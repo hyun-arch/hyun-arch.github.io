@@ -97,7 +97,8 @@ h2 { font-size: 1.6rem; letter-spacing: -0.02em; margin: 0 0 8px; }
 .wall .mine .tag { background: var(--accent); color: #000; }
 .wall .external .tag { background: #1d1d1d; color: var(--muted); border: 1px solid var(--line); }
 .wall .side > .note { color: var(--muted); font-size: 0.85rem; margin: 0 0 20px; }
-.wall .item { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+.wall .item { display: block; background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+.wall .item:hover { border-color: var(--accent); }
 .wall .item h4 { margin: 0 0 6px; font-size: 1rem; }
 .wall .item p { margin: 0; color: var(--muted); font-size: 0.9rem; }
 .wall .item .src { display: inline-block; margin-top: 10px; font-size: 0.75rem; color: var(--muted); }
