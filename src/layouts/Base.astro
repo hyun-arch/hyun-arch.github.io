@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+const { title, frontmatter } = Astro.props;
+const pageTitle = frontmatter?.title ?? title ?? 'Aramirror';
+const desc = frontmatter?.description ?? 'AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경.';
+const isMarkdown = Boolean(frontmatter);
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle} · Aramirror</title>
+    <meta name="description" content={desc} />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="wrap">
+        <a class="brand" href="/">Aramirror<span class="dot">.</span></a>
+        <div class="links">
+          <a href="/wall">생각의 벽</a>
+          <a href="/architecture">Architecture</a>
+          <a href="/agents">Agents</a>
+          <a href="/build-logs">Build Logs</a>
+        </div>
+      </div>
+    </nav>
+
+    {isMarkdown ? (
+      <main class="wrap prose"><slot /></main>
+    ) : (
+      <slot />
+    )}
+
+    <footer>
+      <div class="wrap">
+        Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br />
+        © 2026 Aram Huvis · built with Claude Code
+      </div>
+    </footer>
+  </body>
+</html>

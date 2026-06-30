@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+const logs = [
+  { id: '#01', title: 'Genesis — 텔레그램 한 줄에서 시작된 OS', date: '2026-06-29', href: '/build-logs/01-genesis' },
+];
+---
+<Base title="Build Logs">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Build Logs</p>
+      <h2>Aramirror를 만들어가는 기록</h2>
+      <p class="lead">시스템이 어떻게 태어나고 자라는지, 개발일지로 남긴다. 이 기록 자체가 첫 자산이다.</p>
+      <ul class="logs">
+        {logs.map((l) => (
+          <li>
+            <a href={l.href}>
+              <span class="id">{l.id}</span>
+              <span class="t">{l.title}</span>
+              <span class="d">{l.date}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

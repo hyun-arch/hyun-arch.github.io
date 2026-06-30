@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+
+// 내 생각 — 내가 직접 던진 원본. 자산이고, 소유권이 있다.
+const mine = [
+  {
+    title: '#01 Genesis — 텔레그램 한 줄에서 시작된 OS',
+    desc: '피곤한 어느 밤, 입력 마찰 0으로 던진 생각이 자산이 되는 환경을 만들기로 했다.',
+    href: '/build-logs/01-genesis',
+  },
+  {
+    title: '내 생각과 외부를 가르는 벽이 필요하다',
+    desc: '내가 떠올린 것과 남에게서 가져온 것이 섞이면, 내 오리지널의 값이 희석된다. 그래서 벽을 둔다.',
+    href: '#',
+  },
+];
+
+// 외부에서 — 참고로 끌어온 것. 연료일 뿐, 자산은 아니다. 출처를 반드시 단다.
+const external = [
+  {
+    title: 'SELFORGE — 생각을 지식으로, 지식을 자산으로',
+    desc: '같은 결의 개인 성장 OS. Pulse 대시보드·Articles·태그 등 참고할 화면 구성.',
+    source: 'hminn',
+    url: 'https://hminn.xyz/selforge',
+  },
+  {
+    title: 'Claude Code Skills — 텔레그램 봇 연동 가이드',
+    desc: 'Claude Code를 폰에서 부리는 셋업 모음. 우리가 지금 쓰고 있는 그 방식.',
+    source: 'hminnnnnn (GitHub)',
+    url: 'https://hminnnnnn.github.io/claude-code-skills/',
+  },
+];
+---
+<Base title="생각의 벽">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">The Wall</p>
+      <h2>생각의 벽</h2>
+      <p class="lead">
+        내 생각과 외부에서 가져온 것 사이에는 벽이 있다.
+        왼쪽은 내 것 — 자산이고 소유권이 있다. 오른쪽은 연료 — 반드시 출처를 단다.
+        <strong>AI는 편집자일 뿐, 내 생각은 내 것이다.</strong>
+      </p>
+
+      <div class="wall">
+        <div class="side mine">
+          <div class="side-head">
+            <h3>내 생각</h3>
+            <span class="tag">Mine · 자산</span>
+          </div>
+          <p class="note">내가 직접 던진 원본. 출처가 없다 — 출처가 곧 나이기 때문이다.</p>
+          {mine.map((m) => (
+            <a class="item" href={m.href} style={m.href === '#' ? 'pointer-events:none' : ''}>
+              <h4>{m.title}</h4>
+              <p>{m.desc}</p>
+            </a>
+          ))}
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="side external">
+          <div class="side-head">
+            <h3>외부에서</h3>
+            <span class="tag">External · 연료</span>
+          </div>
+          <p class="note">남에게서 가져온 것. 참고는 하되, 내 자산과 섞지 않는다.</p>
+          {external.map((e) => (
+            <a class="item" href={e.url} target="_blank" rel="noopener">
+              <h4>{e.title}</h4>
+              <p>{e.desc}</p>
+              <span class="src">출처 · <b>{e.source}</b></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

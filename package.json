@@ -1,0 +1,15 @@
+{
+  "name": "aramirror",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Aramirror — AI는 나를 대신하지 않는다, 거울이 된다. (아람: 아름다운 사람)",
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  }
+}
