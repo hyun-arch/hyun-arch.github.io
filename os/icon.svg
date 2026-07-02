@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#0c0f13"/>
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#33c2b8" stroke-width="18"/>
+  <circle cx="256" cy="256" r="46" fill="#33c2b8"/>
+  <path d="M256 106 v-40 M256 446 v-40 M106 256 h-40 M446 256 h40" stroke="#33c2b8" stroke-width="18" stroke-linecap="round"/>
+  <text x="256" y="352" font-family="Segoe UI, sans-serif" font-size="120" font-weight="800" fill="#c8a15a" text-anchor="middle" opacity="0.0">AH</text>
+</svg>
