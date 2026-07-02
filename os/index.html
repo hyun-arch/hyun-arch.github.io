@@ -26,6 +26,7 @@
 </div>
 <div id="app"></div>
 
+<script src="app.js"></script>
 <script>
 // 프로토타입 게이트(가벼운 잠금). 실제 직원 로그인은 다음 단계.
 const PW_HASH="bf5ef70535dc430c8819a48247ac11599debbcb26b4b3d7663fcfda75fef1f03";
@@ -38,7 +39,7 @@ function enter(){
   document.getElementById("gate").style.display="none";
   document.getElementById("app").style.display="block";
   sessionStorage.setItem("ahos.ok","1");
-  window.__bootApp();
+  (function boot(){ if(window.__bootApp) window.__bootApp(); else setTimeout(boot,30); })();
 }
 async function tryEnter(){
   gerr.textContent="";
@@ -51,6 +52,5 @@ if(sessionStorage.getItem("ahos.ok")==="1") enter(); else gpw.focus();
 
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 </script>
-<script src="app.js"></script>
 </body>
 </html>
