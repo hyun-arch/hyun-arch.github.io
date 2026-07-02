@@ -1,6 +1,6 @@
 /* 아주 단순한 오프라인 캐시 (앱 셸). 데이터는 localStorage. */
-const CACHE = 'ahos-v2';
-const ASSETS = ['./','index.html','styles.css','app.js','manifest.webmanifest','icon.svg'];
+const CACHE = 'ahos-v3';
+const ASSETS = ['./','index.html','styles.css','seed.js','app.js','manifest.webmanifest','icon.svg'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
