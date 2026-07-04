@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+const posts = (await Astro.glob('./*.md'))
+  .filter((p) => !p.url.endsWith('/writings'))
+  .sort((a, b) => (a.frontmatter.date < b.frontmatter.date ? 1 : -1));
+---
+<Base title="글">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">글 · Writings</p>
+      <h2>내가 쓴 글</h2>
+      <p class="lead">직접 쓴 글을 모아둔다. SNS로 발행하는 글도 여기서 시작된다.</p>
+      <ul class="logs">
+        {posts.map((p) => (
+          <li>
+            <a href={p.url}>
+              <span class="t">{p.frontmatter.title}</span>
+              <span class="d">{p.frontmatter.date}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

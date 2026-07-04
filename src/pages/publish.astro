@@ -1,0 +1,149 @@
+---
+import Base from '../layouts/Base.astro';
+
+const ORIGIN = 'https://hyun-arch.github.io';
+const strip = (s) => (s || '').replace(/\*\*/g, '').replace(/[*_`]/g, '').replace(/\s+/g, ' ').trim();
+const stripKeepNL = (s) => (s || '').replace(/\*\*/g, '').replace(/[*_`]/g, '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+
+function mapArticle(a, type) {
+  const url = ORIGIN + a.url;
+  const raw = typeof a.rawContent === 'function' ? a.rawContent() : '';
+  const quoteMatch = raw.match(/^>\s?(.+)$/m);
+  return {
+    type,
+    title: a.frontmatter.title || '무제',
+    desc: strip(a.frontmatter.description || ''),
+    date: a.frontmatter.date || '',
+    tags: a.frontmatter.tags || ['Aramirror', '생각이자산', '성장', '리더십'],
+    hook: quoteMatch ? strip(quoteMatch[1]) : '',
+    body: stripKeepNL(raw),
+    url,
+  };
+}
+
+const blFiles = (await Astro.glob('./build-logs/*.md')).map((a) => mapArticle(a, 'buildlog'));
+const wFiles = (await Astro.glob('./writings/*.md')).map((a) => mapArticle(a, 'writing'));
+// 내가 쓴 글(writing)을 먼저, 그다음 빌드로그. 각각 최신순.
+const articles = [...wFiles, ...blFiles].sort((a, b) => {
+  if (a.type !== b.type) return a.type === 'writing' ? -1 : 1;
+  return a.date < b.date ? 1 : -1;
+});
+
+function hashtags(tags) { return tags.map((t) => '#' + String(t).replace(/\s+/g, '')).join(' '); }
+function truncate(s, n) { return s.length > n ? s.slice(0, n - 1).trim() + '…' : s; }
+function cleanTitle(t) {
+  const parts = t.split('—');
+  return (parts.length > 1 ? parts.slice(1).join('—') : t).replace(/^#\d+\s*\w*\s*/, '').trim() || t.replace(/^#\d+\s*/, '');
+}
+const enc = encodeURIComponent;
+
+// 빌드로그: 제목·핵심문장·요약으로 채널별 게시글 생성
+function genSummaryPosts(a) {
+  const ct = cleanTitle(a.title);
+  const hook = a.hook ? a.hook + '\n\n' : '';
+  const tags = hashtags(a.tags);
+  const shortTags = hashtags(a.tags.slice(0, 3));
+  const li = `${hook}${ct}\n\n${a.desc}\n\n전문 → ${a.url}\n\n${tags}`;
+  const fb = `${ct}\n\n${a.desc}\n\n전문 → ${a.url}\n${shortTags}`;
+  const th = truncate(`${ct}\n\n${a.desc}`, 440) + `\n→ ${a.url}\n${shortTags}`;
+  const x = truncate(`${ct} — ${a.desc}`, 230) + `\n${a.url}\n${shortTags}`;
+  const ig = `${ct} 🌊\n\n${a.desc}\n\n전문은 프로필 링크에서.\n\n${tags} #독서기록`;
+  const nv = `[${ct}]\n\n${hook}${a.desc}\n\n전문: ${a.url}`;
+  return [
+    { key: 'linkedin', name: 'LinkedIn', tone: '전문·인사이트', text: li, share: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(a.url)}`, shareLabel: '링크드인 열기(링크)', note: '텍스트 복사 후 붙여넣기' },
+    { key: 'threads', name: 'Threads', tone: '짧고 강하게', text: th, share: `https://www.threads.net/intent/post?text=${enc(th)}`, shareLabel: '스레드에 자동 채워 열기', note: '텍스트까지 자동 · 승인만' },
+    { key: 'x', name: 'X (Twitter)', tone: '한 방', text: x, share: `https://twitter.com/intent/tweet?text=${enc(x)}`, shareLabel: 'X에 자동 채워 열기', note: '텍스트까지 자동 · 승인만' },
+    { key: 'facebook', name: 'Facebook (Meta)', tone: '따뜻하게', text: fb, share: `https://www.facebook.com/sharer/sharer.php?u=${enc(a.url)}`, shareLabel: '페이스북 열기(링크)', note: '텍스트 복사 후 붙여넣기' },
+    { key: 'instagram', name: 'Instagram', tone: '감성·캡션', text: ig, note: '사진 1장 필요 · 캡션 복사 후 앱에서' },
+    { key: 'naver', name: '네이버 블로그', tone: '블로그 글', text: nv, note: '복사 후 블로그 글쓰기에' },
+  ];
+}
+
+// 내가 쓴 글: 원문 그대로. 아무것도 안 붙임.
+function genFullPosts(a) {
+  const body = a.body;
+  const over = (n) => body.length > n;
+  return [
+    { key: 'linkedin', name: 'LinkedIn', tone: '원문 그대로', text: body, note: '글 그대로 · 복사 후 붙여넣기' },
+    { key: 'threads', name: 'Threads', tone: '원문 그대로', text: body, share: `https://www.threads.net/intent/post?text=${enc(body)}`, shareLabel: '스레드에 채워 열기', note: over(500) ? '스레드 500자 초과 — 올릴 때 조금 줄여서' : '그대로 올리면 됩니다' },
+    { key: 'x', name: 'X (Twitter)', tone: '원문 그대로', text: body, share: `https://twitter.com/intent/tweet?text=${enc(body)}`, shareLabel: 'X에 채워 열기', note: over(280) ? 'X 280자 초과 — 올릴 때 줄여서' : '그대로 올리면 됩니다' },
+    { key: 'facebook', name: 'Facebook (Meta)', tone: '원문 그대로', text: body, note: '글 그대로 · 복사 후 붙여넣기' },
+    { key: 'instagram', name: 'Instagram', tone: '원문 그대로', text: body, note: '사진 1장 필요 · 캡션 복사 후 앱에서' },
+    { key: 'naver', name: '네이버 블로그', tone: '원문 그대로', text: body, note: '복사 후 블로그 글쓰기에' },
+  ];
+}
+
+const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? genFullPosts(a) : genSummaryPosts(a) }));
+---
+<Base title="발행 · Publish">
+  <section style="padding-top:72px">
+    <div class="wrap" style="max-width:760px">
+      <p class="section-kicker">발행 · Publish Hub</p>
+      <h2>한 글, 모든 채널로</h2>
+      <p class="lead">글이 올라오면 자동으로 여기 나타나고, 채널별로 붙여넣을 글이 준비됩니다. 내가 쓴 글은 <b>원문 그대로</b>, 빌드로그는 요약본으로. 스레드·X는 버튼 하나로 자동 채움, 나머지는 복사.</p>
+
+      {withPosts.map((a, i) => (
+        <details class="pub-article" open={i === 0}>
+          <summary>
+            <span class="pa-title">{a.title}</span>
+            {a.type === 'writing' && <span class="pa-badge">내 글</span>}
+            <span class="pa-date">{a.date}</span>
+          </summary>
+          <p class="pa-link"><a href={a.url}>{a.url}</a></p>
+          {a.posts.map((p) => (
+            <div class="pub-card">
+              <div class="pub-head"><span class="pub-name">{p.name}</span><span class="pub-tone">{p.tone}</span></div>
+              <textarea class="pub-text" readonly rows={Math.min(14, p.text.split('\n').length + 1)}>{p.text}</textarea>
+              <div class="pub-actions">
+                <button class="pub-btn copy" type="button">복사</button>
+                {p.share && <a class="pub-btn share" href={p.share} target="_blank" rel="noopener">{p.shareLabel} ↗</a>}
+              </div>
+              {p.note && <p class="pub-note">ⓘ {p.note}</p>}
+            </div>
+          ))}
+        </details>
+      ))}
+
+      <p style="color:var(--muted);font-size:0.88rem;margin-top:28px">
+        완전 자동 게시(무터치)를 켜려면 → Meta(인스타·페북·스레드) 1회 인증부터. 준비되면 텔레그램으로 승인 창을 띄워드립니다.
+      </p>
+    </div>
+  </section>
+
+  <style is:global>
+    .pub-article { border-top:1px solid var(--line); padding:18px 0; }
+    .pub-article > summary { cursor:pointer; list-style:none; display:flex; align-items:baseline; gap:12px; padding:6px 0; }
+    .pub-article > summary::-webkit-details-marker { display:none; }
+    .pub-article > summary::before { content:'▸'; color:var(--muted); transition:transform .15s ease; }
+    .pub-article[open] > summary::before { transform:rotate(90deg); }
+    .pa-title { font-weight:700; font-size:1.15rem; letter-spacing:-0.02em; }
+    .pa-badge { font-size:0.68rem; font-weight:700; letter-spacing:0.03em; background:var(--fg); color:#fff; padding:2px 8px; border-radius:999px; }
+    .pa-date { color:var(--muted); font-size:0.85rem; margin-left:auto; }
+    .pa-link { margin:4px 0 8px 22px; }
+    .pa-link a { color:var(--muted); font-size:0.85rem; text-decoration:underline; text-underline-offset:2px; }
+    .pub-card { border:1px solid var(--line); border-radius:16px; padding:20px; margin:14px 0 0 22px; background:var(--bg-card); }
+    .pub-head { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; }
+    .pub-name { font-weight:700; font-size:1.05rem; letter-spacing:-0.02em; }
+    .pub-tone { color:var(--muted); font-size:0.82rem; }
+    .pub-text { width:100%; border:1px solid var(--line-soft); border-radius:10px; padding:14px; font-family:inherit; font-size:0.95rem; line-height:1.6; color:var(--fg-soft); resize:vertical; background:var(--bg-soft); outline:none; }
+    .pub-text:focus { border-color:var(--line); }
+    .pub-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+    .pub-btn { border:1px solid var(--line); border-radius:999px; padding:9px 18px; font-size:0.9rem; font-weight:600; cursor:pointer; background:#fff; color:var(--fg); font-family:inherit; transition:all .15s ease; }
+    .pub-btn.copy:hover, .pub-btn.copy.done { background:var(--fg); color:#fff; border-color:var(--fg); }
+    .pub-btn.share { background:var(--fg); color:#fff; border-color:var(--fg); text-decoration:none; }
+    .pub-btn.share:hover { opacity:.85; }
+    .pub-note { color:var(--muted); font-size:0.82rem; margin:10px 0 0; }
+    @media(max-width:680px){ .pub-card{ margin-left:0; } }
+  </style>
+
+  <script is:inline>
+    document.querySelectorAll('.pub-btn.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var ta = btn.closest('.pub-card').querySelector('.pub-text');
+        function ok(){ btn.textContent = '복사됨 ✓'; btn.classList.add('done'); setTimeout(function(){ btn.textContent='복사'; btn.classList.remove('done'); }, 1600); }
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(ta.value).then(ok, function(){ ta.select(); document.execCommand('copy'); ok(); }); }
+        else { ta.select(); document.execCommand('copy'); ok(); }
+      });
+    });
+  </script>
+</Base>

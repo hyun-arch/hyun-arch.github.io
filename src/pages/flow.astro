@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="몰입 · Flow">
+  <section style="padding-top:72px">
+    <div class="wrap" style="max-width:720px">
+      <p class="section-kicker">몰입 · Flow</p>
+      <h2>시간을 흘려보내지 않고, 한 방울씩</h2>
+      <p class="lead">삶·생각·호흡이 하나로 모이는 시간. 그 한 방울들이 쌓여 나만의 힘이 된다.</p>
+
+      <div class="card flow-card">
+        <input id="focus" placeholder="무엇에 몰입할까요? (예: 새벽 책 사색)" autocomplete="off" />
+        <div class="timer" id="timer">00:00:00</div>
+        <button id="toggle" class="flow-btn">▶ 몰입 시작</button>
+      </div>
+
+      <div class="stats" style="margin-top:36px">
+        <div class="stat"><div class="v" id="s-today">0분</div><div class="l">오늘 몰입</div></div>
+        <div class="stat"><div class="v" id="s-total">0분</div><div class="l">쌓인 몰입(전체)</div></div>
+        <div class="stat"><div class="v" id="s-count">0</div><div class="l">몰입 세션</div></div>
+      </div>
+
+      <h3 style="margin:48px 0 10px;font-size:1.15rem;letter-spacing:-0.02em">몰입 기록</h3>
+      <ul id="log" class="flow-log"></ul>
+
+      <p style="margin-top:40px;color:var(--muted);font-size:0.92rem">
+        몰입이 무엇인지에 대한 글 →
+        <a href="/build-logs/02-flow" style="color:var(--fg);text-decoration:underline;text-underline-offset:3px">#02 Flow — 몰입, 그리고 알을 깨는 새</a>
+      </p>
+    </div>
+  </section>
+
+  <style is:global>
+    .flow-card { text-align:center; padding:32px 24px; margin-top:32px; }
+    .flow-card input {
+      width:100%; max-width:420px; margin:0 auto; display:block;
+      border:1px solid var(--line); border-radius:12px; padding:12px 16px;
+      font-size:1rem; font-family:inherit; outline:none; text-align:center; color:var(--fg);
+    }
+    .flow-card input:focus { border-color:var(--fg); }
+    .timer { font-size:3.4rem; font-weight:700; letter-spacing:-0.03em;
+      font-variant-numeric:tabular-nums; margin:22px 0; color:var(--fg); }
+    .timer.idle { color:var(--line); }
+    .flow-btn { border:0; border-radius:999px; background:var(--fg); color:#fff;
+      font-size:1rem; font-weight:600; padding:13px 30px; cursor:pointer; font-family:inherit;
+      transition:opacity .15s ease; }
+    .flow-btn:hover { opacity:.85; }
+    .flow-btn.stop { background:#b23c3c; }
+    .flow-log { list-style:none; padding:0; margin:0; }
+    .flow-log li { display:flex; gap:16px; align-items:baseline;
+      border-top:1px solid var(--line-soft); padding:16px 4px; }
+    .flow-log li:last-child { border-bottom:1px solid var(--line-soft); }
+    .flow-log .fl-focus { font-weight:600; flex:1; }
+    .flow-log .fl-min { font-weight:700; font-variant-numeric:tabular-nums; }
+    .flow-log .fl-ago { color:var(--muted); font-size:0.85rem; }
+    .flow-empty { color:var(--muted); padding:20px 4px; }
+    @media(max-width:680px){ .timer{ font-size:2.8rem; } }
+  </style>
+
+  <script is:inline>
+    (function(){
+      var K='aramflow.';
+      function get(k,d){ try{ var v=localStorage.getItem(K+k); return v==null?d:JSON.parse(v);}catch(e){return d;} }
+      function set(k,v){ localStorage.setItem(K+k, JSON.stringify(v)); }
+      // 처음이면 예시 몇 개로 채워 살아있게
+      if(!get('seeded',false)){
+        set('sessions',[
+          {focus:'아람휴비스 OS 설계 몰입', min:95, at:Date.now()-9*3600000},
+          {focus:'새벽 책 사색 (몰입·데미안)', min:40, at:Date.now()-5.5*3600000}
+        ]); set('seeded',true);
+      }
+      function localDay(t){ var d=new Date(t); function p(n){return (n<10?'0':'')+n;} return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+      function fmtMin(m){ m=Math.round(m); var h=Math.floor(m/60), mm=m%60; return h? h+'시간 '+mm+'분' : mm+'분'; }
+      function ago(t){ var s=(Date.now()-t)/1000; if(s<60)return'방금'; if(s<3600)return Math.floor(s/60)+'분 전'; if(s<86400)return Math.floor(s/3600)+'시간 전'; return Math.floor(s/86400)+'일 전'; }
+      function pad(n){ return (n<10?'0':'')+n; }
+
+      var focusEl=document.getElementById('focus'), timerEl=document.getElementById('timer'),
+          btn=document.getElementById('toggle'), logEl=document.getElementById('log'),
+          sToday=document.getElementById('s-today'), sTotal=document.getElementById('s-total'), sCount=document.getElementById('s-count');
+      var tick=null;
+
+      function renderStats(){
+        var ss=get('sessions',[]); var today=localDay(Date.now());
+        var t=0, all=0; ss.forEach(function(x){ all+=x.min; if(localDay(x.at)===today) t+=x.min; });
+        sToday.textContent=fmtMin(t); sTotal.textContent=fmtMin(all); sCount.textContent=ss.length;
+        var sorted=ss.slice().sort(function(a,b){return b.at-a.at;});
+        logEl.innerHTML = sorted.length ? sorted.map(function(x){
+          return '<li><span class="fl-focus">'+esc(x.focus)+'</span><span class="fl-min">'+fmtMin(x.min)+'</span><span class="fl-ago">· '+ago(x.at)+'</span></li>';
+        }).join('') : '<li class="flow-empty">첫 몰입을 시작해보세요.</li>';
+      }
+      function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+
+      function showTime(){
+        var start=get('start',null);
+        if(start==null){ timerEl.textContent='00:00:00'; timerEl.classList.add('idle'); return; }
+        timerEl.classList.remove('idle');
+        var s=Math.floor((Date.now()-start)/1000);
+        timerEl.textContent=pad(Math.floor(s/3600))+':'+pad(Math.floor(s/60)%60)+':'+pad(s%60);
+      }
+      function syncUI(){
+        var running=get('start',null)!=null;
+        btn.textContent = running ? '■ 몰입 마치기' : '▶ 몰입 시작';
+        btn.classList.toggle('stop', running);
+        focusEl.style.display = running ? 'none' : 'block';
+        if(running){ if(!tick){ tick=setInterval(showTime,1000); } }
+        else { if(tick){ clearInterval(tick); tick=null; } }
+        showTime();
+      }
+      btn.addEventListener('click', function(){
+        var start=get('start',null);
+        if(start==null){ set('focus', focusEl.value.trim()); set('start', Date.now()); }
+        else {
+          var min=Math.max(1, Math.round((Date.now()-start)/60000));
+          var ss=get('sessions',[]); ss.push({focus:get('focus','')||'몰입', min:min, at:Date.now()});
+          set('sessions',ss); localStorage.removeItem(K+'start'); localStorage.removeItem(K+'focus');
+        }
+        syncUI(); renderStats();
+      });
+      var savedFocus=get('focus','');
+      if(savedFocus && get('start',null)==null) focusEl.value=savedFocus;
+      renderStats(); syncUI();
+    })();
+  </script>
+</Base>
