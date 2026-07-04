@@ -62,7 +62,7 @@ import Base from '../layouts/Base.astro';
   </style>
 
   <script>
-    import { getPosts, CATEGORIES, onChange } from '../scripts/store.js';
+    import { getPosts, CATEGORIES, onChange, init } from '../scripts/store.js';
 
     const listEl = document.getElementById('postList');
     const filtersEl = document.getElementById('filters');
@@ -120,6 +120,6 @@ import Base from '../layouts/Base.astro';
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
     onChange(render);
-    render();
+    init().then(render);
   </script>
 </Base>

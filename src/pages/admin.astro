@@ -170,6 +170,7 @@ import Base from '../layouts/Base.astro';
       getPosts, createPost, updatePost, deletePost, togglePublish,
       getPages, togglePageVisibility, setPageNote,
       CATEGORIES, stats, exportAll, importAll, resetAll, onChange,
+      init, backendMode,
     } from '../scripts/store.js';
 
     const PASS_KEY = 'aramirror.admin.pass';
@@ -209,8 +210,11 @@ import Base from '../layouts/Base.astro';
       $('export').addEventListener('click', doExport);
       $('copyJson').addEventListener('click', doCopy);
       $('importFile').addEventListener('change', doImport);
-      $('reset').addEventListener('click', () => {
-        if (confirm('모든 데이터를 시드 상태로 되돌립니다. 계속할까요?')) resetAll();
+      $('reset').addEventListener('click', async () => {
+        const msg = backendMode() === 'supabase'
+          ? '서버 데이터는 보호됩니다. 최신 상태로 다시 불러올까요?'
+          : '모든 데이터를 시드 상태로 되돌립니다. 계속할까요?';
+        if (confirm(msg)) { try { await resetAll(); } catch (e) { alert(e.message); } }
       });
       $('changePass').addEventListener('click', () => {
         const v = $('newPass').value.trim();
@@ -225,11 +229,11 @@ import Base from '../layouts/Base.astro';
       $('pageRows').addEventListener('change', onNoteChange);
 
       onChange(renderAll);
-      renderAll();
+      init().then(renderAll).catch(() => renderAll());
     }
 
     // ── 폼: 생성/수정 ────────────────────────────────
-    function onSave() {
+    async function onSave() {
       const payload = {
         title: $('fTitle').value.trim(),
         category: $('fCategory').value,
@@ -240,9 +244,17 @@ import Base from '../layouts/Base.astro';
       };
       if (!payload.title) { alert('제목을 입력하세요.'); return; }
       const editId = $('editId').value;
-      if (editId) updatePost(editId, payload);
-      else createPost(payload);
-      clearForm();
+      const btn = $('save');
+      btn.disabled = true;
+      try {
+        if (editId) await updatePost(editId, payload);
+        else await createPost(payload);
+        clearForm();
+      } catch (e) {
+        alert('저장 실패: ' + e.message);
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     function clearForm() {
@@ -270,15 +282,17 @@ import Base from '../layouts/Base.astro';
       $('fTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    function onPostAction(e) {
+    async function onPostAction(e) {
       const btn = e.target.closest('button[data-act]');
       if (!btn) return;
       const id = btn.dataset.id;
       const act = btn.dataset.act;
-      if (act === 'edit') loadIntoForm(getPosts().find((p) => p.id === id));
-      else if (act === 'toggle') togglePublish(id);
-      else if (act === 'delete') {
-        if (confirm('이 글을 삭제할까요?')) deletePost(id);
+      try {
+        if (act === 'edit') loadIntoForm(getPosts().find((p) => p.id === id));
+        else if (act === 'toggle') await togglePublish(id);
+        else if (act === 'delete') { if (confirm('이 글을 삭제할까요?')) await deletePost(id); }
+      } catch (err) {
+        alert('처리 실패: ' + err.message);
       }
     }
 
@@ -314,9 +328,9 @@ import Base from '../layouts/Base.astro';
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = () => {
-        try { importAll(reader.result); alert('가져오기 완료.'); }
-        catch { alert('올바른 JSON이 아닙니다.'); }
+      reader.onload = async () => {
+        try { await importAll(reader.result); alert('가져오기 완료.'); }
+        catch (err) { alert('가져오기 실패: ' + err.message); }
       };
       reader.readAsText(file);
       e.target.value = '';
@@ -325,9 +339,10 @@ import Base from '../layouts/Base.astro';
     // ── 렌더 ─────────────────────────────────────────
     function renderAll() {
       const s = stats();
+      const store = backendMode() === 'supabase' ? 'Supabase' : '브라우저';
       $('stats').innerHTML = [
         ['총 글', s.total], ['게시', s.published], ['초안', s.draft],
-        ['노출 페이지', `${s.pagesVisible}/${s.pagesTotal}`],
+        ['노출 페이지', `${s.pagesVisible}/${s.pagesTotal}`], ['저장소', store],
       ].map(([l, v]) => `<div class="ad-stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
 
       const posts = getPosts();
