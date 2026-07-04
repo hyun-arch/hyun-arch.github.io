@@ -184,7 +184,6 @@ import Base from '../layouts/Base.astro';
       $('panel').hidden = false;
       initPanel();
     }
-    if (sessionStorage.getItem(SESSION_KEY) === '1') unlock();
     $('enter').addEventListener('click', tryEnter);
     $('pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryEnter(); });
     function tryEnter() {
@@ -356,5 +355,8 @@ import Base from '../layouts/Base.astro';
           <td><button class="ad-btn ad-mini ad-toggle ${pg.visible ? 'ad-primary' : ''}" data-path="${pg.path}">${pg.visible ? '노출' : '숨김'}</button></td>
         </tr>`).join('');
     }
+
+    // 모든 선언 이후에 자동 언락 (세션 유지 시 재방문/새로고침에서도 정상 초기화)
+    if (sessionStorage.getItem(SESSION_KEY) === '1') unlock();
   </script>
 </Base>
