@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="스폰지 시계">
+  <section class="app-page">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>3F · 시간 · 몰입</p>
+      <h2 data-reveal="60">스폰지 시계</h2>
+      <p class="lead" data-reveal="120">
+        집중을 빨아들이는 카운트다운 · 스톱워치 타이머. 몰입 세션의 리듬을 잡아주는 스폰지클럽 시계입니다.
+        <a class="ext" href="/apps/sponge/timer.html" target="_blank" rel="noopener">새 창에서 열기 ↗</a>
+      </p>
+      <div class="app-frame" data-reveal="160">
+        <iframe src="/apps/sponge/timer.html" title="스폰지 시계" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+  <style>
+    .app-page { padding: 56px 0 80px; }
+    .app-page .ext { margin-left: 10px; font-size: 0.9rem; color: var(--accent); white-space: nowrap; }
+    .app-frame {
+      margin-top: 26px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+      background: #06070d; box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    }
+    .app-frame iframe { display: block; width: 100%; height: min(78vh, 760px); border: 0; }
+    @media (max-width: 640px) { .app-frame iframe { height: 82vh; } }
+  </style>
+</Base>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>무료 한글 고딕 폰트 10선 — 디자이너 코코 픽</title>
+<meta name="description" content="17년차 디자이너 코코(디자인펜슬)가 실무 기준으로 고른 상업용 무료 한글 고딕 폰트 10선. 자간·행간 세팅과 추천 사용처, 다운로드까지." />
+<meta property="og:title" content="무료 한글 고딕 폰트 10선 — 디자이너 코코 픽" />
+<meta property="og:description" content="상업용 무료 고딕 폰트 10선 · 자간/행간 실무 세팅 · 다운로드" />
+
+<!-- 실제 폰트 미리보기용 웹폰트 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Gothic+A1:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css">
+
+<style>
+  :root{
+    --bg:#0b0d10; --bg2:#111418; --card:#15191e; --line:#242a31;
+    --ink:#eef1f4; --sub:#aab3bd; --dim:#727d88;
+    --gold:#e7c27d; --accent:#7dd3fc;
+    --radius:18px;
+    --max:940px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 700px at 50% -10%, #171b21 0%, var(--bg) 55%) no-repeat, var(--bg);
+    color:var(--ink);
+    font-family:"Pretendard","Pretendard Variable",-apple-system,"Malgun Gothic",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+    letter-spacing:-0.01em;
+  }
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+
+  /* ===== HERO ===== */
+  header.hero{padding:74px 20px 40px;text-align:center}
+  .kicker{
+    display:inline-block;font-size:12.5px;letter-spacing:.16em;color:var(--gold);
+    border:1px solid rgba(231,194,125,.35);border-radius:999px;padding:7px 15px;
+    margin-bottom:22px;text-transform:uppercase;
+  }
+  h1{
+    font-size:clamp(30px,6.2vw,50px);line-height:1.18;margin:0 0 18px;
+    font-weight:800;letter-spacing:-0.035em;
+  }
+  h1 .mute{color:var(--gold)}
+  .lead{max-width:640px;margin:0 auto;color:var(--sub);font-size:clamp(15px,3.6vw,17px)}
+  .credit{margin-top:20px;color:var(--dim);font-size:13.5px}
+  .credit b{color:var(--sub);font-weight:600}
+
+  /* ===== SETTING BAR ===== */
+  .setup{
+    max-width:var(--max);margin:34px auto 0;padding:0 20px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  }
+  .stat{
+    background:linear-gradient(180deg,var(--card),#12161b);
+    border:1px solid var(--line);border-radius:14px;padding:18px 16px;text-align:center;
+  }
+  .stat .n{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+  .stat .n small{font-size:14px;color:var(--dim);font-weight:600}
+  .stat .l{font-size:12.5px;color:var(--dim);margin-top:4px}
+  .note-line{
+    max-width:var(--max);margin:14px auto 0;padding:0 22px;color:var(--dim);
+    font-size:13px;text-align:center
+  }
+
+  /* ===== SECTION TITLE ===== */
+  .sec-title{
+    max-width:var(--max);margin:64px auto 6px;padding:0 20px;
+    font-size:13px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase
+  }
+  .sec-sub{max-width:var(--max);margin:0 auto 26px;padding:0 20px;color:var(--sub);font-size:14.5px}
+
+  /* ===== FONT CARDS ===== */
+  .cards{max-width:var(--max);margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:16px}
+  .card{
+    background:linear-gradient(180deg,var(--card),#12161a);
+    border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;position:relative;transition:border-color .2s, transform .2s;
+  }
+  .card:hover{border-color:#38424d;transform:translateY(-2px)}
+  .card.pick{border-color:rgba(231,194,125,.45)}
+  .card.pick::before{
+    content:"코코 PICK";position:absolute;top:14px;right:14px;z-index:2;
+    font-size:10.5px;letter-spacing:.12em;color:#0b0d10;background:var(--gold);
+    font-weight:800;padding:5px 9px;border-radius:7px;
+  }
+  .card-head{padding:22px 22px 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .idx{color:var(--dim);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+  .fname{font-size:21px;font-weight:800;letter-spacing:-.02em}
+  .feng{color:var(--dim);font-size:13px;font-weight:500}
+
+  .preview{
+    padding:6px 22px 20px;font-size:clamp(21px,5.2vw,30px);line-height:1.5;color:#f4f6f8;
+  }
+  .preview .small{display:block;font-size:15px;color:var(--sub);margin-top:8px;line-height:1.7}
+
+  .meta{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border-top:1px solid var(--line);
+  }
+  .meta div{background:var(--card);padding:12px 14px}
+  .meta .k{font-size:11px;color:var(--dim);letter-spacing:.04em}
+  .meta .v{font-size:14px;color:var(--ink);margin-top:3px;font-weight:600}
+  .meta .v.tag{color:var(--sub);font-weight:500;font-size:13px;line-height:1.5}
+
+  .card-foot{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:14px 22px;border-top:1px solid var(--line);flex-wrap:wrap
+  }
+  .src{color:var(--dim);font-size:13px}
+  .src b{color:var(--sub);font-weight:600}
+  .dl{
+    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+    background:#1e242b;border:1px solid #313b45;color:var(--ink);
+    font-size:13.5px;font-weight:700;padding:9px 16px;border-radius:10px;transition:.15s
+  }
+  .dl:hover{background:var(--gold);border-color:var(--gold);color:#0b0d10}
+  .dl svg{width:14px;height:14px}
+
+  @media(max-width:560px){
+    .setup{grid-template-columns:1fr;gap:10px}
+    .meta{grid-template-columns:repeat(2,1fr)}
+  }
+
+  /* ===== KOKO SAYS ===== */
+  .koko{max-width:var(--max);margin:64px auto 0;padding:0 20px}
+  .koko-box{
+    background:linear-gradient(180deg,#181b16,#13160f);
+    border:1px solid rgba(231,194,125,.28);border-radius:20px;padding:28px 26px
+  }
+  .koko-box h3{margin:0 0 4px;font-size:19px;font-weight:800}
+  .koko-box .cap{color:var(--dim);font-size:13px;margin-bottom:18px}
+  .krow{padding:15px 0;border-top:1px solid rgba(231,194,125,.14);display:flex;gap:14px}
+  .krow:first-of-type{border-top:0}
+  .kname{color:var(--gold);font-weight:800;font-size:15px;min-width:78px;flex-shrink:0}
+  .ktext{color:var(--sub);font-size:14.5px;line-height:1.65}
+
+  /* ===== FOOTER ===== */
+  footer{max-width:var(--max);margin:56px auto 0;padding:26px 20px 60px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px;text-align:center;line-height:1.8}
+  footer b{color:var(--sub)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="kicker">SPONGE CLUB · 코코 PICK</span>
+  <h1>가끔은, <span class="mute">폰트</span>가<br>디자인의 전부다</h1>
+  <p class="lead">AI가 컬러는 잘 뽑아줘도, 한글 폰트 선택과 자간은 아직 사람 몫이에요. 17년차 디자이너 코코가 실무에서 진짜 쓰는 <b>상업용 무료 고딕 10종</b>을 골랐습니다.</p>
+  <p class="credit">정리 · <b>코코 (디자인펜슬)</b> — 스폰지클럽 영상 유닛</p>
+</header>
+
+<section class="setup">
+  <div class="stat"><div class="n">17<small>pt</small></div><div class="l">본문 크기 (기준)</div></div>
+  <div class="stat"><div class="n">27<small>pt</small></div><div class="l">행간 = 크기 × 1.6</div></div>
+  <div class="stat"><div class="n">자간<small></small></div><div class="l">폰트마다 다르게 (아래 표)</div></div>
+</section>
+<p class="note-line">행간은 본문이면 대체로 비슷해요. 크기 바꾸면 행간도 비례(예: 20pt→32pt). <b style="color:var(--sub)">진짜 달라지는 건 자간</b> — 각 카드에 실제 값과 미리보기를 넣었습니다.</p>
+
+<h2 class="sec-title">— 폰트 10선</h2>
+<p class="sec-sub">각 카드의 글자는 <b style="color:var(--sub)">실제 그 폰트로 미리보기</b> 됩니다. 무드·용도는 참고용이니, 실제 써보고 판단하세요.</p>
+
+<div class="cards" id="cards"></div>
+
+<section class="koko">
+  <div class="koko-box">
+    <h3>✍️ 코코 한마디</h3>
+    <p class="cap">특히 추천하는 것만 콕 집어서</p>
+
+    <div class="krow"><div class="kname">프리텐다드</div><div class="ktext">뭘 쓸지 모르겠으면 이거. 굵기 9단이라 한 폰트로 제목·본문·강조 다 잡혀요. 자간도 이미 잘 짜여 손 안 대도 됨.</div></div>
+    <div class="krow"><div class="kname">본고딕</div><div class="ktext">자간이 넓지도 좁지도 않아 조절 거의 불필요. 다국어 섞인 문서에 안전해요.</div></div>
+    <div class="krow"><div class="kname">수트</div><div class="ktext">버튼·아이콘이랑 글자 정렬이 딱 맞아서 UI 만들 때 편해요.</div></div>
+    <div class="krow"><div class="kname">페이퍼로지</div><div class="ktext">발표 PPT 제목용으로 존재감 최고. 대신 본문에 깔면 좀 무거워요.</div></div>
+    <div class="krow"><div class="kname">에이투지체</div><div class="ktext">본문부터 제목까지 커버. 일반 서체보다 무거운 굵기가 있어 실무 편집 효율이 좋아요.</div></div>
+  </div>
+</section>
+
+<footer>
+  라이선스는 모두 <b>상업용 무료</b>지만, 사용 전 공식 배포처에서 최종 확인을 권장합니다.<br>
+  정리 코코 · 디자인펜슬 / 스폰지클럽 영상 유닛 — <b>Arami × 코코 픽</b>
+</footer>
+
+<script>
+const dlIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 21h16"/></svg>';
+
+// letter-spacing 근사: 디자인툴 자간값 / 1000 (em)
+const fonts = [
+  {n:"프리텐다드",e:"Pretendard",css:'"Pretendard","Pretendard Variable"',w:"9단",js:-20,mood:"깔끔 · 중립 · 신뢰",use:"UI · 웹 · 앱 · 본문",src:"길형진",url:"https://github.com/orioncactus/pretendard",pick:true},
+  {n:"본고딕",e:"Noto Sans KR",css:'"Noto Sans KR"',w:"9단",js:-17,mood:"직선 · 균형 · 담백",use:"본문 · 다국어 · 웹",src:"Google Fonts",url:"https://fonts.google.com/noto/specimen/Noto+Sans+KR",pick:true},
+  {n:"수트",e:"SUIT",css:'"SUIT","SUIT Variable"',w:"9단",js:-25,mood:"단정 · 정갈 · UI",use:"UI · 앱 · 본문",src:"sun.fo",url:"https://sun.fo/suit/",pick:true},
+  {n:"스위트",e:"SUITE",css:'"SUITE","SUITE Variable"',w:"7단",js:-10,mood:"동글 · 율동 · 개성",use:"UI · 앱",src:"sun.fo",url:"https://sun.fo/suite/"},
+  {n:"고딕 A1",e:"Gothic A1",css:'"Gothic A1"',w:"9단",js:-10,mood:"균일 · 안정 · 가독",use:"본문 · 긴 글 · 문서",src:"Google Fonts",url:"https://fonts.google.com/specimen/Gothic+A1"},
+  {n:"페이퍼로지",e:"Paperlogy",css:null,w:"9단",js:-15,mood:"묵직 · 존재감 · PPT",use:"발표 · PPT · 제목",src:"이주임 X 김도균",url:"https://noonnu.cc/font_page/1621",pick:true},
+  {n:"에이투지체",e:"A2Z",css:null,w:"9단",js:0,mood:"도회적 · 기하 · 현대",use:"PPT · 문서 · 타이틀(확장성↑)",src:"오토노머스",url:"https://noonnu.cc/font_page/1585",pick:true},
+  {n:"원티드 산스",e:"Wanted Sans",css:'"Wanted Sans","Wanted Sans Variable"',w:"7단",js:-20,mood:"모던 · 깔끔",use:"UI · 브랜딩",src:"원티드랩",url:"https://github.com/wanteddev/wanted-sans"},
+  {n:"민산스",e:"Min Sans",css:null,w:"9단",js:-10,mood:"직선 · 균형 · 담백",use:"다국어 글꼴",src:"김진성",url:"https://noonnu.cc/font_page/1770"},
+  {n:"아스타산스",e:"Asta Sans",css:null,w:"6단",js:-12,mood:"모던 · 정갈",use:"UI · 웹 · 앱 · 본문",src:"42dot",url:"https://github.com/42dot/AstaSans"},
+];
+
+const sample = "새벽을 여는 사람들";
+const sampleSmall = "가나다라마바사 · ABCDEфонт 0123 — 실제 이 폰트로 보이는 미리보기입니다.";
+
+const el = document.getElementById('cards');
+el.innerHTML = fonts.map((f,i)=>{
+  const ff = f.css ? f.css+',"Pretendard",sans-serif' : '"Pretendard",sans-serif';
+  const ls = (f.js/1000).toFixed(3)+'em';
+  const jsLabel = f.js===0 ? "0 (기본)" : f.js;
+  const fallbackNote = f.css ? "" : ' <span style="color:var(--dim);font-size:12px">(웹 미리보기 미지원 — 다운로드해 확인)</span>';
+  return `
+  <div class="card${f.pick?' pick':''}">
+    <div class="card-head">
+      <span class="idx">${String(i+1).padStart(2,'0')}</span>
+      <span class="fname">${f.n}</span>
+      <span class="feng">${f.e}${fallbackNote}</span>
+    </div>
+    <div class="preview" style="font-family:${ff};letter-spacing:${ls}">
+      ${sample}
+      <span class="small" style="font-family:${ff};letter-spacing:${ls}">${sampleSmall}</span>
+    </div>
+    <div class="meta">
+      <div><div class="k">굵기</div><div class="v">${f.w}</div></div>
+      <div><div class="k">자간</div><div class="v">${jsLabel}</div></div>
+      <div><div class="k">무드</div><div class="v tag">${f.mood}</div></div>
+      <div><div class="k">추천 사용처</div><div class="v tag">${f.use}</div></div>
+    </div>
+    <div class="card-foot">
+      <span class="src">배포 · <b>${f.src}</b></span>
+      <a class="dl" href="${f.url}" target="_blank" rel="noopener">${dlIcon} 다운로드</a>
+    </div>
+  </div>`;
+}).join('');
+</script>
+</body>
+</html>

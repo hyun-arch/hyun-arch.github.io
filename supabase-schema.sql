@@ -75,6 +75,29 @@ create policy "carousels public insert" on public.carousels for insert with chec
 create policy "carousels public delete" on public.carousels for delete using (true);
 
 -- ────────────────────────────────────────────────────────────
+-- 6) 활동 로그 테이블 (events) — "지하 엔진실"
+--    페이지 열람·몰입 세션·시계 사용 등 모든 활동이 시간순으로 쌓인다.
+--    밤마다 종합하고 아침 5시 보고에 반영하는 데이터 원천.
+create table if not exists public.events (
+  id          uuid        primary key default gen_random_uuid(),
+  type        text        not null,                       -- page_view | flow_session | clock_open ...
+  payload     jsonb       not null default '{}'::jsonb,    -- 활동별 부가정보
+  occurred_at timestamptz not null default now(),
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists events_occurred_idx on public.events (occurred_at desc);
+create index if not exists events_type_idx      on public.events (type);
+
+alter table public.events enable row level security;
+
+drop policy if exists "events public read"   on public.events;
+drop policy if exists "events public insert" on public.events;
+
+create policy "events public read"   on public.events for select using (true);
+create policy "events public insert" on public.events for insert with check (true);
+
+-- ────────────────────────────────────────────────────────────
 -- (선택) 쓰기 보호까지 원하면: 위 insert/update/delete 정책을 지우고
 --   create policy "posts auth write" on public.posts
 --     for all to authenticated using (true) with check (true);

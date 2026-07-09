@@ -69,3 +69,23 @@ export async function sbCarouselDelete(id) {
     headers: baseHeaders(),
   });
 }
+
+// ── 활동 로그 (events 테이블) — "지하 엔진실" ─────────────────
+// 모든 활동(페이지 열람·몰입 세션·시계 사용 등)이 여기에 시간순으로 쌓인다.
+// 밤마다 종합하고 아침 5시 보고에 반영하는 데이터 원천.
+export async function sbEventInsert(row) {
+  const out = await req(rest('events'), {
+    method: 'POST',
+    headers: { ...baseHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify(row),
+  });
+  return Array.isArray(out) ? out[0] : out;
+}
+
+// 기간/종류로 조회 (기본: 최근 200건). since = ISO 문자열.
+export async function sbEventList({ type, since, limit = 200 } = {}) {
+  let q = `events?select=*&order=occurred_at.desc&limit=${limit}`;
+  if (type) q += `&type=eq.${encodeURIComponent(type)}`;
+  if (since) q += `&occurred_at=gte.${encodeURIComponent(since)}`;
+  return req(rest(q), { headers: baseHeaders() });
+}

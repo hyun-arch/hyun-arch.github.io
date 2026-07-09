@@ -223,8 +223,11 @@ import Base from '../layouts/Base.astro';
             }
           }
           var min=Math.max(1, Math.round(sec/60));
-          var ss=get('sessions',[]); ss.push({focus:get('focus','')||'몰입', sec:sec, min:min, at:Date.now()});
+          var focusName=get('focus','')||'몰입';
+          var ss=get('sessions',[]); ss.push({focus:focusName, sec:sec, min:min, at:Date.now()});
           set('sessions',ss); localStorage.removeItem(K+'start'); localStorage.removeItem(K+'focus');
+          // 지하 엔진실 적재 — 완료된 몰입 세션을 events 테이블에 쌓는다
+          if(window.aramLog){ window.aramLog('flow_session', {focus:focusName, minutes:min, seconds:sec}); }
         }
         syncUI(); renderStats();
       });
