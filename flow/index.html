@@ -1,0 +1,161 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>몰입 · Flow · Aramirror</title><meta name="description" content="AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경."><meta name="theme-color" content="#ffffff"><!-- OG / 공유카드 (자동생성 이미지) --><meta property="og:type" content="website"><meta property="og:site_name" content="Aramirror"><meta property="og:title" content="몰입 · Flow"><meta property="og:description" content="AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경."><meta property="og:url" content="https://hyun-arch.github.io/flow"><meta property="og:image" content="https://hyun-arch.github.io/og/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="몰입 · Flow"><meta name="twitter:description" content="AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경."><meta name="twitter:image" content="https://hyun-arch.github.io/og/home.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="/_astro/admin.B3QSDTNE.css">
+<style>.flow-card{text-align:center;padding:32px 24px;margin-top:32px}.flow-card input{width:100%;max-width:420px;margin:0 auto;display:block;border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:1rem;font-family:inherit;outline:none;text-align:center;color:var(--fg)}.flow-card input:focus{border-color:var(--fg)}.timer{font-size:3.4rem;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:22px 0;color:var(--fg)}.timer.idle{color:var(--line)}.flow-btn{border:0;border-radius:999px;background:var(--fg);color:#fff;font-size:1rem;font-weight:600;padding:13px 30px;cursor:pointer;font-family:inherit;transition:opacity .15s ease}.flow-btn:hover{opacity:.85}.flow-btn.stop{background:#b23c3c}.flow-log{list-style:none;padding:0;margin:0}.flow-log li{display:flex;gap:16px;align-items:baseline;border-top:1px solid var(--line-soft);padding:16px 4px}.flow-log li:last-child{border-bottom:1px solid var(--line-soft)}.flow-log .fl-focus{font-weight:600;flex:1}.flow-log .fl-min{font-weight:700;font-variant-numeric:tabular-nums}.flow-log .fl-ago{color:var(--muted);font-size:.85rem}.flow-log .fl-del{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.05rem;line-height:1;padding:2px 4px;opacity:.45;transition:opacity .15s ease,color .15s ease}.flow-log .fl-del:hover{opacity:1;color:#b23c3c}.flow-empty{color:var(--muted);padding:20px 4px}.goal-presets{display:flex;gap:8px;justify-content:center;margin:18px 0 4px}.goal-btn{border:1px solid var(--line);background:none;color:var(--muted);border-radius:999px;padding:7px 16px;font-size:.9rem;font-family:inherit;cursor:pointer;transition:border-color .15s ease,color .15s ease}.goal-btn:hover{border-color:var(--fg);color:var(--fg)}.goal-btn.active{border-color:var(--fg);color:var(--fg);font-weight:600}.goal-status{min-height:1.2em;font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:6px}.goal-status.reached{color:var(--fg);font-weight:600}.goal-bar{max-width:420px;margin:0 auto 18px;height:5px;border-radius:999px;background:var(--line-soft);overflow:hidden}.goal-bar span{display:block;height:100%;width:0%;background:var(--fg);border-radius:999px;transition:width .6s ease}.goal-bar.reached span{background:#3c8f5b}.flow-week{width:100%;border-collapse:collapse}.flow-week td{border-top:1px solid var(--line-soft);padding:14px 4px;font-size:.95rem}.flow-week tr:last-child td{border-bottom:1px solid var(--line-soft)}.flow-week .fw-focus{font-weight:600}.flow-week .fw-min{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}.flow-week .flow-empty td{color:var(--muted)}@media (max-width:680px){.timer{font-size:2.8rem}}
+</style><script type="module" src="/_astro/hoisted.Wq2bQHzn.js"></script></head> <body> <nav class="nav"> <div class="wrap"> <a class="brand" href="/">Aramirror<span class="dot">.</span></a> <div class="links"> <a href="/hq" class="nav-hq">총괄실</a> <a href="/mirror">전체 지도</a> <a href="/wall">생각의 벽</a> <a href="/build-logs">Build Logs</a> <a href="/writings">글</a> <a href="/board">게시판</a> <a href="/flow">몰입 · Flow</a> <a href="/studio">캐러셀</a> <a href="/publish">발행</a> </div> </div> </nav>  <section style="padding-top:72px"> <div class="wrap" style="max-width:720px"> <p class="section-kicker">몰입 · Flow</p> <h2>시간을 흘려보내지 않고, 한 방울씩</h2> <p class="lead">삶·생각·호흡이 하나로 모이는 시간. 그 한 방울들이 쌓여 나만의 힘이 된다.</p> <div class="card flow-card"> <input id="focus" placeholder="무엇에 몰입할까요? (예: 새벽 책 사색)" autocomplete="off"> <div class="goal-presets" id="goal-presets"> <button type="button" class="goal-btn" data-goal="25">25분</button> <button type="button" class="goal-btn" data-goal="50">50분</button> <button type="button" class="goal-btn active" data-goal="0">무제한</button> </div> <div class="timer" id="timer">00:00:00</div> <div class="goal-status" id="goal-status"></div> <div class="goal-bar" id="goal-bar" style="display:none"><span id="goal-bar-fill"></span></div> <button id="toggle" class="flow-btn">▶ 몰입 시작</button> </div> <div class="stats" style="margin-top:36px"> <div class="stat"><div class="v" id="s-today">0분</div><div class="l">오늘 몰입</div></div> <div class="stat"><div class="v" id="s-total">0분</div><div class="l">쌓인 몰입(전체)</div></div> <div class="stat"><div class="v" id="s-count">0</div><div class="l">몰입 세션</div></div> </div> <h3 style="margin:48px 0 10px;font-size:1.15rem;letter-spacing:-0.02em">집중 대상별 주간 합계</h3> <table class="flow-week"><tbody id="week-body"></tbody></table> <h3 style="margin:48px 0 10px;font-size:1.15rem;letter-spacing:-0.02em">몰입 기록</h3> <ul id="log" class="flow-log"></ul> <p style="margin-top:40px;color:var(--muted);font-size:0.92rem">
+몰입이 무엇인지에 대한 글 →
+<a href="/build-logs/02-flow" style="color:var(--fg);text-decoration:underline;text-underline-offset:3px">#02 Flow — 몰입, 그리고 알을 깨는 새</a> </p> </div> </section>  <script>
+    (function(){
+      var K='aramflow.';
+      function get(k,d){ try{ var v=localStorage.getItem(K+k); return v==null?d:JSON.parse(v);}catch(e){return d;} }
+      function set(k,v){ localStorage.setItem(K+k, JSON.stringify(v)); }
+      // 처음이면 예시 몇 개로 채워 살아있게
+      if(!get('seeded',false)){
+        set('sessions',[
+          {focus:'아람휴비스 OS 설계 몰입', min:95, at:Date.now()-9*3600000},
+          {focus:'새벽 책 사색 (몰입·데미안)', min:40, at:Date.now()-5.5*3600000}
+        ]); set('seeded',true);
+      }
+      function localDay(t){ var d=new Date(t); function p(n){return (n<10?'0':'')+n;} return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+      function fmtMin(m){ m=Math.round(m); var h=Math.floor(m/60), mm=m%60; return h? h+'시간 '+mm+'분' : mm+'분'; }
+      // 세션 1건의 분(minutes) — 초 단위(sec)가 있으면 그걸로, 옛 기록은 min 사용
+      function sessMin(x){ return x.sec!=null ? x.sec/60 : (x.min||0); }
+      function ago(t){ var s=(Date.now()-t)/1000; if(s<60)return'방금'; if(s<3600)return Math.floor(s/60)+'분 전'; if(s<86400)return Math.floor(s/3600)+'시간 전'; return Math.floor(s/86400)+'일 전'; }
+      function pad(n){ return (n<10?'0':'')+n; }
+
+      var focusEl=document.getElementById('focus'), timerEl=document.getElementById('timer'),
+          btn=document.getElementById('toggle'), logEl=document.getElementById('log'),
+          sToday=document.getElementById('s-today'), sTotal=document.getElementById('s-total'), sCount=document.getElementById('s-count'),
+          weekBody=document.getElementById('week-body'),
+          presetsEl=document.getElementById('goal-presets'), goalStatus=document.getElementById('goal-status'),
+          goalBar=document.getElementById('goal-bar'), goalFill=document.getElementById('goal-bar-fill');
+      var tick=null;
+
+      // 이번 주(월요일 시작, 로컬 KST)의 시작 시각
+      function weekStart(){
+        var d=new Date(); d.setHours(0,0,0,0);
+        var dow=(d.getDay()+6)%7; // 월=0 … 일=6
+        d.setDate(d.getDate()-dow); return d.getTime();
+      }
+      // 목표시간(분): 0=무제한. 프리셋과 함께 localStorage에 저장(기존 스키마에 키 추가만)
+      var goalMin = get('goal', 0);
+      function setActivePreset(){
+        var bs=presetsEl.querySelectorAll('.goal-btn');
+        for(var i=0;i<bs.length;i++){ bs[i].classList.toggle('active', Number(bs[i].getAttribute('data-goal'))===goalMin); }
+      }
+      presetsEl.addEventListener('click', function(e){
+        var b=e.target.closest ? e.target.closest('.goal-btn') : null;
+        if(!b) return;
+        goalMin=Number(b.getAttribute('data-goal')); set('goal',goalMin);
+        setActivePreset(); showTime();
+      });
+
+      function renderStats(){
+        var ss=get('sessions',[]); var today=localDay(Date.now());
+        var t=0, all=0; ss.forEach(function(x){ var m=sessMin(x); all+=m; if(localDay(x.at)===today) t+=m; });
+        sToday.textContent=fmtMin(t); sTotal.textContent=fmtMin(all); sCount.textContent=ss.length;
+        var sorted=ss.slice().sort(function(a,b){return b.at-a.at;});
+        logEl.innerHTML = sorted.length ? sorted.map(function(x){
+          return '<li><span class="fl-focus">'+esc(x.focus)+'</span><span class="fl-min">'+fmtMin(sessMin(x))+'</span><span class="fl-ago">· '+ago(x.at)+'</span>'+
+            '<button class="fl-del" data-at="'+x.at+'" title="이 기록 삭제" aria-label="이 기록 삭제">×</button></li>';
+        }).join('') : '<li class="flow-empty">첫 몰입을 시작해보세요.</li>';
+        renderWeek(ss);
+      }
+      // 집중 대상(focus 텍스트)별 이번 주 누적 분
+      function renderWeek(ss){
+        var ws=weekStart(); var map={}, order=[];
+        ss.forEach(function(x){
+          if(x.at<ws) return;
+          var f=(x.focus||'몰입');
+          if(map[f]==null){ map[f]=0; order.push(f); }
+          map[f]+=sessMin(x);
+        });
+        order.sort(function(a,b){ return map[b]-map[a]; });
+        weekBody.innerHTML = order.length ? order.map(function(f){
+          return '<tr><td class="fw-focus">'+esc(f)+'</td><td class="fw-min">'+fmtMin(map[f])+'</td></tr>';
+        }).join('') : '<tr class="flow-empty"><td colspan="2">이번 주 몰입 기록이 아직 없어요.</td></tr>';
+      }
+      // 기록 삭제 (오염 세션 제거) — 이벤트 위임
+      logEl.addEventListener('click', function(e){
+        var b=e.target.closest ? e.target.closest('.fl-del') : null;
+        if(!b) return;
+        var at=Number(b.getAttribute('data-at'));
+        var ss=get('sessions',[]).filter(function(x){ return x.at!==at; });
+        set('sessions',ss); renderStats();
+      });
+      function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+
+      function showTime(){
+        var start=get('start',null);
+        if(start==null){
+          timerEl.textContent='00:00:00'; timerEl.classList.add('idle');
+          renderGoal(0,false); return;
+        }
+        timerEl.classList.remove('idle');
+        var s=Math.floor((Date.now()-start)/1000);
+        timerEl.textContent=pad(Math.floor(s/3600))+':'+pad(Math.floor(s/60)%60)+':'+pad(s%60);
+        renderGoal(s,true);
+      }
+      // 목표 진행바/상태 (소리 없이 색·텍스트로만 알림)
+      function renderGoal(elapsedSec, running){
+        if(!goalMin || !running){
+          goalBar.style.display='none'; goalBar.classList.remove('reached');
+          goalStatus.classList.remove('reached'); goalStatus.textContent='';
+          return;
+        }
+        var goalSec=goalMin*60, left=goalSec-elapsedSec;
+        var pct=Math.min(100, Math.round(elapsedSec/goalSec*100));
+        goalBar.style.display='block'; goalFill.style.width=pct+'%';
+        if(left<=0){
+          goalBar.classList.add('reached'); goalStatus.classList.add('reached');
+          goalStatus.textContent='🌱 목표 '+goalMin+'분 달성! 마쳐도 좋고, 더 흘러가도 좋아요.';
+        } else {
+          goalBar.classList.remove('reached'); goalStatus.classList.remove('reached');
+          var lm=Math.floor(left/60), lsx=left%60;
+          goalStatus.textContent='목표 '+goalMin+'분까지 '+lm+':'+pad(lsx)+' 남음';
+        }
+      }
+      function syncUI(){
+        var running=get('start',null)!=null;
+        btn.textContent = running ? '■ 몰입 마치기' : '▶ 몰입 시작';
+        btn.classList.toggle('stop', running);
+        focusEl.style.display = running ? 'none' : 'block';
+        if(running){ if(!tick){ tick=setInterval(showTime,1000); } }
+        else { if(tick){ clearInterval(tick); tick=null; } }
+        showTime();
+      }
+      btn.addEventListener('click', function(){
+        var start=get('start',null);
+        if(start==null){ set('focus', focusEl.value.trim()); set('start', Date.now()); }
+        else {
+          var sec=Math.round((Date.now()-start)/1000);
+          // 과도 세션(12시간 초과)은 "마치기"를 깜빡한 경우가 대부분 → 확인 후에만 기록
+          if(sec>12*3600){
+            var hrs=(sec/3600).toFixed(1);
+            if(!confirm(hrs+'시간짜리 몰입이에요. 타이머를 깜빡하신 것 같으면 [취소]하면 기록 없이 접혀요.\n\n[확인]을 누르면 그대로 기록합니다.')){
+              localStorage.removeItem(K+'start'); localStorage.removeItem(K+'focus'); syncUI(); renderStats(); return;
+            }
+          }
+          var min=Math.max(1, Math.round(sec/60));
+          var ss=get('sessions',[]); ss.push({focus:get('focus','')||'몰입', sec:sec, min:min, at:Date.now()});
+          set('sessions',ss); localStorage.removeItem(K+'start'); localStorage.removeItem(K+'focus');
+        }
+        syncUI(); renderStats();
+      });
+      // 여러 탭 동기화 — 다른 탭에서 기록/타이머/목표가 바뀌면 이 탭도 갱신
+      window.addEventListener('storage', function(e){
+        if(!e.key || e.key.indexOf(K)!==0) return;
+        var sub=e.key.slice(K.length);
+        if(sub==='goal'){ goalMin=get('goal',0); setActivePreset(); }
+        if(sub==='sessions'){ renderStats(); }
+        if(sub==='start'||sub==='focus'){ syncUI(); }
+        showTime();
+      });
+
+      var savedFocus=get('focus','');
+      if(savedFocus && get('start',null)==null) focusEl.value=savedFocus;
+      setActivePreset();
+      renderStats(); syncUI();
+    })();
+  </script>  <footer> <div class="wrap"> <div class="foot-links"> <a href="/hq">총괄실</a> <a href="/order">기획주문서</a> <a href="/eval">평가시트</a> <a href="/how">작동 방식</a> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> </div>
+Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br>
+© 2026 Aram Huvis · built with Claude Code
+</div> </footer>   </body> </html>

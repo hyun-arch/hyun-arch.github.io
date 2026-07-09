@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>#04 게시판을 실서버로 — localStorage에서 Supabase로 승격하다 · Aramirror</title><meta name="description" content="#03에서 열어둔 승격의 문을 실제로 통과한 기록. 스토어 인터페이스는 그대로 두고 저장소만 갈아끼워, 정적 사이트 위 게시판을 다중 사용자 서버 CRUD로 올렸다."><meta name="theme-color" content="#ffffff"><!-- OG / 공유카드 (자동생성 이미지) --><meta property="og:type" content="website"><meta property="og:site_name" content="Aramirror"><meta property="og:title" content="#04 게시판을 실서버로 — localStorage에서 Supabase로 승격하다"><meta property="og:description" content="#03에서 열어둔 승격의 문을 실제로 통과한 기록. 스토어 인터페이스는 그대로 두고 저장소만 갈아끼워, 정적 사이트 위 게시판을 다중 사용자 서버 CRUD로 올렸다."><meta property="og:url" content="https://hyun-arch.github.io/build-logs/04-supabase-crud"><meta property="og:image" content="https://hyun-arch.github.io/og/build-logs/04-supabase-crud.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="#04 게시판을 실서버로 — localStorage에서 Supabase로 승격하다"><meta name="twitter:description" content="#03에서 열어둔 승격의 문을 실제로 통과한 기록. 스토어 인터페이스는 그대로 두고 저장소만 갈아끼워, 정적 사이트 위 게시판을 다중 사용자 서버 CRUD로 올렸다."><meta name="twitter:image" content="https://hyun-arch.github.io/og/build-logs/04-supabase-crud.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="/_astro/admin.B3QSDTNE.css"><script type="module" src="/_astro/hoisted.Wq2bQHzn.js"></script></head> <body> <nav class="nav"> <div class="wrap"> <a class="brand" href="/">Aramirror<span class="dot">.</span></a> <div class="links"> <a href="/hq" class="nav-hq">총괄실</a> <a href="/mirror">전체 지도</a> <a href="/wall">생각의 벽</a> <a href="/build-logs">Build Logs</a> <a href="/writings">글</a> <a href="/board">게시판</a> <a href="/flow">몰입 · Flow</a> <a href="/studio">캐러셀</a> <a href="/publish">발행</a> </div> </div> </nav> <main class="wrap prose"><h1 id="04-게시판을-실서버로">#04 게시판을 실서버로</h1>
+<p class="meta">2026-07-07 · Build Log</p>
+<blockquote>
+<p>한 번 연결이 힘들지, 그다음은 쭉 편해진다. #03에서 문만 열어뒀던 그 연결을, 오늘 실제로 통과했다.</p>
+</blockquote>
+<h2 id="03이-남긴-숙제">#03이 남긴 숙제</h2>
+<p>지난 기록에서 게시판을 브라우저 스토어(localStorage)로 먼저 세우고 이렇게 적었다.</p>
+<blockquote>
+<p>“스토어 인터페이스(<code>getPosts / createPost / updatePost / deletePost</code>)는 이미 그 승격을 염두에 두고 잘라두었다.”</p>
+</blockquote>
+<p>경계를 미리 그어두면, 나중에 저장소만 갈아끼우면 된다 — 그 약속을 지킬 차례였다.</p>
+<h2 id="무엇을-바꿨나">무엇을 바꿨나</h2>
+<p>UI는 한 줄도 손대지 않았다. 데이터 레이어 뒤편만 갈아끼웠다.</p>
+<ul>
+<li><strong>저장소 승격</strong> — <code>localStorage</code> → <strong>Supabase(Postgres)</strong>. 이제 한 사람의 브라우저가 아니라, 어디서 접속하든 같은 글이 보인다.</li>
+<li><strong>이중 모드(dual mode)</strong> — Supabase 키가 있으면 서버로, 없으면 예전처럼 로컬 스토어로 자동 폴백. 키가 빠져도 사이트가 죽지 않는다.</li>
+<li><strong>인터페이스는 그대로</strong> — <code>getPosts / createPost / updatePost / deletePost</code> 시그니처를 유지했다. #03에서 잘라둔 경계 덕분에, 관리자 콘솔과 게시판 페이지는 자기 뒤편이 바뀐 걸 모른다.</li>
+</ul>
+<p>이게 #03에서 “저장소만 갈아끼우면 된다”고 한 말의 실물이다. 재활용의 값을 오늘 정확히 받아냈다.</p>
+<h2 id="왜-이중-모드인가">왜 이중 모드인가</h2>
+<p>정적 사이트(GitHub Pages)는 서버가 없다. 그래서 키를 코드에 박지 않고 설정값으로 주입하고, 없으면 로컬로 떨어지게 했다. 덕분에</p>
+<ul>
+<li>키를 아직 안 넣은 상태에서도 사이트는 정상 동작하고,</li>
+<li>키를 넣는 순간 같은 콘솔이 그대로 <strong>다중 사용자 실서버 CRUD</strong>가 된다.</li>
+</ul>
+<p>배포와 실서버 사이의 문턱을 없앤 셈이다.</p>
+<h2 id="남은-메모">남은 메모</h2>
+<ul>
+<li>스키마(<code>supabase-schema.sql</code>)는 열려 있다. Supabase 프로젝트 URL·anon key만 설정에 채우면 승격이 즉시 완료된다.</li>
+<li>원천은 여전히 마크다운. 렌더링에 기대지 않는 구조를 계속 지킨다.</li>
+</ul>
+<blockquote>
+<p>경계를 잘 그어두면, 성장은 갈아끼우기가 된다. 다시 짓는 게 아니라.</p>
+</blockquote>
+<hr>
+<h2 id="english">English</h2>
+<h1 id="04-the-board-goes-server-side">#04 The Board Goes Server-Side</h1>
+<blockquote>
+<p>The first connection is the hard one; everything after is easy. In #03 I only left the door open — today I actually walked through it.</p>
+</blockquote>
+<h3 id="the-homework-03-left">The homework #03 left</h3>
+<p>Last time I stood the board up on browser storage (localStorage) and wrote:</p>
+<blockquote>
+<p>“The store interface (<code>getPosts / createPost / updatePost / deletePost</code>) was already cut with this promotion in mind.”</p>
+</blockquote>
+<p>Draw the boundary early, and later you only have to swap the storage. It was time to keep that promise.</p>
+<h3 id="what-changed">What changed</h3>
+<p>I didn’t touch a single line of UI. I only swapped what sits behind the data layer.</p>
+<ul>
+<li><strong>Storage promotion</strong> — <code>localStorage</code> → <strong>Supabase (Postgres)</strong>. Now it isn’t one person’s browser; the same posts show up wherever you connect from.</li>
+<li><strong>Dual mode</strong> — with Supabase keys it runs server-side; without them it falls back to the old local store automatically. Miss the keys and the site still doesn’t die.</li>
+<li><strong>Same interface</strong> — the <code>getPosts / createPost / updatePost / deletePost</code> signatures held. Thanks to the boundary cut in #03, the admin console and board pages have no idea their backend moved.</li>
+</ul>
+<p>This is the physical proof of “just swap the storage” from #03. Today the value of reuse paid out exactly.</p>
+<h3 id="why-dual-mode">Why dual mode</h3>
+<p>A static site (GitHub Pages) has no server. So I inject the keys as config instead of hard-coding them, and fall back to local when they’re absent. Because of that:</p>
+<ul>
+<li>the site works fine even before any keys are set, and</li>
+<li>the moment keys go in, the very same console becomes <strong>multi-user, real-server CRUD</strong>.</li>
+</ul>
+<p>The threshold between “deployed” and “real server” is gone.</p>
+<h3 id="notes-left">Notes left</h3>
+<ul>
+<li>The schema (<code>supabase-schema.sql</code>) is open. Fill the Supabase project URL and anon key into config, and the promotion completes instantly.</li>
+<li>The source is still Markdown. I keep the structure from leaning on rendering.</li>
+</ul>
+<blockquote>
+<p>Draw the boundary well, and growth becomes a swap — not a rebuild.</p>
+</blockquote></main> <footer> <div class="wrap"> <div class="foot-links"> <a href="/hq">총괄실</a> <a href="/order">기획주문서</a> <a href="/eval">평가시트</a> <a href="/how">작동 방식</a> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> </div>
+Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br>
+© 2026 Aram Huvis · built with Claude Code
+</div> </footer>   </body> </html>

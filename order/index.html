@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>기획주문서 — 사장님 전체 프로젝트</title>
+<meta name="description" content="사장님과 함께한 모든 프로젝트를 한 장에. 무엇·왜·지금 상태·다음 할 일·확정 필요." />
+<style>
+  :root{
+    --bg:#0a0b0f; --bg2:#12141b; --card:#161922; --line:#242938;
+    --ink:#e8eaf0; --dim:#98a0b3; --faint:#6b7385;
+    --coral:#ff6b5e; --coral2:#ff8a7a; --gold:#f5c451;
+    --green:#54d08a; --amber:#f2b34a; --red:#ff6b6b; --blue:#5aa9ff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px 80px}
+  header{padding:40px 18px 24px;max-width:760px;margin:0 auto}
+  .kicker{color:var(--coral);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+  h1{font-size:30px;line-height:1.25;margin:10px 0 8px;font-weight:800;
+    background:linear-gradient(120deg,#fff,#ffb8ae);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--dim);font-size:15px;margin:0}
+  .meta{color:var(--faint);font-size:12.5px;margin-top:10px}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0 6px;font-size:12.5px;color:var(--dim)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .g{background:var(--green)} .a{background:var(--amber)} .r{background:var(--red)}
+
+  section.group{margin-top:30px}
+  .ghead{display:flex;align-items:baseline;gap:10px;margin:0 0 6px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .gnum{color:var(--coral);font-weight:800;font-size:15px}
+  .gtitle{font-size:18px;font-weight:800;margin:0}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin-top:12px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--faint)}
+  .card.s-g::before{background:var(--green)} .card.s-a::before{background:var(--amber)} .card.s-r::before{background:var(--red)}
+  .ctop{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+  .ctitle{font-weight:800;font-size:15.5px}
+  .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .badge.g{color:var(--green);border-color:rgba(84,208,138,.35);background:rgba(84,208,138,.08)}
+  .badge.a{color:var(--amber);border-color:rgba(242,179,74,.35);background:rgba(242,179,74,.08)}
+  .badge.r{color:var(--red);border-color:rgba(255,107,107,.35);background:rgba(255,107,107,.08)}
+  .row{display:flex;gap:8px;font-size:14px;margin-top:6px}
+  .row .k{color:var(--faint);flex:0 0 auto;font-weight:700;font-size:12.5px;margin-top:1px;min-width:34px}
+  .row .v{color:var(--ink)} .row .v.dim{color:var(--dim)}
+  .next{color:var(--coral2)!important;font-weight:600}
+  .need{color:var(--gold)!important;font-weight:700}
+
+  .call{margin-top:30px;background:linear-gradient(180deg,rgba(255,107,94,.10),rgba(255,107,94,.03));
+    border:1px solid rgba(255,107,94,.28);border-radius:16px;padding:18px}
+  .call h3{margin:0 0 10px;font-size:16px;color:var(--coral2)}
+  .call ol{margin:0;padding-left:20px} .call li{margin:7px 0;font-size:14.5px}
+  .greenbox{margin-top:14px;border:1px solid rgba(84,208,138,.3);background:rgba(84,208,138,.05);
+    border-radius:16px;padding:16px 18px}
+  .greenbox h3{margin:0 0 6px;font-size:15px;color:var(--green)}
+  .greenbox p{margin:0;color:var(--dim);font-size:14px}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center}
+  .pill-nav{position:sticky;top:0;z-index:5;background:rgba(10,11,15,.85);backdrop-filter:blur(10px);
+    display:flex;gap:8px;overflow-x:auto;padding:12px 18px;margin:0 -18px;border-bottom:1px solid var(--line)}
+  .pill-nav a{flex:0 0 auto;font-size:12.5px;color:var(--dim);text-decoration:none;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--bg2)}
+  .pill-nav a:active{color:var(--coral)}
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:50;display:flex;gap:6px;overflow-x:auto;padding:9px 14px;background:rgba(8,9,13,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid #232838;font-family:-apple-system,'Malgun Gothic','맑은 고딕',sans-serif">
+  <a href="/hq/" style="flex:0 0 auto;font-size:12.5px;font-weight:700;text-decoration:none;padding:6px 11px;border-radius:999px;white-space:nowrap;color:#98a0b3;border:1px solid #232838;background:#10121a">🎛 총괄실</a>
+  <a href="/order/" style="flex:0 0 auto;font-size:12.5px;font-weight:700;text-decoration:none;padding:6px 11px;border-radius:999px;white-space:nowrap;color:#fff;border:1px solid transparent;background:linear-gradient(120deg,#ff6b5e,#ff8a7a)">📋 주문서</a>
+  <a href="/eval/" style="flex:0 0 auto;font-size:12.5px;font-weight:700;text-decoration:none;padding:6px 11px;border-radius:999px;white-space:nowrap;color:#98a0b3;border:1px solid #232838;background:#10121a">📝 평가</a>
+  <a href="/admin/" style="flex:0 0 auto;font-size:12.5px;font-weight:700;text-decoration:none;padding:6px 11px;border-radius:999px;white-space:nowrap;color:#98a0b3;border:1px solid #232838;background:#10121a">🛠 관리자</a>
+  <a href="/" style="flex:0 0 auto;font-size:12.5px;font-weight:700;text-decoration:none;padding:6px 11px;border-radius:999px;white-space:nowrap;color:#98a0b3;border:1px solid #232838;background:#10121a">🪞 본체</a>
+</div>
+<header>
+  <div class="kicker">기획주문서 · ORDER SHEET</div>
+  <h1>사장님과 함께하는<br/>모든 프로젝트 한 장</h1>
+  <p class="sub">각 칸 = 무엇 · 왜 · 지금 상태 · 다음 할 일 · 확정 필요</p>
+  <div class="meta">업데이트 2026-07-09 · 아라미(클로드) · 사장님이 각 칸에 "이거 해" 한 줄만 달면 그대로 실행합니다.</div>
+  <div class="legend">
+    <span><i class="dot g"></i>완료</span>
+    <span><i class="dot a"></i>진행중</span>
+    <span><i class="dot r"></i>막힘/사장님 대기</span>
+  </div>
+</header>
+
+<nav class="pill-nav">
+  <a href="#g1">회사</a><a href="#g2">개인</a><a href="#g3">가족</a>
+  <a href="#g4">커뮤니티</a><a href="#g5">서비스</a><a href="#g6">인프라</a><a href="#call">막힌 것</a>
+</nav>
+
+<div class="wrap">
+
+  <section class="group" id="g1">
+    <div class="ghead"><span class="gnum">1</span><h2 class="gtitle">회사 (아람휴비스)</h2></div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">인사평가 시스템</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">왜</span><span class="v dim">"가치가 직급을 이긴다"를 실제 평가로 굴러가게</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">문서 6종 설계 완료. 웹앱은 다음 반기, 워크샵용 시트부터</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">워크샵용 평가 시트 1장 → 직원 피드백 → 웹앱 확정</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">금요일 워크샵 · 해커톤 · 워케이션</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">실행안·발표양식·슬라이드 템플릿 완성</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">최종 타임테이블 확정, 발표 슬라이드 내용 채우기</span></div>
+      <div class="row"><span class="k">확정</span><span class="v need">7/10 참석 인원·시간·장소</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">아람휴비스 OS (회사 운영체제)</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">ARAM OS로 개인+회사 통합(5도메인×3레이어). 아라미러 웹에 넣는 중</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">아라미러 페이지에 회사 OS 화면 붙이기</span></div>
+    </div>
+
+    <div class="card s-g">
+      <div class="ctop"><span class="ctitle">배포·데이터 파이프라인 표준</span><span class="badge g">완료</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">GitHub→Vercel→Supabase→테스트→재개발 표준 + 데이터 대장 완성</span></div>
+    </div>
+  </section>
+
+  <section class="group" id="g2">
+    <div class="ghead"><span class="gnum">2</span><h2 class="gtitle">나 (개인 브랜드 · 기록)</h2></div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">아라미러 웹 (aramirror)</span><span class="badge a">상시 고도화</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">gh-pages 라이브. 흑요석 다크 v2. 한/영 이중 포스팅</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">문서·CRM·캐러셀·배포 자동화 계속 고도화 (상시 지시)</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">아라미러 개인앱 (/me)</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">몰입타이머·저널·독서·목표 개인 OS 페이지 제작됨</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">기능 다듬기 + 아라미러 본체와 연결</span></div>
+    </div>
+
+    <div class="card s-g">
+      <div class="ctop"><span class="ctitle">미러맵 (비번 게이트)</span><span class="badge g">완료</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">비번 게이트로 어디서든 열림. 라이브 검증 완료</span></div>
+    </div>
+
+    <div class="card s-r">
+      <div class="ctop"><span class="ctitle">캐러셀 보관함 (스튜디오07)</span><span class="badge r">키 대기</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">코드·배포 완료. 사장님이 키만 주면 그 자리에서 마무리</span></div>
+      <div class="row"><span class="k">확정</span><span class="v need">Supabase URL + 키 (이것만 주시면 끝)</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">ARAM OS (개인 운영체제)</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">매일 기록→밤 정리→아침 리포트 루프. 아라미러 웹에 넣는 중</span></div>
+    </div>
+  </section>
+
+  <section class="group" id="g3">
+    <div class="ghead"><span class="gnum">3</span><h2 class="gtitle">가족</h2></div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">아빠와 아들 AI창업 30일 (체스게임)</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">주차별 문서 + 체스게임 기획서 + 매일 체크리스트 완성</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">매일 아들 맞춤 미션 제공</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">스폰지클럽 주차 과제</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">남 것 베끼지 않고 내 경험 1인칭으로. 매주 반복 적용</span></div>
+    </div>
+  </section>
+
+  <section class="group" id="g4">
+    <div class="ghead"><span class="gnum">4</span><h2 class="gtitle">커뮤니티 (스폰지클럽)</h2></div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">이기적멤버십 AX (가두리망→전환)</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">왜</span><span class="v dim">가두리망(풀)이 커질수록 전환(공유회·챌린지·워크숍·스폰지) 가능성↑</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">방법론+인프라 전체 문서화 완료. AX 흐름 정의됨</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">유입→풀→전환 단계별 실제 수치·채널 채우기</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">셸 통합알림 대응</span><span class="badge a">매일</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">슬랙 MCP 연결. 매일 답례 대상 새로 계산(오래된 명단 금지)</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">오늘자 답례 대상 재계산해서 알려드리기</span></div>
+    </div>
+
+    <div class="card s-g">
+      <div class="ctop"><span class="ctitle">스킬러스 추천 도구</span><span class="badge g">완료</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">맞춤 스킬 추천+자동설치+슬랙 후기 스킬로 설치됨</span></div>
+    </div>
+  </section>
+
+  <section class="group" id="g5">
+    <div class="ghead"><span class="gnum">5</span><h2 class="gtitle">서비스 제품</h2></div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">GTB 새벽 농구클럽 웹서비스</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">랜딩 + 정산계산기 완성</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">회원 DB(Supabase) 붙이기, 유저테스트</span></div>
+      <div class="row"><span class="k">확정</span><span class="v need">아라미러 메뉴의 /gtb 페이지 — 지울까요, 놔둘까요?</span></div>
+    </div>
+
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">INUPT 데일리 매칭</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">설치 불필요 단일 HTML 앱 제작. 대시보드 Vercel 배포</span></div>
+      <div class="row"><span class="k">다음</span><span class="v next">매칭 로직·데이터 붙이기, 실사용 테스트</span></div>
+    </div>
+  </section>
+
+  <section class="group" id="g6">
+    <div class="ghead"><span class="gnum">6</span><h2 class="gtitle">인프라 · 도구</h2></div>
+
+    <div class="card s-g">
+      <div class="ctop"><span class="ctitle">텔레그램 봇 채널 (@Arami_claude_bot)</span><span class="badge g">완료</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">Windows PC 상시 실행. 규칙: 무조건 답 먼저, 일 나중</span></div>
+    </div>
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">아침 5시 모닝리포트</span><span class="badge a">매일</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">cron 설정. 세션마다 재확인·재설정</span></div>
+    </div>
+    <div class="card s-g">
+      <div class="ctop"><span class="ctitle">PPT 자동 제작 파이프라인</span><span class="badge g">완료</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">HTML→헤드리스 PNG→python-pptx. 언제든 호출</span></div>
+    </div>
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">총괄실(/hq) Mission Control</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">뼈대 승인됨. 처리 큐 관리 중</span></div>
+    </div>
+    <div class="card s-a">
+      <div class="ctop"><span class="ctitle">AI와 대화하는 법 · 티로 연계</span><span class="badge a">진행</span></div>
+      <div class="row"><span class="k">상태</span><span class="v">문서 완성. 티로 회의록은 텍스트로 넘겨받는 방식</span></div>
+    </div>
+  </section>
+
+  <div class="call" id="call">
+    <h3>🔴 지금 사장님만 풀 수 있는 것</h3>
+    <ol>
+      <li><b>캐러셀 보관함</b> → Supabase URL + 키 (주시면 그 자리에서 마무리)</li>
+      <li><b>인사평가 / 워크샵</b> → 7/10 참석 인원·시간·장소</li>
+      <li><b>GTB /gtb 페이지</b> → 지울까요, 놔둘까요? 한 줄만</li>
+    </ol>
+  </div>
+
+  <div class="greenbox">
+    <h3>🟢 확인 없이 제가 계속 미는 것</h3>
+    <p>아라미러 상시 고도화 · 모닝리포트 · 셸 답례 계산 · 아들 미션 · 스폰지 과제</p>
+  </div>
+
+  <footer>
+    이 페이지가 <b>주문서</b>입니다. 각 칸 밑에 "이거 해" 한 줄만 달면 제가 그대로 실행하고 결과로 보고합니다.<br/>
+    aramirror · hyun-arch.github.io/order
+  </footer>
+</div>
+</body>
+</html>

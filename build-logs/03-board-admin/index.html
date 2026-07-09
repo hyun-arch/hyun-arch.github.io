@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>#03 게시판과 관리자 — KEY 연결 없이 CRUD를 세우다 · Aramirror</title><meta name="description" content="0704 이기적스폰지 공유회의 '② KEY 연결 → CRUD 게시판'을, 정적 사이트 위에서 클라이언트 스토어로 먼저 세우고 Supabase/Vercel 승격의 문만 열어둔 기록."><meta name="theme-color" content="#ffffff"><!-- OG / 공유카드 (자동생성 이미지) --><meta property="og:type" content="website"><meta property="og:site_name" content="Aramirror"><meta property="og:title" content="#03 게시판과 관리자 — KEY 연결 없이 CRUD를 세우다"><meta property="og:description" content="0704 이기적스폰지 공유회의 '② KEY 연결 → CRUD 게시판'을, 정적 사이트 위에서 클라이언트 스토어로 먼저 세우고 Supabase/Vercel 승격의 문만 열어둔 기록."><meta property="og:url" content="https://hyun-arch.github.io/build-logs/03-board-admin"><meta property="og:image" content="https://hyun-arch.github.io/og/build-logs/03-board-admin.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="#03 게시판과 관리자 — KEY 연결 없이 CRUD를 세우다"><meta name="twitter:description" content="0704 이기적스폰지 공유회의 '② KEY 연결 → CRUD 게시판'을, 정적 사이트 위에서 클라이언트 스토어로 먼저 세우고 Supabase/Vercel 승격의 문만 열어둔 기록."><meta name="twitter:image" content="https://hyun-arch.github.io/og/build-logs/03-board-admin.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="/_astro/admin.B3QSDTNE.css"><script type="module" src="/_astro/hoisted.Wq2bQHzn.js"></script></head> <body> <nav class="nav"> <div class="wrap"> <a class="brand" href="/">Aramirror<span class="dot">.</span></a> <div class="links"> <a href="/hq" class="nav-hq">총괄실</a> <a href="/mirror">전체 지도</a> <a href="/wall">생각의 벽</a> <a href="/build-logs">Build Logs</a> <a href="/writings">글</a> <a href="/board">게시판</a> <a href="/flow">몰입 · Flow</a> <a href="/studio">캐러셀</a> <a href="/publish">발행</a> </div> </div> </nav> <main class="wrap prose"><h1 id="03-게시판--관리자">#03 게시판 · 관리자</h1>
+<p class="meta">2026-07-04 · Build Log</p>
+<blockquote>
+<p>재활용이 자동화의 핵심이고, 그것을 형태로 굳힌 것이 스킬이다. 게시판도 마찬가지 — 한 번 세워두면 그다음은 쭉 재활용된다.</p>
+</blockquote>
+<h2 id="어디서-왔나--이기적스폰지-공유회">어디서 왔나 — 이기적스폰지 공유회</h2>
+<p>2026-07-04 에이든의 공유회 아젠다는 다섯이었다.</p>
+<ol>
+<li>기본 스킬</li>
+<li><strong>KEY 연결 → CRUD 게시판</strong></li>
+<li>딥인터뷰 + 기본 스킬</li>
+<li>씽킹노트(탐욕적으로 공부하기)</li>
+<li>서브에이전트와 동적 워크플로우</li>
+</ol>
+<p>두 번째가 곧장 아라미러에 필요한 것이었다. 공유회에선 <code>.env</code>에 KEY를 넣어 <strong>GitHub·Supabase·Vercel</strong>로 배선하고, 실제 어드민 콘솔(BASEBOARD — 대시보드·게시글·상태(공개)·처리(숨김/삭제))까지 만들었다. “한 번 연결이 힘들지, 그다음은 쭉 편해진다.”</p>
+<h2 id="무엇을-만들었나">무엇을 만들었나</h2>
+<p>아라미러는 GitHub Pages 정적 사이트다. 그래서 서버 DB 대신 <strong>브라우저 스토어(localStorage) + JSON 내보내기/가져오기</strong>로, 지금 당장 동작하는 CRUD를 먼저 세웠다.</p>
+<ul>
+<li><strong>게시판 <code>/board</code></strong> — 카테고리(생각·빌드로그·글·공유회·공지) 필터, 글 읽기. 공개된 글만 노출.</li>
+<li><strong>관리자 <code>/admin</code></strong> — 통계 대시보드, 글 <strong>생성·수정·삭제·게시/숨김</strong>, 웹페이지 상위 노출 관리, JSON 백업/복원, 암호 게이트.</li>
+<li><strong>웹페이지 상위 관리</strong> — 사이트 실제 라우트를 한 표에서 노출/숨김·메모로 관리.</li>
+</ul>
+<p>데이터 레이어(<code>src/scripts/store.js</code>)는 UI와 분리했다. 이 경계 덕분에 나중에 저장소만 갈아끼우면 된다.</p>
+<h2 id="승격의-문은-열어둔다">승격의 문은 열어둔다</h2>
+<p>지금은 로컬 스토어지만, 공유회 아젠다 ② 그대로 <code>.env</code> + Supabase + Vercel로 연결하면 이 콘솔이 그대로 <strong>다중 사용자 실서버 CRUD</strong>가 된다. 스토어 인터페이스(<code>getPosts / createPost / updatePost / deletePost</code>)는 이미 그 승격을 염두에 두고 잘라두었다.</p>
+<h2 id="남은-메모">남은 메모</h2>
+<ul>
+<li>이 문서를 정리하려고 공유회 스크린샷 32장을 <strong>서브에이전트로 병렬 MECE 정리</strong>시켰다. 공유회 5번(서브에이전트/동적 워크플로우)을 문서화 과정에서 그대로 써먹은 셈이다.</li>
+<li>마크다운을 원천 포맷으로 — 게시판 본문도 렌더링에 기대지 않는 구조로 남긴다.</li>
+</ul>
+<blockquote>
+<p>AI는 나를 대신하지 않는다. 게시판도 나를 대신 쓰지 않는다 — 내 기록이 자산이 되도록 비출 뿐이다.</p>
+</blockquote></main> <footer> <div class="wrap"> <div class="foot-links"> <a href="/hq">총괄실</a> <a href="/order">기획주문서</a> <a href="/eval">평가시트</a> <a href="/how">작동 방식</a> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> </div>
+Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br>
+© 2026 Aram Huvis · built with Claude Code
+</div> </footer>   </body> </html>

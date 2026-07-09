@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>총괄실 · Mission Control</title>
+<meta name="description" content="사장님 전용 관제실 — 모든 프로젝트·지표·자동화·바로가기를 폰 한 화면에서." />
+<style>
+  :root{
+    --bg:#08090d; --bg2:#10121a; --card:#151824; --card2:#1a1e2b; --line:#232838;
+    --ink:#e9ebf2; --dim:#98a0b3; --faint:#6b7385;
+    --coral:#ff6b5e; --coral2:#ff8a7a; --gold:#f5c451;
+    --green:#54d08a; --amber:#f2b34a; --red:#ff6b6b; --blue:#5aa9ff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:
+    radial-gradient(1200px 600px at 50% -10%,rgba(255,107,94,.10),transparent 60%),var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px 90px}
+  header{padding:34px 16px 14px;max-width:820px;margin:0 auto}
+  .kicker{color:var(--coral);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+  h1{font-size:28px;line-height:1.2;margin:8px 0 4px;font-weight:900;letter-spacing:-.01em;
+    background:linear-gradient(120deg,#fff,#ffb8ae);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--dim);font-size:14px;margin:0}
+  .clock{color:var(--faint);font-size:12.5px;margin-top:8px;font-variant-numeric:tabular-nums}
+
+  /* tab bar */
+  .tabs{position:sticky;top:39px;z-index:10;background:rgba(8,9,13,.9);backdrop-filter:blur(12px);
+    display:flex;gap:7px;overflow-x:auto;padding:11px 16px;margin:0 -16px 4px;border-bottom:1px solid var(--line)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;font-size:13px;font-weight:700;color:var(--dim);border:1px solid var(--line);
+    background:var(--bg2);padding:7px 13px;border-radius:999px;cursor:pointer;user-select:none;white-space:nowrap}
+  .tab.on{color:#fff;background:linear-gradient(120deg,#ff6b5e,#ff8a7a);border-color:transparent}
+
+  .panel{display:none;animation:fade .25s ease} .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 4px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 11px}
+  .stat .n{font-size:24px;font-weight:900;line-height:1}
+  .stat .l{color:var(--faint);font-size:11.5px;margin-top:5px;font-weight:700}
+  .stat.g .n{color:var(--green)} .stat.a .n{color:var(--amber)} .stat.r .n{color:var(--red)}
+
+  h2.sec{font-size:13px;letter-spacing:.05em;color:var(--faint);text-transform:uppercase;
+    margin:24px 0 8px;font-weight:800}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;
+    margin-top:10px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--faint)}
+  .card.g::before{background:var(--green)} .card.a::before{background:var(--amber)} .card.r::before{background:var(--red)}
+  .ctop{display:flex;align-items:center;gap:8px}
+  .ctitle{font-weight:800;font-size:15px;flex:1}
+  .badge{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .badge.g{color:var(--green);border-color:rgba(84,208,138,.35);background:rgba(84,208,138,.08)}
+  .badge.a{color:var(--amber);border-color:rgba(242,179,74,.35);background:rgba(242,179,74,.08)}
+  .badge.r{color:var(--red);border-color:rgba(255,107,107,.35);background:rgba(255,107,107,.08)}
+  .cnext{color:var(--coral2);font-size:13px;margin-top:6px}
+  .cnext b{color:var(--gold)}
+  .bar{height:5px;background:var(--bg2);border-radius:999px;margin-top:9px;overflow:hidden}
+  .bar>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#54d08a,#7be0a6)}
+  .bar.a>i{background:linear-gradient(90deg,#f2b34a,#f5c451)}
+  .bar.r>i{background:linear-gradient(90deg,#ff6b6b,#ff8a7a)}
+
+  a.link{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-radius:13px;padding:13px 15px;margin-top:9px;text-decoration:none;color:var(--ink)}
+  a.link:active{border-color:var(--coral)}
+  a.link .emo{font-size:20px}
+  a.link .t{flex:1}
+  a.link .t b{display:block;font-size:14.5px}
+  a.link .t span{color:var(--faint);font-size:12px}
+  a.link .arw{color:var(--faint);font-size:18px}
+
+  .todo{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 4px;margin-top:10px}
+  .todo .i{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+  .todo .i:last-child{border-bottom:0}
+  .todo .k{font-size:16px;line-height:1.4}
+  .todo .m{flex:1;font-size:14px}
+  .todo .m span{display:block;color:var(--faint);font-size:12px;margin-top:1px}
+
+  .callr{margin-top:12px;background:linear-gradient(180deg,rgba(255,107,107,.10),rgba(255,107,107,.03));
+    border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:13px 15px}
+  .callr h3{margin:0 0 4px;font-size:14px;color:var(--red)}
+  .callr li{font-size:13.5px;margin:5px 0}
+  .greenbox{margin-top:10px;border:1px solid rgba(84,208,138,.3);background:rgba(84,208,138,.05);
+    border-radius:14px;padding:12px 15px}
+  .greenbox h3{margin:0 0 4px;font-size:14px;color:var(--green)}
+  .greenbox p{margin:0;color:var(--dim);font-size:13px}
+
+  footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--faint);font-size:12px;text-align:center}
+  footer a{color:var(--coral2);text-decoration:none}
+
+  /* embedded room (주문서·평가를 한 화면 안에) */
+  .roomhead{display:flex;align-items:center;gap:8px;margin:16px 0 8px}
+  .roomhead b{font-size:15px}
+  .roomhead a.open{margin-left:auto;font-size:12px;color:var(--coral2);text-decoration:none;
+    border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+  .roomframe{width:100%;height:78vh;border:1px solid var(--line);border-radius:14px;background:var(--bg2);display:block}
+
+  /* 아라미러 본체 네비 (통제실 = 사이트의 일부) */
+  .sitebar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;overflow-x:auto;
+    padding:8px 14px;background:rgba(6,7,10,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line)}
+  .sitebar::-webkit-scrollbar{display:none}
+  .sitebar .bd{flex:0 0 auto;font-weight:900;font-size:14px;color:#fff;text-decoration:none;margin-right:2px}
+  .sitebar .bd i{color:var(--coral);font-style:normal}
+  .sitebar a.s{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--dim);text-decoration:none;
+    padding:5px 10px;border-radius:999px;white-space:nowrap;border:1px solid transparent}
+  .sitebar a.s:active{color:#fff}
+  .sitebar a.s.here{color:#fff;background:linear-gradient(120deg,#ff6b5e,#ff8a7a)}
+</style>
+</head>
+<body>
+<nav class="sitebar" aria-label="아라미러 전체">
+  <a class="bd" href="/">Aramirror<i>.</i></a>
+  <a class="s here" href="/hq/">🎛 관제실</a>
+  <a class="s" href="/log/">통합기록</a>
+  <a class="s" href="/mirror/">전체지도</a>
+  <a class="s" href="/wall/">생각의벽</a>
+  <a class="s" href="/flow/">몰입</a>
+  <a class="s" href="/board/">게시판</a>
+  <a class="s" href="/writings/">글</a>
+  <a class="s" href="/studio/">캐러셀</a>
+  <a class="s" href="/publish/">발행</a>
+  <a class="s" href="/build-logs/">Build Logs</a>
+  <a class="s" href="/how/">작동방식</a>
+  <a class="s" href="/gtb/">농구클럽</a>
+  <a class="s" href="/spongeclub/">스폰지클럽</a>
+</nav>
+<header>
+  <div class="kicker">Mission Control · 총괄실</div>
+  <h1>사장님 관제실</h1>
+  <p class="sub">모든 프로젝트 · 지표 · 자동화 · 바로가기를 한 화면에서</p>
+  <div class="clock" id="clock">—</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <div class="tab on" data-p="today">오늘</div>
+  <div class="tab" data-p="proj">프로젝트</div>
+  <div class="tab" data-p="metric">핵심지표</div>
+  <div class="tab" data-p="auto">자동화</div>
+  <div class="tab" data-p="order">주문서</div>
+  <div class="tab" data-p="eval">평가</div>
+  <div class="tab" data-p="admin">관리자</div>
+  <div class="tab" data-p="go">빠른실행</div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ 오늘 ============ -->
+  <section class="panel on" id="today">
+    <div class="stat-row">
+      <div class="stat g"><div class="n">7</div><div class="l">완료</div></div>
+      <div class="stat a"><div class="n">14</div><div class="l">진행중</div></div>
+      <div class="stat r"><div class="n">3</div><div class="l">사장님 대기</div></div>
+    </div>
+
+    <h2 class="sec">오늘 (7/9) 한눈</h2>
+    <div class="todo">
+      <div class="i"><div class="k">🌅</div><div class="m">아침 5시 모닝리포트<span>매일 자동 · 세션마다 크론 재확인</span></div></div>
+      <div class="i"><div class="k">🏀</div><div class="m">GTB 새벽농구 05:30<span>랜딩·정산계산기 라이브</span></div></div>
+      <div class="i"><div class="k">💬</div><div class="m">셸 답례 대상 재계산<span>오래된 명단 금지 · 매일 새로</span></div></div>
+      <div class="i"><div class="k">🎯</div><div class="m">내일(7/10) 워크샵·해커톤<span>참석·시간·장소 확정 필요 🔴</span></div></div>
+    </div>
+
+    <div class="callr">
+      <h3>🔴 사장님만 풀 수 있는 것 (한 줄이면 끝)</h3>
+      <ol style="margin:0;padding-left:18px">
+        <li><b>캐러셀 보관함</b> — Supabase URL + 키</li>
+        <li><b>워크샵(7/10)</b> — 참석 인원·시간·장소</li>
+        <li><b>GTB /gtb 페이지</b> — 지울까요 놔둘까요?</li>
+      </ol>
+    </div>
+
+    <div class="greenbox">
+      <h3>🟢 확인 없이 제가 계속 미는 것</h3>
+      <p>아라미러 고도화 · 모닝리포트 · 셸 답례 · 아들 미션 · 스폰지 과제</p>
+    </div>
+  </section>
+
+  <!-- ============ 프로젝트 ============ -->
+  <section class="panel" id="proj">
+    <h2 class="sec">회사 (아람휴비스)</h2>
+    <div class="card a"><div class="ctop"><span class="ctitle">인사평가 시스템</span><span class="badge a">진행 80%</span></div>
+      <div class="cnext">✅ 평가시트 라이브(<b>/eval</b>) · 다음 · 직원 피드백 → 웹앱 확정</div><div class="bar a"><i style="width:80%"></i></div></div>
+    <div class="card r"><div class="ctop"><span class="ctitle">금요 워크샵·해커톤·워케이션</span><span class="badge r">7/10 임박</span></div>
+      <div class="cnext"><b>확정 필요</b> · 참석 인원·시간·장소</div><div class="bar a"><i style="width:80%"></i></div></div>
+    <div class="card a"><div class="ctop"><span class="ctitle">아람휴비스 OS</span><span class="badge a">진행</span></div>
+      <div class="cnext">다음 · 아라미러 페이지에 회사 OS 화면 붙이기</div><div class="bar a"><i style="width:55%"></i></div></div>
+    <div class="card g"><div class="ctop"><span class="ctitle">배포·데이터 파이프라인 표준</span><span class="badge g">완료</span></div><div class="bar"><i style="width:100%"></i></div></div>
+
+    <h2 class="sec">나 (개인 브랜드)</h2>
+    <div class="card a"><div class="ctop"><span class="ctitle">아라미러 웹</span><span class="badge a">상시</span></div>
+      <div class="cnext">다음 · 문서·CRM·캐러셀·배포 자동화 계속 고도화</div><div class="bar a"><i style="width:75%"></i></div></div>
+    <div class="card a"><div class="ctop"><span class="ctitle">아라미러 개인앱 /me</span><span class="badge a">진행</span></div>
+      <div class="cnext">다음 · 기능 다듬기 + 본체와 연결</div><div class="bar a"><i style="width:60%"></i></div></div>
+    <div class="card r"><div class="ctop"><span class="ctitle">캐러셀 보관함 (스튜디오07)</span><span class="badge r">키 대기</span></div>
+      <div class="cnext"><b>확정 필요</b> · Supabase URL + 키 (주시면 끝)</div><div class="bar r"><i style="width:90%"></i></div></div>
+
+    <h2 class="sec">가족</h2>
+    <div class="card a"><div class="ctop"><span class="ctitle">아빠와 아들 AI창업 30일 (체스)</span><span class="badge a">진행</span></div>
+      <div class="cnext">다음 · 매일 아들 맞춤 미션</div><div class="bar a"><i style="width:40%"></i></div></div>
+
+    <h2 class="sec">커뮤니티 (스폰지클럽)</h2>
+    <div class="card a"><div class="ctop"><span class="ctitle">이기적멤버십 AX</span><span class="badge a">진행</span></div>
+      <div class="cnext">다음 · 유입→풀→전환 단계별 실제 수치·채널 채우기</div><div class="bar a"><i style="width:50%"></i></div></div>
+    <div class="card a"><div class="ctop"><span class="ctitle">셸 통합알림 대응</span><span class="badge a">매일</span></div>
+      <div class="cnext">다음 · 오늘자 답례 대상 재계산</div><div class="bar a"><i style="width:65%"></i></div></div>
+
+    <h2 class="sec">서비스 제품</h2>
+    <div class="card a"><div class="ctop"><span class="ctitle">GTB 새벽 농구클럽</span><span class="badge a">진행</span></div>
+      <div class="cnext">다음 · 회원 DB(Supabase) 붙이기, 유저테스트</div><div class="bar a"><i style="width:55%"></i></div></div>
+    <div class="card a"><div class="ctop"><span class="ctitle">INUPT 데일리 매칭</span><span class="badge a">진행</span></div>
+      <div class="cnext">다음 · 매칭 로직·데이터 붙이기, 실사용 테스트</div><div class="bar a"><i style="width:60%"></i></div></div>
+  </section>
+
+  <!-- ============ 핵심지표 ============ -->
+  <section class="panel" id="metric">
+    <h2 class="sec">INUPT (데일리 매칭)</h2>
+    <div class="stat-row">
+      <div class="stat"><div class="n">895</div><div class="l">누적 고객</div></div>
+      <div class="stat"><div class="n">—</div><div class="l">이번달 매출</div></div>
+      <div class="stat"><div class="n">—</div><div class="l">ROAS</div></div>
+    </div>
+    <p style="color:var(--faint);font-size:12.5px;margin:8px 2px">
+      실시간 숫자는 INUPT 대시보드가 원천 — 폴더 경로 주시면 여기 자동으로 물려서 실값 띄웁니다.</p>
+
+    <h2 class="sec">셀피쉬클럽 / 이기적멤버십</h2>
+    <div class="stat-row">
+      <div class="stat"><div class="n">4</div><div class="l">프로그램</div></div>
+      <div class="stat"><div class="n">9+</div><div class="l">n8n 워크플로우</div></div>
+      <div class="stat"><div class="n">LIVE</div><div class="l">멤버십3.0</div></div>
+    </div>
+
+    <h2 class="sec">아라미러 (기록·배포)</h2>
+    <div class="stat-row">
+      <div class="stat g"><div class="n">200</div><div class="l">라이브 상태</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">빌드로그</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">스튜디오 슬라이드</div></div>
+    </div>
+  </section>
+
+  <!-- ============ 자동화 ============ -->
+  <section class="panel" id="auto">
+    <h2 class="sec">이 PC에서 도는 것</h2>
+    <div class="card g"><div class="ctop"><span class="ctitle">텔레그램 봇 @Arami_claude_bot</span><span class="badge g">상시</span></div>
+      <div class="cnext">규칙 · 무조건 답 먼저, 일 나중</div></div>
+    <div class="card a"><div class="ctop"><span class="ctitle">아침 5시 모닝리포트</span><span class="badge a">매일</span></div>
+      <div class="cnext">cron 설정 · 세션마다 재확인·재설정</div></div>
+    <div class="card g"><div class="ctop"><span class="ctitle">PPT 자동 제작 파이프라인</span><span class="badge g">대기</span></div>
+      <div class="cnext">HTML→헤드리스 PNG→python-pptx · 언제든 호출</div></div>
+
+    <h2 class="sec">셀피쉬 n8n (n8n.selfishclub.xyz)</h2>
+    <div class="card g"><div class="ctop"><span class="ctitle">[멤버십3.0] 가입 자동 발송</span><span class="badge g">Published</span></div>
+      <div class="cnext">Webhook→중복방지→슬랙·알림톡(SOLAPI)·이메일</div></div>
+    <div class="card g"><div class="ctop"><span class="ctitle">셀피쉬DB_main_flow</span><span class="badge g">Published</span></div>
+      <div class="cnext">신청+결제 대형 플로우</div></div>
+    <div class="card g"><div class="ctop"><span class="ctitle">스폰지클럽 2기 알림톡</span><span class="badge g">Published</span></div></div>
+  </section>
+
+  <!-- ============ 주문서 (임베드) ============ -->
+  <section class="panel" id="order">
+    <div class="roomhead"><b>📋 기획주문서</b><a class="open" href="/order/" target="_blank">새 탭 ↗</a></div>
+    <iframe class="roomframe" data-src="/order/" title="기획주문서"></iframe>
+  </section>
+
+  <!-- ============ 평가 (임베드) ============ -->
+  <section class="panel" id="eval">
+    <div class="roomhead"><b>📝 평가시트</b><a class="open" href="/eval/" target="_blank">새 탭 ↗</a></div>
+    <iframe class="roomframe" data-src="/eval/" title="평가시트"></iframe>
+  </section>
+
+  <!-- ============ 관리자 (임베드) ============ -->
+  <section class="panel" id="admin">
+    <div class="roomhead"><b>🛠️ 관리자 콘솔</b><a class="open" href="/admin/" target="_blank">새 탭 ↗</a></div>
+    <iframe class="roomframe" data-src="/admin/" title="관리자 콘솔"></iframe>
+  </section>
+
+  <!-- ============ 빠른실행 ============ -->
+  <section class="panel" id="go">
+    <h2 class="sec">내 것 (아라미러)</h2>
+    <a class="link" href="https://hyun-arch.github.io/" target="_blank"><span class="emo">🪞</span><span class="t"><b>아라미러 본체</b><span>기록·블로그·스튜디오</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://hyun-arch.github.io/order/" target="_blank"><span class="emo">📋</span><span class="t"><b>기획주문서</b><span>전체 프로젝트 한 장</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://hyun-arch.github.io/mirror/" target="_blank"><span class="emo">🗺️</span><span class="t"><b>미러맵</b><span>비번 게이트</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://hyun-arch.github.io/gtb/" target="_blank"><span class="emo">🏀</span><span class="t"><b>GTB 농구클럽</b><span>랜딩·정산계산기</span></span><span class="arw">›</span></a>
+
+    <h2 class="sec">서비스 · 회사</h2>
+    <a class="link" href="https://hyun-arch.github.io/eval/" target="_blank"><span class="emo">📝</span><span class="t"><b>평가시트</b><span>4층 평가 · 점수 자동계산</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://hyun-arch.github.io/admin/" target="_blank"><span class="emo">🛠️</span><span class="t"><b>관리자 콘솔</b><span>게시판·페이지 CRUD (비공개)</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://inupt-dashboard-mu.vercel.app" target="_blank"><span class="emo">📊</span><span class="t"><b>INUPT 대시보드</b><span>마케팅·CRM 관제</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://new.selfishclub.xyz" target="_blank"><span class="emo">🐟</span><span class="t"><b>셀피쉬클럽</b><span>멤버십3.0 라이브</span></span><span class="arw">›</span></a>
+    <a class="link" href="https://n8n.selfishclub.xyz" target="_blank"><span class="emo">⚙️</span><span class="t"><b>n8n 자동화</b><span>워크플로우 관리</span></span><span class="arw">›</span></a>
+  </section>
+
+  <footer>
+    이 화면 하나가 <b>아라미러 통제실</b>입니다 — 주문서·평가·관리자까지 여기서 다 열려요.<br/>
+    <a href="/log/">🧩 통합 기록: 무엇을 어떤 스킬로 어떻게 →</a><br/>
+    <a href="https://hyun-arch.github.io/order/">기획주문서 →</a> · aramirror/hq · 업데이트 2026-07-09
+  </footer>
+</div>
+
+<script>
+  var tabs=document.getElementById('tabs');
+  tabs.addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});
+    var p=t.getAttribute('data-p');
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('on',x.id===p)});
+    // 임베드 방(주문서·평가)은 열 때 처음 한 번만 로드
+    var fr=document.querySelector('#'+p+' iframe.roomframe');
+    if(fr && !fr.src){ fr.src=fr.getAttribute('data-src'); }
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  function tick(){
+    var d=new Date();
+    var days=['일','월','화','수','목','금','토'];
+    var hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
+    document.getElementById('clock').textContent=
+      d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+' ('+days[d.getDay()]+') '+hh+':'+mm+' · 라이브라 폰에서 바로';
+  }
+  tick(); setInterval(tick,10000);
+</script>
+</body>
+</html>
