@@ -14,12 +14,41 @@ const posts = (await Astro.glob('./*.md'))
         {posts.map((p) => (
           <li>
             <a href={p.url}>
-              <span class="t">{p.frontmatter.title}</span>
-              <span class="d">{p.frontmatter.date}</span>
+              <span class="row">
+                <span class="t">{p.frontmatter.title}</span>
+                <span class="d">{p.frontmatter.date}</span>
+              </span>
+              {p.frontmatter.description && (
+                <span class="desc">{p.frontmatter.description}</span>
+              )}
+              {p.frontmatter.tags && p.frontmatter.tags.length > 0 && (
+                <span class="tags">
+                  {p.frontmatter.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </span>
+              )}
             </a>
           </li>
         ))}
       </ul>
     </div>
   </section>
+  <style>
+    .logs a { display: flex; flex-direction: column; gap: 8px; }
+    .logs .row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .logs .desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .logs .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .logs .tag {
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 10px;
+    }
+  </style>
 </Base>

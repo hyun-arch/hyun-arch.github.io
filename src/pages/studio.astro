@@ -30,11 +30,18 @@ const caps = carousel.captions;
       </div>
 
       <div class="savebar">
-        <button id="save-carousel" class="btn accent"
-          data-topic={carousel.topic} data-slides={carousel.slides.length}>＋ 이 캐러셀 보관함에 저장</button>
+        <button id="save-carousel" class="btn accent">＋ 이 캐러셀 보관함에 저장</button>
         <span id="save-status" class="save-status"></span>
         <span class="save-mode" id="save-mode"></span>
       </div>
+      <!-- 저장 스냅샷 원본: 현재 세트(주제·프롬프트 맥락·모델·슬라이드)를 JSON으로 보관함에 넣는다. -->
+      <script id="carousel-snapshot" type="application/json" set:html={JSON.stringify({
+        id: carousel.id,
+        topic: carousel.topic,
+        model: carousel.model || 'claude-code',
+        prompt: { hook: carousel.hook, audience: carousel.audience, brand: carousel.brand, handle: carousel.handle },
+        slides: carousel.slides.map((s) => ({ n: s.n, kind: s.kind, title: s.title, sub: s.sub })),
+      })} />
 
       <!-- 01 기획 -->
       <div class="block" id="plan">
@@ -141,6 +148,14 @@ const caps = carousel.captions;
         <p class="blk-d">저장한 캐러셀이 여기 쌓입니다. 새로고침해도 안 사라져요. <b id="arch-mode-note"></b></p>
         <div id="archive-list" class="archive-list"></div>
         <p id="archive-empty" class="exp-note">아직 저장한 캐러셀이 없어요. 위 “보관함에 저장”을 눌러보세요.</p>
+        <div id="archive-detail" class="arch-detail" hidden>
+          <div class="arch-detail-head">
+            <h4 id="ad-topic"></h4>
+            <button id="ad-close" class="copy sm" type="button">닫기</button>
+          </div>
+          <p id="ad-meta" class="arch-detail-meta"></p>
+          <ol id="ad-slides" class="arch-detail-slides"></ol>
+        </div>
       </div>
     </div>
   </section>
@@ -242,6 +257,13 @@ const caps = carousel.captions;
     .arch button { border: 1px solid var(--line); background: var(--bg-card); border-radius: 8px; padding: 6px 12px; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--fg); }
     .arch button:hover { background: var(--bg-soft); }
     .arch button.del:hover { background: #b23c3c; color: #fff; border-color: #b23c3c; }
+    .arch-detail { margin-top: 18px; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--bg-card); }
+    .arch-detail-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .arch-detail-head h4 { margin: 0; font-size: 1.05rem; font-weight: 700; }
+    .arch-detail-meta { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin: 6px 0 12px; }
+    .arch-detail-slides { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+    .arch-detail-slides li { line-height: 1.5; color: var(--fg-soft); font-size: 0.92rem; }
+    .arch-detail-slides li b { color: var(--fg); }
 
     @media (max-width: 680px) {
       .viewer { width: 300px; height: 375px; }
@@ -312,6 +334,12 @@ const caps = carousel.captions;
     const saveModeEl = document.getElementById('save-mode');
     const statusEl = document.getElementById('save-status');
     const saveBtn = document.getElementById('save-carousel');
+    const detailEl = document.getElementById('archive-detail');
+
+    // 현재 세트 스냅샷(주제·프롬프트 맥락·모델·슬라이드) — 저장/복원의 원본.
+    let snapshot = {};
+    try { snapshot = JSON.parse(document.getElementById('carousel-snapshot').textContent || '{}'); }
+    catch (e) { console.error(e); }
 
     const mode = cloud ? '클라우드 저장 (Supabase · 모든 기기)' : '브라우저 저장 (이 기기)';
     if (modeNote) modeNote.textContent = '· 현재: ' + mode;
@@ -322,9 +350,33 @@ const caps = carousel.captions;
     function esc(s) { return (s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
     function stamp(iso) { return (iso || '').replace('T', ' ').slice(0, 16); }
 
-    // Supabase row → 카드 형태로 정규화
+    // 로컬 날짜(KST) — toISOString(UTC) 쓰지 않는다.
+    function nowLocal() {
+      const d = new Date();
+      const p = (n) => (n < 10 ? '0' : '') + n;
+      return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+    }
+
+    // 내용 해시(중복 저장 방지) — 주제 + 슬라이드 제목/서브를 이어붙여 djb2 해시.
+    function contentHash(snap) {
+      const basis = [snap.topic, (snap.slides || []).map((s) => s.title + '|' + s.sub).join('§')].join('#');
+      let h = 5381;
+      for (let i = 0; i < basis.length; i++) h = ((h << 5) + h + basis.charCodeAt(i)) | 0;
+      return 'h' + (h >>> 0).toString(36);
+    }
+
+    // Supabase row → 카드 형태로 정규화 (data 컬럼에 스냅샷 JSON, 없으면 개수 폴백)
     function normalize(x) {
-      return { id: String(x.id), topic: x.topic, slides: x.slides ?? x.slides_count ?? 0, date: x.date || stamp(x.created_at) };
+      let data = null;
+      if (x.data) { try { data = typeof x.data === 'string' ? JSON.parse(x.data) : x.data; } catch {} }
+      return {
+        id: String(x.id),
+        topic: x.topic,
+        slides: (data && data.slides) ? data.slides.length : (x.slides ?? 0),
+        date: x.date || stamp(x.created_at),
+        hash: x.hash || (data ? contentHash(data) : ''),
+        data,
+      };
     }
 
     async function listAll() {
@@ -345,13 +397,36 @@ const caps = carousel.captions;
         b.onclick = async () => { await removeOne(b.dataset.del); refresh(); };
       });
       listEl.querySelectorAll('[data-open]').forEach((b) => {
-        b.onclick = () => document.getElementById('slides').scrollIntoView({ behavior: 'smooth' });
+        b.onclick = () => openDetail(arr.find((y) => y.id === b.dataset.open));
       });
+    }
+
+    // 복원: 저장된 세트의 스냅샷을 상세 패널에 펼쳐 보여준다.
+    function openDetail(item) {
+      if (!item || !detailEl) return;
+      const data = item.data || { topic: item.topic, slides: [] };
+      document.getElementById('ad-topic').textContent = item.topic || '(제목 없음)';
+      const p = data.prompt || {};
+      const bits = [(data.slides || []).length + '장', item.date];
+      if (data.model) bits.push('모델 ' + data.model);
+      if (p.handle) bits.push(p.handle);
+      document.getElementById('ad-meta').textContent = bits.filter(Boolean).join(' · ');
+      document.getElementById('ad-slides').innerHTML = (data.slides || []).map((s) =>
+        '<li><b>' + esc(String(s.title || '').replace(/<[^>]+>/g, '')) + '</b>' +
+        (s.sub ? ' — ' + esc(s.sub) : '') + '</li>'
+      ).join('') || '<li>슬라이드 정보가 저장되지 않은 항목입니다.</li>';
+      detailEl.hidden = false;
+      detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    if (document.getElementById('ad-close')) {
+      document.getElementById('ad-close').onclick = () => { detailEl.hidden = true; };
     }
 
     async function removeOne(id) {
       if (cloud) { try { await sbCarouselDelete(id); } catch (e) { console.error(e); } }
       else writeLocal(readLocal().filter((y) => y.id !== id));
+      if (detailEl) detailEl.hidden = true;
     }
 
     async function refresh() {
@@ -365,25 +440,41 @@ const caps = carousel.captions;
       const local = readLocal();
       if (!local.length) return;
       for (const x of local) {
-        try { await sbCarouselInsert({ topic: x.topic, slides: Number(x.slides) || 0 }); }
-        catch (e) { console.error('promote fail', e); }
+        try { await sbCarouselInsert({ topic: x.topic, slides: Number(x.slides) || 0, hash: x.hash, data: x.data }); }
+        catch (e) {
+          try { await sbCarouselInsert({ topic: x.topic, slides: Number(x.slides) || 0 }); }
+          catch (e2) { console.error('promote fail', e2); }
+        }
       }
       writeLocal([]);
     }
 
     if (saveBtn) {
       saveBtn.onclick = async () => {
-        const topic = saveBtn.dataset.topic;
-        const slides = Number(saveBtn.dataset.slides) || 0;
+        const topic = snapshot.topic || '캐러셀';
+        const slides = (snapshot.slides || []).length;
+        const hash = contentHash(snapshot);
+
+        // 중복 저장 방지 — 같은 내용(해시)이 이미 있으면 저장하지 않는다.
+        let existing = [];
+        try { existing = await listAll(); } catch (e) { existing = readLocal(); }
+        if (existing.some((y) => y.hash === hash)) {
+          statusEl.textContent = '이미 같은 캐러셀이 있어요';
+          setTimeout(() => { statusEl.textContent = ''; }, 1800);
+          return;
+        }
+
         if (cloud) {
-          try { await sbCarouselInsert({ topic, slides }); }
-          catch (e) { console.error(e); statusEl.textContent = '저장 실패 — 잠시 후 다시'; return; }
+          try { await sbCarouselInsert({ topic, slides, hash, data: snapshot }); }
+          catch (e) {
+            // hash/data 컬럼이 없는 구(舊) 스키마면 최소 컬럼으로 재시도.
+            console.warn('rich insert failed, retry minimal', e);
+            try { await sbCarouselInsert({ topic, slides }); }
+            catch (e2) { console.error(e2); statusEl.textContent = '저장 실패 — 잠시 후 다시'; return; }
+          }
         } else {
-          const d = new Date();
-          const p = (n) => (n < 10 ? '0' : '') + n;
-          const date = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
           const arr = readLocal();
-          arr.unshift({ id: 'c' + d.getTime(), topic, slides, date });
+          arr.unshift({ id: 'c' + Date.now(), topic, slides, date: nowLocal(), hash, data: snapshot });
           writeLocal(arr);
         }
         statusEl.textContent = '보관함에 저장됨 ✓';

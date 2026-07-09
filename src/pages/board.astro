@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
   <section style="padding-top:80px">
     <div class="wrap">
       <p class="section-kicker">게시판 · Board</p>
+      <p class="board-localbadge" id="localBadge" hidden>● 로컬 저장 모드 — 글이 이 브라우저에만 저장됩니다.</p>
       <h2>생각과 기록이 쌓이는 곳</h2>
       <p class="lead">
         던진 생각·빌드로그·공유회 메모가 여기 모인다. 글은 브라우저에 저장되며,
@@ -28,6 +29,9 @@ import Base from '../layouts/Base.astro';
       <div class="board-tags" id="mTags"></div>
     </div>
   </div>
+
+  <!-- 토스트 알림 -->
+  <div class="board-toast" id="toast" hidden role="status" aria-live="polite"></div>
 
   <style>
     .board-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
@@ -59,16 +63,63 @@ import Base from '../layouts/Base.astro';
     .board-body { color: var(--fg-soft); line-height: 1.8; white-space: pre-wrap; }
     .board-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
     .board-tags span { background: var(--bg-soft); color: var(--muted); font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; }
+
+    /* 로컬 저장 모드 경고 배지 */
+    .board-localbadge {
+      display: inline-block; margin: 0 0 12px; padding: 6px 14px;
+      border: 1px solid var(--line); border-radius: 999px;
+      background: var(--bg-soft); color: var(--muted);
+      font-size: 0.78rem; font-weight: 600; letter-spacing: -0.01em;
+    }
+    .board-localbadge[hidden] { display: none; }
+
+    /* 딥링크로 도착한 글 하이라이트 */
+    .logs li.board-flash > a {
+      background: var(--bg-soft);
+      box-shadow: inset 3px 0 0 var(--fg);
+      border-radius: 6px;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* 토스트 알림 */
+    .board-toast {
+      position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px);
+      background: var(--fg); color: var(--bg);
+      padding: 12px 22px; border-radius: 999px;
+      font-size: 0.88rem; font-weight: 600; letter-spacing: -0.01em;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.28); z-index: 60;
+      opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .board-toast[hidden] { display: none; }
+    .board-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 
   <script>
-    import { getPosts, CATEGORIES, onChange, init } from '../scripts/store.js';
+    import { getPosts, CATEGORIES, onChange, init, backendMode } from '../scripts/store.js';
 
     const listEl = document.getElementById('postList');
     const filtersEl = document.getElementById('filters');
     const emptyEl = document.getElementById('empty');
     const modal = document.getElementById('modal');
+    const badgeEl = document.getElementById('localBadge');
+    const toastEl = document.getElementById('toast');
     let active = '전체';
+
+    // 로컬 저장 모드면 상단 경고 배지 노출
+    badgeEl.hidden = backendMode() !== 'local';
+
+    // 토스트 알림
+    let toastTimer = null;
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.hidden = false;
+      requestAnimationFrame(() => toastEl.classList.add('show'));
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.remove('show');
+        setTimeout(() => { toastEl.hidden = true; }, 250);
+      }, 2600);
+    }
 
     const cats = ['전체', ...CATEGORIES];
     filtersEl.innerHTML = cats
@@ -91,13 +142,25 @@ import Base from '../layouts/Base.astro';
       emptyEl.hidden = posts.length > 0;
       listEl.innerHTML = posts
         .map(
-          (p) => `<li><a href="#" data-id="${p.id}">
+          (p) => `<li id="post-${esc(p.id)}"><a href="#post-${esc(p.id)}" data-id="${esc(p.id)}">
             <span class="cat">${esc(p.category)}</span>
             <span class="t">${esc(p.title)}</span>
             <span class="d">${esc(p.date)}</span>
           </a></li>`
         )
         .join('');
+    }
+
+    // 딥링크(#post-<id>): 해당 글로 스크롤 + 잠깐 하이라이트
+    function flashFromHash() {
+      const m = (location.hash || '').match(/^#post-(.+)$/);
+      if (!m) return;
+      const id = decodeURIComponent(m[1]);
+      const li = document.getElementById('post-' + id);
+      if (!li) return;
+      li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      li.classList.add('board-flash');
+      setTimeout(() => li.classList.remove('board-flash'), 2200);
     }
 
     listEl.addEventListener('click', (e) => {
@@ -120,6 +183,20 @@ import Base from '../layouts/Base.astro';
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
     onChange(render);
-    init().then(render);
+
+    // 저장(작성/수정) 성공 토스트
+    window.addEventListener('aramirror:saved', (e) => {
+      const action = e.detail && e.detail.action;
+      toast(action === 'update' ? '수정 저장 완료' : '글 저장 완료');
+    });
+
+    // 해시가 바뀌어도(공유 링크 재클릭 등) 다시 하이라이트
+    window.addEventListener('hashchange', flashFromHash);
+
+    init().then(() => {
+      render();
+      // 렌더 직후 해시가 있으면 스크롤+하이라이트
+      if (location.hash.startsWith('#post-')) requestAnimationFrame(flashFromHash);
+    });
   </script>
 </Base>

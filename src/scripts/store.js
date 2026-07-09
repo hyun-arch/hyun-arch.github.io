@@ -58,6 +58,10 @@ function write(key, value) {
 function fire() {
   if (isBrowser) window.dispatchEvent(new CustomEvent('aramirror:store'));
 }
+// 저장(작성/수정) 성공 시 발생 — 토스트 알림 등 UI 피드백용. 렌더 트리거인 fire()와 별개.
+function fireSaved(detail) {
+  if (isBrowser) window.dispatchEvent(new CustomEvent('aramirror:saved', { detail }));
+}
 // 로컬(KST) 기준 YYYY-MM-DD. toISOString()은 UTC라 새벽 0~9시 글이 하루 전으로 찍히는 버그가 있었음.
 function today() {
   var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
@@ -131,6 +135,7 @@ export async function createPost(input) {
     write(POSTS_KEY, _cache);
   }
   fire();
+  fireSaved({ action: 'create', id: _cache[0].id, mode: backendMode() });
   return _cache[0];
 }
 
@@ -147,6 +152,7 @@ export async function updatePost(id, patch) {
     write(POSTS_KEY, _cache);
   }
   fire();
+  fireSaved({ action: 'update', id, mode: backendMode() });
   return getPost(id);
 }
 

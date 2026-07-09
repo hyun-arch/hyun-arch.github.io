@@ -17,7 +17,7 @@ const s = stats();
       <div class="overview">
         <div class="ov-stat"><div class="v">{s.total}</div><div class="l">전체 인원</div></div>
         <div class="ov-stat"><div class="v">{s.done}</div><div class="l">기획 제출</div></div>
-        <div class="ov-stat"><div class="v">6</div><div class="l">조</div></div>
+        <div class="ov-stat"><div class="v">{groups.length}</div><div class="l">조</div></div>
         <div class="ov-stat"><div class="v">{s.empty}</div><div class="l">미제출</div></div>
       </div>
 
@@ -68,6 +68,7 @@ const s = stats();
                   </details>
                 ))}
               </div>
+              <button class="reveal" data-reveal hidden>숨긴 <span data-reveal-n>0</span>명 펼쳐 보기</button>
             </details>
           );
         })}
@@ -79,7 +80,7 @@ const s = stats();
         <div class="flow">
           <div class="fstep"><span class="fn">01</span><b>레포 클론</b><p>spongeclub-2 통째로 받기</p></div>
           <span class="farrow">→</span>
-          <div class="fstep"><span class="fn">02</span><b>6조 병렬 분석</b><p>Fable 모델 6개 에이전트 동시에</p></div>
+          <div class="fstep"><span class="fn">02</span><b>{groups.length}조 병렬 분석</b><p>Fable 모델 {groups.length}개 에이전트 동시에</p></div>
           <span class="farrow">→</span>
           <div class="fstep"><span class="fn">03</span><b>71명 기획 추출</b><p>제목·문제·아이디어·태그·적용</p></div>
           <span class="farrow">→</span>
@@ -129,6 +130,11 @@ const s = stats();
     .p-tools button { border: 1px solid var(--line); background: var(--bg-card); border-radius: 7px; width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem; }
     .p-tools button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+    .reveal { display: block; width: 100%; border: none; border-top: 1px solid var(--line-soft); background: var(--bg-soft); color: var(--muted); font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; padding: 12px; cursor: pointer; }
+    .reveal:hover { color: var(--accent); }
+    .reveal[hidden] { display: none; }
+    .grp.show-hidden .person.hidden { display: block; opacity: 0.5; }
+
     .p-body { padding: 4px 22px 22px; border-top: 1px solid var(--line-soft); }
     .p-one { font-size: 1.02rem; font-weight: 600; margin: 14px 0 0; line-height: 1.5; }
     .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 0; }
@@ -162,6 +168,21 @@ const s = stats();
       function get(k, d){ try { var v = localStorage.getItem(K+k); return v==null?d:JSON.parse(v); } catch(e){ return d; } }
       function set(k, v){ localStorage.setItem(K+k, JSON.stringify(v)); }
       var pins = get('pins', {}), hides = get('hides', {}), notes = get('notes', {});
+      function refreshReveal(grp) {
+        if (!grp) return;
+        var btn = grp.querySelector('[data-reveal]');
+        if (!btn) return;
+        var n = grp.querySelectorAll('.person.hidden').length;
+        var nEl = btn.querySelector('[data-reveal-n]');
+        if (nEl) nEl.textContent = n;
+        if (n === 0) { btn.hidden = true; grp.classList.remove('show-hidden'); }
+        else { btn.hidden = false;
+          if (grp.classList.contains('show-hidden')) btn.textContent = '숨긴 항목 다시 접기';
+          else { btn.textContent = ''; btn.appendChild(document.createTextNode('숨긴 '));
+            var s = document.createElement('span'); s.setAttribute('data-reveal-n',''); s.textContent = n; btn.appendChild(s);
+            btn.appendChild(document.createTextNode('명 펼쳐 보기')); }
+        }
+      }
       document.querySelectorAll('.person').forEach(function (el) {
         var key = el.dataset.key;
         if (pins[key]) el.classList.add('pinned');
@@ -170,10 +191,15 @@ const s = stats();
         var note = el.querySelector('[data-note]');
         if (pinBtn) { if (pins[key]) pinBtn.classList.add('on');
           pinBtn.onclick = function(e){ e.preventDefault(); pins[key]=!pins[key]; set('pins',pins); el.classList.toggle('pinned'); pinBtn.classList.toggle('on'); }; }
-        if (hideBtn) { hideBtn.onclick = function(e){ e.preventDefault(); hides[key]=true; set('hides',hides); el.classList.add('hidden'); }; }
+        if (hideBtn) { hideBtn.onclick = function(e){ e.preventDefault(); hides[key]=true; set('hides',hides); el.classList.add('hidden'); refreshReveal(el.closest('.grp')); }; }
         if (note) { note.value = notes[key] || '';
           note.oninput = function(){ notes[key]=note.value; set('notes',notes); };
           note.onclick = function(e){ e.stopPropagation(); }; }
+      });
+      document.querySelectorAll('.grp').forEach(function (grp) {
+        var btn = grp.querySelector('[data-reveal]');
+        if (btn) btn.onclick = function(e){ e.preventDefault(); grp.classList.toggle('show-hidden'); refreshReveal(grp); };
+        refreshReveal(grp);
       });
     })();
   </script>

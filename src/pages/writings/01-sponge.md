@@ -16,3 +16,17 @@ tags: ["스펀지클럽", "성장", "도전", "자기이해"]
 앞으로 남은 기간 동안도 나 자신과 새로운 환경의 변화에 계속 맞춰 변화하며, 성장하는 나의 모습을 계속해서 그리고 도전하고 싶습니다.
 
 마지막으로 셀피쉬 크루와 저와 함께 어려움을 겪고 있는 스펀지 2기 크루들, 그리고 1기 멤버들에게 깊은 감사를 느낍니다.
+
+---
+
+## Sponge Club: Me, Before and After
+
+To grow and change as a person before and after starting Sponge Club, I spent a week living through constant, day-by-day challenges. In particular, I believe the ongoing conversations with AI became a chance to know and feel my own self more deeply.
+
+Over this past week, as I carried out the missions, I felt a big change in who I was before and after starting Sponge Club.
+
+Especially by taking on new challenges each day and talking with AI, I came to understand myself a little better, bit by bit. I can genuinely feel the strength inside me growing, little by little.
+
+For the time that remains, I want to keep changing in step with myself and with the shifts in my new environment, and to keep picturing and pursuing the version of me that keeps growing.
+
+Finally, I feel deep gratitude toward the Selfish crew, the Sponge 2nd-gen crew who are going through the hardships alongside me, and the 1st-gen members.

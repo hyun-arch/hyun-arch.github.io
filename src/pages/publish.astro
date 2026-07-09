@@ -12,7 +12,7 @@ function mapArticle(a, type) {
   return {
     type,
     title: a.frontmatter.title || '무제',
-    desc: strip(a.frontmatter.description || ''),
+    desc: strip(a.frontmatter.description || '') || (a.frontmatter.title ? strip(a.frontmatter.title) : '아라미러의 새 글이 올라왔습니다.'),
     date: a.frontmatter.date || '',
     tags: a.frontmatter.tags || ['Aramirror', '생각이자산', '성장', '리더십'],
     hook: quoteMatch ? strip(quoteMatch[1]) : '',
@@ -21,8 +21,10 @@ function mapArticle(a, type) {
   };
 }
 
-const blFiles = (await Astro.glob('./build-logs/*.md')).map((a) => mapArticle(a, 'buildlog'));
-const wFiles = (await Astro.glob('./writings/*.md')).map((a) => mapArticle(a, 'writing'));
+const blMods = import.meta.glob('./build-logs/*.md', { eager: true });
+const wMods = import.meta.glob('./writings/*.md', { eager: true });
+const blFiles = Object.values(blMods).map((a) => mapArticle(a, 'buildlog'));
+const wFiles = Object.values(wMods).map((a) => mapArticle(a, 'writing'));
 // 내가 쓴 글(writing)을 먼저, 그다음 빌드로그. 각각 최신순.
 const articles = [...wFiles, ...blFiles].sort((a, b) => {
   if (a.type !== b.type) return a.type === 'writing' ? -1 : 1;
@@ -52,7 +54,7 @@ function genSummaryPosts(a) {
   return [
     { key: 'linkedin', name: 'LinkedIn', tone: '전문·인사이트', text: li, share: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(a.url)}`, shareLabel: '링크드인 열기(링크)', note: '텍스트 복사 후 붙여넣기' },
     { key: 'threads', name: 'Threads', tone: '짧고 강하게', text: th, share: `https://www.threads.net/intent/post?text=${enc(th)}`, shareLabel: '스레드에 자동 채워 열기', note: '텍스트까지 자동 · 승인만' },
-    { key: 'x', name: 'X (Twitter)', tone: '한 방', text: x, share: `https://twitter.com/intent/tweet?text=${enc(x)}`, shareLabel: 'X에 자동 채워 열기', note: '텍스트까지 자동 · 승인만' },
+    { key: 'x', name: 'X (Twitter)', tone: '한 방', text: x, share: `https://x.com/intent/tweet?text=${enc(x)}`, shareLabel: 'X에 자동 채워 열기', note: '텍스트까지 자동 · 승인만' },
     { key: 'facebook', name: 'Facebook (Meta)', tone: '따뜻하게', text: fb, share: `https://www.facebook.com/sharer/sharer.php?u=${enc(a.url)}`, shareLabel: '페이스북 열기(링크)', note: '텍스트 복사 후 붙여넣기' },
     { key: 'instagram', name: 'Instagram', tone: '감성·캡션', text: ig, note: '사진 1장 필요 · 캡션 복사 후 앱에서' },
     { key: 'naver', name: '네이버 블로그', tone: '블로그 글', text: nv, note: '복사 후 블로그 글쓰기에' },
@@ -66,7 +68,7 @@ function genFullPosts(a) {
   return [
     { key: 'linkedin', name: 'LinkedIn', tone: '원문 그대로', text: body, note: '글 그대로 · 복사 후 붙여넣기' },
     { key: 'threads', name: 'Threads', tone: '원문 그대로', text: body, share: `https://www.threads.net/intent/post?text=${enc(body)}`, shareLabel: '스레드에 채워 열기', note: over(500) ? '스레드 500자 초과 — 올릴 때 조금 줄여서' : '그대로 올리면 됩니다' },
-    { key: 'x', name: 'X (Twitter)', tone: '원문 그대로', text: body, share: `https://twitter.com/intent/tweet?text=${enc(body)}`, shareLabel: 'X에 채워 열기', note: over(280) ? 'X 280자 초과 — 올릴 때 줄여서' : '그대로 올리면 됩니다' },
+    { key: 'x', name: 'X (Twitter)', tone: '원문 그대로', text: body, share: `https://x.com/intent/tweet?text=${enc(body)}`, shareLabel: 'X에 채워 열기', note: over(280) ? 'X 280자 초과 — 올릴 때 줄여서' : '그대로 올리면 됩니다' },
     { key: 'facebook', name: 'Facebook (Meta)', tone: '원문 그대로', text: body, note: '글 그대로 · 복사 후 붙여넣기' },
     { key: 'instagram', name: 'Instagram', tone: '원문 그대로', text: body, note: '사진 1장 필요 · 캡션 복사 후 앱에서' },
     { key: 'naver', name: '네이버 블로그', tone: '원문 그대로', text: body, note: '복사 후 블로그 글쓰기에' },

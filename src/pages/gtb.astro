@@ -129,7 +129,7 @@ import Base from '../layouts/Base.astro';
             </label>
             <label class="fld">
               <span>정산 월</span>
-              <input id="c-month" type="number" min="1" max="12" value="7" />
+              <input id="c-month" type="number" min="1" max="12" />
             </label>
           </div>
         </div>
@@ -168,11 +168,11 @@ import Base from '../layouts/Base.astro';
         </div>
         <div class="card">
           <span class="n">회비</span>
-          <h3>국민 816901-04-252612</h3>
-          <p>채상재(GTB) · 전월 28일까지 신청<br />미납 시 지연벌금 5,000 + 참석 최후순위</p>
+          <h3>국민 816901-04-****12</h3>
+          <p>채○재(GTB) · 전월 28일까지 신청<br />미납 시 지연벌금 5,000 + 참석 최후순위</p>
         </div>
       </div>
-      <p class="foot-note" data-reveal>* 시설 비밀번호·개인 연락처 등 민감정보는 로그인한 회원에게만 표시됩니다.</p>
+      <p class="foot-note" data-reveal>* 전체 계좌번호·시설 비밀번호·개인 연락처 등 민감정보는 로그인한 회원에게만 표시됩니다.</p>
     </div>
   </section>
 
@@ -251,6 +251,10 @@ import Base from '../layouts/Base.astro';
   <script>
     const won = (n) => n.toLocaleString('ko-KR') + '원';
     const $ = (id) => document.getElementById(id);
+
+    // 정산 월 기본값 = 현재 로컬(KST) 월. UTC 금지.
+    const monthEl = $('c-month') as HTMLInputElement | null;
+    if (monthEl && !monthEl.value) monthEl.value = String(new Date().getMonth() + 1);
 
     function calc() {
       const plan   = Number(($('c-plan') as HTMLSelectElement).value) || 0;

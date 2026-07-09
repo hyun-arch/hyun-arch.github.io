@@ -24,6 +24,7 @@ export const osPillars = [
 export const carousel = {
   id: 'claude-code-cheatkeys',
   topic: '클로드코드 치트키',
+  model: 'claude-code',        // 이 세트를 만든 도구/모델 — 보관함 스냅샷에 기록
   audience: '비개발자 · AI로 일하고 싶은 사람 (스폰지클럽)',
   brand: 'Aramirror · 스킬러스',
   handle: '@aramirror',

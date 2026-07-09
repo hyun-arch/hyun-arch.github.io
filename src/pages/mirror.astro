@@ -20,9 +20,25 @@ const hrefOf = (it) => it.to || ('/m/' + it.slug);
 
   <section style="padding-top:16px; min-height:50vh">
     <div class="wrap">
+      <div class="controls">
+        <div class="filters" role="group" aria-label="상태 필터">
+          <button class="chip is-on" data-status="all" type="button">전체</button>
+          <button class="chip" data-status="live" type="button"><i class="dot live"></i>작동 중</button>
+          <button class="chip" data-status="building" type="button"><i class="dot building"></i>만드는 중</button>
+          <button class="chip" data-status="seed" type="button"><i class="dot seed"></i>내용 있음</button>
+          <button class="chip" data-status="idea" type="button"><i class="dot idea"></i>아이디어</button>
+        </div>
+        <div class="tools">
+          <input id="mirror-search" class="search" type="search" placeholder="제목·설명 검색…" aria-label="검색" autocomplete="off" />
+          <button id="expand-all" class="toggle-all" type="button">모두 펼치기</button>
+          <button id="collapse-all" class="toggle-all" type="button">모두 접기</button>
+        </div>
+      </div>
+      <p class="no-match" hidden>검색·필터에 맞는 항목이 없어요.</p>
+
       <div class="tree">
         {domains.map((d) => (
-          <details class="domain" open>
+          <details class="domain" data-domain={d.key} open>
             <summary>
               <span class="dom-icon">{d.icon}</span>
               <span class="dom-num">{d.key}</span>
@@ -31,17 +47,19 @@ const hrefOf = (it) => it.to || ('/m/' + it.slug);
               <span class="chev" aria-hidden="true">▾</span>
             </summary>
             <div class="branches">
-              {d.branches.map((c) => (
-                <div class="branch">
+              {d.branches.map((c, ci) => (
+                <div class="branch" data-branch={`${d.key}-${ci}`}>
                   <h4>{c.h}</h4>
                   <ul>
                     {c.items.map((it) => {
                       const m = statusMeta(it.status);
+                      const hay = ((it.t || '') + ' ' + (it.lead || '') + ' ' + (it.from || '')).toLowerCase();
                       return (
-                        <li>
+                        <li class="item" data-status={it.status} data-search={hay}>
                           <a class="node" href={hrefOf(it)}>
                             <span class={`dot ${m.cls}`} title={m.label}></span>
                             <span class="node-t">{it.t}</span>
+                            {it.from && <span class="from" title="출처">{it.from}</span>}
                             {it.to && <span class="ext" title="기능 페이지">↗</span>}
                             <span class="go" aria-hidden="true">→</span>
                           </a>
@@ -69,6 +87,36 @@ const hrefOf = (it) => it.to || ('/m/' + it.slug);
   </section>
 
   <style>
+    /* 컨트롤: 필터 칩 + 검색 + 펼치기/접기 */
+    .controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 14px 18px; margin: 0 2px 20px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--bg-card); color: var(--fg-soft);
+      font-size: 0.86rem; font-weight: 600; cursor: pointer; line-height: 1;
+      transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease; }
+    .chip:hover { background: var(--bg-soft); color: var(--fg); }
+    .chip.is-on { background: var(--fg); border-color: var(--fg); color: var(--bg-card); }
+    .chip.is-on .dot { box-shadow: 0 0 0 1px var(--bg-card); }
+    .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .search { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--bg-card); color: var(--fg); font-size: 0.88rem; min-width: 180px;
+      transition: border-color 0.14s ease; }
+    .search:focus { outline: none; border-color: var(--muted); }
+    .search::placeholder { color: var(--muted); }
+    .toggle-all { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--bg-card); color: var(--fg-soft); font-size: 0.84rem; font-weight: 600;
+      cursor: pointer; transition: background 0.14s ease, color 0.14s ease; }
+    .toggle-all:hover { background: var(--bg-soft); color: var(--fg); }
+    .no-match { color: var(--muted); font-size: 0.95rem; text-align: center; margin: 40px 2px; }
+
+    /* 출처 배지 */
+    .from { color: var(--muted); font-size: 0.74rem; font-weight: 600; padding: 2px 7px; border-radius: 999px;
+      background: var(--bg-soft); border: 1px solid var(--line-soft); white-space: nowrap; }
+
+    /* 필터/검색으로 숨김 */
+    .item[hidden], .branch[hidden], .domain[hidden] { display: none; }
+
     /* 지도 트리 */
     .tree { display: flex; flex-direction: column; gap: 14px; }
     .domain { border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-card);
@@ -118,5 +166,92 @@ const hrefOf = (it) => it.to || ('/m/' + it.slug);
       .branch { padding: 16px 18px; border-right: none; }
       .go { opacity: 1; transform: none; }
     }
+    @media (max-width: 680px) {
+      .controls { flex-direction: column; align-items: stretch; }
+      .search { flex: 1; min-width: 0; }
+      .tools { justify-content: flex-start; }
+    }
   </style>
+
+  <script is:inline>
+    (function () {
+      const KEY = 'mirror.open.v1';
+      const domainsEls = Array.from(document.querySelectorAll('.domain'));
+      const items = Array.from(document.querySelectorAll('.item'));
+      const branches = Array.from(document.querySelectorAll('.branch'));
+      const chips = Array.from(document.querySelectorAll('.chip'));
+      const searchEl = document.getElementById('mirror-search');
+      const noMatch = document.querySelector('.no-match');
+      const tree = document.querySelector('.tree');
+
+      let curStatus = 'all';
+      let curQuery = '';
+
+      // 열림상태 저장/복원
+      function loadOpen() {
+        try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+      }
+      function saveOpen(map) {
+        try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) {}
+      }
+      const openMap = loadOpen();
+      domainsEls.forEach((d) => {
+        const id = d.dataset.domain;
+        if (Object.prototype.hasOwnProperty.call(openMap, id)) d.open = !!openMap[id];
+        d.addEventListener('toggle', () => {
+          openMap[id] = d.open;
+          saveOpen(openMap);
+        });
+      });
+
+      // 필터 + 검색 적용
+      function apply() {
+        items.forEach((li) => {
+          const okStatus = curStatus === 'all' || li.dataset.status === curStatus;
+          const okSearch = !curQuery || (li.dataset.search || '').indexOf(curQuery) !== -1;
+          li.hidden = !(okStatus && okSearch);
+        });
+        // 항목이 하나도 안 보이는 브랜치/도메인은 숨김
+        branches.forEach((b) => {
+          const anyVisible = b.querySelector('.item:not([hidden])');
+          b.hidden = !anyVisible;
+        });
+        let anyDomainVisible = false;
+        domainsEls.forEach((d) => {
+          const anyVisible = d.querySelector('.item:not([hidden])');
+          d.hidden = !anyVisible;
+          if (anyVisible) anyDomainVisible = true;
+        });
+        if (noMatch) noMatch.hidden = anyDomainVisible;
+        if (tree) tree.hidden = !anyDomainVisible;
+      }
+
+      chips.forEach((c) => {
+        c.addEventListener('click', () => {
+          chips.forEach((x) => x.classList.remove('is-on'));
+          c.classList.add('is-on');
+          curStatus = c.dataset.status;
+          apply();
+        });
+      });
+
+      if (searchEl) {
+        searchEl.addEventListener('input', () => {
+          curQuery = searchEl.value.trim().toLowerCase();
+          apply();
+        });
+      }
+
+      const expandBtn = document.getElementById('expand-all');
+      const collapseBtn = document.getElementById('collapse-all');
+      if (expandBtn) expandBtn.addEventListener('click', () => {
+        domainsEls.forEach((d) => { d.open = true; });
+      });
+      if (collapseBtn) collapseBtn.addEventListener('click', () => {
+        domainsEls.forEach((d) => { d.open = false; });
+      });
+
+      apply();
+    })();
+  </script>
 </Base>
