@@ -7,7 +7,7 @@
 //   - Project URL      → SUPABASE_URL
 //   - Project API keys의 anon(public) → SUPABASE_ANON_KEY
 
-export const SUPABASE_URL = '';       // 예: https://abcxyz.supabase.co
-export const SUPABASE_ANON_KEY = '';  // 예: eyJhbGciOi...
+export const SUPABASE_URL = 'https://chptaqszhlpymefbqjfq.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_kHVxKkCweUyHluk3p-Szdg_VUQac3UI';
 
 export const hasSupabase = () => Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);

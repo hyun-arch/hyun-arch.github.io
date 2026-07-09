@@ -48,3 +48,24 @@ export async function sbDelete(id) {
     headers: baseHeaders(),
   });
 }
+
+// ── 캐러셀 보관함 (carousels 테이블) ─────────────────────────
+export async function sbCarouselList() {
+  return req(rest('carousels?select=*&order=created_at.desc'), { headers: baseHeaders() });
+}
+
+export async function sbCarouselInsert(row) {
+  const out = await req(rest('carousels'), {
+    method: 'POST',
+    headers: { ...baseHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify(row),
+  });
+  return Array.isArray(out) ? out[0] : out;
+}
+
+export async function sbCarouselDelete(id) {
+  await req(rest(`carousels?id=eq.${encodeURIComponent(id)}`), {
+    method: 'DELETE',
+    headers: baseHeaders(),
+  });
+}

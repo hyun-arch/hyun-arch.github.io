@@ -177,6 +177,8 @@ import Base from '../layouts/Base.astro';
     const SESSION_KEY = 'aramirror.admin.session';
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+    // 로컬(KST) 날짜 YYYY-MM-DD — UTC(toISOString) 쓰면 새벽엔 하루 전으로 찍힘
+    const localDate = () => { const d = new Date(), p = (n) => (n < 10 ? '0' : '') + n; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); };
 
     // ── 접근 게이트 ──────────────────────────────────
     function currentPass() { return localStorage.getItem(PASS_KEY) || 'arami'; }
@@ -203,7 +205,7 @@ import Base from '../layouts/Base.astro';
       inited = true;
 
       $('fCategory').innerHTML = CATEGORIES.map((c) => `<option value="${c}">${c}</option>`).join('');
-      $('fDate').value = new Date().toISOString().slice(0, 10);
+      $('fDate').value = localDate();
 
       $('save').addEventListener('click', onSave);
       $('cancelEdit').addEventListener('click', clearForm);
@@ -264,7 +266,7 @@ import Base from '../layouts/Base.astro';
       $('fBody').value = '';
       $('fCategory').value = CATEGORIES[0];
       $('fStatus').value = 'published';
-      $('fDate').value = new Date().toISOString().slice(0, 10);
+      $('fDate').value = localDate();
       $('formTitle').textContent = '새 글 작성';
       $('cancelEdit').hidden = true;
     }
@@ -313,7 +315,7 @@ import Base from '../layouts/Base.astro';
       const blob = new Blob([exportAll()], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `aramirror-board-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `aramirror-board-${localDate()}.json`;
       a.click();
       URL.revokeObjectURL(a.href);
     }

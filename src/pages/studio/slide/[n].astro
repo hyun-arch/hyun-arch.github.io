@@ -1,0 +1,137 @@
+---
+// 슬라이드 1장을 인스타 사이즈(1080×1350)로 풀블리드 렌더 → PNG 추출용.
+// nav/footer 없이 슬라이드만. 디자인 시스템(엄격): 코랄 #c2603b 단일 포인트,
+// ExtraBold 800, 큰 여백, 강조 밴드, 하단 워터마크 — 매번 동일하게.
+import { carousel, slideByN } from '../../../data/carousel.js';
+
+export function getStaticPaths() {
+  return carousel.slides.map((s) => ({ params: { n: String(s.n) }, props: { s } }));
+}
+const { s } = Astro.props;
+const total = carousel.slides.length;
+const dark = s.theme === 'dark';
+---
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@500;600;700&display=swap" />
+  <style>
+    /* 디자인 시스템 (엄격) — 브랜드 노랑 #e9ed12 단일 포인트. 변경 없이 사용.
+       다크 슬라이드: 노랑 포인트 + 흰 텍스트. 라이트 슬라이드: 검정 텍스트 + 노랑 밴드. */
+    :root {
+      --cream: #faf6ef; --ink: #17140f; --ink-soft: #221d16;
+      --pop: #e9ed12;                 /* 브랜드 노랑 — 고정 */
+      --mono: "Spline Sans Mono", ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1350px; }
+    body { font-family: "Pretendard", system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+    .slide {
+      width: 1080px; height: 1350px; padding: 92px 84px 84px;
+      display: flex; flex-direction: column; position: relative;
+    }
+    .slide.light { background: var(--cream); color: var(--ink); }
+    .slide.dark  { background: var(--ink);  color: #f4f0e6; }
+    .slide.dark.cover { background: radial-gradient(125% 90% at 50% 4%, #2a2519 0%, var(--ink) 58%, #100e09 100%); }
+
+    /* 배경 고스트 숫자 — 시선 무게 */
+    .ghost {
+      position: absolute; right: 20px; top: 40px; font-family: var(--mono);
+      font-weight: 700; font-size: 400px; line-height: 1; letter-spacing: -0.04em;
+      user-select: none;
+    }
+    .slide.dark .ghost { color: var(--pop); opacity: 0.14; }
+    .slide.light .ghost { color: var(--ink); opacity: 0.05; }
+
+    .kicker {
+      font-family: var(--mono); font-weight: 600; font-size: 27px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 14px; z-index: 1;
+    }
+    .kicker::before { content: ''; width: 46px; height: 5px; background: var(--pop); border-radius: 2px; }
+    .slide.dark .kicker { color: var(--pop); }
+    .slide.light .kicker { color: var(--ink); }
+
+    .body { flex: 1; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
+
+    h1 { font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; font-size: 88px; }
+    .cover h1 { font-size: 108px; }
+    .slide.dark h1 { color: #fff; }
+    .slide.light h1 { color: var(--ink); }
+    /* 노랑 강조 밴드 — 검정 글자, 두 테마 공통 (시그니처) */
+    h1 mark {
+      background: var(--pop); color: var(--ink); padding: 0.02em 0.14em 0.06em;
+      border-radius: 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    }
+    .title-sub { margin-top: 20px; font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+    .slide.dark .title-sub { color: var(--pop); }
+    .slide.light .title-sub { color: #6a6350; }
+
+    .sub { margin-top: 30px; font-size: 34px; line-height: 1.5; font-weight: 500; max-width: 21ch; }
+    .slide.dark .sub { color: #d3ccbb; }
+    .slide.light .sub { color: #5a5044; }
+
+    .points { margin-top: 46px; display: flex; flex-direction: column; gap: 22px; }
+    .points li { list-style: none; display: flex; gap: 20px; align-items: flex-start;
+      font-size: 34px; font-weight: 600; line-height: 1.34; letter-spacing: -0.01em; }
+    .points li b { font-weight: 900; flex: 0 0 auto; }
+    .slide.dark .points li { color: #efe9dc; }
+    .slide.dark .points li b { color: var(--pop); }
+    .slide.light .points li { color: var(--ink); }
+    .slide.light .points li b { color: var(--ink); }
+
+    .cover .center { text-align: center; align-items: center; }
+    .cover .center .sub { max-width: 24ch; }
+
+    .foot {
+      display: flex; align-items: center; justify-content: space-between; z-index: 1;
+      font-family: var(--mono); font-size: 25px; font-weight: 500;
+    }
+    .slide.light .foot { color: #8c8070; }
+    .slide.dark .foot { color: #9c9284; }
+    .brand-badge { display: flex; align-items: center; gap: 12px; }
+    .brand-badge .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--pop); }
+    .dots { display: flex; gap: 9px; align-items: center; }
+    .dots i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; opacity: 0.3; }
+    .dots i.on { opacity: 1; background: var(--pop); width: 28px; border-radius: 5px; }
+
+    .big-hint {
+      margin-top: 50px; align-self: flex-start; font-size: 38px; font-weight: 800;
+      letter-spacing: -0.02em; background: var(--pop); color: var(--ink);
+      padding: 16px 28px; border-radius: 999px;
+    }
+    .cover .center .big-hint { align-self: center; }
+  </style>
+</head>
+<body>
+  <div class={`slide ${dark ? 'dark' : 'light'} ${s.kind === '표지' ? 'cover' : ''}`}>
+    {(s.kind === '치트키') && <div class="ghost">{['①','②','③','④','⑤'][s.n - 2]}</div>}
+
+    <div class="kicker">{s.label}</div>
+
+    <div class={`body ${s.kind === '표지' ? 'center' : ''}`}>
+      <h1 set:html={s.title}></h1>
+      {s.titleSub && <p class="title-sub">{s.titleSub}</p>}
+      {s.sub && <p class="sub">{s.sub}</p>}
+
+      {s.points && (
+        <ul class="points">
+          {s.points.map((p) => (<li><b>—</b><span>{p}</span></li>))}
+        </ul>
+      )}
+
+      {s.kind === '표지' && s.foot && <p class="big-hint">{s.foot}</p>}
+    </div>
+
+    <div class="foot">
+      <span class="brand-badge"><span class="dot"></span>{carousel.handle} · Aramirror</span>
+      <span class="dots">
+        {carousel.slides.map((x) => (<i class={x.n === s.n ? 'on' : ''}></i>))}
+      </span>
+    </div>
+  </div>
+</body>
+</html>

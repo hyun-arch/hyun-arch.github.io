@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>아람휴비스 평가시트</title>
+<meta name="description" content="핵심가치·사업지표·직무KPI·협업 4층 평가를 한 장에서 — 점수 자동 계산." />
+<style>
+  :root{
+    --bg:#08090d; --bg2:#10121a; --card:#151824; --line:#232838;
+    --ink:#e9ebf2; --dim:#98a0b3; --faint:#6b7385;
+    --coral:#ff6b5e; --coral2:#ff8a7a; --gold:#f5c451; --green:#54d08a; --blue:#5aa9ff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;overflow-x:hidden;background:
+    radial-gradient(1000px 500px at 50% -10%,rgba(90,169,255,.10),transparent 60%),var(--bg);
+    color:var(--ink);font-family:-apple-system,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;line-height:1.55}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+  header{padding:32px 16px 10px;max-width:720px;margin:0 auto}
+  .kicker{color:var(--blue);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+  h1{font-size:26px;margin:8px 0 4px;font-weight:900;
+    background:linear-gradient(120deg,#fff,#bcd8ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--dim);font-size:14px;margin:0}
+
+  .who{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .who input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:11px;
+    color:var(--ink);padding:11px 13px;font-size:14px;font-family:inherit}
+  .who input::placeholder{color:var(--faint)}
+
+  h2.sec{font-size:15px;margin:26px 0 4px;font-weight:900}
+  h2.sec small{display:block;color:var(--faint);font-size:12px;font-weight:600;margin-top:2px}
+  .wt{float:right;font-size:12px;font-weight:800;color:var(--gold);background:rgba(245,196,81,.1);
+    border:1px solid rgba(245,196,81,.3);border-radius:999px;padding:2px 9px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-top:10px}
+  .qtop{display:flex;align-items:baseline;gap:8px}
+  .qname{font-weight:800;font-size:15px}
+  .qhint{color:var(--faint);font-size:12px;margin-top:2px}
+  .scale{display:flex;gap:7px;margin-top:10px}
+  .sc{flex:1;text-align:center;padding:9px 0;border:1px solid var(--line);border-radius:10px;
+    background:var(--bg2);color:var(--dim);font-weight:800;font-size:15px;cursor:pointer;user-select:none}
+  .sc.on{background:linear-gradient(120deg,#5aa9ff,#7bc0ff);color:#04101f;border-color:transparent}
+
+  textarea,.kpi input{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+    color:var(--ink);padding:10px 12px;font-size:14px;font-family:inherit;margin-top:8px;resize:vertical}
+  .kpi{display:grid;grid-template-columns:1fr 84px;gap:8px;align-items:center;margin-top:8px}
+  .kpi input[type=number]{text-align:center}
+
+  .coll{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .chip{font-size:12.5px;padding:6px 11px;border:1px solid var(--line);border-radius:999px;
+    background:var(--bg2);color:var(--dim);cursor:pointer;user-select:none}
+  .chip.on{background:rgba(84,208,138,.14);color:var(--green);border-color:rgba(84,208,138,.4)}
+
+  /* sticky score */
+  .score{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(8,9,13,.94);
+    backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 16px}
+  .score .in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:12px}
+  .score .in>div:first-child{flex:0 0 auto}
+  .score .bd{min-width:0}
+  .score .big{font-size:30px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;
+    background:linear-gradient(120deg,#54d08a,#7be0a6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .score .lab{color:var(--faint);font-size:11.5px}
+  .score .bd{flex:1;color:var(--dim);font-size:11.5px;line-height:1.4}
+  .btn{background:linear-gradient(120deg,#ff6b5e,#ff8a7a);color:#fff;border:0;border-radius:11px;
+    padding:11px 16px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+  .note{color:var(--faint);font-size:12px;margin-top:6px}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);color:var(--faint);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">아람휴비스 · 평가시트 v1</div>
+  <h1>4층 평가시트</h1>
+  <p class="sub">핵심가치 · 사업지표 · 직무KPI · 협업 — 점수 자동 계산</p>
+  <div class="who">
+    <input id="who" placeholder="평가 대상자 이름" />
+    <input id="by" placeholder="평가자 (상사/동료/본인)" />
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 1층 핵심가치 -->
+  <h2 class="sec"><span class="wt">20%</span>1층 · 핵심가치
+    <small>5대 가치대로 행동했나 (1 전혀 ~ 5 매우) · 상사+본인</small></h2>
+  <div id="values"></div>
+
+  <!-- 2층 사업지표 -->
+  <h2 class="sec"><span class="wt">20%</span>2층 · 사업지표 <small>팀 공동 성과 — 데이터로 자동. 지금은 팀 점수 입력</small></h2>
+  <div class="card">
+    <div class="qtop"><span class="qname">이 사업 팀 점수</span></div>
+    <div class="qhint">그 사업이 이겼나 (매출·불량률·리텐션 등 대표지표 달성도)</div>
+    <div class="scale" data-band="biz">
+      <div class="sc" data-v="1">1</div><div class="sc" data-v="2">2</div><div class="sc" data-v="3">3</div><div class="sc" data-v="4">4</div><div class="sc" data-v="5">5</div>
+    </div>
+  </div>
+
+  <!-- 3층 직무KPI -->
+  <h2 class="sec"><span class="wt">40%</span>3층 · 직무 KPI <small>분기 목표 2~4개, 숫자로 · 상사+본인</small></h2>
+  <div id="kpis"></div>
+  <div class="note">달성률 = 실제÷목표. 100% 넘으면 초과달성으로 5점 처리.</div>
+
+  <!-- 4층 협업 -->
+  <h2 class="sec"><span class="wt">20%</span>4층 · 협업 (360°) <small>같이 일한 사람이 평가 · 익명 집계</small></h2>
+  <div class="card">
+    <div class="qtop"><span class="qname">① 이 사람과 다시 일하고 싶은가?</span></div>
+    <div class="scale" data-band="collab"><div class="sc" data-v="1">1</div><div class="sc" data-v="2">2</div><div class="sc" data-v="3">3</div><div class="sc" data-v="4">4</div><div class="sc" data-v="5">5</div></div>
+  </div>
+  <div class="card">
+    <div class="qtop"><span class="qname">② 핵심가치대로 행동했나?</span></div>
+    <div class="qhint">해당하는 가치를 눌러 체크</div>
+    <div class="coll" id="collvals"></div>
+  </div>
+  <div class="card">
+    <div class="qtop"><span class="qname">③ 한 줄 칭찬 + 한 줄 개선점</span></div>
+    <textarea rows="3" id="memo" placeholder="칭찬: ...&#10;개선점: ..."></textarea>
+  </div>
+
+  <footer>
+    비중(20·20·40·20)은 사장님이 조정 가능 · 아람휴비스 인사평가 v1 · 2026-07-09<br/>
+    이 시트는 워크샵에서 바로 쓰는 용도 — 실제 웹앱은 이 골격으로 확장합니다.
+  </footer>
+</div>
+
+<div class="score">
+  <div class="in">
+    <div><div class="big" id="total">0.0</div><div class="lab">/ 5.0 종합</div></div>
+    <div class="bd" id="brk">가치 – · 사업 – · KPI – · 협업 –</div>
+    <button class="btn" id="copy">결과 복사</button>
+  </div>
+</div>
+
+<script>
+  var VALUES=[
+    ["가치 우선","직급·목소리 아니라 더 나은 생각이 이긴다"],
+    ["고객의 눈","끝엔 쓰는 사람 관점으로 판단했나"],
+    ["끝까지 완성","맡은 걸 마무리했나"],
+    ["함께 이김","옆 부서까지 협업에서 도움을 줬나"],
+    ["배우고 고침","피드백 받고 실제로 바뀌었나"]
+  ];
+  var state={val:[0,0,0,0,0], biz:0, kpi:[], collab:0, collvals:{}};
+
+  // build value questions
+  var vc=document.getElementById('values');
+  VALUES.forEach(function(v,i){
+    var c=document.createElement('div'); c.className='card';
+    c.innerHTML='<div class="qtop"><span class="qname">'+(i+1)+'. '+v[0]+'</span></div>'+
+      '<div class="qhint">'+v[1]+'</div><div class="scale" data-band="val" data-i="'+i+'">'+
+      [1,2,3,4,5].map(function(n){return '<div class="sc" data-v="'+n+'">'+n+'</div>'}).join('')+'</div>';
+    vc.appendChild(c);
+  });
+  // build collab value chips
+  var cvc=document.getElementById('collvals');
+  VALUES.forEach(function(v,i){
+    var s=document.createElement('span'); s.className='chip'; s.textContent=v[0]; s.dataset.i=i;
+    cvc.appendChild(s);
+  });
+  // build 3 KPI rows
+  var kc=document.getElementById('kpis');
+  for(var k=0;k<3;k++){
+    var c=document.createElement('div'); c.className='card';
+    c.innerHTML='<input placeholder="목표 '+(k+1)+' (예: 해지율 5%→3%)" class="kname"/>'+
+      '<div class="kpi"><input class="ktgt" type="number" placeholder="목표"/><input class="kact" type="number" placeholder="실제"/></div>';
+    kc.appendChild(c);
+  }
+
+  function paint(band,i,v){
+    var sel='.scale[data-band="'+band+'"]'+(band==='val'?'[data-i="'+i+'"]':'');
+    var sc=document.querySelector(sel).querySelectorAll('.sc');
+    sc.forEach(function(x){x.classList.toggle('on',+x.dataset.v===v)});
+  }
+  document.querySelectorAll('.scale').forEach(function(sc){
+    sc.addEventListener('click',function(e){
+      var t=e.target.closest('.sc'); if(!t)return;
+      var band=sc.dataset.band, v=+t.dataset.v;
+      if(band==='val'){var i=+sc.dataset.i; state.val[i]=v; paint('val',i,v);}
+      else if(band==='biz'){state.biz=v; paint('biz',null,v);}
+      else if(band==='collab'){state.collab=v; paint('collab',null,v);}
+      calc();
+    });
+  });
+  cvc.addEventListener('click',function(e){
+    var t=e.target.closest('.chip'); if(!t)return;
+    t.classList.toggle('on'); state.collvals[t.dataset.i]=t.classList.contains('on');
+  });
+  kc.addEventListener('input',calc);
+
+  function avg(a){var f=a.filter(function(x){return x>0}); return f.length?f.reduce(function(s,x){return s+x},0)/f.length:0;}
+  function kpiScore(){
+    var rows=kc.querySelectorAll('.card'), tot=0, n=0;
+    rows.forEach(function(r){
+      var tgt=parseFloat(r.querySelector('.ktgt').value), act=parseFloat(r.querySelector('.kact').value);
+      if(tgt>0 && !isNaN(act)){ var rate=act/tgt; var s=Math.max(1,Math.min(5, rate*5)); tot+=s; n++; }
+    });
+    return n?tot/n:0;
+  }
+  function calc(){
+    var v=avg(state.val), b=state.biz, k=kpiScore(), c=state.collab;
+    // weighted only over answered layers (5-scale)
+    var parts=[[v,.20],[b,.20],[k,.40],[c,.20]], num=0, den=0;
+    parts.forEach(function(p){ if(p[0]>0){num+=p[0]*p[1]; den+=p[1];} });
+    var total=den?num/den:0;
+    document.getElementById('total').textContent=total.toFixed(1);
+    document.getElementById('brk').textContent=
+      '가치 '+(v?v.toFixed(1):'–')+' · 사업 '+(b||'–')+' · KPI '+(k?k.toFixed(1):'–')+' · 협업 '+(c||'–');
+  }
+  document.getElementById('copy').addEventListener('click',function(){
+    var who=document.getElementById('who').value||'(대상자)';
+    var by=document.getElementById('by').value||'(평가자)';
+    var v=avg(state.val),b=state.biz,k=kpiScore(),c=state.collab;
+    var chosen=VALUES.filter(function(_,i){return state.collvals[i]}).map(function(x){return x[0]}).join(', ')||'–';
+    var txt='[아람휴비스 평가] '+who+' (평가자 '+by+')\n'+
+      '종합 '+document.getElementById('total').textContent+'/5\n'+
+      '· 핵심가치 '+(v?v.toFixed(1):'–')+' (20%)\n'+
+      '· 사업지표 '+(b||'–')+' (20%)\n'+
+      '· 직무KPI '+(k?k.toFixed(1):'–')+' (40%)\n'+
+      '· 협업 '+(c||'–')+' (20%)\n'+
+      '협업 체크 가치: '+chosen+'\n'+
+      '메모: '+(document.getElementById('memo').value||'–');
+    if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){alert('결과 복사됨! 슬랙·메모에 붙여넣으세요.')},function(){prompt('복사:',txt)});}
+    else prompt('복사:',txt);
+  });
+  calc();
+</script>
+</body>
+</html>

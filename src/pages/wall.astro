@@ -34,6 +34,9 @@ const external = [
 <Base title="생각의 벽">
   <section style="padding-top:80px">
     <div class="wrap">
+      <p style="margin-bottom:14px">
+        <a href="/mirror" style="color:var(--muted);text-decoration:none;font-size:0.9rem">← 전체 지도</a>
+      </p>
       <p class="section-kicker">The Wall</p>
       <h2>생각의 벽</h2>
       <p class="lead">
@@ -50,10 +53,17 @@ const external = [
           </div>
           <p class="note">내가 직접 던진 원본. 출처가 없다 — 출처가 곧 나이기 때문이다.</p>
           {mine.map((m) => (
-            <a class="item" href={m.href} style={m.href === '#' ? 'pointer-events:none' : ''}>
-              <h4>{m.title}</h4>
-              <p>{m.desc}</p>
-            </a>
+            m.href === '#' ? (
+              <div class="item soon" aria-disabled="true">
+                <h4>{m.title} <span class="soon-badge">준비 중</span></h4>
+                <p>{m.desc}</p>
+              </div>
+            ) : (
+              <a class="item" href={m.href}>
+                <h4>{m.title}</h4>
+                <p>{m.desc}</p>
+              </a>
+            )
           ))}
         </div>
 
@@ -76,4 +86,13 @@ const external = [
       </div>
     </div>
   </section>
+
+  <style>
+    .item.soon { opacity:.55; cursor:default; }
+    .soon-badge {
+      display:inline-block; font-size:0.68rem; font-weight:600; vertical-align:middle;
+      padding:2px 8px; margin-left:6px; border-radius:999px;
+      border:1px solid var(--line); color:var(--muted);
+    }
+  </style>
 </Base>

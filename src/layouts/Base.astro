@@ -4,6 +4,13 @@ const { title, frontmatter } = Astro.props;
 const pageTitle = frontmatter?.title ?? title ?? 'Aramirror';
 const desc = frontmatter?.description ?? 'AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경.';
 const isMarkdown = Boolean(frontmatter);
+
+// OG 이미지 자동생성 무기: 페이지 경로 → /og/<slug>.png (빌드타임 생성분과 매칭)
+const path = Astro.url.pathname.replace(/\/$/, '');
+const ogMatch = path.match(/^\/((?:build-logs|writings)\/[^/]+)$/);
+const ogKey = ogMatch ? ogMatch[1] : 'home';
+const ogImage = new URL(`/og/${ogKey}.png`, Astro.site).href;
+const pageUrl = new URL(path || '/', Astro.site).href;
 ---
 <!doctype html>
 <html lang="ko">
@@ -13,10 +20,29 @@ const isMarkdown = Boolean(frontmatter);
     <title>{pageTitle} · Aramirror</title>
     <meta name="description" content={desc} />
     <meta name="theme-color" content="#ffffff" />
+    <!-- OG / 공유카드 (자동생성 이미지) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Aramirror" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"
     />
   </head>
   <body>
@@ -24,13 +50,14 @@ const isMarkdown = Boolean(frontmatter);
       <div class="wrap">
         <a class="brand" href="/">Aramirror<span class="dot">.</span></a>
         <div class="links">
+          <a href="/hq" class="nav-hq">총괄실</a>
+          <a href="/mirror">전체 지도</a>
           <a href="/wall">생각의 벽</a>
-          <a href="/architecture">Architecture</a>
-          <a href="/agents">Agents</a>
           <a href="/build-logs">Build Logs</a>
           <a href="/writings">글</a>
           <a href="/board">게시판</a>
           <a href="/flow">몰입 · Flow</a>
+          <a href="/studio">캐러셀</a>
           <a href="/publish">발행</a>
         </div>
       </div>
@@ -44,9 +71,44 @@ const isMarkdown = Boolean(frontmatter);
 
     <footer>
       <div class="wrap">
+        <div class="foot-links">
+          <a href="/hq">총괄실</a>
+          <a href="/order">기획주문서</a>
+          <a href="/eval">평가시트</a>
+          <a href="/how">작동 방식</a>
+          <a href="/gtb">농구클럽 · GTB</a>
+          <a href="/spongeclub">스폰지클럽</a>
+        </div>
         Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br />
         © 2026 Aram Huvis · built with Claude Code
       </div>
     </footer>
+    <style is:global>
+      footer .foot-links { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin-bottom:14px; }
+      footer .foot-links a { color:inherit; text-decoration:underline; text-underline-offset:2px; font-size:0.9rem; }
+      .nav .links a.nav-hq { color:#ff6b5e; font-weight:700; }
+      .nav .links a.nav-hq::before { content:"●"; font-size:0.6em; vertical-align:middle; margin-right:4px; }
+    </style>
+
+    <script>
+      // scroll reveal — 요소가 뷰포트에 들어오면 스르륵 나타남
+      const els = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window && els.length) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const el = e.target as HTMLElement;
+              const delay = el.dataset.reveal ? Number(el.dataset.reveal) : 0;
+              el.style.transitionDelay = delay + 'ms';
+              el.classList.add('in');
+              io.unobserve(el);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('in'));
+      }
+    </script>
   </body>
 </html>

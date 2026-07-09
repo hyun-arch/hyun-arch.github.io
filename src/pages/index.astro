@@ -1,36 +1,43 @@
 ---
 import Base from '../layouts/Base.astro';
+import { logs } from '../data/logs.js';
+const latestLogs = logs.slice(0, 3);
 ---
 <Base title="Home">
   <header class="hero">
     <div class="wrap">
-      <p class="kicker">Aramirror · 아람, 아름다운 사람</p>
-      <h1>AI는 나를 대신하지 않는다 —<br /><mark>거울</mark>이 된다.</h1>
-      <p class="sub">
+      <p class="kicker" data-reveal>Aramirror · 아람, 아름다운 사람</p>
+      <h1 data-reveal="80">AI는 나를 대신하지 않는다 —<br /><mark>거울</mark>이 된다.</h1>
+      <p class="sub" data-reveal="160">
         AI는 나를 대신 완성하지도, 규정하지도, 해석하지도 않는다.
         패턴을 표면화하고 되묻는다. 그래서 내가 만든 것은 시스템이 아니라 —
-        내 생각이 자산·가치로 기능하는 환경이다.
+        <strong>내 생각이 자산·가치로 기능하는 환경</strong>이다.
       </p>
+      <div class="cta-row" data-reveal="240">
+        <a class="btn accent" href="/hq">총괄실 들어가기 →</a>
+        <a class="btn-outline" href="/mirror">전체 지도 보기</a>
+        <a class="btn-outline" href="/flow">몰입 시작하기</a>
+      </div>
     </div>
   </header>
 
   <section>
     <div class="wrap">
-      <p class="section-kicker">The Loop</p>
-      <h2>생각 → 지식 → 자산</h2>
-      <p class="lead">던지면 알아서 엮이고 서술된다. 세 층이 서로 다른 리듬으로 돈다.</p>
+      <p class="section-kicker" data-reveal>The Loop</p>
+      <h2 data-reveal="60">생각 → 지식 → 자산</h2>
+      <p class="lead" data-reveal="120">던지면 알아서 엮이고 서술된다. 세 층이 서로 다른 리듬으로 돈다.</p>
       <div class="cards">
-        <div class="card">
+        <div class="card" data-reveal="0">
           <span class="n">01 · 사고</span>
           <h3>던진다</h3>
           <p>떠오른 생각을 그대로 던진다. 정리·분류·태그는 없다. 입력 마찰 0.</p>
         </div>
-        <div class="card">
+        <div class="card" data-reveal="120">
           <span class="n">02 · 지식</span>
           <h3>엮인다</h3>
           <p>쌓인 메모 사이의 연결을 자동으로 발견한다. 오늘 생각이 지난달·외부 개념과 이어진다.</p>
         </div>
-        <div class="card">
+        <div class="card" data-reveal="240">
           <span class="n">03 · 자산</span>
           <h3>가치가 된다</h3>
           <p>성숙한 생각은 글·발표·아카이브가 된다. 내 사고 과정 자체가 포트폴리오.</p>
@@ -39,33 +46,55 @@ import Base from '../layouts/Base.astro';
     </div>
   </section>
 
-  <section>
+  <section class="dark-section">
     <div class="wrap">
-      <p class="section-kicker">Why</p>
-      <h2>지식도 기술도 흔해졌다.</h2>
-      <p class="lead">이제 가치는 결론이 아니라 <strong>생각의 과정</strong>에 있다. Aramirror는 그 과정을 보존하고, 비추고, 자산으로 바꾼다.</p>
-      <div class="stats">
-        <div class="stat"><div class="v">0</div><div class="l">입력 마찰 — 그냥 말하면 된다</div></div>
-        <div class="stat"><div class="v">매일</div><div class="l">밤마다 자동으로 연결·서술</div></div>
-        <div class="stat"><div class="v">내 것</div><div class="l">소유권은 언제나 나에게</div></div>
+      <p class="section-kicker" data-reveal>Why</p>
+      <h2 data-reveal="60">지식도 기술도 흔해졌다.<br />이제 가치는 <mark>과정</mark>에 있다.</h2>
+      <p class="lead" data-reveal="120">Aramirror는 결론이 아니라 생각의 과정을 보존하고, 비추고, 자산으로 바꾼다.</p>
+      <div class="num-grid">
+        <div class="num-item" data-reveal="0">
+          <span class="ni">01</span>
+          <h4>입력 마찰 0</h4>
+          <p>정리·분류·태그 없이 그냥 말하면 된다. 떠오른 순간 그대로 던진다.</p>
+        </div>
+        <div class="num-item" data-reveal="80">
+          <span class="ni">02</span>
+          <h4>밤마다 자동으로 엮인다</h4>
+          <p>쌓인 생각을 매일 밤 연결·서술한다. 오늘 생각이 지난달·외부 개념과 이어진다.</p>
+        </div>
+        <div class="num-item" data-reveal="160">
+          <span class="ni">03</span>
+          <h4>소유권은 언제나 나에게</h4>
+          <p>AI는 편집자일 뿐. 내 생각은 내 언어로, 내 자산으로 남는다.</p>
+        </div>
+        <div class="num-item" data-reveal="240">
+          <span class="ni">04</span>
+          <h4>과정 자체가 포트폴리오</h4>
+          <p>성숙한 생각은 글·발표가 된다. 어떻게 생각했는지가 곧 나의 값이다.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <p class="section-kicker">Build Logs</p>
-      <h2>이 시스템을 만들어가는 기록</h2>
-      <p class="lead">Aramirror가 어떻게 태어나고 자라는지, 개발일지로 남긴다.</p>
-      <ul class="logs">
-        <li>
-          <a href="/build-logs/01-genesis">
-            <span class="id">#01</span>
-            <span class="t">Genesis — 텔레그램 한 줄에서 시작된 OS</span>
-            <span class="d">2026-06-29</span>
-          </a>
-        </li>
+      <p class="section-kicker" data-reveal>Build Logs</p>
+      <h2 data-reveal="60">이 시스템을 만들어가는 기록</h2>
+      <p class="lead" data-reveal="120">Aramirror가 어떻게 태어나고 자라는지, 개발일지로 남긴다.</p>
+      <ul class="logs" data-reveal="160">
+        {latestLogs.map((l) => (
+          <li>
+            <a href={l.href}>
+              <span class="id">{l.id}</span>
+              <span class="t">{l.title}</span>
+              <span class="d">{l.date}</span>
+            </a>
+          </li>
+        ))}
       </ul>
+      <p data-reveal="200" style="margin-top:22px">
+        <a class="btn-outline" href="/build-logs">전체 기록 보기 →</a>
+      </p>
     </div>
   </section>
 </Base>

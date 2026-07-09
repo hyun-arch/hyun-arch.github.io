@@ -32,13 +32,12 @@ const SEED_POSTS = [
 const SEED_PAGES = [
   { path: '/', label: '홈', visible: true, note: '히어로 · The Loop' },
   { path: '/wall', label: '생각의 벽', visible: true, note: '자산 ↔ 연료 분리' },
-  { path: '/architecture', label: 'Architecture', visible: true, note: '' },
-  { path: '/agents', label: 'Agents', visible: true, note: '' },
   { path: '/build-logs', label: 'Build Logs', visible: true, note: '개발일지' },
   { path: '/writings', label: '글', visible: true, note: '' },
   { path: '/flow', label: '몰입 · Flow', visible: true, note: '몰입 타이머' },
   { path: '/publish', label: '발행', visible: true, note: 'SNS 발행' },
   { path: '/board', label: '게시판', visible: true, note: 'CRUD 게시판' },
+  { path: '/how', label: '작동 방식', visible: true, note: '흐름 + 에이전트 (설명 모음)' },
 ];
 
 // ── 내부 유틸 ────────────────────────────────────────────────
@@ -59,7 +58,11 @@ function write(key, value) {
 function fire() {
   if (isBrowser) window.dispatchEvent(new CustomEvent('aramirror:store'));
 }
-function today() { return new Date().toISOString().slice(0, 10); }
+// 로컬(KST) 기준 YYYY-MM-DD. toISOString()은 UTC라 새벽 0~9시 글이 하루 전으로 찍히는 버그가 있었음.
+function today() {
+  var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
 function nowIso() { return new Date().toISOString(); }
 function uid() { return 'p-' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-3); }
 function normalizeTags(tags) {

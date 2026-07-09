@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import { domains, statusMeta } from '../data/mirror.js';
+
+// 공개 지도(2026-07-06 개정): 비밀번호 잠금 제거. 누구나 바로 열람.
+// mirror.js 평문을 빌드 때 그대로 정적 렌더한다(브라우저 복호화 없음).
+const hrefOf = (it) => it.to || ('/m/' + it.slug);
+---
+<Base title="거울 · 전체 지도">
+  <header class="hero" style="padding:120px 0 40px">
+    <div class="wrap">
+      <p class="kicker">The Mirror · 전체 지도</p>
+      <h1>나라는 사람 전체를,<br /><mark>한눈에</mark> 비춘다.</h1>
+      <p class="sub">
+        개인 · 회사 · 사람 · 지식 · 자산 — 다섯 영역이 각각 그 아래로 다시 구조화된다.
+        <strong>어느 항목이든 눌러보세요</strong> — 그 칸의 실제 내용과 기능이 열립니다.
+      </p>
+    </div>
+  </header>
+
+  <section style="padding-top:16px; min-height:50vh">
+    <div class="wrap">
+      <div class="tree">
+        {domains.map((d) => (
+          <details class="domain" open>
+            <summary>
+              <span class="dom-icon">{d.icon}</span>
+              <span class="dom-num">{d.key}</span>
+              <span class="dom-title">{d.title}<span class="dom-en">{d.en}</span></span>
+              <span class="dom-tag">{d.tagline}</span>
+              <span class="chev" aria-hidden="true">▾</span>
+            </summary>
+            <div class="branches">
+              {d.branches.map((c) => (
+                <div class="branch">
+                  <h4>{c.h}</h4>
+                  <ul>
+                    {c.items.map((it) => {
+                      const m = statusMeta(it.status);
+                      return (
+                        <li>
+                          <a class="node" href={hrefOf(it)}>
+                            <span class={`dot ${m.cls}`} title={m.label}></span>
+                            <span class="node-t">{it.t}</span>
+                            {it.to && <span class="ext" title="기능 페이지">↗</span>}
+                            <span class="go" aria-hidden="true">→</span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <div class="legend">
+        <span><i class="dot live"></i>작동 중</span>
+        <span><i class="dot building"></i>만드는 중</span>
+        <span><i class="dot seed"></i>내용 있음</span>
+        <span><i class="dot idea"></i>아이디어</span>
+      </div>
+      <p class="foot-note">
+        이 지도는 살아있다 — 텔레그램에 던지는 모든 게 알아서 제자리 칸에 쌓이고, 밤마다 다시 엮인다.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    /* 지도 트리 */
+    .tree { display: flex; flex-direction: column; gap: 14px; }
+    .domain { border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-card);
+      overflow: hidden; transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+    .domain[open] { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05); }
+    .domain > summary { display: flex; align-items: center; gap: 16px; padding: 22px 26px; cursor: pointer;
+      list-style: none; user-select: none; }
+    .domain > summary::-webkit-details-marker { display: none; }
+    .domain > summary:hover { background: var(--bg-soft); }
+    .dom-icon { font-size: 1.5rem; line-height: 1; }
+    .dom-num { color: var(--muted); font-weight: 700; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+    .dom-title { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
+    .dom-en { color: var(--muted); font-weight: 500; font-size: 0.8rem; margin-left: 9px; letter-spacing: 0.02em; }
+    .dom-tag { color: var(--muted); font-size: 0.92rem; margin-left: auto; text-align: right; }
+    .chev { color: var(--muted); font-size: 0.85rem; transition: transform 0.2s ease; }
+    .domain[open] .chev { transform: rotate(180deg); }
+    .branches { display: grid; gap: 0; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      border-top: 1px solid var(--line-soft); }
+    .branch { padding: 20px 20px; border-top: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
+    .branch h4 { margin: 0 0 8px; font-size: 0.98rem; font-weight: 700; letter-spacing: -0.01em; }
+    .branch ul { list-style: none; padding: 0; margin: 0; }
+    .branch li { margin: 0; }
+    .node { display: flex; align-items: center; gap: 9px; padding: 8px 10px; margin: 1px -10px; border-radius: 9px;
+      color: var(--fg-soft); font-size: 0.93rem; line-height: 1.4; text-decoration: none;
+      transition: background 0.14s ease, color 0.14s ease; }
+    .node:hover { background: var(--bg-soft); color: var(--fg); }
+    .node-t { flex: 1; }
+    .ext { color: var(--muted); font-size: 0.8rem; }
+    .go { color: var(--muted); font-size: 0.85rem; opacity: 0; transform: translateX(-4px);
+      transition: opacity 0.14s ease, transform 0.14s ease; }
+    .node:hover .go { opacity: 1; transform: translateX(0); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: var(--line); }
+    .dot.live { background: #2fa15a; }
+    .dot.building { background: #e0a217; }
+    .dot.seed { background: #5a6fd0; }
+    .dot.idea { background: #c9ccd6; }
+    .legend { display: flex; flex-wrap: wrap; gap: 18px; margin: 26px 2px 0; color: var(--muted); font-size: 0.86rem; }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .legend i.dot { display: inline-block; }
+    .foot-note { color: var(--muted); font-size: 0.95rem; margin: 22px 2px 0; text-align: center; }
+
+    @media (max-width: 680px) {
+      .domain > summary { flex-wrap: wrap; gap: 10px 12px; padding: 18px 18px; position: relative; }
+      .dom-tag { margin-left: 0; width: 100%; text-align: left; order: 5; font-size: 0.86rem; }
+      .chev { position: absolute; right: 18px; top: 20px; }
+      .branches { grid-template-columns: 1fr; }
+      .branch { padding: 16px 18px; border-right: none; }
+      .go { opacity: 1; transform: none; }
+    }
+  </style>
+</Base>

@@ -1,0 +1,397 @@
+---
+import Base from '../layouts/Base.astro';
+import { carousel, osPillars, references } from '../data/carousel.js';
+
+// 캐러셀 스튜디오 — 기획부터 발행까지 한 화면.
+// 사이트 chrome 은 아라미러 다크 테마, 슬라이드 미리보기는 브랜드 노랑 #e9ed12(iframe 실제 렌더).
+const stages = [
+  { id: 'plan', n: '01', t: '기획' },
+  { id: 'slides', n: '02', t: '슬라이드' },
+  { id: 'caption', n: '03', t: '캡션' },
+  { id: 'manychat', n: '04', t: '마니챗' },
+  { id: 'refs', n: '05', t: '레퍼런스' },
+  { id: 'export', n: '06', t: '내보내기' },
+  { id: 'archive', n: '07', t: '보관함' },
+];
+const caps = carousel.captions;
+---
+<Base title="캐러셀 스튜디오">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Carousel Studio · 캐러셀 OS</p>
+      <h2>기획부터 발행까지, <mark>한 화면</mark>에서</h2>
+      <p class="lead">
+        주제 하나로 슬라이드 8장 + 플랫폼별 캡션 + 마니챗까지. 매번 같은 결로 나오게 만든 캐러셀 OS.
+        지금 세트: <b>{carousel.topic}</b>
+      </p>
+
+      <div class="stage-nav">
+        {stages.map((s) => (<a href={`#${s.id}`}><span class="sn">{s.n}</span>{s.t}</a>))}
+      </div>
+
+      <div class="savebar">
+        <button id="save-carousel" class="btn accent"
+          data-topic={carousel.topic} data-slides={carousel.slides.length}>＋ 이 캐러셀 보관함에 저장</button>
+        <span id="save-status" class="save-status"></span>
+        <span class="save-mode" id="save-mode"></span>
+      </div>
+
+      <!-- 01 기획 -->
+      <div class="block" id="plan">
+        <h3 class="blk-h"><span class="blk-n">01</span> 기획 — 캐러셀 OS 6가지</h3>
+        <p class="blk-d">이 6개를 고정해두면 “이 주제로 캐러셀 만들어줘” 한마디에 매번 같은 결이 나온다. (참고 — @zemma.selfishclub 케이스)</p>
+        <div class="pillars">
+          {osPillars.map((p) => (
+            <div class="pillar">
+              <div class="pil-top"><span class="pil-n">{p.n}</span><h4>{p.name}</h4>{p.done && <span class="chk">✓</span>}</div>
+              <p class="pil-detail">{p.detail}</p>
+              <p class="pil-have">{p.have}</p>
+              <p class="pil-miss">안 하면 · {p.miss}</p>
+            </div>
+          ))}
+        </div>
+        <div class="stic">
+          <p class="stic-h">입력 포맷 · STIC</p>
+          <p><b>S</b>ituation — 어떤 채널에 무슨 주제로 / <b>T</b>ask — 몇 장, 어떤 구조로 / <b>I</b>ntent — 왜(일관된 톤·스타일) / <b>C</b>oncern — 컬러 #e9ed12 고정 등 지킬 것</p>
+        </div>
+      </div>
+
+      <!-- 02 슬라이드 -->
+      <div class="block" id="slides">
+        <h3 class="blk-h"><span class="blk-n">02</span> 슬라이드 — {carousel.slides.length}장</h3>
+        <p class="blk-d">실제 렌더를 그대로 축소해 보여줍니다. ← → 로 넘겨보세요.</p>
+        <div class="viewer-row">
+          <button class="nav-btn" id="prev" aria-label="이전">←</button>
+          <div class="viewer"><iframe id="frame" src="/studio/slide/1" scrolling="no" title="slide"></iframe></div>
+          <button class="nav-btn" id="next" aria-label="다음">→</button>
+        </div>
+        <p class="counter"><span id="counter">1</span> / {carousel.slides.length}</p>
+        <div class="strip">
+          {carousel.slides.map((s) => (
+            <button class="thumb" data-n={s.n} title={`슬라이드 ${s.n}`}>
+              <iframe src={`/studio/slide/${s.n}`} scrolling="no" tabindex="-1"></iframe>
+              <span class="thumb-n">{s.n}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- 03 캡션 -->
+      <div class="block" id="caption">
+        <h3 class="blk-h"><span class="blk-n">03</span> 캡션 — 플랫폼별</h3>
+        <p class="blk-d">각 플랫폼 특성에 맞춰 톤·길이를 다르게. 복사해서 바로 붙여넣기.</p>
+        <div class="tabs">
+          <button class="tab on" data-p="instagram">Instagram</button>
+          <button class="tab" data-p="threads">Threads</button>
+          <button class="tab" data-p="linkedin">LinkedIn</button>
+        </div>
+        {Object.entries(caps).map(([k, c], i) => (
+          <div class={`cap ${i === 0 ? 'on' : ''}`} data-cap={k}>
+            <div class="cap-head"><span class="cap-note">{c.note}</span><button class="copy" data-copy={k}>복사</button></div>
+            <pre class="cap-body" id={`cap-${k}`}>{c.body}</pre>
+          </div>
+        ))}
+      </div>
+
+      <!-- 04 마니챗 -->
+      <div class="block" id="manychat">
+        <h3 class="blk-h"><span class="blk-n">04</span> 마니챗 — 댓글 → DM 자동발송</h3>
+        <p class="blk-d">게시물 댓글에 <b>“{carousel.manychat.trigger}”</b> 가 달리면 아래 순서로 DM 자동 발송. {carousel.manychat.note}</p>
+        <div class="mc">
+          {carousel.manychat.messages.map((m) => (
+            <div class="mc-msg">
+              <div class="mc-step">{m.step}</div>
+              <pre class="mc-text" id={`mc-${m.step.split(' ')[0]}`}>{m.text}</pre>
+              <button class="copy sm" data-copytext={m.text}>복사</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 05 레퍼런스 -->
+      <div class="block" id="refs">
+        <h3 class="blk-h"><span class="blk-n">05</span> 레퍼런스 — 찾을 곳</h3>
+        <p class="blk-d">캐러셀 만들 때 참고할 사이트 모음.</p>
+        <div class="refs">
+          {references.map((r) => (
+            <a class="ref" href={r.url} target="_blank" rel="noopener">
+              <span class="ref-t">{r.label}</span>
+              <span class="ref-d">{r.desc}</span>
+              <span class="ref-go">↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- 06 내보내기 -->
+      <div class="block" id="export">
+        <h3 class="blk-h"><span class="blk-n">06</span> 내보내기 — 인스타 PNG</h3>
+        <p class="blk-d">각 슬라이드는 1080×1350 전용 페이지로 열려요. 브라우저에서 열고 저장(또는 캡처)하면 인스타에 바로 올릴 수 있어요.</p>
+        <div class="exp-grid">
+          {carousel.slides.map((s) => (
+            <a class="exp" href={`/studio/slide/${s.n}`} target="_blank" rel="noopener">슬라이드 {s.n} 열기 ↗</a>
+          ))}
+        </div>
+        <p class="exp-note">※ 전체 PNG 자동 추출은 텔레그램으로 “캐러셀 뽑아줘” 하면 8장 한 번에 만들어 보내드려요.</p>
+      </div>
+
+      <!-- 07 보관함 -->
+      <div class="block" id="archive">
+        <h3 class="blk-h"><span class="blk-n">07</span> 보관함 — 만든 캐러셀 모아보기</h3>
+        <p class="blk-d">저장한 캐러셀이 여기 쌓입니다. 새로고침해도 안 사라져요. <b id="arch-mode-note"></b></p>
+        <div id="archive-list" class="archive-list"></div>
+        <p id="archive-empty" class="exp-note">아직 저장한 캐러셀이 없어요. 위 “보관함에 저장”을 눌러보세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .stage-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 40px; }
+    .stage-nav a { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line);
+      border-radius: 999px; padding: 8px 16px; font-size: 0.9rem; font-weight: 600; color: var(--fg-soft); }
+    .stage-nav a:hover { background: var(--bg-soft); border-color: var(--fg); }
+    .stage-nav .sn { font-family: var(--mono); color: var(--accent); font-size: 0.78rem; }
+
+    .block { padding: 40px 0; border-top: 1px solid var(--line-soft); scroll-margin-top: 70px; }
+    .blk-h { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; display: flex; align-items: baseline; gap: 12px; }
+    .blk-n { font-family: var(--mono); color: var(--accent); font-size: 0.95rem; font-weight: 600; }
+    .blk-d { color: var(--muted); margin: 0 0 24px; max-width: 60ch; line-height: 1.6; }
+
+    /* 기획 */
+    .pillars { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    .pillar { border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: var(--bg-card); }
+    .pil-top { display: flex; align-items: center; gap: 10px; }
+    .pil-n { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+    .pil-top h4 { margin: 0; font-size: 1.05rem; font-weight: 700; flex: 1; }
+    .chk { color: #2fa15a; font-weight: 800; }
+    .pil-detail { color: var(--muted); font-size: 0.85rem; margin: 8px 0 12px; }
+    .pil-have { font-size: 0.92rem; line-height: 1.5; color: var(--fg-soft); margin: 0; }
+    .pil-miss { font-size: 0.82rem; color: var(--accent-strong); margin: 12px 0 0; opacity: 0.9; }
+    .stic { margin-top: 20px; background: var(--accent-soft); border: 1px solid #efd3c4; border-radius: 14px; padding: 20px 22px; }
+    .stic-h { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; color: var(--accent-strong); font-weight: 700; margin: 0 0 8px; }
+    .stic p { margin: 0; line-height: 1.7; color: var(--fg); font-size: 0.95rem; }
+    .stic b { color: var(--accent-strong); }
+
+    /* 슬라이드 뷰어 */
+    .viewer-row { display: flex; align-items: center; justify-content: center; gap: 20px; }
+    .viewer { width: 384px; height: 480px; border-radius: 16px; overflow: hidden; border: 1px solid var(--line);
+      box-shadow: 0 18px 50px rgba(60,40,20,0.12); flex: 0 0 auto; background: #111; }
+    .viewer iframe { width: 1080px; height: 1350px; border: 0; transform: scale(0.35556); transform-origin: top left; }
+    .nav-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg-card);
+      font-size: 1.3rem; cursor: pointer; color: var(--fg); flex: 0 0 auto; transition: background .15s; }
+    .nav-btn:hover { background: var(--fg); color: var(--bg); }
+    .counter { text-align: center; font-family: var(--mono); color: var(--muted); margin: 16px 0 22px; }
+    .counter #counter { color: var(--accent); font-weight: 700; }
+    .strip { display: flex; gap: 10px; overflow-x: auto; padding: 6px 2px 12px; }
+    .thumb { position: relative; width: 104px; height: 130px; flex: 0 0 auto; border-radius: 9px; overflow: hidden;
+      border: 2px solid var(--line); background: #111; cursor: pointer; padding: 0; }
+    .thumb.on { border-color: var(--accent); }
+    .thumb iframe { width: 1080px; height: 1350px; border: 0; transform: scale(0.0963); transform-origin: top left; pointer-events: none; }
+    .thumb-n { position: absolute; left: 5px; bottom: 4px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      color: #fff; background: rgba(0,0,0,.5); border-radius: 4px; padding: 1px 5px; }
+
+    /* 캡션 */
+    .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+    .tab { border: 1px solid var(--line); background: var(--bg-card); border-radius: 999px; padding: 8px 18px;
+      font-weight: 600; font-size: 0.9rem; cursor: pointer; color: var(--fg-soft); }
+    .tab.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    .cap { display: none; }
+    .cap.on { display: block; }
+    .cap-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .cap-note { color: var(--muted); font-size: 0.86rem; }
+    .cap-body { white-space: pre-wrap; font-family: inherit; background: var(--bg-card); border: 1px solid var(--line);
+      border-radius: 12px; padding: 20px 22px; line-height: 1.7; font-size: 0.96rem; margin: 0; color: var(--fg); }
+    .copy { border: 1px solid var(--line); background: var(--bg-card); border-radius: 8px; padding: 6px 14px;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--fg); }
+    .copy:hover { background: var(--fg); color: var(--bg); }
+    .copy.sm { padding: 4px 10px; font-size: 0.76rem; }
+    .copy.done { background: #2fa15a; color: #fff; border-color: #2fa15a; }
+
+    /* 마니챗 */
+    .mc { display: flex; flex-direction: column; gap: 12px; }
+    .mc-msg { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; background: var(--bg-card); position: relative; }
+    .mc-step { font-family: var(--mono); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+    .mc-text { white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.6; color: var(--fg); font-size: 0.94rem; padding-right: 60px; }
+    .mc-msg .copy { position: absolute; top: 14px; right: 14px; }
+
+    /* 레퍼런스 */
+    .refs { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .ref { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 12px;
+      padding: 16px 18px; background: var(--bg-card); }
+    .ref:hover { background: var(--bg-soft); border-color: var(--fg); }
+    .ref-t { font-weight: 700; flex: 1; }
+    .ref-d { color: var(--muted); font-size: 0.82rem; }
+    .ref-go { color: var(--accent); font-weight: 700; }
+
+    /* 내보내기 */
+    .exp-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    .exp { text-align: center; border: 1px solid var(--line); border-radius: 10px; padding: 14px; font-weight: 600;
+      font-size: 0.9rem; color: var(--fg); background: var(--bg-card); }
+    .exp:hover { background: var(--bg-soft); }
+    .exp-note { color: var(--muted); font-size: 0.86rem; margin-top: 16px; }
+
+    /* 저장 바 + 보관함 */
+    .savebar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 36px; }
+    .save-status { color: #2fa15a; font-weight: 600; font-size: 0.9rem; }
+    .save-mode { margin-left: auto; font-family: var(--mono); font-size: 0.76rem; color: var(--muted); }
+    .archive-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .arch { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--bg-card); }
+    .arch h4 { margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; }
+    .arch .meta { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); }
+    .arch .row { display: flex; gap: 8px; margin-top: 14px; }
+    .arch button { border: 1px solid var(--line); background: var(--bg-card); border-radius: 8px; padding: 6px 12px; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--fg); }
+    .arch button:hover { background: var(--bg-soft); }
+    .arch button.del:hover { background: #b23c3c; color: #fff; border-color: #b23c3c; }
+
+    @media (max-width: 680px) {
+      .viewer { width: 300px; height: 375px; }
+      .viewer iframe { transform: scale(0.2778); }
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      var slides = document.querySelectorAll('.thumb').length;
+      var frame = document.getElementById('frame');
+      var counter = document.getElementById('counter');
+      var cur = 1;
+      function show(n) {
+        cur = ((n - 1 + slides) % slides) + 1;
+        frame.src = '/studio/slide/' + cur;
+        counter.textContent = cur;
+        document.querySelectorAll('.thumb').forEach(function (t) {
+          t.classList.toggle('on', Number(t.dataset.n) === cur);
+        });
+      }
+      document.getElementById('prev').onclick = function () { show(cur - 1); };
+      document.getElementById('next').onclick = function () { show(cur + 1); };
+      document.querySelectorAll('.thumb').forEach(function (t) {
+        t.onclick = function () { show(Number(t.dataset.n)); };
+      });
+      show(1);
+
+      // 캡션 탭
+      document.querySelectorAll('.tab').forEach(function (tab) {
+        tab.onclick = function () {
+          document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('on'); });
+          document.querySelectorAll('.cap').forEach(function (x) { x.classList.remove('on'); });
+          tab.classList.add('on');
+          document.querySelector('.cap[data-cap="' + tab.dataset.p + '"]').classList.add('on');
+        };
+      });
+
+      // 복사
+      function copyText(txt, btn) {
+        navigator.clipboard.writeText(txt).then(function () {
+          var old = btn.textContent; btn.textContent = '복사됨 ✓'; btn.classList.add('done');
+          setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1400);
+        });
+      }
+      document.querySelectorAll('.copy[data-copy]').forEach(function (b) {
+        b.onclick = function () { copyText(document.getElementById('cap-' + b.dataset.copy).textContent, b); };
+      });
+      document.querySelectorAll('.copy[data-copytext]').forEach(function (b) {
+        b.onclick = function () { copyText(b.dataset.copytext, b); };
+      });
+      // 보관함 로직은 아래 모듈 스크립트에서 (Supabase 이중 모드).
+    })();
+  </script>
+
+  <!-- 보관함 — 이중 모드: Supabase 키 있으면 클라우드, 없으면 localStorage. -->
+  <!-- 클라우드로 승격되면 이 기기에만 있던 로컬 저장분을 자동으로 올려준다. -->
+  <script>
+    import { hasSupabase } from '../lib/config.js';
+    import { sbCarouselList, sbCarouselInsert, sbCarouselDelete } from '../lib/backend.js';
+
+    const AK = 'aramcarousel.saved';
+    const cloud = hasSupabase();
+
+    const listEl = document.getElementById('archive-list');
+    const emptyEl = document.getElementById('archive-empty');
+    const modeNote = document.getElementById('arch-mode-note');
+    const saveModeEl = document.getElementById('save-mode');
+    const statusEl = document.getElementById('save-status');
+    const saveBtn = document.getElementById('save-carousel');
+
+    const mode = cloud ? '클라우드 저장 (Supabase · 모든 기기)' : '브라우저 저장 (이 기기)';
+    if (modeNote) modeNote.textContent = '· 현재: ' + mode;
+    if (saveModeEl) saveModeEl.textContent = mode;
+
+    function readLocal() { try { return JSON.parse(localStorage.getItem(AK) || '[]'); } catch { return []; } }
+    function writeLocal(a) { localStorage.setItem(AK, JSON.stringify(a)); }
+    function esc(s) { return (s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+    function stamp(iso) { return (iso || '').replace('T', ' ').slice(0, 16); }
+
+    // Supabase row → 카드 형태로 정규화
+    function normalize(x) {
+      return { id: String(x.id), topic: x.topic, slides: x.slides ?? x.slides_count ?? 0, date: x.date || stamp(x.created_at) };
+    }
+
+    async function listAll() {
+      if (!cloud) return readLocal();
+      const rows = await sbCarouselList();
+      return (rows || []).map(normalize);
+    }
+
+    function renderCards(arr) {
+      emptyEl.style.display = arr.length ? 'none' : 'block';
+      listEl.innerHTML = arr.map((x) =>
+        '<div class="arch"><h4>' + esc(x.topic) + '</h4>' +
+        '<span class="meta">' + x.slides + '장 · ' + esc(x.date) + '</span>' +
+        '<div class="row"><button data-open="' + x.id + '">보기</button>' +
+        '<button class="del" data-del="' + x.id + '">삭제</button></div></div>'
+      ).join('');
+      listEl.querySelectorAll('[data-del]').forEach((b) => {
+        b.onclick = async () => { await removeOne(b.dataset.del); refresh(); };
+      });
+      listEl.querySelectorAll('[data-open]').forEach((b) => {
+        b.onclick = () => document.getElementById('slides').scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    async function removeOne(id) {
+      if (cloud) { try { await sbCarouselDelete(id); } catch (e) { console.error(e); } }
+      else writeLocal(readLocal().filter((y) => y.id !== id));
+    }
+
+    async function refresh() {
+      try { renderCards(await listAll()); }
+      catch (e) { console.error(e); renderCards(readLocal()); }
+    }
+
+    // 클라우드 승격 시: 이 기기에만 있던 로컬 저장분을 서버로 한 번 올리고 비운다.
+    async function promoteLocal() {
+      if (!cloud) return;
+      const local = readLocal();
+      if (!local.length) return;
+      for (const x of local) {
+        try { await sbCarouselInsert({ topic: x.topic, slides: Number(x.slides) || 0 }); }
+        catch (e) { console.error('promote fail', e); }
+      }
+      writeLocal([]);
+    }
+
+    if (saveBtn) {
+      saveBtn.onclick = async () => {
+        const topic = saveBtn.dataset.topic;
+        const slides = Number(saveBtn.dataset.slides) || 0;
+        if (cloud) {
+          try { await sbCarouselInsert({ topic, slides }); }
+          catch (e) { console.error(e); statusEl.textContent = '저장 실패 — 잠시 후 다시'; return; }
+        } else {
+          const d = new Date();
+          const p = (n) => (n < 10 ? '0' : '') + n;
+          const date = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+          const arr = readLocal();
+          arr.unshift({ id: 'c' + d.getTime(), topic, slides, date });
+          writeLocal(arr);
+        }
+        statusEl.textContent = '보관함에 저장됨 ✓';
+        setTimeout(() => { statusEl.textContent = ''; }, 1800);
+        refresh();
+      };
+    }
+
+    (async () => { await promoteLocal(); refresh(); })();
+  </script>
+</Base>

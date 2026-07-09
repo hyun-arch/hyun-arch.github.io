@@ -1,0 +1,180 @@
+---
+import Base from '../layouts/Base.astro';
+import { people, groups, themes, byGroup, stats } from '../data/spongeclub.js';
+const s = stats();
+---
+<Base title="스폰지클럽 1주차 기획">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Spongeclub S2 · 1주차 미션</p>
+      <h2>71명의 기획을 <mark>한눈에</mark></h2>
+      <p class="lead">
+        스폰지클럽 시즌2 1주차 과제(각자의 “나만의 OS”)를 전부 읽어 구조화했다.
+        큰 구조(조) → 작은 구조(사람 → 기획)로 펼쳐진다. 클릭해서 파고들어가.
+      </p>
+
+      <!-- 전체 구조도 (한눈에) -->
+      <div class="overview">
+        <div class="ov-stat"><div class="v">{s.total}</div><div class="l">전체 인원</div></div>
+        <div class="ov-stat"><div class="v">{s.done}</div><div class="l">기획 제출</div></div>
+        <div class="ov-stat"><div class="v">6</div><div class="l">조</div></div>
+        <div class="ov-stat"><div class="v">{s.empty}</div><div class="l">미제출</div></div>
+      </div>
+
+      <div class="themes">
+        <p class="th-h">공통 패턴</p>
+        <div class="th-row">
+          {themes.map((t) => (<span class="chip" title={t.desc}>{t.key}</span>))}
+        </div>
+      </div>
+
+      <!-- 조 → 사람 → 기획 드릴다운 -->
+      <div class="groups">
+        {groups.map((g) => {
+          const ppl = byGroup(g);
+          const done = ppl.filter((p) => p.submitted).length;
+          return (
+            <details class="grp">
+              <summary>
+                <span class="g-name">{g}</span>
+                <span class="g-count">{done}<span>/{ppl.length} 제출</span></span>
+                <span class="g-names">{ppl.filter((p)=>p.submitted).slice(0,4).map((p)=>p.name.replace(/\(.*\)/,'')).join(' · ')} …</span>
+                <span class="chev">▾</span>
+              </summary>
+              <div class="people">
+                {ppl.map((p) => (
+                  <details class={`person ${p.submitted ? '' : 'empty'}`} data-key={`${g}/${p.name}`}>
+                    <summary>
+                      <span class="p-name">{p.name}{p.self && <span class="me">나</span>}</span>
+                      <span class="p-title">{p.submitted ? p.title : '(미제출)'}</span>
+                      <span class="p-tools">
+                        <button class="pin" title="핀" data-pin>☆</button>
+                        <button class="hide" title="숨김" data-hide>◐</button>
+                      </span>
+                    </summary>
+                    {p.submitted && (
+                      <div class="p-body">
+                        <p class="p-one">{p.oneLine}</p>
+                        <div class="p-grid">
+                          <div><span class="pl">문제</span><p>{p.problem}</p></div>
+                          <div><span class="pl">아이디어</span><p>{p.idea}</p></div>
+                        </div>
+                        <div class="p-tags">{p.tags.map((t) => (<span>#{t}</span>))}</div>
+                        <div class="p-apply"><span class="pl">→ 아람미러 적용</span><p>{p.apply}</p></div>
+                        <textarea class="p-note" placeholder="내 메모 (자동 저장)" data-note></textarea>
+                      </div>
+                    )}
+                    {!p.submitted && p.note && <div class="p-body"><p class="p-one" style="color:var(--muted)">{p.note}</p></div>}
+                  </details>
+                ))}
+              </div>
+            </details>
+          );
+        })}
+      </div>
+
+      <!-- 만들어진 과정 (시각화) -->
+      <div class="process">
+        <p class="th-h">이 페이지가 만들어진 과정</p>
+        <div class="flow">
+          <div class="fstep"><span class="fn">01</span><b>레포 클론</b><p>spongeclub-2 통째로 받기</p></div>
+          <span class="farrow">→</span>
+          <div class="fstep"><span class="fn">02</span><b>6조 병렬 분석</b><p>Fable 모델 6개 에이전트 동시에</p></div>
+          <span class="farrow">→</span>
+          <div class="fstep"><span class="fn">03</span><b>71명 기획 추출</b><p>제목·문제·아이디어·태그·적용</p></div>
+          <span class="farrow">→</span>
+          <div class="fstep"><span class="fn">04</span><b>구조화 + 웹</b><p>조→사람→기획 드릴다운 페이지</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .overview { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 8px 0 28px; }
+    .ov-stat { border: 1px solid var(--line); border-radius: 14px; padding: 20px; text-align: center; background: var(--bg-card); }
+    .ov-stat .v { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; color: var(--accent); font-family: var(--mono); }
+    .ov-stat .l { color: var(--muted); font-size: 0.86rem; margin-top: 4px; }
+
+    .themes { margin: 0 0 30px; }
+    .th-h { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.74rem; color: var(--accent); font-weight: 600; margin: 0 0 10px; }
+    .th-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: 0.86rem; font-weight: 600; background: var(--bg-card); }
+
+    .groups { display: flex; flex-direction: column; gap: 12px; }
+    .grp { border: 1px solid var(--line); border-radius: 16px; background: var(--bg-card); overflow: hidden; }
+    .grp[open] { box-shadow: 0 14px 40px rgba(60,40,20,0.06); }
+    .grp > summary { display: flex; align-items: center; gap: 16px; padding: 20px 24px; cursor: pointer; list-style: none; }
+    .grp > summary::-webkit-details-marker { display: none; }
+    .grp > summary:hover { background: var(--bg-soft); }
+    .g-name { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+    .g-count { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+    .g-count span { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+    .g-names { color: var(--muted); font-size: 0.9rem; margin-left: auto; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 45%; }
+    .chev { color: var(--muted); transition: transform 0.2s; }
+    .grp[open] > summary .chev { transform: rotate(180deg); }
+
+    .people { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-soft); border-top: 1px solid var(--line-soft); }
+    .person { background: var(--bg-card); }
+    .person.empty { opacity: 0.5; }
+    .person.hidden { display: none; }
+    .person.pinned { order: -1; }
+    .person > summary { display: flex; align-items: center; gap: 12px; padding: 16px 22px; cursor: pointer; list-style: none; }
+    .person > summary::-webkit-details-marker { display: none; }
+    .person > summary:hover { background: var(--bg-soft); }
+    .p-name { font-weight: 700; flex: 0 0 auto; min-width: 92px; }
+    .p-name .me { font-size: 0.62rem; background: var(--accent); color: #fff; border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
+    .p-title { color: var(--fg-soft); font-size: 0.92rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .p-tools { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+    .person > summary:hover .p-tools { opacity: 1; }
+    .p-tools button { border: 1px solid var(--line); background: var(--bg-card); border-radius: 7px; width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem; }
+    .p-tools button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .p-body { padding: 4px 22px 22px; border-top: 1px solid var(--line-soft); }
+    .p-one { font-size: 1.02rem; font-weight: 600; margin: 14px 0 0; line-height: 1.5; }
+    .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 0; }
+    .pl { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; }
+    .p-grid p, .p-apply p { margin: 5px 0 0; font-size: 0.92rem; line-height: 1.55; color: var(--fg-soft); }
+    .p-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; }
+    .p-tags span { font-size: 0.78rem; color: var(--accent-strong); background: var(--accent-soft); border-radius: 6px; padding: 2px 8px; }
+    .p-apply { margin: 16px 0 0; padding: 14px 16px; background: var(--bg-soft); border-radius: 10px; }
+    .p-note { width: 100%; margin-top: 12px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 44px; background: var(--bg-card); color: var(--fg); }
+
+    .process { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--line-soft); }
+    .flow { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
+    .fstep { flex: 1; min-width: 160px; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--bg-card); }
+    .fstep .fn { font-family: var(--mono); color: var(--accent); font-weight: 700; font-size: 0.85rem; }
+    .fstep b { display: block; margin: 6px 0 4px; font-size: 1.02rem; }
+    .fstep p { margin: 0; color: var(--muted); font-size: 0.85rem; line-height: 1.45; }
+    .farrow { align-self: center; color: var(--accent); font-weight: 700; }
+
+    @media (max-width: 680px) {
+      .overview { grid-template-columns: repeat(2,1fr); }
+      .people { grid-template-columns: 1fr; }
+      .p-grid { grid-template-columns: 1fr; }
+      .g-names { display: none; }
+      .farrow { display: none; }
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      var K = 'aramsponge.';
+      function get(k, d){ try { var v = localStorage.getItem(K+k); return v==null?d:JSON.parse(v); } catch(e){ return d; } }
+      function set(k, v){ localStorage.setItem(K+k, JSON.stringify(v)); }
+      var pins = get('pins', {}), hides = get('hides', {}), notes = get('notes', {});
+      document.querySelectorAll('.person').forEach(function (el) {
+        var key = el.dataset.key;
+        if (pins[key]) el.classList.add('pinned');
+        if (hides[key]) el.classList.add('hidden');
+        var pinBtn = el.querySelector('[data-pin]'), hideBtn = el.querySelector('[data-hide]');
+        var note = el.querySelector('[data-note]');
+        if (pinBtn) { if (pins[key]) pinBtn.classList.add('on');
+          pinBtn.onclick = function(e){ e.preventDefault(); pins[key]=!pins[key]; set('pins',pins); el.classList.toggle('pinned'); pinBtn.classList.toggle('on'); }; }
+        if (hideBtn) { hideBtn.onclick = function(e){ e.preventDefault(); hides[key]=true; set('hides',hides); el.classList.add('hidden'); }; }
+        if (note) { note.value = notes[key] || '';
+          note.oninput = function(){ notes[key]=note.value; set('notes',notes); };
+          note.onclick = function(e){ e.stopPropagation(); }; }
+      });
+    })();
+  </script>
+</Base>

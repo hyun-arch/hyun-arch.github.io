@@ -53,6 +53,9 @@ import Base from '../layouts/Base.astro';
     .flow-log .fl-focus { font-weight:600; flex:1; }
     .flow-log .fl-min { font-weight:700; font-variant-numeric:tabular-nums; }
     .flow-log .fl-ago { color:var(--muted); font-size:0.85rem; }
+    .flow-log .fl-del { border:0; background:none; color:var(--muted); cursor:pointer;
+      font-size:1.05rem; line-height:1; padding:2px 4px; opacity:.45; transition:opacity .15s ease, color .15s ease; }
+    .flow-log .fl-del:hover { opacity:1; color:#b23c3c; }
     .flow-empty { color:var(--muted); padding:20px 4px; }
     @media(max-width:680px){ .timer{ font-size:2.8rem; } }
   </style>
@@ -71,6 +74,8 @@ import Base from '../layouts/Base.astro';
       }
       function localDay(t){ var d=new Date(t); function p(n){return (n<10?'0':'')+n;} return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
       function fmtMin(m){ m=Math.round(m); var h=Math.floor(m/60), mm=m%60; return h? h+'시간 '+mm+'분' : mm+'분'; }
+      // 세션 1건의 분(minutes) — 초 단위(sec)가 있으면 그걸로, 옛 기록은 min 사용
+      function sessMin(x){ return x.sec!=null ? x.sec/60 : (x.min||0); }
       function ago(t){ var s=(Date.now()-t)/1000; if(s<60)return'방금'; if(s<3600)return Math.floor(s/60)+'분 전'; if(s<86400)return Math.floor(s/3600)+'시간 전'; return Math.floor(s/86400)+'일 전'; }
       function pad(n){ return (n<10?'0':'')+n; }
 
@@ -81,13 +86,22 @@ import Base from '../layouts/Base.astro';
 
       function renderStats(){
         var ss=get('sessions',[]); var today=localDay(Date.now());
-        var t=0, all=0; ss.forEach(function(x){ all+=x.min; if(localDay(x.at)===today) t+=x.min; });
+        var t=0, all=0; ss.forEach(function(x){ var m=sessMin(x); all+=m; if(localDay(x.at)===today) t+=m; });
         sToday.textContent=fmtMin(t); sTotal.textContent=fmtMin(all); sCount.textContent=ss.length;
         var sorted=ss.slice().sort(function(a,b){return b.at-a.at;});
         logEl.innerHTML = sorted.length ? sorted.map(function(x){
-          return '<li><span class="fl-focus">'+esc(x.focus)+'</span><span class="fl-min">'+fmtMin(x.min)+'</span><span class="fl-ago">· '+ago(x.at)+'</span></li>';
+          return '<li><span class="fl-focus">'+esc(x.focus)+'</span><span class="fl-min">'+fmtMin(sessMin(x))+'</span><span class="fl-ago">· '+ago(x.at)+'</span>'+
+            '<button class="fl-del" data-at="'+x.at+'" title="이 기록 삭제" aria-label="이 기록 삭제">×</button></li>';
         }).join('') : '<li class="flow-empty">첫 몰입을 시작해보세요.</li>';
       }
+      // 기록 삭제 (오염 세션 제거) — 이벤트 위임
+      logEl.addEventListener('click', function(e){
+        var b=e.target.closest ? e.target.closest('.fl-del') : null;
+        if(!b) return;
+        var at=Number(b.getAttribute('data-at'));
+        var ss=get('sessions',[]).filter(function(x){ return x.at!==at; });
+        set('sessions',ss); renderStats();
+      });
       function esc(s){ return (s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
 
       function showTime(){
@@ -110,8 +124,16 @@ import Base from '../layouts/Base.astro';
         var start=get('start',null);
         if(start==null){ set('focus', focusEl.value.trim()); set('start', Date.now()); }
         else {
-          var min=Math.max(1, Math.round((Date.now()-start)/60000));
-          var ss=get('sessions',[]); ss.push({focus:get('focus','')||'몰입', min:min, at:Date.now()});
+          var sec=Math.round((Date.now()-start)/1000);
+          // 과도 세션(12시간 초과)은 "마치기"를 깜빡한 경우가 대부분 → 확인 후에만 기록
+          if(sec>12*3600){
+            var hrs=(sec/3600).toFixed(1);
+            if(!confirm(hrs+'시간짜리 몰입이에요. 타이머를 깜빡하신 것 같으면 [취소]하면 기록 없이 접혀요.\n\n[확인]을 누르면 그대로 기록합니다.')){
+              localStorage.removeItem(K+'start'); localStorage.removeItem(K+'focus'); syncUI(); renderStats(); return;
+            }
+          }
+          var min=Math.max(1, Math.round(sec/60));
+          var ss=get('sessions',[]); ss.push({focus:get('focus','')||'몰입', sec:sec, min:min, at:Date.now()});
           set('sessions',ss); localStorage.removeItem(K+'start'); localStorage.removeItem(K+'focus');
         }
         syncUI(); renderStats();

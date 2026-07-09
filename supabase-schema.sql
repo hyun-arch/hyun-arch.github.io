@@ -50,6 +50,31 @@ select * from (values
 where not exists (select 1 from public.posts);
 
 -- ────────────────────────────────────────────────────────────
+-- 5) 캐러셀 보관함 테이블 (스튜디오 07 보관함 → 클라우드 승격)
+--    Storage = 슬라이드 PNG 링크(image_urls) / Database = 아래 메타데이터
+create table if not exists public.carousels (
+  id            uuid        primary key default gen_random_uuid(),
+  topic         text        not null,
+  week_number   int,
+  slides        int         not null default 0,
+  prompt        text        not null default '',
+  character_ids jsonb       not null default '[]'::jsonb,
+  model         text        not null default '',
+  image_urls    jsonb       not null default '[]'::jsonb,
+  created_at    timestamptz not null default now()
+);
+
+alter table public.carousels enable row level security;
+
+drop policy if exists "carousels public read"   on public.carousels;
+drop policy if exists "carousels public insert" on public.carousels;
+drop policy if exists "carousels public delete" on public.carousels;
+
+create policy "carousels public read"   on public.carousels for select using (true);
+create policy "carousels public insert" on public.carousels for insert with check (true);
+create policy "carousels public delete" on public.carousels for delete using (true);
+
+-- ────────────────────────────────────────────────────────────
 -- (선택) 쓰기 보호까지 원하면: 위 insert/update/delete 정책을 지우고
 --   create policy "posts auth write" on public.posts
 --     for all to authenticated using (true) with check (true);
