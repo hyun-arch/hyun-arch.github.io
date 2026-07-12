@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARAM OS 업그레이드 — 2기 전체 장점 적용</title>
+<style>
+  :root{ --y:#FFC400; --y2:#FFD84D; --ink:#1c1a12; --paper:#fffdf6; --muted:#6b6653; --line:#efe9d6 }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Malgun Gothic','맑은 고딕',system-ui,sans-serif;background:#f4f1e8;color:var(--ink);line-height:1.62}
+  .wrap{max-width:840px;margin:0 auto;padding:0 18px 90px}
+  header{background:linear-gradient(135deg,var(--y),var(--y2));padding:40px 26px;border-radius:0 0 26px 26px;box-shadow:0 6px 24px rgba(255,196,0,.35)}
+  header .badge{display:inline-block;background:var(--ink);color:var(--y);font-weight:800;font-size:12px;padding:5px 13px;border-radius:999px;letter-spacing:1px}
+  header h1{margin:14px 0 6px;font-size:27px;font-weight:900;letter-spacing:-1px}
+  header p{margin:0;font-weight:700;color:#4a4526;font-size:14px}
+  .intro{background:var(--paper);border-radius:18px;padding:20px 24px;margin-top:24px;border:1px solid var(--line);font-size:15px}
+  h2.sec{font-size:20px;font-weight:900;margin:34px 4px 6px}
+  .rank{background:var(--paper);border-radius:16px;padding:18px 20px 16px;margin-top:14px;border:1px solid var(--line);box-shadow:0 3px 12px rgba(0,0,0,.04);position:relative}
+  .rank .no{position:absolute;top:-11px;left:16px;background:var(--ink);color:var(--y);font-weight:900;font-size:13px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+  .rank h3{margin:8px 0 6px;font-size:17px;font-weight:900}
+  .rank .who{display:inline-block;background:var(--y);color:var(--ink);font-weight:800;font-size:11px;padding:2px 9px;border-radius:6px;margin-left:6px;vertical-align:middle}
+  .rank .q{color:var(--muted);font-size:13.5px;margin:4px 0;font-style:italic}
+  .rank .why{font-size:14px;margin:6px 0 0}
+  .rank .why b{color:#8a6d00}
+  table{width:100%;border-collapse:collapse;margin-top:14px;background:var(--paper);border-radius:14px;overflow:hidden;font-size:13.5px;border:1px solid var(--line)}
+  th{background:var(--ink);color:var(--y);padding:10px 12px;text-align:left;font-size:13px}
+  td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+  td code{background:#fff3c9;padding:2px 6px;border-radius:5px;font-size:12px}
+  .note{background:var(--ink);color:#fdfaf0;border-radius:16px;padding:18px 22px;margin-top:22px;font-size:14.5px}
+  .note b{color:var(--y)}
+  .foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:36px}
+</style>
+</head>
+<body>
+<header>
+  <span class="badge">🧽 SPONGE CLUB 2기 · 벤치마킹</span>
+  <h1>ARAM OS 업그레이드 리포트</h1>
+  <p>전체 인원 장점 → 중요한 순 리스트업 → 내 OS에 실제 적용 · 2026-07-12</p>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    스폰지클럽 2기 <b>전체 인원의 OS 장점·구조·생각의 흐름</b>을 다 뽑아서, 중요한 순으로 10개 정리하고 사장님 ARAM OS에 <b>규칙 파일로 실제 적용</b>했습니다. 아래는 그 결과입니다.
+  </div>
+
+  <h2 class="sec">🏆 중요한 순 — 장점 TOP 10</h2>
+
+  <div class="rank"><span class="no">1</span>
+    <h3>되묻는 세컨드브레인 = 멘토<span class="who">흐민</span></h3>
+    <p class="q">"저장소가 아니라 나한테 되묻는 파트너. 생각은 내가 — AI는 엔진. AI는 거울이 된다."</p>
+    <p class="why"><b>왜 1위:</b> 사장님 철학 "손은 내가, 생각은 사장님이"와 정확히 일치. 이미 "되묻는 멘토가 돼라"고 못박으신 지점.</p>
+  </div>
+
+  <div class="rank"><span class="no">2</span>
+    <h3>3층 = 인지 모드 분리<span class="who">흐민</span></h3>
+    <p class="q">"1층 사고=발산 / 2층 지식=수렴 / 3층 자산화=변환. 층 분리 = 인지 모드 분리."</p>
+    <p class="why"><b>왜 2위:</b> ARAM OS의 세로 3층이 이미 이 구조. 근데 '왜 나누는지'(머리 쓰는 방식이 바뀜)의 의미가 빠져 있어 명문화.</p>
+  </div>
+
+  <div class="rank"><span class="no">3</span>
+    <h3>자정 시냅스 파이프라인<span class="who">흐민</span></h3>
+    <p class="q">"매일 자정 Raw→관계추출→위키화. 그날 바뀐 것만, 없으면 스킵. 내가 잘 때 끝나 있다."</p>
+    <p class="why"><b>왜 3위:</b> 야간 정리를 '관계추출→주제위키' 2단계로 구조화하면 매일 자동으로 생각이 엮임. 비용도 절약.</p>
+  </div>
+
+  <div class="rank"><span class="no">4</span>
+    <h3>니즈→해결→구현→가치 + "0 to 100 금지"<span class="who">흐민</span></h3>
+    <p class="q">"기능 먼저 만들지 마라. 불편함 하나 → 기능 하나씩. 내가 이해 못 하는 기능이 하나도 없어야."</p>
+    <p class="why"><b>왜 4위:</b> 사장님 OS의 "니즈 풀다 보니 OS 됨"(emergent)을 규칙으로 고정. 과설계 방지.</p>
+  </div>
+
+  <div class="rank"><span class="no">5</span>
+    <h3>자산화 5기준 채점 게이트<span class="who">흐민</span></h3>
+    <p class="q">"독자가치·소스충분·기존중복·고유성·시점적합 5채점 → 4개+ 발행후보. 자동발행 절대 없음."</p>
+    <p class="why"><b>왜 5위:</b> 아람미러 글·보고서를 아무거나 안 내보내는 품질 게이트. 발행권은 사장님.</p>
+  </div>
+
+  <div class="rank"><span class="no">6</span>
+    <h3>파일 = 에이전트<span class="who">흐민 팀OS</span></h3>
+    <p class="q">"IDENTITY·SOUL·AGENTS·HEARTBEAT·MEMORY.md로 정체성. 평가가 아니라 이해."</p>
+    <p class="why"><b>왜 6위:</b> 사장님 CLAUDE.md 페르소나 방식과 같은 계열. 회사 OS 에이전트 정체성에 이식.</p>
+  </div>
+
+  <div class="rank"><span class="no">7</span>
+    <h3>데일리 브리핑 + 근거(provenance)<span class="who">흐민 옵수</span></h3>
+    <p class="q">"흩어진 슬랙을 매일 한 장으로. 항목마다 [상태/액션/담당/완료기준/근거]."</p>
+    <p class="why"><b>왜 7위:</b> 사장님 아침 5시 모닝리포트에 바로 이식 가능한 포맷. 근거 붙어 즉시 판단.</p>
+  </div>
+
+  <div class="rank"><span class="no">8</span>
+    <h3>따뜻한 자동 메시지 = 온맘<span class="who">배짱</span></h3>
+    <p class="q">"부모님께 매일 아침 7:30 자동 안부 → 보이스클로닝·노래까지. 작은 OS도 누군가에게 닿는다."</p>
+    <p class="why"><b>왜 8위:</b> 데일리 셀·직원/고객 케어에 응용. 기술이 아니라 '닿음'이 핵심.</p>
+  </div>
+
+  <div class="rank"><span class="no">9</span>
+    <h3>Self/External 물리 분리 = The Wall 검증<span class="who">흐민</span></h3>
+    <p class="q">"섞이면 내 생각인지 읽은 건지 헷갈림." frontmatter로 type·출처.</p>
+    <p class="why"><b>왜 9위:</b> 사장님 The Wall이 옳다는 외부 독립 검증. frontmatter 관행 강화.</p>
+  </div>
+
+  <div class="rank"><span class="no">10</span>
+    <h3>전체 시스템 사고 + 팀=아웃풋 무게중심<span class="who">비비안·흐민</span></h3>
+    <p class="q">"개인 OS=인풋 무게중심, 팀 OS=아웃풋 무게중심. 차이는 어디에 힘을 주느냐."</p>
+    <p class="why"><b>왜 10위:</b> 회사(아람휴비스) OS는 '임원이 다시 읽는 자산'(아웃풋)에 힘줘야 한다는 방향타.</p>
+  </div>
+
+  <h2 class="sec">✅ 실제 적용한 것 (파일로 반영)</h2>
+  <table>
+    <tr><th>장점</th><th>적용 위치</th></tr>
+    <tr><td>1. 되묻는 멘토 규칙</td><td><code>_admin/rules/01-되묻는멘토</code></td></tr>
+    <tr><td>2·4. 3층 인지모드 + 0to100 금지</td><td><code>_admin/rules/00-OS운영원칙</code></td></tr>
+    <tr><td>3. 자정 시냅스 파이프라인</td><td><code>_admin/rules/02-자정파이프라인</code></td></tr>
+    <tr><td>5·7. 자산화 5기준 + 브리핑 근거</td><td><code>_admin/rules/03-자산화게이트</code></td></tr>
+    <tr><td>6·9·10. 파일=에이전트·The Wall·아웃풋</td><td><code>00-OS운영원칙</code>에 통합</td></tr>
+    <tr><td>8. 따뜻한 자동 메시지</td><td>데일리 셀·모닝리포트 톤 지침</td></tr>
+  </table>
+
+  <div class="note">
+    🧭 <b>적용 방식</b> — 흐민의 당부 "0 to 100 하지 마세요"를 그대로 지켜, <b>한 번에 다 넣지 않고 규칙 문서로 얹어</b> 실제로 돌려보며 하나씩 켭니다. 그리고 "제 사례에 갇히지 마세요"대로, 남의 OS를 베끼지 않고 <b>사장님 니즈에서 재출발</b>해 재해석했습니다.
+  </div>
+
+  <p class="foot">ARAM OS · 스폰지클럽 2기 전체 벤치마킹 · v1 · 2026-07-12</p>
+</div>
+</body>
+</html>
