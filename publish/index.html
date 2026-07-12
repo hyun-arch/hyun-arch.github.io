@@ -1,6 +1,654 @@
 <!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>발행 · Publish · Aramirror</title><meta name="description" content="AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경."><meta name="theme-color" content="#ffffff"><!-- OG / 공유카드 (자동생성 이미지) --><meta property="og:type" content="website"><meta property="og:site_name" content="Aramirror"><meta property="og:title" content="발행 · Publish"><meta property="og:description" content="AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경."><meta property="og:url" content="https://hyun-arch.github.io/publish"><meta property="og:image" content="https://hyun-arch.github.io/og/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="발행 · Publish"><meta name="twitter:description" content="AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경."><meta name="twitter:image" content="https://hyun-arch.github.io/og/home.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="/_astro/admin.BQRrx82t.css">
 <style>.pub-article{border-top:1px solid var(--line);padding:18px 0}.pub-article>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:12px;padding:6px 0}.pub-article>summary::-webkit-details-marker{display:none}.pub-article>summary:before{content:"▸";color:var(--muted);transition:transform .15s ease}.pub-article[open]>summary:before{transform:rotate(90deg)}.pa-title{font-weight:700;font-size:1.15rem;letter-spacing:-.02em}.pa-badge{font-size:.68rem;font-weight:700;letter-spacing:.03em;background:var(--fg);color:#fff;padding:2px 8px;border-radius:999px}.pa-date{color:var(--muted);font-size:.85rem;margin-left:auto}.pa-link{margin:4px 0 8px 22px}.pa-link a{color:var(--muted);font-size:.85rem;text-decoration:underline;text-underline-offset:2px}.pub-card{border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0 0 22px;background:var(--bg-card)}.pub-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}.pub-name{font-weight:700;font-size:1.05rem;letter-spacing:-.02em}.pub-tone{color:var(--muted);font-size:.82rem}.pub-text{width:100%;border:1px solid var(--line-soft);border-radius:10px;padding:14px;font-family:inherit;font-size:.95rem;line-height:1.6;color:var(--fg-soft);resize:vertical;background:var(--bg-soft);outline:none}.pub-text:focus{border-color:var(--line)}.pub-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}.pub-btn{border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-size:.9rem;font-weight:600;cursor:pointer;background:#fff;color:var(--fg);font-family:inherit;transition:all .15s ease}.pub-btn.copy:hover,.pub-btn.copy.done{background:var(--fg);color:#fff;border-color:var(--fg)}.pub-btn.share{background:var(--fg);color:#fff;border-color:var(--fg);text-decoration:none}.pub-btn.share:hover{opacity:.85}.pub-note{color:var(--muted);font-size:.82rem;margin:10px 0 0}@media (max-width:680px){.pub-card{margin-left:0}}
-</style><script type="module" src="/_astro/hoisted.DSgg0DEI.js"></script></head> <body> <nav class="nav"> <div class="wrap"> <a class="brand" href="/">Aramirror<span class="dot">.</span></a> <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button> <div class="links" id="navLinks"> <div class="nav-group"> <button class="nav-top nav-top--hq" type="button">총괄실</button> <div class="nav-menu"> <a href="/hq">대시보드</a> <a href="/order">기획주문서</a> <a href="/eval">평가시트</a> <a href="/admin">관리자</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">세컨드브레인</button> <div class="nav-menu"> <a href="/ask">되묻기 · 멘토</a> <a href="/mirror">전체 지도</a> <a href="/wall">생각의 벽</a> <a href="/writings">글</a> <a href="/reading">독서 · 학습</a> <a href="/board">게시판</a> <a href="/publish">발행</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">시간 · 몰입</button> <div class="nav-menu"> <a href="/flow">몰입 · Flow</a> <a href="/masters">몰입의 거장</a> <a href="/sponge">스폰지 시계</a> <a href="/world">세계 시계</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">프로젝트</button> <div class="nav-menu"> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> <a href="/studio">캐러셀 스튜디오</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">기록 · 안내</button> <div class="nav-menu"> <a href="/build-logs">Build Logs</a> <a href="/how">작동 방식</a> </div> </div> </div> </div> </nav>  <section style="padding-top:72px"> <div class="wrap" style="max-width:760px"> <p class="section-kicker">발행 · Publish Hub</p> <h2>한 글, 모든 채널로</h2> <p class="lead">글이 올라오면 자동으로 여기 나타나고, 채널별로 붙여넣을 글이 준비됩니다. 내가 쓴 글은 <b>원문 그대로</b>, 빌드로그는 요약본으로. 스레드·X는 버튼 하나로 자동 채움, 나머지는 복사.</p> <details class="pub-article" open> <summary> <span class="pa-title">스펀지 클럽, 시작 전과 후의 나</span> <span class="pa-badge">내 글</span> <span class="pa-date">2026-07-03</span> </summary> <p class="pa-link"><a href="https://hyun-arch.github.io/writings/01-sponge">https://hyun-arch.github.io/writings/01-sponge</a></p> <div class="pub-card"> <div class="pub-head"><span class="pub-name">LinkedIn</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">스펀지 클럽을 시작하기 전과 후에 나라는 사람의 성장과 변화를 위해서, 한 주 동안은 하루하루 끊임없는 도전을 하며 생활하였습니다. 특히 지속적인 AI와의 대화를 통해 나 자신에 대해 더 깊이 알고 느낄 수 있는 기회가 되었다고 생각합니다.
+</style><script type="module" src="/_astro/hoisted.DSgg0DEI.js"></script></head> <body> <nav class="nav"> <div class="wrap"> <a class="brand" href="/">Aramirror<span class="dot">.</span></a> <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button> <div class="links" id="navLinks"> <div class="nav-group"> <button class="nav-top nav-top--hq" type="button">총괄실</button> <div class="nav-menu"> <a href="/hq">대시보드</a> <a href="/order">기획주문서</a> <a href="/eval">평가시트</a> <a href="/admin">관리자</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">세컨드브레인</button> <div class="nav-menu"> <a href="/ask">되묻기 · 멘토</a> <a href="/mirror">전체 지도</a> <a href="/wall">생각의 벽</a> <a href="/writings">글</a> <a href="/reading">독서 · 학습</a> <a href="/board">게시판</a> <a href="/publish">발행</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">시간 · 몰입</button> <div class="nav-menu"> <a href="/flow">몰입 · Flow</a> <a href="/masters">몰입의 거장</a> <a href="/sponge">스폰지 시계</a> <a href="/world">세계 시계</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">프로젝트</button> <div class="nav-menu"> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> <a href="/studio">캐러셀 스튜디오</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">기록 · 안내</button> <div class="nav-menu"> <a href="/build-logs">Build Logs</a> <a href="/how">작동 방식</a> </div> </div> </div> </div> </nav>  <section style="padding-top:72px"> <div class="wrap" style="max-width:760px"> <p class="section-kicker">발행 · Publish Hub</p> <h2>한 글, 모든 채널로</h2> <p class="lead">글이 올라오면 자동으로 여기 나타나고, 채널별로 붙여넣을 글이 준비됩니다. 내가 쓴 글은 <b>원문 그대로</b>, 빌드로그는 요약본으로. 스레드·X는 버튼 하나로 자동 채움, 나머지는 복사.</p> <details class="pub-article" open> <summary> <span class="pa-title">머스크에게 배운 것 — 민간 우주에서 강박, 알고리즘, 하드코어까지</span> <span class="pa-badge">내 글</span> <span class="pa-date">2026-07-12</span> </summary> <p class="pa-link"><a href="https://hyun-arch.github.io/writings/02-musk">https://hyun-arch.github.io/writings/02-musk</a></p> <div class="pub-card"> <div class="pub-head"><span class="pub-name">LinkedIn</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">요즘 나는 일론 머스크에 관한 책을 읽고 있다. 오늘 그에 대해 세 가지를 붙잡았다. 강박, 알고리즘, 그리고 하드코어. 그런데 며칠 전 읽은 스페이스X 이야기까지 붙여 놓고 보니, 이 모두는 따로 떨어진 조각이 아니라 하나의 축을 이룬다. 스페이스X는 그가 만든 결과였고, 강박·알고리즘·하드코어는 그 결과를 만든 방법이었다. 나는 이 전체를 나와 아람휴비스에 심고 싶어 하나의 글로 남긴다.
+
+## 0. 먼저 본 것 — 국가의 일을 민간이 해냈다
+
+책에서 내가 먼저 만난 건 스페이스X가 민간 우주항공에 도전하는 대목이었다. 미국·중국·러시아가 정부 예산을 막대하게 투입해 하던 우주개발을, 스페이스X는 민간으로 끌어내려 효율적으로 실현한 사실상 최초의 회사였다. 국가만 하던 일을 한 기업이 해냈다는 것 — 그 자체가 상징이었다.
+
+그 이야기의 결말이 궁금해 최신 사실을 확인했다. 2026년 6월, 스페이스X는 나스닥에 상장했다. 조달액 약 $750억~860억으로 역대 세계 최대 규모의 IPO였고, 상장 첫날 시가총액은 약 $2조 1,000억에 달했다. 흥미로운 건 오너십 구조다. 머스크의 지분은 42%지만 슈퍼의결권 주식으로 의결권은 82% — 대규모 자금은 끌어모으되 방향을 쥐는 힘은 창업자가 계속 쥐는 설계다.
+
+정부 주도 → 민간 이양 → 재사용 로켓 → 스타링크로 수익화 → 세계 최대 IPO. 이게 결과다. 그렇다면 그는 이걸 어떻게 해냈나. 여기서부터가 진짜 배울 대목이다.
+
+## 1. 강박 — 어디에 겨누느냐가 전부다
+
+머스크는 스스로를 강박적(OCD)이라고 말한다. 문제가 풀릴 때까지 잠도, 밥도, 관계도 뒤로 미루고 물고 늘어진다. 그런데 내가 배운 핵심은 &quot;강박이 세다&quot;가 아니다. 그 강박을 어디에 겨눴느냐다.
+
+잡스는 제품의 겉과 사용 경험, 디자인에 강박을 쏟았다. 예술가였다. 머스크는 거기서 한 층 더 내려간다. 화면이 예쁜가가 아니라, 물리 법칙상 이게 정말 최선인가를 묻는다. 그래서 그의 강박은 근본 과학, 공학, 그리고 공장의 제조 라인까지 내려간다. 로켓을 재사용해 비용을 뒤엎은 것도 여기서 나왔다. 나도 &#39;예쁜 표면&#39;이 아니라 &#39;작동하는 근본 구조&#39;에 강도를 쏘고 싶다.
+
+## 2. 첫 원칙과 &#39;바보 지수&#39;
+
+머스크의 무기는 첫 원칙 사고다. &quot;남들이 이렇게 하니까&quot;를 버리고, 원재료와 물리 법칙까지 분해한 다음 거기서부터 다시 쌓는다.
+
+그가 스페이스X에서 쓴 &#39;바보 지수(Idiot Index)&#39;가 인상 깊었다. 완성품 가격을 원재료 가격으로 나눈 값이다. 이 숫자가 크면, 재료값에 비해 터무니없이 비싸다는 뜻이고, 곧 &quot;만드는 방식이 바보 같다&quot;는 신호다. 그러면 제조법을 통째로 갈아엎어 원가를 떨어뜨린다. 국가가 수십억 달러를 쓰던 발사를 민간이 감당 가능한 값으로 끌어내린 힘이 바로 이 사고였다. 나도 내 일에 이 질문을 붙이고 싶다. 들인 시간과 비용 대비, 이 결과물은 정말 그만한 가치가 있는가?
+
+## 3. 강박을 절차로 — 5단계 알고리즘
+
+머스크는 테슬라의 &#39;생산 지옥&#39;에서 이 다섯 단계를 체득했다. 순서가 생명이다.
+
+1. 요구사항을 의심하라. 모든 요구에 &#39;누가 정했는가&#39;라는 실명을 붙여라. &quot;원래 그래왔다&quot;는 가장 먼저 의심할 대상이다.
+2. 삭제하라. 부품과 단계를 과감히 지워라.
+3. 단순화·최적화하라. 남은 것만 다듬어라.
+4. 속도를 올려라.
+5. 자동화하라. 맨 마지막이다.
+
+머스크는 경고한다. &quot;존재하지 말았어야 할 것을 최적화하는 것이 똑똑한 사람들의 가장 흔한 실수다. 무덤을 파고 있다면, 더 빨리 파지 말고 파는 것을 멈춰라.&quot; 나는 자주 없애야 할 일을 더 열심히 하고 있었다. 개선과 자동화(3~5)보다, 의심과 삭제(1~2)가 먼저다.
+
+## 4. 하드코어 — 그리고 그 진짜 연료
+
+머스크가 가장 좋아하는 단어 중 하나가 &#39;하드코어&#39;다. 긴 시간, 높은 강도, 그리고 오직 예외적으로 뛰어난 성과만이 합격점이라는 뜻이다. 그는 트위터를 인수한 직후 전 직원에게 &quot;극도로 하드코어해질 것&quot;을 요구했다.
+
+그런데 이 이야기에는 반전이 있다. 그 메일 뒤 트위터 직원의 약 75%가 떠났다. 나는 여기서 가장 큰 교훈을 얻었다. 하드코어는 그냥 &quot;더 오래 일해라&quot;가 아니다. 세 가지가 없으면 그것은 번아웃과 이탈로 끝난다. 첫째, 왜 하는지(미션)가 가슴에 꽂혀 있어야 한다. 둘째, 강요가 아니라 자발적 선택이어야 한다. 셋째, 탁월한 동료와 함께라는 자부심이 있어야 한다. 하드코어의 진짜 연료는 &#39;시간&#39;이 아니라 &#39;의미와 몰입, 그리고 동료의 수준&#39;이다. 화성에 간다는 미션이 없었다면, 스페이스X의 그 살인적인 몰입도 그냥 번아웃으로 끝났을 것이다.
+
+## 5. 그래서 나는 — 아람휴비스에 이렇게 심는다
+
+아람휴비스의 심장은 &quot;가치가 위계를 이긴다&quot;이다. 머스크의 &quot;직급이 아니라 성과가 기준&quot;과 정확히 통한다. 다만 트위터의 강요형 실패는 피하고, 건강한 하드코어로 번역한다.
+
+- &#39;오래&#39;가 아니라 &#39;높은 강도의 집중&#39;으로 정의한다. 야근 시간이 아니라, 이번 분기의 압도적인 결과 하나로 측정한다.
+- 모든 일 앞에 &quot;왜 이 일이 중요한가&quot;를 붙인다. 그것이 하드코어의 연료다.
+- 소수 정예에 실명 책임을 붙인다. 직급이 아니라 결과로 영향력을 갖는다.
+- &quot;예외적 성과&quot;의 통과선을 눈에 보이게 명문화한다.
+- 강요하지 않고 초대한다. &quot;동의하라&quot;가 아니라 &quot;이 미션에 미쳐볼 사람?&quot;이라고 묻는다.
+- 하드코어 스프린트 뒤에는 회복을 세트로 둔다. 지속 가능해야 진짜 하드코어다.
+
+한 줄로 남긴다. 강박은 근본에 겨누고, 일은 먼저 의심하고 지운 뒤에 다듬으며, 하드코어는 강요가 아니라 의미에 미친 소수의 자발적 몰입으로 번역한다. 스페이스X라는 결과는, 이 방법들이 하나로 맞물렸을 때 나온 것이었다.
+
+---
+
+## What I Learned from Musk — From Private Spaceflight to Obsession, the Algorithm, and Hardcore
+
+These days I&#39;ve been reading a book about Elon Musk. Today I held on to three things about him: obsession, the algorithm, and hardcore. But once I laid them next to the SpaceX story I&#39;d read a few days earlier, I saw that these aren&#39;t separate fragments — they form a single axis. SpaceX was the result he built; obsession, the algorithm, and hardcore were the method that produced it. I want to plant this whole thing in myself and in Aram Huvis, so I&#39;m leaving it here as one piece.
+
+### 0. What I Saw First — A Private Company Did What Only Nations Did
+
+The first thing I met in the book was SpaceX&#39;s challenge to private spaceflight. Space development that the U.S., China, and Russia pursued by pouring in enormous government budgets, SpaceX pulled down into the private sector and realized efficiently — essentially the first company to do so. That a single company did what only nations had done was, in itself, a symbol.
+
+Curious how the story ended, I checked the latest facts. In June 2026, SpaceX listed on the Nasdaq. With roughly $75–86 billion raised, it was the largest IPO in world history, and its market cap reached about $2.1 trillion on its first day. The fascinating part is the ownership structure: Musk holds 42% of the shares but, thanks to super-voting stock, 82% of the voting power — a design that raises massive capital while the founder keeps his grip on direction.
+
+Government-led → handed to the private sector → reusable rockets → monetized through Starlink → the largest IPO ever. That&#39;s the result. So how did he do it? This is where the real lesson begins.
+
+### 1. Obsession — What You Aim It At Is Everything
+
+Musk calls himself obsessive-compulsive. Until a problem is solved, he pushes sleep, food, and relationships aside and refuses to let go. But the key lesson for me isn&#39;t that his obsession is intense. It&#39;s what he aims that obsession at.
+
+Jobs poured his obsession into a product&#39;s surface, its user experience, its design. He was an artist. Musk goes one layer deeper. He doesn&#39;t ask whether the screen is pretty; he asks whether, by the laws of physics, this is truly the best it can be. So his obsession reaches down into fundamental science, engineering, and the factory manufacturing line. Reusing rockets to overturn cost came from exactly this. I, too, want to aim my intensity not at a pretty surface but at the underlying structure that actually works.
+
+### 2. First Principles and the &quot;Idiot Index&quot;
+
+Musk&#39;s weapon is first-principles thinking. He discards &quot;because everyone does it this way,&quot; breaks a thing down to its raw materials and the laws of physics, and rebuilds from there.
+
+The &quot;Idiot Index&quot; he used at SpaceX struck me. It is the price of the finished product divided by the cost of its raw materials. When this number is high, it means the product is absurdly expensive relative to its materials — a sign that &quot;the way it&#39;s made is idiotic.&quot; So he overhauls the manufacturing method entirely and drives the cost down. The force that pulled a launch — once costing nations billions — down to a price the private sector could bear was exactly this kind of thinking. I want to attach this question to my own work: relative to the time and money I&#39;ve put in, is this result truly worth it?
+
+### 3. Turning Obsession into a Procedure — The Five-Step Algorithm
+
+Musk learned these five steps in Tesla&#39;s &quot;production hell.&quot; The order is everything.
+
+1. Question the requirements. Attach a real person&#39;s name to every requirement. &quot;It&#39;s always been done this way&quot; is the first thing to question.
+2. Delete. Cut parts and steps aggressively.
+3. Simplify and optimize. Only refine what remains.
+4. Accelerate.
+5. Automate. This comes last.
+
+Musk warns: &quot;The most common mistake of smart engineers is to optimize a thing that should not exist. If you&#39;re digging your grave, don&#39;t dig faster — stop digging.&quot; I have often been working harder at things I should have eliminated. Questioning and deleting (1–2) come before improving and automating (3–5).
+
+### 4. Hardcore — and Its Real Fuel
+
+One of Musk&#39;s favorite words is &quot;hardcore&quot;: long hours, high intensity, and only exceptional performance counts as a passing grade. Right after acquiring Twitter, he demanded that all employees become &quot;extremely hardcore.&quot;
+
+But there&#39;s a twist. After that email, roughly 75% of Twitter&#39;s employees left. This is where I found the biggest lesson. Hardcore is not simply &quot;work longer.&quot; Without three things, it ends in burnout and attrition. First, the reason — the mission — must be lodged in your heart. Second, it must be a voluntary choice, not a coercion. Third, there must be the pride of working alongside exceptional peers. The real fuel of hardcore is not &quot;time&quot; but &quot;meaning, immersion, and the caliber of your colleagues.&quot; Without the mission of reaching Mars, even SpaceX&#39;s punishing immersion would have ended in mere burnout.
+
+### 5. So Here&#39;s How I Plant It in Aram Huvis
+
+The heart of Aram Huvis is &quot;value beats hierarchy.&quot; That aligns exactly with Musk&#39;s &quot;results, not rank, are the standard.&quot; But I avoid Twitter&#39;s coercive failure and translate this into a healthy hardcore.
+
+- Define it as &quot;high-intensity focus,&quot; not &quot;long hours.&quot; Measure it by one overwhelming result this quarter, not by overtime.
+- Put &quot;why this matters&quot; in front of every task. That is the fuel of hardcore.
+- Attach named accountability to a small elite. Influence comes from results, not rank.
+- Make the passing line for &quot;exceptional performance&quot; visible and explicit.
+- Invite rather than coerce. Not &quot;agree to this,&quot; but &quot;who wants to go crazy for this mission?&quot;
+- Pair every hardcore sprint with recovery. It&#39;s only truly hardcore if it&#39;s sustainable.
+
+I&#39;ll leave it in one line. Aim obsession at the fundamentals; question and delete before you refine; and translate hardcore not as coercion but as the voluntary immersion of a few who are crazy about the meaning. The result called SpaceX emerged only when these methods locked together as one.</textarea> <div class="pub-actions"> <button class="pub-btn copy" type="button">복사</button>  </div> <p class="pub-note">ⓘ 글 그대로 · 복사 후 붙여넣기</p> </div><div class="pub-card"> <div class="pub-head"><span class="pub-name">Threads</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">요즘 나는 일론 머스크에 관한 책을 읽고 있다. 오늘 그에 대해 세 가지를 붙잡았다. 강박, 알고리즘, 그리고 하드코어. 그런데 며칠 전 읽은 스페이스X 이야기까지 붙여 놓고 보니, 이 모두는 따로 떨어진 조각이 아니라 하나의 축을 이룬다. 스페이스X는 그가 만든 결과였고, 강박·알고리즘·하드코어는 그 결과를 만든 방법이었다. 나는 이 전체를 나와 아람휴비스에 심고 싶어 하나의 글로 남긴다.
+
+## 0. 먼저 본 것 — 국가의 일을 민간이 해냈다
+
+책에서 내가 먼저 만난 건 스페이스X가 민간 우주항공에 도전하는 대목이었다. 미국·중국·러시아가 정부 예산을 막대하게 투입해 하던 우주개발을, 스페이스X는 민간으로 끌어내려 효율적으로 실현한 사실상 최초의 회사였다. 국가만 하던 일을 한 기업이 해냈다는 것 — 그 자체가 상징이었다.
+
+그 이야기의 결말이 궁금해 최신 사실을 확인했다. 2026년 6월, 스페이스X는 나스닥에 상장했다. 조달액 약 $750억~860억으로 역대 세계 최대 규모의 IPO였고, 상장 첫날 시가총액은 약 $2조 1,000억에 달했다. 흥미로운 건 오너십 구조다. 머스크의 지분은 42%지만 슈퍼의결권 주식으로 의결권은 82% — 대규모 자금은 끌어모으되 방향을 쥐는 힘은 창업자가 계속 쥐는 설계다.
+
+정부 주도 → 민간 이양 → 재사용 로켓 → 스타링크로 수익화 → 세계 최대 IPO. 이게 결과다. 그렇다면 그는 이걸 어떻게 해냈나. 여기서부터가 진짜 배울 대목이다.
+
+## 1. 강박 — 어디에 겨누느냐가 전부다
+
+머스크는 스스로를 강박적(OCD)이라고 말한다. 문제가 풀릴 때까지 잠도, 밥도, 관계도 뒤로 미루고 물고 늘어진다. 그런데 내가 배운 핵심은 &quot;강박이 세다&quot;가 아니다. 그 강박을 어디에 겨눴느냐다.
+
+잡스는 제품의 겉과 사용 경험, 디자인에 강박을 쏟았다. 예술가였다. 머스크는 거기서 한 층 더 내려간다. 화면이 예쁜가가 아니라, 물리 법칙상 이게 정말 최선인가를 묻는다. 그래서 그의 강박은 근본 과학, 공학, 그리고 공장의 제조 라인까지 내려간다. 로켓을 재사용해 비용을 뒤엎은 것도 여기서 나왔다. 나도 &#39;예쁜 표면&#39;이 아니라 &#39;작동하는 근본 구조&#39;에 강도를 쏘고 싶다.
+
+## 2. 첫 원칙과 &#39;바보 지수&#39;
+
+머스크의 무기는 첫 원칙 사고다. &quot;남들이 이렇게 하니까&quot;를 버리고, 원재료와 물리 법칙까지 분해한 다음 거기서부터 다시 쌓는다.
+
+그가 스페이스X에서 쓴 &#39;바보 지수(Idiot Index)&#39;가 인상 깊었다. 완성품 가격을 원재료 가격으로 나눈 값이다. 이 숫자가 크면, 재료값에 비해 터무니없이 비싸다는 뜻이고, 곧 &quot;만드는 방식이 바보 같다&quot;는 신호다. 그러면 제조법을 통째로 갈아엎어 원가를 떨어뜨린다. 국가가 수십억 달러를 쓰던 발사를 민간이 감당 가능한 값으로 끌어내린 힘이 바로 이 사고였다. 나도 내 일에 이 질문을 붙이고 싶다. 들인 시간과 비용 대비, 이 결과물은 정말 그만한 가치가 있는가?
+
+## 3. 강박을 절차로 — 5단계 알고리즘
+
+머스크는 테슬라의 &#39;생산 지옥&#39;에서 이 다섯 단계를 체득했다. 순서가 생명이다.
+
+1. 요구사항을 의심하라. 모든 요구에 &#39;누가 정했는가&#39;라는 실명을 붙여라. &quot;원래 그래왔다&quot;는 가장 먼저 의심할 대상이다.
+2. 삭제하라. 부품과 단계를 과감히 지워라.
+3. 단순화·최적화하라. 남은 것만 다듬어라.
+4. 속도를 올려라.
+5. 자동화하라. 맨 마지막이다.
+
+머스크는 경고한다. &quot;존재하지 말았어야 할 것을 최적화하는 것이 똑똑한 사람들의 가장 흔한 실수다. 무덤을 파고 있다면, 더 빨리 파지 말고 파는 것을 멈춰라.&quot; 나는 자주 없애야 할 일을 더 열심히 하고 있었다. 개선과 자동화(3~5)보다, 의심과 삭제(1~2)가 먼저다.
+
+## 4. 하드코어 — 그리고 그 진짜 연료
+
+머스크가 가장 좋아하는 단어 중 하나가 &#39;하드코어&#39;다. 긴 시간, 높은 강도, 그리고 오직 예외적으로 뛰어난 성과만이 합격점이라는 뜻이다. 그는 트위터를 인수한 직후 전 직원에게 &quot;극도로 하드코어해질 것&quot;을 요구했다.
+
+그런데 이 이야기에는 반전이 있다. 그 메일 뒤 트위터 직원의 약 75%가 떠났다. 나는 여기서 가장 큰 교훈을 얻었다. 하드코어는 그냥 &quot;더 오래 일해라&quot;가 아니다. 세 가지가 없으면 그것은 번아웃과 이탈로 끝난다. 첫째, 왜 하는지(미션)가 가슴에 꽂혀 있어야 한다. 둘째, 강요가 아니라 자발적 선택이어야 한다. 셋째, 탁월한 동료와 함께라는 자부심이 있어야 한다. 하드코어의 진짜 연료는 &#39;시간&#39;이 아니라 &#39;의미와 몰입, 그리고 동료의 수준&#39;이다. 화성에 간다는 미션이 없었다면, 스페이스X의 그 살인적인 몰입도 그냥 번아웃으로 끝났을 것이다.
+
+## 5. 그래서 나는 — 아람휴비스에 이렇게 심는다
+
+아람휴비스의 심장은 &quot;가치가 위계를 이긴다&quot;이다. 머스크의 &quot;직급이 아니라 성과가 기준&quot;과 정확히 통한다. 다만 트위터의 강요형 실패는 피하고, 건강한 하드코어로 번역한다.
+
+- &#39;오래&#39;가 아니라 &#39;높은 강도의 집중&#39;으로 정의한다. 야근 시간이 아니라, 이번 분기의 압도적인 결과 하나로 측정한다.
+- 모든 일 앞에 &quot;왜 이 일이 중요한가&quot;를 붙인다. 그것이 하드코어의 연료다.
+- 소수 정예에 실명 책임을 붙인다. 직급이 아니라 결과로 영향력을 갖는다.
+- &quot;예외적 성과&quot;의 통과선을 눈에 보이게 명문화한다.
+- 강요하지 않고 초대한다. &quot;동의하라&quot;가 아니라 &quot;이 미션에 미쳐볼 사람?&quot;이라고 묻는다.
+- 하드코어 스프린트 뒤에는 회복을 세트로 둔다. 지속 가능해야 진짜 하드코어다.
+
+한 줄로 남긴다. 강박은 근본에 겨누고, 일은 먼저 의심하고 지운 뒤에 다듬으며, 하드코어는 강요가 아니라 의미에 미친 소수의 자발적 몰입으로 번역한다. 스페이스X라는 결과는, 이 방법들이 하나로 맞물렸을 때 나온 것이었다.
+
+---
+
+## What I Learned from Musk — From Private Spaceflight to Obsession, the Algorithm, and Hardcore
+
+These days I&#39;ve been reading a book about Elon Musk. Today I held on to three things about him: obsession, the algorithm, and hardcore. But once I laid them next to the SpaceX story I&#39;d read a few days earlier, I saw that these aren&#39;t separate fragments — they form a single axis. SpaceX was the result he built; obsession, the algorithm, and hardcore were the method that produced it. I want to plant this whole thing in myself and in Aram Huvis, so I&#39;m leaving it here as one piece.
+
+### 0. What I Saw First — A Private Company Did What Only Nations Did
+
+The first thing I met in the book was SpaceX&#39;s challenge to private spaceflight. Space development that the U.S., China, and Russia pursued by pouring in enormous government budgets, SpaceX pulled down into the private sector and realized efficiently — essentially the first company to do so. That a single company did what only nations had done was, in itself, a symbol.
+
+Curious how the story ended, I checked the latest facts. In June 2026, SpaceX listed on the Nasdaq. With roughly $75–86 billion raised, it was the largest IPO in world history, and its market cap reached about $2.1 trillion on its first day. The fascinating part is the ownership structure: Musk holds 42% of the shares but, thanks to super-voting stock, 82% of the voting power — a design that raises massive capital while the founder keeps his grip on direction.
+
+Government-led → handed to the private sector → reusable rockets → monetized through Starlink → the largest IPO ever. That&#39;s the result. So how did he do it? This is where the real lesson begins.
+
+### 1. Obsession — What You Aim It At Is Everything
+
+Musk calls himself obsessive-compulsive. Until a problem is solved, he pushes sleep, food, and relationships aside and refuses to let go. But the key lesson for me isn&#39;t that his obsession is intense. It&#39;s what he aims that obsession at.
+
+Jobs poured his obsession into a product&#39;s surface, its user experience, its design. He was an artist. Musk goes one layer deeper. He doesn&#39;t ask whether the screen is pretty; he asks whether, by the laws of physics, this is truly the best it can be. So his obsession reaches down into fundamental science, engineering, and the factory manufacturing line. Reusing rockets to overturn cost came from exactly this. I, too, want to aim my intensity not at a pretty surface but at the underlying structure that actually works.
+
+### 2. First Principles and the &quot;Idiot Index&quot;
+
+Musk&#39;s weapon is first-principles thinking. He discards &quot;because everyone does it this way,&quot; breaks a thing down to its raw materials and the laws of physics, and rebuilds from there.
+
+The &quot;Idiot Index&quot; he used at SpaceX struck me. It is the price of the finished product divided by the cost of its raw materials. When this number is high, it means the product is absurdly expensive relative to its materials — a sign that &quot;the way it&#39;s made is idiotic.&quot; So he overhauls the manufacturing method entirely and drives the cost down. The force that pulled a launch — once costing nations billions — down to a price the private sector could bear was exactly this kind of thinking. I want to attach this question to my own work: relative to the time and money I&#39;ve put in, is this result truly worth it?
+
+### 3. Turning Obsession into a Procedure — The Five-Step Algorithm
+
+Musk learned these five steps in Tesla&#39;s &quot;production hell.&quot; The order is everything.
+
+1. Question the requirements. Attach a real person&#39;s name to every requirement. &quot;It&#39;s always been done this way&quot; is the first thing to question.
+2. Delete. Cut parts and steps aggressively.
+3. Simplify and optimize. Only refine what remains.
+4. Accelerate.
+5. Automate. This comes last.
+
+Musk warns: &quot;The most common mistake of smart engineers is to optimize a thing that should not exist. If you&#39;re digging your grave, don&#39;t dig faster — stop digging.&quot; I have often been working harder at things I should have eliminated. Questioning and deleting (1–2) come before improving and automating (3–5).
+
+### 4. Hardcore — and Its Real Fuel
+
+One of Musk&#39;s favorite words is &quot;hardcore&quot;: long hours, high intensity, and only exceptional performance counts as a passing grade. Right after acquiring Twitter, he demanded that all employees become &quot;extremely hardcore.&quot;
+
+But there&#39;s a twist. After that email, roughly 75% of Twitter&#39;s employees left. This is where I found the biggest lesson. Hardcore is not simply &quot;work longer.&quot; Without three things, it ends in burnout and attrition. First, the reason — the mission — must be lodged in your heart. Second, it must be a voluntary choice, not a coercion. Third, there must be the pride of working alongside exceptional peers. The real fuel of hardcore is not &quot;time&quot; but &quot;meaning, immersion, and the caliber of your colleagues.&quot; Without the mission of reaching Mars, even SpaceX&#39;s punishing immersion would have ended in mere burnout.
+
+### 5. So Here&#39;s How I Plant It in Aram Huvis
+
+The heart of Aram Huvis is &quot;value beats hierarchy.&quot; That aligns exactly with Musk&#39;s &quot;results, not rank, are the standard.&quot; But I avoid Twitter&#39;s coercive failure and translate this into a healthy hardcore.
+
+- Define it as &quot;high-intensity focus,&quot; not &quot;long hours.&quot; Measure it by one overwhelming result this quarter, not by overtime.
+- Put &quot;why this matters&quot; in front of every task. That is the fuel of hardcore.
+- Attach named accountability to a small elite. Influence comes from results, not rank.
+- Make the passing line for &quot;exceptional performance&quot; visible and explicit.
+- Invite rather than coerce. Not &quot;agree to this,&quot; but &quot;who wants to go crazy for this mission?&quot;
+- Pair every hardcore sprint with recovery. It&#39;s only truly hardcore if it&#39;s sustainable.
+
+I&#39;ll leave it in one line. Aim obsession at the fundamentals; question and delete before you refine; and translate hardcore not as coercion but as the voluntary immersion of a few who are crazy about the meaning. The result called SpaceX emerged only when these methods locked together as one.</textarea> <div class="pub-actions"> <button class="pub-btn copy" type="button">복사</button> <a class="pub-btn share" href="https://www.threads.net/intent/post?text=%EC%9A%94%EC%A6%98%20%EB%82%98%EB%8A%94%20%EC%9D%BC%EB%A1%A0%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%97%90%20%EA%B4%80%ED%95%9C%20%EC%B1%85%EC%9D%84%20%EC%9D%BD%EA%B3%A0%20%EC%9E%88%EB%8B%A4.%20%EC%98%A4%EB%8A%98%20%EA%B7%B8%EC%97%90%20%EB%8C%80%ED%95%B4%20%EC%84%B8%20%EA%B0%80%EC%A7%80%EB%A5%BC%20%EB%B6%99%EC%9E%A1%EC%95%98%EB%8B%A4.%20%EA%B0%95%EB%B0%95%2C%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4.%20%EA%B7%B8%EB%9F%B0%EB%8D%B0%20%EB%A9%B0%EC%B9%A0%20%EC%A0%84%20%EC%9D%BD%EC%9D%80%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EA%B9%8C%EC%A7%80%20%EB%B6%99%EC%97%AC%20%EB%86%93%EA%B3%A0%20%EB%B3%B4%EB%8B%88%2C%20%EC%9D%B4%20%EB%AA%A8%EB%91%90%EB%8A%94%20%EB%94%B0%EB%A1%9C%20%EB%96%A8%EC%96%B4%EC%A7%84%20%EC%A1%B0%EA%B0%81%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20%ED%95%98%EB%82%98%EC%9D%98%20%EC%B6%95%EC%9D%84%20%EC%9D%B4%EB%A3%AC%EB%8B%A4.%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%8A%94%20%EA%B7%B8%EA%B0%80%20%EB%A7%8C%EB%93%A0%20%EA%B2%B0%EA%B3%BC%EC%98%80%EA%B3%A0%2C%20%EA%B0%95%EB%B0%95%C2%B7%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%C2%B7%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8A%94%20%EA%B7%B8%20%EA%B2%B0%EA%B3%BC%EB%A5%BC%20%EB%A7%8C%EB%93%A0%20%EB%B0%A9%EB%B2%95%EC%9D%B4%EC%97%88%EB%8B%A4.%20%EB%82%98%EB%8A%94%20%EC%9D%B4%20%EC%A0%84%EC%B2%B4%EB%A5%BC%20%EB%82%98%EC%99%80%20%EC%95%84%EB%9E%8C%ED%9C%B4%EB%B9%84%EC%8A%A4%EC%97%90%20%EC%8B%AC%EA%B3%A0%20%EC%8B%B6%EC%96%B4%20%ED%95%98%EB%82%98%EC%9D%98%20%EA%B8%80%EB%A1%9C%20%EB%82%A8%EA%B8%B4%EB%8B%A4.%0A%0A%23%23%200.%20%EB%A8%BC%EC%A0%80%20%EB%B3%B8%20%EA%B2%83%20%E2%80%94%20%EA%B5%AD%EA%B0%80%EC%9D%98%20%EC%9D%BC%EC%9D%84%20%EB%AF%BC%EA%B0%84%EC%9D%B4%20%ED%95%B4%EB%83%88%EB%8B%A4%0A%0A%EC%B1%85%EC%97%90%EC%84%9C%20%EB%82%B4%EA%B0%80%20%EB%A8%BC%EC%A0%80%20%EB%A7%8C%EB%82%9C%20%EA%B1%B4%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EA%B0%80%20%EB%AF%BC%EA%B0%84%20%EC%9A%B0%EC%A3%BC%ED%95%AD%EA%B3%B5%EC%97%90%20%EB%8F%84%EC%A0%84%ED%95%98%EB%8A%94%20%EB%8C%80%EB%AA%A9%EC%9D%B4%EC%97%88%EB%8B%A4.%20%EB%AF%B8%EA%B5%AD%C2%B7%EC%A4%91%EA%B5%AD%C2%B7%EB%9F%AC%EC%8B%9C%EC%95%84%EA%B0%80%20%EC%A0%95%EB%B6%80%20%EC%98%88%EC%82%B0%EC%9D%84%20%EB%A7%89%EB%8C%80%ED%95%98%EA%B2%8C%20%ED%88%AC%EC%9E%85%ED%95%B4%20%ED%95%98%EB%8D%98%20%EC%9A%B0%EC%A3%BC%EA%B0%9C%EB%B0%9C%EC%9D%84%2C%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%8A%94%20%EB%AF%BC%EA%B0%84%EC%9C%BC%EB%A1%9C%20%EB%81%8C%EC%96%B4%EB%82%B4%EB%A0%A4%20%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EC%8B%A4%ED%98%84%ED%95%9C%20%EC%82%AC%EC%8B%A4%EC%83%81%20%EC%B5%9C%EC%B4%88%EC%9D%98%20%ED%9A%8C%EC%82%AC%EC%98%80%EB%8B%A4.%20%EA%B5%AD%EA%B0%80%EB%A7%8C%20%ED%95%98%EB%8D%98%20%EC%9D%BC%EC%9D%84%20%ED%95%9C%20%EA%B8%B0%EC%97%85%EC%9D%B4%20%ED%95%B4%EB%83%88%EB%8B%A4%EB%8A%94%20%EA%B2%83%20%E2%80%94%20%EA%B7%B8%20%EC%9E%90%EC%B2%B4%EA%B0%80%20%EC%83%81%EC%A7%95%EC%9D%B4%EC%97%88%EB%8B%A4.%0A%0A%EA%B7%B8%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EC%9D%98%20%EA%B2%B0%EB%A7%90%EC%9D%B4%20%EA%B6%81%EA%B8%88%ED%95%B4%20%EC%B5%9C%EC%8B%A0%20%EC%82%AC%EC%8B%A4%EC%9D%84%20%ED%99%95%EC%9D%B8%ED%96%88%EB%8B%A4.%202026%EB%85%84%206%EC%9B%94%2C%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%8A%94%20%EB%82%98%EC%8A%A4%EB%8B%A5%EC%97%90%20%EC%83%81%EC%9E%A5%ED%96%88%EB%8B%A4.%20%EC%A1%B0%EB%8B%AC%EC%95%A1%20%EC%95%BD%20%24750%EC%96%B5~860%EC%96%B5%EC%9C%BC%EB%A1%9C%20%EC%97%AD%EB%8C%80%20%EC%84%B8%EA%B3%84%20%EC%B5%9C%EB%8C%80%20%EA%B7%9C%EB%AA%A8%EC%9D%98%20IPO%EC%98%80%EA%B3%A0%2C%20%EC%83%81%EC%9E%A5%20%EC%B2%AB%EB%82%A0%20%EC%8B%9C%EA%B0%80%EC%B4%9D%EC%95%A1%EC%9D%80%20%EC%95%BD%20%242%EC%A1%B0%201%2C000%EC%96%B5%EC%97%90%20%EB%8B%AC%ED%96%88%EB%8B%A4.%20%ED%9D%A5%EB%AF%B8%EB%A1%9C%EC%9A%B4%20%EA%B1%B4%20%EC%98%A4%EB%84%88%EC%8B%AD%20%EA%B5%AC%EC%A1%B0%EB%8B%A4.%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%9D%98%20%EC%A7%80%EB%B6%84%EC%9D%80%2042%25%EC%A7%80%EB%A7%8C%20%EC%8A%88%ED%8D%BC%EC%9D%98%EA%B2%B0%EA%B6%8C%20%EC%A3%BC%EC%8B%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%98%EA%B2%B0%EA%B6%8C%EC%9D%80%2082%25%20%E2%80%94%20%EB%8C%80%EA%B7%9C%EB%AA%A8%20%EC%9E%90%EA%B8%88%EC%9D%80%20%EB%81%8C%EC%96%B4%EB%AA%A8%EC%9C%BC%EB%90%98%20%EB%B0%A9%ED%96%A5%EC%9D%84%20%EC%A5%90%EB%8A%94%20%ED%9E%98%EC%9D%80%20%EC%B0%BD%EC%97%85%EC%9E%90%EA%B0%80%20%EA%B3%84%EC%86%8D%20%EC%A5%90%EB%8A%94%20%EC%84%A4%EA%B3%84%EB%8B%A4.%0A%0A%EC%A0%95%EB%B6%80%20%EC%A3%BC%EB%8F%84%20%E2%86%92%20%EB%AF%BC%EA%B0%84%20%EC%9D%B4%EC%96%91%20%E2%86%92%20%EC%9E%AC%EC%82%AC%EC%9A%A9%20%EB%A1%9C%EC%BC%93%20%E2%86%92%20%EC%8A%A4%ED%83%80%EB%A7%81%ED%81%AC%EB%A1%9C%20%EC%88%98%EC%9D%B5%ED%99%94%20%E2%86%92%20%EC%84%B8%EA%B3%84%20%EC%B5%9C%EB%8C%80%20IPO.%20%EC%9D%B4%EA%B2%8C%20%EA%B2%B0%EA%B3%BC%EB%8B%A4.%20%EA%B7%B8%EB%A0%87%EB%8B%A4%EB%A9%B4%20%EA%B7%B8%EB%8A%94%20%EC%9D%B4%EA%B1%B8%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%ED%95%B4%EB%83%88%EB%82%98.%20%EC%97%AC%EA%B8%B0%EC%84%9C%EB%B6%80%ED%84%B0%EA%B0%80%20%EC%A7%84%EC%A7%9C%20%EB%B0%B0%EC%9A%B8%20%EB%8C%80%EB%AA%A9%EC%9D%B4%EB%8B%A4.%0A%0A%23%23%201.%20%EA%B0%95%EB%B0%95%20%E2%80%94%20%EC%96%B4%EB%94%94%EC%97%90%20%EA%B2%A8%EB%88%84%EB%8A%90%EB%83%90%EA%B0%80%20%EC%A0%84%EB%B6%80%EB%8B%A4%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%EC%8A%A4%EC%8A%A4%EB%A1%9C%EB%A5%BC%20%EA%B0%95%EB%B0%95%EC%A0%81(OCD)%EC%9D%B4%EB%9D%BC%EA%B3%A0%20%EB%A7%90%ED%95%9C%EB%8B%A4.%20%EB%AC%B8%EC%A0%9C%EA%B0%80%20%ED%92%80%EB%A6%B4%20%EB%95%8C%EA%B9%8C%EC%A7%80%20%EC%9E%A0%EB%8F%84%2C%20%EB%B0%A5%EB%8F%84%2C%20%EA%B4%80%EA%B3%84%EB%8F%84%20%EB%92%A4%EB%A1%9C%20%EB%AF%B8%EB%A3%A8%EA%B3%A0%20%EB%AC%BC%EA%B3%A0%20%EB%8A%98%EC%96%B4%EC%A7%84%EB%8B%A4.%20%EA%B7%B8%EB%9F%B0%EB%8D%B0%20%EB%82%B4%EA%B0%80%20%EB%B0%B0%EC%9A%B4%20%ED%95%B5%EC%8B%AC%EC%9D%80%20%22%EA%B0%95%EB%B0%95%EC%9D%B4%20%EC%84%B8%EB%8B%A4%22%EA%B0%80%20%EC%95%84%EB%8B%88%EB%8B%A4.%20%EA%B7%B8%20%EA%B0%95%EB%B0%95%EC%9D%84%20%EC%96%B4%EB%94%94%EC%97%90%20%EA%B2%A8%EB%88%B4%EB%8A%90%EB%83%90%EB%8B%A4.%0A%0A%EC%9E%A1%EC%8A%A4%EB%8A%94%20%EC%A0%9C%ED%92%88%EC%9D%98%20%EA%B2%89%EA%B3%BC%20%EC%82%AC%EC%9A%A9%20%EA%B2%BD%ED%97%98%2C%20%EB%94%94%EC%9E%90%EC%9D%B8%EC%97%90%20%EA%B0%95%EB%B0%95%EC%9D%84%20%EC%8F%9F%EC%95%98%EB%8B%A4.%20%EC%98%88%EC%88%A0%EA%B0%80%EC%98%80%EB%8B%A4.%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%EA%B1%B0%EA%B8%B0%EC%84%9C%20%ED%95%9C%20%EC%B8%B5%20%EB%8D%94%20%EB%82%B4%EB%A0%A4%EA%B0%84%EB%8B%A4.%20%ED%99%94%EB%A9%B4%EC%9D%B4%20%EC%98%88%EC%81%9C%EA%B0%80%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%2C%20%EB%AC%BC%EB%A6%AC%20%EB%B2%95%EC%B9%99%EC%83%81%20%EC%9D%B4%EA%B2%8C%20%EC%A0%95%EB%A7%90%20%EC%B5%9C%EC%84%A0%EC%9D%B8%EA%B0%80%EB%A5%BC%20%EB%AC%BB%EB%8A%94%EB%8B%A4.%20%EA%B7%B8%EB%9E%98%EC%84%9C%20%EA%B7%B8%EC%9D%98%20%EA%B0%95%EB%B0%95%EC%9D%80%20%EA%B7%BC%EB%B3%B8%20%EA%B3%BC%ED%95%99%2C%20%EA%B3%B5%ED%95%99%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EA%B3%B5%EC%9E%A5%EC%9D%98%20%EC%A0%9C%EC%A1%B0%20%EB%9D%BC%EC%9D%B8%EA%B9%8C%EC%A7%80%20%EB%82%B4%EB%A0%A4%EA%B0%84%EB%8B%A4.%20%EB%A1%9C%EC%BC%93%EC%9D%84%20%EC%9E%AC%EC%82%AC%EC%9A%A9%ED%95%B4%20%EB%B9%84%EC%9A%A9%EC%9D%84%20%EB%92%A4%EC%97%8E%EC%9D%80%20%EA%B2%83%EB%8F%84%20%EC%97%AC%EA%B8%B0%EC%84%9C%20%EB%82%98%EC%99%94%EB%8B%A4.%20%EB%82%98%EB%8F%84%20'%EC%98%88%EC%81%9C%20%ED%91%9C%EB%A9%B4'%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20'%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%20%EA%B7%BC%EB%B3%B8%20%EA%B5%AC%EC%A1%B0'%EC%97%90%20%EA%B0%95%EB%8F%84%EB%A5%BC%20%EC%8F%98%EA%B3%A0%20%EC%8B%B6%EB%8B%A4.%0A%0A%23%23%202.%20%EC%B2%AB%20%EC%9B%90%EC%B9%99%EA%B3%BC%20'%EB%B0%94%EB%B3%B4%20%EC%A7%80%EC%88%98'%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%9D%98%20%EB%AC%B4%EA%B8%B0%EB%8A%94%20%EC%B2%AB%20%EC%9B%90%EC%B9%99%20%EC%82%AC%EA%B3%A0%EB%8B%A4.%20%22%EB%82%A8%EB%93%A4%EC%9D%B4%20%EC%9D%B4%EB%A0%87%EA%B2%8C%20%ED%95%98%EB%8B%88%EA%B9%8C%22%EB%A5%BC%20%EB%B2%84%EB%A6%AC%EA%B3%A0%2C%20%EC%9B%90%EC%9E%AC%EB%A3%8C%EC%99%80%20%EB%AC%BC%EB%A6%AC%20%EB%B2%95%EC%B9%99%EA%B9%8C%EC%A7%80%20%EB%B6%84%ED%95%B4%ED%95%9C%20%EB%8B%A4%EC%9D%8C%20%EA%B1%B0%EA%B8%B0%EC%84%9C%EB%B6%80%ED%84%B0%20%EB%8B%A4%EC%8B%9C%20%EC%8C%93%EB%8A%94%EB%8B%A4.%0A%0A%EA%B7%B8%EA%B0%80%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EC%97%90%EC%84%9C%20%EC%93%B4%20'%EB%B0%94%EB%B3%B4%20%EC%A7%80%EC%88%98(Idiot%20Index)'%EA%B0%80%20%EC%9D%B8%EC%83%81%20%EA%B9%8A%EC%97%88%EB%8B%A4.%20%EC%99%84%EC%84%B1%ED%92%88%20%EA%B0%80%EA%B2%A9%EC%9D%84%20%EC%9B%90%EC%9E%AC%EB%A3%8C%20%EA%B0%80%EA%B2%A9%EC%9C%BC%EB%A1%9C%20%EB%82%98%EB%88%88%20%EA%B0%92%EC%9D%B4%EB%8B%A4.%20%EC%9D%B4%20%EC%88%AB%EC%9E%90%EA%B0%80%20%ED%81%AC%EB%A9%B4%2C%20%EC%9E%AC%EB%A3%8C%EA%B0%92%EC%97%90%20%EB%B9%84%ED%95%B4%20%ED%84%B0%EB%AC%B4%EB%8B%88%EC%97%86%EC%9D%B4%20%EB%B9%84%EC%8B%B8%EB%8B%A4%EB%8A%94%20%EB%9C%BB%EC%9D%B4%EA%B3%A0%2C%20%EA%B3%A7%20%22%EB%A7%8C%EB%93%9C%EB%8A%94%20%EB%B0%A9%EC%8B%9D%EC%9D%B4%20%EB%B0%94%EB%B3%B4%20%EA%B0%99%EB%8B%A4%22%EB%8A%94%20%EC%8B%A0%ED%98%B8%EB%8B%A4.%20%EA%B7%B8%EB%9F%AC%EB%A9%B4%20%EC%A0%9C%EC%A1%B0%EB%B2%95%EC%9D%84%20%ED%86%B5%EC%A7%B8%EB%A1%9C%20%EA%B0%88%EC%95%84%EC%97%8E%EC%96%B4%20%EC%9B%90%EA%B0%80%EB%A5%BC%20%EB%96%A8%EC%96%B4%EB%9C%A8%EB%A6%B0%EB%8B%A4.%20%EA%B5%AD%EA%B0%80%EA%B0%80%20%EC%88%98%EC%8B%AD%EC%96%B5%20%EB%8B%AC%EB%9F%AC%EB%A5%BC%20%EC%93%B0%EB%8D%98%20%EB%B0%9C%EC%82%AC%EB%A5%BC%20%EB%AF%BC%EA%B0%84%EC%9D%B4%20%EA%B0%90%EB%8B%B9%20%EA%B0%80%EB%8A%A5%ED%95%9C%20%EA%B0%92%EC%9C%BC%EB%A1%9C%20%EB%81%8C%EC%96%B4%EB%82%B4%EB%A6%B0%20%ED%9E%98%EC%9D%B4%20%EB%B0%94%EB%A1%9C%20%EC%9D%B4%20%EC%82%AC%EA%B3%A0%EC%98%80%EB%8B%A4.%20%EB%82%98%EB%8F%84%20%EB%82%B4%20%EC%9D%BC%EC%97%90%20%EC%9D%B4%20%EC%A7%88%EB%AC%B8%EC%9D%84%20%EB%B6%99%EC%9D%B4%EA%B3%A0%20%EC%8B%B6%EB%8B%A4.%20%EB%93%A4%EC%9D%B8%20%EC%8B%9C%EA%B0%84%EA%B3%BC%20%EB%B9%84%EC%9A%A9%20%EB%8C%80%EB%B9%84%2C%20%EC%9D%B4%20%EA%B2%B0%EA%B3%BC%EB%AC%BC%EC%9D%80%20%EC%A0%95%EB%A7%90%20%EA%B7%B8%EB%A7%8C%ED%95%9C%20%EA%B0%80%EC%B9%98%EA%B0%80%20%EC%9E%88%EB%8A%94%EA%B0%80%3F%0A%0A%23%23%203.%20%EA%B0%95%EB%B0%95%EC%9D%84%20%EC%A0%88%EC%B0%A8%EB%A1%9C%20%E2%80%94%205%EB%8B%A8%EA%B3%84%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%ED%85%8C%EC%8A%AC%EB%9D%BC%EC%9D%98%20'%EC%83%9D%EC%82%B0%20%EC%A7%80%EC%98%A5'%EC%97%90%EC%84%9C%20%EC%9D%B4%20%EB%8B%A4%EC%84%AF%20%EB%8B%A8%EA%B3%84%EB%A5%BC%20%EC%B2%B4%EB%93%9D%ED%96%88%EB%8B%A4.%20%EC%88%9C%EC%84%9C%EA%B0%80%20%EC%83%9D%EB%AA%85%EC%9D%B4%EB%8B%A4.%0A%0A1.%20%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%EC%9D%84%20%EC%9D%98%EC%8B%AC%ED%95%98%EB%9D%BC.%20%EB%AA%A8%EB%93%A0%20%EC%9A%94%EA%B5%AC%EC%97%90%20'%EB%88%84%EA%B0%80%20%EC%A0%95%ED%96%88%EB%8A%94%EA%B0%80'%EB%9D%BC%EB%8A%94%20%EC%8B%A4%EB%AA%85%EC%9D%84%20%EB%B6%99%EC%97%AC%EB%9D%BC.%20%22%EC%9B%90%EB%9E%98%20%EA%B7%B8%EB%9E%98%EC%99%94%EB%8B%A4%22%EB%8A%94%20%EA%B0%80%EC%9E%A5%20%EB%A8%BC%EC%A0%80%20%EC%9D%98%EC%8B%AC%ED%95%A0%20%EB%8C%80%EC%83%81%EC%9D%B4%EB%8B%A4.%0A2.%20%EC%82%AD%EC%A0%9C%ED%95%98%EB%9D%BC.%20%EB%B6%80%ED%92%88%EA%B3%BC%20%EB%8B%A8%EA%B3%84%EB%A5%BC%20%EA%B3%BC%EA%B0%90%ED%9E%88%20%EC%A7%80%EC%9B%8C%EB%9D%BC.%0A3.%20%EB%8B%A8%EC%88%9C%ED%99%94%C2%B7%EC%B5%9C%EC%A0%81%ED%99%94%ED%95%98%EB%9D%BC.%20%EB%82%A8%EC%9D%80%20%EA%B2%83%EB%A7%8C%20%EB%8B%A4%EB%93%AC%EC%96%B4%EB%9D%BC.%0A4.%20%EC%86%8D%EB%8F%84%EB%A5%BC%20%EC%98%AC%EB%A0%A4%EB%9D%BC.%0A5.%20%EC%9E%90%EB%8F%99%ED%99%94%ED%95%98%EB%9D%BC.%20%EB%A7%A8%20%EB%A7%88%EC%A7%80%EB%A7%89%EC%9D%B4%EB%8B%A4.%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%EA%B2%BD%EA%B3%A0%ED%95%9C%EB%8B%A4.%20%22%EC%A1%B4%EC%9E%AC%ED%95%98%EC%A7%80%20%EB%A7%90%EC%95%98%EC%96%B4%EC%95%BC%20%ED%95%A0%20%EA%B2%83%EC%9D%84%20%EC%B5%9C%EC%A0%81%ED%99%94%ED%95%98%EB%8A%94%20%EA%B2%83%EC%9D%B4%20%EB%98%91%EB%98%91%ED%95%9C%20%EC%82%AC%EB%9E%8C%EB%93%A4%EC%9D%98%20%EA%B0%80%EC%9E%A5%20%ED%9D%94%ED%95%9C%20%EC%8B%A4%EC%88%98%EB%8B%A4.%20%EB%AC%B4%EB%8D%A4%EC%9D%84%20%ED%8C%8C%EA%B3%A0%20%EC%9E%88%EB%8B%A4%EB%A9%B4%2C%20%EB%8D%94%20%EB%B9%A8%EB%A6%AC%20%ED%8C%8C%EC%A7%80%20%EB%A7%90%EA%B3%A0%20%ED%8C%8C%EB%8A%94%20%EA%B2%83%EC%9D%84%20%EB%A9%88%EC%B6%B0%EB%9D%BC.%22%20%EB%82%98%EB%8A%94%20%EC%9E%90%EC%A3%BC%20%EC%97%86%EC%95%A0%EC%95%BC%20%ED%95%A0%20%EC%9D%BC%EC%9D%84%20%EB%8D%94%20%EC%97%B4%EC%8B%AC%ED%9E%88%20%ED%95%98%EA%B3%A0%20%EC%9E%88%EC%97%88%EB%8B%A4.%20%EA%B0%9C%EC%84%A0%EA%B3%BC%20%EC%9E%90%EB%8F%99%ED%99%94(3~5)%EB%B3%B4%EB%8B%A4%2C%20%EC%9D%98%EC%8B%AC%EA%B3%BC%20%EC%82%AD%EC%A0%9C(1~2)%EA%B0%80%20%EB%A8%BC%EC%A0%80%EB%8B%A4.%0A%0A%23%23%204.%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%20%E2%80%94%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EA%B7%B8%20%EC%A7%84%EC%A7%9C%20%EC%97%B0%EB%A3%8C%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EA%B0%80%20%EA%B0%80%EC%9E%A5%20%EC%A2%8B%EC%95%84%ED%95%98%EB%8A%94%20%EB%8B%A8%EC%96%B4%20%EC%A4%91%20%ED%95%98%EB%82%98%EA%B0%80%20'%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4'%EB%8B%A4.%20%EA%B8%B4%20%EC%8B%9C%EA%B0%84%2C%20%EB%86%92%EC%9D%80%20%EA%B0%95%EB%8F%84%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EC%98%A4%EC%A7%81%20%EC%98%88%EC%99%B8%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EB%9B%B0%EC%96%B4%EB%82%9C%20%EC%84%B1%EA%B3%BC%EB%A7%8C%EC%9D%B4%20%ED%95%A9%EA%B2%A9%EC%A0%90%EC%9D%B4%EB%9D%BC%EB%8A%94%20%EB%9C%BB%EC%9D%B4%EB%8B%A4.%20%EA%B7%B8%EB%8A%94%20%ED%8A%B8%EC%9C%84%ED%84%B0%EB%A5%BC%20%EC%9D%B8%EC%88%98%ED%95%9C%20%EC%A7%81%ED%9B%84%20%EC%A0%84%20%EC%A7%81%EC%9B%90%EC%97%90%EA%B2%8C%20%22%EA%B7%B9%EB%8F%84%EB%A1%9C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%ED%95%B4%EC%A7%88%20%EA%B2%83%22%EC%9D%84%20%EC%9A%94%EA%B5%AC%ED%96%88%EB%8B%A4.%0A%0A%EA%B7%B8%EB%9F%B0%EB%8D%B0%20%EC%9D%B4%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EC%97%90%EB%8A%94%20%EB%B0%98%EC%A0%84%EC%9D%B4%20%EC%9E%88%EB%8B%A4.%20%EA%B7%B8%20%EB%A9%94%EC%9D%BC%20%EB%92%A4%20%ED%8A%B8%EC%9C%84%ED%84%B0%20%EC%A7%81%EC%9B%90%EC%9D%98%20%EC%95%BD%2075%25%EA%B0%80%20%EB%96%A0%EB%82%AC%EB%8B%A4.%20%EB%82%98%EB%8A%94%20%EC%97%AC%EA%B8%B0%EC%84%9C%20%EA%B0%80%EC%9E%A5%20%ED%81%B0%20%EA%B5%90%ED%9B%88%EC%9D%84%20%EC%96%BB%EC%97%88%EB%8B%A4.%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8A%94%20%EA%B7%B8%EB%83%A5%20%22%EB%8D%94%20%EC%98%A4%EB%9E%98%20%EC%9D%BC%ED%95%B4%EB%9D%BC%22%EA%B0%80%20%EC%95%84%EB%8B%88%EB%8B%A4.%20%EC%84%B8%20%EA%B0%80%EC%A7%80%EA%B0%80%20%EC%97%86%EC%9C%BC%EB%A9%B4%20%EA%B7%B8%EA%B2%83%EC%9D%80%20%EB%B2%88%EC%95%84%EC%9B%83%EA%B3%BC%20%EC%9D%B4%ED%83%88%EB%A1%9C%20%EB%81%9D%EB%82%9C%EB%8B%A4.%20%EC%B2%AB%EC%A7%B8%2C%20%EC%99%9C%20%ED%95%98%EB%8A%94%EC%A7%80(%EB%AF%B8%EC%85%98)%EA%B0%80%20%EA%B0%80%EC%8A%B4%EC%97%90%20%EA%BD%82%ED%98%80%20%EC%9E%88%EC%96%B4%EC%95%BC%20%ED%95%9C%EB%8B%A4.%20%EB%91%98%EC%A7%B8%2C%20%EA%B0%95%EC%9A%94%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EC%9E%90%EB%B0%9C%EC%A0%81%20%EC%84%A0%ED%83%9D%EC%9D%B4%EC%96%B4%EC%95%BC%20%ED%95%9C%EB%8B%A4.%20%EC%85%8B%EC%A7%B8%2C%20%ED%83%81%EC%9B%94%ED%95%9C%20%EB%8F%99%EB%A3%8C%EC%99%80%20%ED%95%A8%EA%BB%98%EB%9D%BC%EB%8A%94%20%EC%9E%90%EB%B6%80%EC%8B%AC%EC%9D%B4%20%EC%9E%88%EC%96%B4%EC%95%BC%20%ED%95%9C%EB%8B%A4.%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EC%9D%98%20%EC%A7%84%EC%A7%9C%20%EC%97%B0%EB%A3%8C%EB%8A%94%20'%EC%8B%9C%EA%B0%84'%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20'%EC%9D%98%EB%AF%B8%EC%99%80%20%EB%AA%B0%EC%9E%85%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EB%8F%99%EB%A3%8C%EC%9D%98%20%EC%88%98%EC%A4%80'%EC%9D%B4%EB%8B%A4.%20%ED%99%94%EC%84%B1%EC%97%90%20%EA%B0%84%EB%8B%A4%EB%8A%94%20%EB%AF%B8%EC%85%98%EC%9D%B4%20%EC%97%86%EC%97%88%EB%8B%A4%EB%A9%B4%2C%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EC%9D%98%20%EA%B7%B8%20%EC%82%B4%EC%9D%B8%EC%A0%81%EC%9D%B8%20%EB%AA%B0%EC%9E%85%EB%8F%84%20%EA%B7%B8%EB%83%A5%20%EB%B2%88%EC%95%84%EC%9B%83%EC%9C%BC%EB%A1%9C%20%EB%81%9D%EB%82%AC%EC%9D%84%20%EA%B2%83%EC%9D%B4%EB%8B%A4.%0A%0A%23%23%205.%20%EA%B7%B8%EB%9E%98%EC%84%9C%20%EB%82%98%EB%8A%94%20%E2%80%94%20%EC%95%84%EB%9E%8C%ED%9C%B4%EB%B9%84%EC%8A%A4%EC%97%90%20%EC%9D%B4%EB%A0%87%EA%B2%8C%20%EC%8B%AC%EB%8A%94%EB%8B%A4%0A%0A%EC%95%84%EB%9E%8C%ED%9C%B4%EB%B9%84%EC%8A%A4%EC%9D%98%20%EC%8B%AC%EC%9E%A5%EC%9D%80%20%22%EA%B0%80%EC%B9%98%EA%B0%80%20%EC%9C%84%EA%B3%84%EB%A5%BC%20%EC%9D%B4%EA%B8%B4%EB%8B%A4%22%EC%9D%B4%EB%8B%A4.%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%9D%98%20%22%EC%A7%81%EA%B8%89%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EC%84%B1%EA%B3%BC%EA%B0%80%20%EA%B8%B0%EC%A4%80%22%EA%B3%BC%20%EC%A0%95%ED%99%95%ED%9E%88%20%ED%86%B5%ED%95%9C%EB%8B%A4.%20%EB%8B%A4%EB%A7%8C%20%ED%8A%B8%EC%9C%84%ED%84%B0%EC%9D%98%20%EA%B0%95%EC%9A%94%ED%98%95%20%EC%8B%A4%ED%8C%A8%EB%8A%94%20%ED%94%BC%ED%95%98%EA%B3%A0%2C%20%EA%B1%B4%EA%B0%95%ED%95%9C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%A1%9C%20%EB%B2%88%EC%97%AD%ED%95%9C%EB%8B%A4.%0A%0A-%20'%EC%98%A4%EB%9E%98'%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20'%EB%86%92%EC%9D%80%20%EA%B0%95%EB%8F%84%EC%9D%98%20%EC%A7%91%EC%A4%91'%EC%9C%BC%EB%A1%9C%20%EC%A0%95%EC%9D%98%ED%95%9C%EB%8B%A4.%20%EC%95%BC%EA%B7%BC%20%EC%8B%9C%EA%B0%84%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%2C%20%EC%9D%B4%EB%B2%88%20%EB%B6%84%EA%B8%B0%EC%9D%98%20%EC%95%95%EB%8F%84%EC%A0%81%EC%9D%B8%20%EA%B2%B0%EA%B3%BC%20%ED%95%98%EB%82%98%EB%A1%9C%20%EC%B8%A1%EC%A0%95%ED%95%9C%EB%8B%A4.%0A-%20%EB%AA%A8%EB%93%A0%20%EC%9D%BC%20%EC%95%9E%EC%97%90%20%22%EC%99%9C%20%EC%9D%B4%20%EC%9D%BC%EC%9D%B4%20%EC%A4%91%EC%9A%94%ED%95%9C%EA%B0%80%22%EB%A5%BC%20%EB%B6%99%EC%9D%B8%EB%8B%A4.%20%EA%B7%B8%EA%B2%83%EC%9D%B4%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EC%9D%98%20%EC%97%B0%EB%A3%8C%EB%8B%A4.%0A-%20%EC%86%8C%EC%88%98%20%EC%A0%95%EC%98%88%EC%97%90%20%EC%8B%A4%EB%AA%85%20%EC%B1%85%EC%9E%84%EC%9D%84%20%EB%B6%99%EC%9D%B8%EB%8B%A4.%20%EC%A7%81%EA%B8%89%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EA%B2%B0%EA%B3%BC%EB%A1%9C%20%EC%98%81%ED%96%A5%EB%A0%A5%EC%9D%84%20%EA%B0%96%EB%8A%94%EB%8B%A4.%0A-%20%22%EC%98%88%EC%99%B8%EC%A0%81%20%EC%84%B1%EA%B3%BC%22%EC%9D%98%20%ED%86%B5%EA%B3%BC%EC%84%A0%EC%9D%84%20%EB%88%88%EC%97%90%20%EB%B3%B4%EC%9D%B4%EA%B2%8C%20%EB%AA%85%EB%AC%B8%ED%99%94%ED%95%9C%EB%8B%A4.%0A-%20%EA%B0%95%EC%9A%94%ED%95%98%EC%A7%80%20%EC%95%8A%EA%B3%A0%20%EC%B4%88%EB%8C%80%ED%95%9C%EB%8B%A4.%20%22%EB%8F%99%EC%9D%98%ED%95%98%EB%9D%BC%22%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20%22%EC%9D%B4%20%EB%AF%B8%EC%85%98%EC%97%90%20%EB%AF%B8%EC%B3%90%EB%B3%BC%20%EC%82%AC%EB%9E%8C%3F%22%EC%9D%B4%EB%9D%BC%EA%B3%A0%20%EB%AC%BB%EB%8A%94%EB%8B%A4.%0A-%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%20%EC%8A%A4%ED%94%84%EB%A6%B0%ED%8A%B8%20%EB%92%A4%EC%97%90%EB%8A%94%20%ED%9A%8C%EB%B3%B5%EC%9D%84%20%EC%84%B8%ED%8A%B8%EB%A1%9C%20%EB%91%94%EB%8B%A4.%20%EC%A7%80%EC%86%8D%20%EA%B0%80%EB%8A%A5%ED%95%B4%EC%95%BC%20%EC%A7%84%EC%A7%9C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8B%A4.%0A%0A%ED%95%9C%20%EC%A4%84%EB%A1%9C%20%EB%82%A8%EA%B8%B4%EB%8B%A4.%20%EA%B0%95%EB%B0%95%EC%9D%80%20%EA%B7%BC%EB%B3%B8%EC%97%90%20%EA%B2%A8%EB%88%84%EA%B3%A0%2C%20%EC%9D%BC%EC%9D%80%20%EB%A8%BC%EC%A0%80%20%EC%9D%98%EC%8B%AC%ED%95%98%EA%B3%A0%20%EC%A7%80%EC%9A%B4%20%EB%92%A4%EC%97%90%20%EB%8B%A4%EB%93%AC%EC%9C%BC%EB%A9%B0%2C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8A%94%20%EA%B0%95%EC%9A%94%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EC%9D%98%EB%AF%B8%EC%97%90%20%EB%AF%B8%EC%B9%9C%20%EC%86%8C%EC%88%98%EC%9D%98%20%EC%9E%90%EB%B0%9C%EC%A0%81%20%EB%AA%B0%EC%9E%85%EC%9C%BC%EB%A1%9C%20%EB%B2%88%EC%97%AD%ED%95%9C%EB%8B%A4.%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%9D%BC%EB%8A%94%20%EA%B2%B0%EA%B3%BC%EB%8A%94%2C%20%EC%9D%B4%20%EB%B0%A9%EB%B2%95%EB%93%A4%EC%9D%B4%20%ED%95%98%EB%82%98%EB%A1%9C%20%EB%A7%9E%EB%AC%BC%EB%A0%B8%EC%9D%84%20%EB%95%8C%20%EB%82%98%EC%98%A8%20%EA%B2%83%EC%9D%B4%EC%97%88%EB%8B%A4.%0A%0A---%0A%0A%23%23%20What%20I%20Learned%20from%20Musk%20%E2%80%94%20From%20Private%20Spaceflight%20to%20Obsession%2C%20the%20Algorithm%2C%20and%20Hardcore%0A%0AThese%20days%20I've%20been%20reading%20a%20book%20about%20Elon%20Musk.%20Today%20I%20held%20on%20to%20three%20things%20about%20him%3A%20obsession%2C%20the%20algorithm%2C%20and%20hardcore.%20But%20once%20I%20laid%20them%20next%20to%20the%20SpaceX%20story%20I'd%20read%20a%20few%20days%20earlier%2C%20I%20saw%20that%20these%20aren't%20separate%20fragments%20%E2%80%94%20they%20form%20a%20single%20axis.%20SpaceX%20was%20the%20result%20he%20built%3B%20obsession%2C%20the%20algorithm%2C%20and%20hardcore%20were%20the%20method%20that%20produced%20it.%20I%20want%20to%20plant%20this%20whole%20thing%20in%20myself%20and%20in%20Aram%20Huvis%2C%20so%20I'm%20leaving%20it%20here%20as%20one%20piece.%0A%0A%23%23%23%200.%20What%20I%20Saw%20First%20%E2%80%94%20A%20Private%20Company%20Did%20What%20Only%20Nations%20Did%0A%0AThe%20first%20thing%20I%20met%20in%20the%20book%20was%20SpaceX's%20challenge%20to%20private%20spaceflight.%20Space%20development%20that%20the%20U.S.%2C%20China%2C%20and%20Russia%20pursued%20by%20pouring%20in%20enormous%20government%20budgets%2C%20SpaceX%20pulled%20down%20into%20the%20private%20sector%20and%20realized%20efficiently%20%E2%80%94%20essentially%20the%20first%20company%20to%20do%20so.%20That%20a%20single%20company%20did%20what%20only%20nations%20had%20done%20was%2C%20in%20itself%2C%20a%20symbol.%0A%0ACurious%20how%20the%20story%20ended%2C%20I%20checked%20the%20latest%20facts.%20In%20June%202026%2C%20SpaceX%20listed%20on%20the%20Nasdaq.%20With%20roughly%20%2475%E2%80%9386%20billion%20raised%2C%20it%20was%20the%20largest%20IPO%20in%20world%20history%2C%20and%20its%20market%20cap%20reached%20about%20%242.1%20trillion%20on%20its%20first%20day.%20The%20fascinating%20part%20is%20the%20ownership%20structure%3A%20Musk%20holds%2042%25%20of%20the%20shares%20but%2C%20thanks%20to%20super-voting%20stock%2C%2082%25%20of%20the%20voting%20power%20%E2%80%94%20a%20design%20that%20raises%20massive%20capital%20while%20the%20founder%20keeps%20his%20grip%20on%20direction.%0A%0AGovernment-led%20%E2%86%92%20handed%20to%20the%20private%20sector%20%E2%86%92%20reusable%20rockets%20%E2%86%92%20monetized%20through%20Starlink%20%E2%86%92%20the%20largest%20IPO%20ever.%20That's%20the%20result.%20So%20how%20did%20he%20do%20it%3F%20This%20is%20where%20the%20real%20lesson%20begins.%0A%0A%23%23%23%201.%20Obsession%20%E2%80%94%20What%20You%20Aim%20It%20At%20Is%20Everything%0A%0AMusk%20calls%20himself%20obsessive-compulsive.%20Until%20a%20problem%20is%20solved%2C%20he%20pushes%20sleep%2C%20food%2C%20and%20relationships%20aside%20and%20refuses%20to%20let%20go.%20But%20the%20key%20lesson%20for%20me%20isn't%20that%20his%20obsession%20is%20intense.%20It's%20what%20he%20aims%20that%20obsession%20at.%0A%0AJobs%20poured%20his%20obsession%20into%20a%20product's%20surface%2C%20its%20user%20experience%2C%20its%20design.%20He%20was%20an%20artist.%20Musk%20goes%20one%20layer%20deeper.%20He%20doesn't%20ask%20whether%20the%20screen%20is%20pretty%3B%20he%20asks%20whether%2C%20by%20the%20laws%20of%20physics%2C%20this%20is%20truly%20the%20best%20it%20can%20be.%20So%20his%20obsession%20reaches%20down%20into%20fundamental%20science%2C%20engineering%2C%20and%20the%20factory%20manufacturing%20line.%20Reusing%20rockets%20to%20overturn%20cost%20came%20from%20exactly%20this.%20I%2C%20too%2C%20want%20to%20aim%20my%20intensity%20not%20at%20a%20pretty%20surface%20but%20at%20the%20underlying%20structure%20that%20actually%20works.%0A%0A%23%23%23%202.%20First%20Principles%20and%20the%20%22Idiot%20Index%22%0A%0AMusk's%20weapon%20is%20first-principles%20thinking.%20He%20discards%20%22because%20everyone%20does%20it%20this%20way%2C%22%20breaks%20a%20thing%20down%20to%20its%20raw%20materials%20and%20the%20laws%20of%20physics%2C%20and%20rebuilds%20from%20there.%0A%0AThe%20%22Idiot%20Index%22%20he%20used%20at%20SpaceX%20struck%20me.%20It%20is%20the%20price%20of%20the%20finished%20product%20divided%20by%20the%20cost%20of%20its%20raw%20materials.%20When%20this%20number%20is%20high%2C%20it%20means%20the%20product%20is%20absurdly%20expensive%20relative%20to%20its%20materials%20%E2%80%94%20a%20sign%20that%20%22the%20way%20it's%20made%20is%20idiotic.%22%20So%20he%20overhauls%20the%20manufacturing%20method%20entirely%20and%20drives%20the%20cost%20down.%20The%20force%20that%20pulled%20a%20launch%20%E2%80%94%20once%20costing%20nations%20billions%20%E2%80%94%20down%20to%20a%20price%20the%20private%20sector%20could%20bear%20was%20exactly%20this%20kind%20of%20thinking.%20I%20want%20to%20attach%20this%20question%20to%20my%20own%20work%3A%20relative%20to%20the%20time%20and%20money%20I've%20put%20in%2C%20is%20this%20result%20truly%20worth%20it%3F%0A%0A%23%23%23%203.%20Turning%20Obsession%20into%20a%20Procedure%20%E2%80%94%20The%20Five-Step%20Algorithm%0A%0AMusk%20learned%20these%20five%20steps%20in%20Tesla's%20%22production%20hell.%22%20The%20order%20is%20everything.%0A%0A1.%20Question%20the%20requirements.%20Attach%20a%20real%20person's%20name%20to%20every%20requirement.%20%22It's%20always%20been%20done%20this%20way%22%20is%20the%20first%20thing%20to%20question.%0A2.%20Delete.%20Cut%20parts%20and%20steps%20aggressively.%0A3.%20Simplify%20and%20optimize.%20Only%20refine%20what%20remains.%0A4.%20Accelerate.%0A5.%20Automate.%20This%20comes%20last.%0A%0AMusk%20warns%3A%20%22The%20most%20common%20mistake%20of%20smart%20engineers%20is%20to%20optimize%20a%20thing%20that%20should%20not%20exist.%20If%20you're%20digging%20your%20grave%2C%20don't%20dig%20faster%20%E2%80%94%20stop%20digging.%22%20I%20have%20often%20been%20working%20harder%20at%20things%20I%20should%20have%20eliminated.%20Questioning%20and%20deleting%20(1%E2%80%932)%20come%20before%20improving%20and%20automating%20(3%E2%80%935).%0A%0A%23%23%23%204.%20Hardcore%20%E2%80%94%20and%20Its%20Real%20Fuel%0A%0AOne%20of%20Musk's%20favorite%20words%20is%20%22hardcore%22%3A%20long%20hours%2C%20high%20intensity%2C%20and%20only%20exceptional%20performance%20counts%20as%20a%20passing%20grade.%20Right%20after%20acquiring%20Twitter%2C%20he%20demanded%20that%20all%20employees%20become%20%22extremely%20hardcore.%22%0A%0ABut%20there's%20a%20twist.%20After%20that%20email%2C%20roughly%2075%25%20of%20Twitter's%20employees%20left.%20This%20is%20where%20I%20found%20the%20biggest%20lesson.%20Hardcore%20is%20not%20simply%20%22work%20longer.%22%20Without%20three%20things%2C%20it%20ends%20in%20burnout%20and%20attrition.%20First%2C%20the%20reason%20%E2%80%94%20the%20mission%20%E2%80%94%20must%20be%20lodged%20in%20your%20heart.%20Second%2C%20it%20must%20be%20a%20voluntary%20choice%2C%20not%20a%20coercion.%20Third%2C%20there%20must%20be%20the%20pride%20of%20working%20alongside%20exceptional%20peers.%20The%20real%20fuel%20of%20hardcore%20is%20not%20%22time%22%20but%20%22meaning%2C%20immersion%2C%20and%20the%20caliber%20of%20your%20colleagues.%22%20Without%20the%20mission%20of%20reaching%20Mars%2C%20even%20SpaceX's%20punishing%20immersion%20would%20have%20ended%20in%20mere%20burnout.%0A%0A%23%23%23%205.%20So%20Here's%20How%20I%20Plant%20It%20in%20Aram%20Huvis%0A%0AThe%20heart%20of%20Aram%20Huvis%20is%20%22value%20beats%20hierarchy.%22%20That%20aligns%20exactly%20with%20Musk's%20%22results%2C%20not%20rank%2C%20are%20the%20standard.%22%20But%20I%20avoid%20Twitter's%20coercive%20failure%20and%20translate%20this%20into%20a%20healthy%20hardcore.%0A%0A-%20Define%20it%20as%20%22high-intensity%20focus%2C%22%20not%20%22long%20hours.%22%20Measure%20it%20by%20one%20overwhelming%20result%20this%20quarter%2C%20not%20by%20overtime.%0A-%20Put%20%22why%20this%20matters%22%20in%20front%20of%20every%20task.%20That%20is%20the%20fuel%20of%20hardcore.%0A-%20Attach%20named%20accountability%20to%20a%20small%20elite.%20Influence%20comes%20from%20results%2C%20not%20rank.%0A-%20Make%20the%20passing%20line%20for%20%22exceptional%20performance%22%20visible%20and%20explicit.%0A-%20Invite%20rather%20than%20coerce.%20Not%20%22agree%20to%20this%2C%22%20but%20%22who%20wants%20to%20go%20crazy%20for%20this%20mission%3F%22%0A-%20Pair%20every%20hardcore%20sprint%20with%20recovery.%20It's%20only%20truly%20hardcore%20if%20it's%20sustainable.%0A%0AI'll%20leave%20it%20in%20one%20line.%20Aim%20obsession%20at%20the%20fundamentals%3B%20question%20and%20delete%20before%20you%20refine%3B%20and%20translate%20hardcore%20not%20as%20coercion%20but%20as%20the%20voluntary%20immersion%20of%20a%20few%20who%20are%20crazy%20about%20the%20meaning.%20The%20result%20called%20SpaceX%20emerged%20only%20when%20these%20methods%20locked%20together%20as%20one." target="_blank" rel="noopener">스레드에 채워 열기 ↗</a> </div> <p class="pub-note">ⓘ 스레드 500자 초과 — 올릴 때 조금 줄여서</p> </div><div class="pub-card"> <div class="pub-head"><span class="pub-name">X (Twitter)</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">요즘 나는 일론 머스크에 관한 책을 읽고 있다. 오늘 그에 대해 세 가지를 붙잡았다. 강박, 알고리즘, 그리고 하드코어. 그런데 며칠 전 읽은 스페이스X 이야기까지 붙여 놓고 보니, 이 모두는 따로 떨어진 조각이 아니라 하나의 축을 이룬다. 스페이스X는 그가 만든 결과였고, 강박·알고리즘·하드코어는 그 결과를 만든 방법이었다. 나는 이 전체를 나와 아람휴비스에 심고 싶어 하나의 글로 남긴다.
+
+## 0. 먼저 본 것 — 국가의 일을 민간이 해냈다
+
+책에서 내가 먼저 만난 건 스페이스X가 민간 우주항공에 도전하는 대목이었다. 미국·중국·러시아가 정부 예산을 막대하게 투입해 하던 우주개발을, 스페이스X는 민간으로 끌어내려 효율적으로 실현한 사실상 최초의 회사였다. 국가만 하던 일을 한 기업이 해냈다는 것 — 그 자체가 상징이었다.
+
+그 이야기의 결말이 궁금해 최신 사실을 확인했다. 2026년 6월, 스페이스X는 나스닥에 상장했다. 조달액 약 $750억~860억으로 역대 세계 최대 규모의 IPO였고, 상장 첫날 시가총액은 약 $2조 1,000억에 달했다. 흥미로운 건 오너십 구조다. 머스크의 지분은 42%지만 슈퍼의결권 주식으로 의결권은 82% — 대규모 자금은 끌어모으되 방향을 쥐는 힘은 창업자가 계속 쥐는 설계다.
+
+정부 주도 → 민간 이양 → 재사용 로켓 → 스타링크로 수익화 → 세계 최대 IPO. 이게 결과다. 그렇다면 그는 이걸 어떻게 해냈나. 여기서부터가 진짜 배울 대목이다.
+
+## 1. 강박 — 어디에 겨누느냐가 전부다
+
+머스크는 스스로를 강박적(OCD)이라고 말한다. 문제가 풀릴 때까지 잠도, 밥도, 관계도 뒤로 미루고 물고 늘어진다. 그런데 내가 배운 핵심은 &quot;강박이 세다&quot;가 아니다. 그 강박을 어디에 겨눴느냐다.
+
+잡스는 제품의 겉과 사용 경험, 디자인에 강박을 쏟았다. 예술가였다. 머스크는 거기서 한 층 더 내려간다. 화면이 예쁜가가 아니라, 물리 법칙상 이게 정말 최선인가를 묻는다. 그래서 그의 강박은 근본 과학, 공학, 그리고 공장의 제조 라인까지 내려간다. 로켓을 재사용해 비용을 뒤엎은 것도 여기서 나왔다. 나도 &#39;예쁜 표면&#39;이 아니라 &#39;작동하는 근본 구조&#39;에 강도를 쏘고 싶다.
+
+## 2. 첫 원칙과 &#39;바보 지수&#39;
+
+머스크의 무기는 첫 원칙 사고다. &quot;남들이 이렇게 하니까&quot;를 버리고, 원재료와 물리 법칙까지 분해한 다음 거기서부터 다시 쌓는다.
+
+그가 스페이스X에서 쓴 &#39;바보 지수(Idiot Index)&#39;가 인상 깊었다. 완성품 가격을 원재료 가격으로 나눈 값이다. 이 숫자가 크면, 재료값에 비해 터무니없이 비싸다는 뜻이고, 곧 &quot;만드는 방식이 바보 같다&quot;는 신호다. 그러면 제조법을 통째로 갈아엎어 원가를 떨어뜨린다. 국가가 수십억 달러를 쓰던 발사를 민간이 감당 가능한 값으로 끌어내린 힘이 바로 이 사고였다. 나도 내 일에 이 질문을 붙이고 싶다. 들인 시간과 비용 대비, 이 결과물은 정말 그만한 가치가 있는가?
+
+## 3. 강박을 절차로 — 5단계 알고리즘
+
+머스크는 테슬라의 &#39;생산 지옥&#39;에서 이 다섯 단계를 체득했다. 순서가 생명이다.
+
+1. 요구사항을 의심하라. 모든 요구에 &#39;누가 정했는가&#39;라는 실명을 붙여라. &quot;원래 그래왔다&quot;는 가장 먼저 의심할 대상이다.
+2. 삭제하라. 부품과 단계를 과감히 지워라.
+3. 단순화·최적화하라. 남은 것만 다듬어라.
+4. 속도를 올려라.
+5. 자동화하라. 맨 마지막이다.
+
+머스크는 경고한다. &quot;존재하지 말았어야 할 것을 최적화하는 것이 똑똑한 사람들의 가장 흔한 실수다. 무덤을 파고 있다면, 더 빨리 파지 말고 파는 것을 멈춰라.&quot; 나는 자주 없애야 할 일을 더 열심히 하고 있었다. 개선과 자동화(3~5)보다, 의심과 삭제(1~2)가 먼저다.
+
+## 4. 하드코어 — 그리고 그 진짜 연료
+
+머스크가 가장 좋아하는 단어 중 하나가 &#39;하드코어&#39;다. 긴 시간, 높은 강도, 그리고 오직 예외적으로 뛰어난 성과만이 합격점이라는 뜻이다. 그는 트위터를 인수한 직후 전 직원에게 &quot;극도로 하드코어해질 것&quot;을 요구했다.
+
+그런데 이 이야기에는 반전이 있다. 그 메일 뒤 트위터 직원의 약 75%가 떠났다. 나는 여기서 가장 큰 교훈을 얻었다. 하드코어는 그냥 &quot;더 오래 일해라&quot;가 아니다. 세 가지가 없으면 그것은 번아웃과 이탈로 끝난다. 첫째, 왜 하는지(미션)가 가슴에 꽂혀 있어야 한다. 둘째, 강요가 아니라 자발적 선택이어야 한다. 셋째, 탁월한 동료와 함께라는 자부심이 있어야 한다. 하드코어의 진짜 연료는 &#39;시간&#39;이 아니라 &#39;의미와 몰입, 그리고 동료의 수준&#39;이다. 화성에 간다는 미션이 없었다면, 스페이스X의 그 살인적인 몰입도 그냥 번아웃으로 끝났을 것이다.
+
+## 5. 그래서 나는 — 아람휴비스에 이렇게 심는다
+
+아람휴비스의 심장은 &quot;가치가 위계를 이긴다&quot;이다. 머스크의 &quot;직급이 아니라 성과가 기준&quot;과 정확히 통한다. 다만 트위터의 강요형 실패는 피하고, 건강한 하드코어로 번역한다.
+
+- &#39;오래&#39;가 아니라 &#39;높은 강도의 집중&#39;으로 정의한다. 야근 시간이 아니라, 이번 분기의 압도적인 결과 하나로 측정한다.
+- 모든 일 앞에 &quot;왜 이 일이 중요한가&quot;를 붙인다. 그것이 하드코어의 연료다.
+- 소수 정예에 실명 책임을 붙인다. 직급이 아니라 결과로 영향력을 갖는다.
+- &quot;예외적 성과&quot;의 통과선을 눈에 보이게 명문화한다.
+- 강요하지 않고 초대한다. &quot;동의하라&quot;가 아니라 &quot;이 미션에 미쳐볼 사람?&quot;이라고 묻는다.
+- 하드코어 스프린트 뒤에는 회복을 세트로 둔다. 지속 가능해야 진짜 하드코어다.
+
+한 줄로 남긴다. 강박은 근본에 겨누고, 일은 먼저 의심하고 지운 뒤에 다듬으며, 하드코어는 강요가 아니라 의미에 미친 소수의 자발적 몰입으로 번역한다. 스페이스X라는 결과는, 이 방법들이 하나로 맞물렸을 때 나온 것이었다.
+
+---
+
+## What I Learned from Musk — From Private Spaceflight to Obsession, the Algorithm, and Hardcore
+
+These days I&#39;ve been reading a book about Elon Musk. Today I held on to three things about him: obsession, the algorithm, and hardcore. But once I laid them next to the SpaceX story I&#39;d read a few days earlier, I saw that these aren&#39;t separate fragments — they form a single axis. SpaceX was the result he built; obsession, the algorithm, and hardcore were the method that produced it. I want to plant this whole thing in myself and in Aram Huvis, so I&#39;m leaving it here as one piece.
+
+### 0. What I Saw First — A Private Company Did What Only Nations Did
+
+The first thing I met in the book was SpaceX&#39;s challenge to private spaceflight. Space development that the U.S., China, and Russia pursued by pouring in enormous government budgets, SpaceX pulled down into the private sector and realized efficiently — essentially the first company to do so. That a single company did what only nations had done was, in itself, a symbol.
+
+Curious how the story ended, I checked the latest facts. In June 2026, SpaceX listed on the Nasdaq. With roughly $75–86 billion raised, it was the largest IPO in world history, and its market cap reached about $2.1 trillion on its first day. The fascinating part is the ownership structure: Musk holds 42% of the shares but, thanks to super-voting stock, 82% of the voting power — a design that raises massive capital while the founder keeps his grip on direction.
+
+Government-led → handed to the private sector → reusable rockets → monetized through Starlink → the largest IPO ever. That&#39;s the result. So how did he do it? This is where the real lesson begins.
+
+### 1. Obsession — What You Aim It At Is Everything
+
+Musk calls himself obsessive-compulsive. Until a problem is solved, he pushes sleep, food, and relationships aside and refuses to let go. But the key lesson for me isn&#39;t that his obsession is intense. It&#39;s what he aims that obsession at.
+
+Jobs poured his obsession into a product&#39;s surface, its user experience, its design. He was an artist. Musk goes one layer deeper. He doesn&#39;t ask whether the screen is pretty; he asks whether, by the laws of physics, this is truly the best it can be. So his obsession reaches down into fundamental science, engineering, and the factory manufacturing line. Reusing rockets to overturn cost came from exactly this. I, too, want to aim my intensity not at a pretty surface but at the underlying structure that actually works.
+
+### 2. First Principles and the &quot;Idiot Index&quot;
+
+Musk&#39;s weapon is first-principles thinking. He discards &quot;because everyone does it this way,&quot; breaks a thing down to its raw materials and the laws of physics, and rebuilds from there.
+
+The &quot;Idiot Index&quot; he used at SpaceX struck me. It is the price of the finished product divided by the cost of its raw materials. When this number is high, it means the product is absurdly expensive relative to its materials — a sign that &quot;the way it&#39;s made is idiotic.&quot; So he overhauls the manufacturing method entirely and drives the cost down. The force that pulled a launch — once costing nations billions — down to a price the private sector could bear was exactly this kind of thinking. I want to attach this question to my own work: relative to the time and money I&#39;ve put in, is this result truly worth it?
+
+### 3. Turning Obsession into a Procedure — The Five-Step Algorithm
+
+Musk learned these five steps in Tesla&#39;s &quot;production hell.&quot; The order is everything.
+
+1. Question the requirements. Attach a real person&#39;s name to every requirement. &quot;It&#39;s always been done this way&quot; is the first thing to question.
+2. Delete. Cut parts and steps aggressively.
+3. Simplify and optimize. Only refine what remains.
+4. Accelerate.
+5. Automate. This comes last.
+
+Musk warns: &quot;The most common mistake of smart engineers is to optimize a thing that should not exist. If you&#39;re digging your grave, don&#39;t dig faster — stop digging.&quot; I have often been working harder at things I should have eliminated. Questioning and deleting (1–2) come before improving and automating (3–5).
+
+### 4. Hardcore — and Its Real Fuel
+
+One of Musk&#39;s favorite words is &quot;hardcore&quot;: long hours, high intensity, and only exceptional performance counts as a passing grade. Right after acquiring Twitter, he demanded that all employees become &quot;extremely hardcore.&quot;
+
+But there&#39;s a twist. After that email, roughly 75% of Twitter&#39;s employees left. This is where I found the biggest lesson. Hardcore is not simply &quot;work longer.&quot; Without three things, it ends in burnout and attrition. First, the reason — the mission — must be lodged in your heart. Second, it must be a voluntary choice, not a coercion. Third, there must be the pride of working alongside exceptional peers. The real fuel of hardcore is not &quot;time&quot; but &quot;meaning, immersion, and the caliber of your colleagues.&quot; Without the mission of reaching Mars, even SpaceX&#39;s punishing immersion would have ended in mere burnout.
+
+### 5. So Here&#39;s How I Plant It in Aram Huvis
+
+The heart of Aram Huvis is &quot;value beats hierarchy.&quot; That aligns exactly with Musk&#39;s &quot;results, not rank, are the standard.&quot; But I avoid Twitter&#39;s coercive failure and translate this into a healthy hardcore.
+
+- Define it as &quot;high-intensity focus,&quot; not &quot;long hours.&quot; Measure it by one overwhelming result this quarter, not by overtime.
+- Put &quot;why this matters&quot; in front of every task. That is the fuel of hardcore.
+- Attach named accountability to a small elite. Influence comes from results, not rank.
+- Make the passing line for &quot;exceptional performance&quot; visible and explicit.
+- Invite rather than coerce. Not &quot;agree to this,&quot; but &quot;who wants to go crazy for this mission?&quot;
+- Pair every hardcore sprint with recovery. It&#39;s only truly hardcore if it&#39;s sustainable.
+
+I&#39;ll leave it in one line. Aim obsession at the fundamentals; question and delete before you refine; and translate hardcore not as coercion but as the voluntary immersion of a few who are crazy about the meaning. The result called SpaceX emerged only when these methods locked together as one.</textarea> <div class="pub-actions"> <button class="pub-btn copy" type="button">복사</button> <a class="pub-btn share" href="https://x.com/intent/tweet?text=%EC%9A%94%EC%A6%98%20%EB%82%98%EB%8A%94%20%EC%9D%BC%EB%A1%A0%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%97%90%20%EA%B4%80%ED%95%9C%20%EC%B1%85%EC%9D%84%20%EC%9D%BD%EA%B3%A0%20%EC%9E%88%EB%8B%A4.%20%EC%98%A4%EB%8A%98%20%EA%B7%B8%EC%97%90%20%EB%8C%80%ED%95%B4%20%EC%84%B8%20%EA%B0%80%EC%A7%80%EB%A5%BC%20%EB%B6%99%EC%9E%A1%EC%95%98%EB%8B%A4.%20%EA%B0%95%EB%B0%95%2C%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4.%20%EA%B7%B8%EB%9F%B0%EB%8D%B0%20%EB%A9%B0%EC%B9%A0%20%EC%A0%84%20%EC%9D%BD%EC%9D%80%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EA%B9%8C%EC%A7%80%20%EB%B6%99%EC%97%AC%20%EB%86%93%EA%B3%A0%20%EB%B3%B4%EB%8B%88%2C%20%EC%9D%B4%20%EB%AA%A8%EB%91%90%EB%8A%94%20%EB%94%B0%EB%A1%9C%20%EB%96%A8%EC%96%B4%EC%A7%84%20%EC%A1%B0%EA%B0%81%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20%ED%95%98%EB%82%98%EC%9D%98%20%EC%B6%95%EC%9D%84%20%EC%9D%B4%EB%A3%AC%EB%8B%A4.%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%8A%94%20%EA%B7%B8%EA%B0%80%20%EB%A7%8C%EB%93%A0%20%EA%B2%B0%EA%B3%BC%EC%98%80%EA%B3%A0%2C%20%EA%B0%95%EB%B0%95%C2%B7%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%C2%B7%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8A%94%20%EA%B7%B8%20%EA%B2%B0%EA%B3%BC%EB%A5%BC%20%EB%A7%8C%EB%93%A0%20%EB%B0%A9%EB%B2%95%EC%9D%B4%EC%97%88%EB%8B%A4.%20%EB%82%98%EB%8A%94%20%EC%9D%B4%20%EC%A0%84%EC%B2%B4%EB%A5%BC%20%EB%82%98%EC%99%80%20%EC%95%84%EB%9E%8C%ED%9C%B4%EB%B9%84%EC%8A%A4%EC%97%90%20%EC%8B%AC%EA%B3%A0%20%EC%8B%B6%EC%96%B4%20%ED%95%98%EB%82%98%EC%9D%98%20%EA%B8%80%EB%A1%9C%20%EB%82%A8%EA%B8%B4%EB%8B%A4.%0A%0A%23%23%200.%20%EB%A8%BC%EC%A0%80%20%EB%B3%B8%20%EA%B2%83%20%E2%80%94%20%EA%B5%AD%EA%B0%80%EC%9D%98%20%EC%9D%BC%EC%9D%84%20%EB%AF%BC%EA%B0%84%EC%9D%B4%20%ED%95%B4%EB%83%88%EB%8B%A4%0A%0A%EC%B1%85%EC%97%90%EC%84%9C%20%EB%82%B4%EA%B0%80%20%EB%A8%BC%EC%A0%80%20%EB%A7%8C%EB%82%9C%20%EA%B1%B4%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EA%B0%80%20%EB%AF%BC%EA%B0%84%20%EC%9A%B0%EC%A3%BC%ED%95%AD%EA%B3%B5%EC%97%90%20%EB%8F%84%EC%A0%84%ED%95%98%EB%8A%94%20%EB%8C%80%EB%AA%A9%EC%9D%B4%EC%97%88%EB%8B%A4.%20%EB%AF%B8%EA%B5%AD%C2%B7%EC%A4%91%EA%B5%AD%C2%B7%EB%9F%AC%EC%8B%9C%EC%95%84%EA%B0%80%20%EC%A0%95%EB%B6%80%20%EC%98%88%EC%82%B0%EC%9D%84%20%EB%A7%89%EB%8C%80%ED%95%98%EA%B2%8C%20%ED%88%AC%EC%9E%85%ED%95%B4%20%ED%95%98%EB%8D%98%20%EC%9A%B0%EC%A3%BC%EA%B0%9C%EB%B0%9C%EC%9D%84%2C%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%8A%94%20%EB%AF%BC%EA%B0%84%EC%9C%BC%EB%A1%9C%20%EB%81%8C%EC%96%B4%EB%82%B4%EB%A0%A4%20%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EC%8B%A4%ED%98%84%ED%95%9C%20%EC%82%AC%EC%8B%A4%EC%83%81%20%EC%B5%9C%EC%B4%88%EC%9D%98%20%ED%9A%8C%EC%82%AC%EC%98%80%EB%8B%A4.%20%EA%B5%AD%EA%B0%80%EB%A7%8C%20%ED%95%98%EB%8D%98%20%EC%9D%BC%EC%9D%84%20%ED%95%9C%20%EA%B8%B0%EC%97%85%EC%9D%B4%20%ED%95%B4%EB%83%88%EB%8B%A4%EB%8A%94%20%EA%B2%83%20%E2%80%94%20%EA%B7%B8%20%EC%9E%90%EC%B2%B4%EA%B0%80%20%EC%83%81%EC%A7%95%EC%9D%B4%EC%97%88%EB%8B%A4.%0A%0A%EA%B7%B8%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EC%9D%98%20%EA%B2%B0%EB%A7%90%EC%9D%B4%20%EA%B6%81%EA%B8%88%ED%95%B4%20%EC%B5%9C%EC%8B%A0%20%EC%82%AC%EC%8B%A4%EC%9D%84%20%ED%99%95%EC%9D%B8%ED%96%88%EB%8B%A4.%202026%EB%85%84%206%EC%9B%94%2C%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%8A%94%20%EB%82%98%EC%8A%A4%EB%8B%A5%EC%97%90%20%EC%83%81%EC%9E%A5%ED%96%88%EB%8B%A4.%20%EC%A1%B0%EB%8B%AC%EC%95%A1%20%EC%95%BD%20%24750%EC%96%B5~860%EC%96%B5%EC%9C%BC%EB%A1%9C%20%EC%97%AD%EB%8C%80%20%EC%84%B8%EA%B3%84%20%EC%B5%9C%EB%8C%80%20%EA%B7%9C%EB%AA%A8%EC%9D%98%20IPO%EC%98%80%EA%B3%A0%2C%20%EC%83%81%EC%9E%A5%20%EC%B2%AB%EB%82%A0%20%EC%8B%9C%EA%B0%80%EC%B4%9D%EC%95%A1%EC%9D%80%20%EC%95%BD%20%242%EC%A1%B0%201%2C000%EC%96%B5%EC%97%90%20%EB%8B%AC%ED%96%88%EB%8B%A4.%20%ED%9D%A5%EB%AF%B8%EB%A1%9C%EC%9A%B4%20%EA%B1%B4%20%EC%98%A4%EB%84%88%EC%8B%AD%20%EA%B5%AC%EC%A1%B0%EB%8B%A4.%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%9D%98%20%EC%A7%80%EB%B6%84%EC%9D%80%2042%25%EC%A7%80%EB%A7%8C%20%EC%8A%88%ED%8D%BC%EC%9D%98%EA%B2%B0%EA%B6%8C%20%EC%A3%BC%EC%8B%9D%EC%9C%BC%EB%A1%9C%20%EC%9D%98%EA%B2%B0%EA%B6%8C%EC%9D%80%2082%25%20%E2%80%94%20%EB%8C%80%EA%B7%9C%EB%AA%A8%20%EC%9E%90%EA%B8%88%EC%9D%80%20%EB%81%8C%EC%96%B4%EB%AA%A8%EC%9C%BC%EB%90%98%20%EB%B0%A9%ED%96%A5%EC%9D%84%20%EC%A5%90%EB%8A%94%20%ED%9E%98%EC%9D%80%20%EC%B0%BD%EC%97%85%EC%9E%90%EA%B0%80%20%EA%B3%84%EC%86%8D%20%EC%A5%90%EB%8A%94%20%EC%84%A4%EA%B3%84%EB%8B%A4.%0A%0A%EC%A0%95%EB%B6%80%20%EC%A3%BC%EB%8F%84%20%E2%86%92%20%EB%AF%BC%EA%B0%84%20%EC%9D%B4%EC%96%91%20%E2%86%92%20%EC%9E%AC%EC%82%AC%EC%9A%A9%20%EB%A1%9C%EC%BC%93%20%E2%86%92%20%EC%8A%A4%ED%83%80%EB%A7%81%ED%81%AC%EB%A1%9C%20%EC%88%98%EC%9D%B5%ED%99%94%20%E2%86%92%20%EC%84%B8%EA%B3%84%20%EC%B5%9C%EB%8C%80%20IPO.%20%EC%9D%B4%EA%B2%8C%20%EA%B2%B0%EA%B3%BC%EB%8B%A4.%20%EA%B7%B8%EB%A0%87%EB%8B%A4%EB%A9%B4%20%EA%B7%B8%EB%8A%94%20%EC%9D%B4%EA%B1%B8%20%EC%96%B4%EB%96%BB%EA%B2%8C%20%ED%95%B4%EB%83%88%EB%82%98.%20%EC%97%AC%EA%B8%B0%EC%84%9C%EB%B6%80%ED%84%B0%EA%B0%80%20%EC%A7%84%EC%A7%9C%20%EB%B0%B0%EC%9A%B8%20%EB%8C%80%EB%AA%A9%EC%9D%B4%EB%8B%A4.%0A%0A%23%23%201.%20%EA%B0%95%EB%B0%95%20%E2%80%94%20%EC%96%B4%EB%94%94%EC%97%90%20%EA%B2%A8%EB%88%84%EB%8A%90%EB%83%90%EA%B0%80%20%EC%A0%84%EB%B6%80%EB%8B%A4%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%EC%8A%A4%EC%8A%A4%EB%A1%9C%EB%A5%BC%20%EA%B0%95%EB%B0%95%EC%A0%81(OCD)%EC%9D%B4%EB%9D%BC%EA%B3%A0%20%EB%A7%90%ED%95%9C%EB%8B%A4.%20%EB%AC%B8%EC%A0%9C%EA%B0%80%20%ED%92%80%EB%A6%B4%20%EB%95%8C%EA%B9%8C%EC%A7%80%20%EC%9E%A0%EB%8F%84%2C%20%EB%B0%A5%EB%8F%84%2C%20%EA%B4%80%EA%B3%84%EB%8F%84%20%EB%92%A4%EB%A1%9C%20%EB%AF%B8%EB%A3%A8%EA%B3%A0%20%EB%AC%BC%EA%B3%A0%20%EB%8A%98%EC%96%B4%EC%A7%84%EB%8B%A4.%20%EA%B7%B8%EB%9F%B0%EB%8D%B0%20%EB%82%B4%EA%B0%80%20%EB%B0%B0%EC%9A%B4%20%ED%95%B5%EC%8B%AC%EC%9D%80%20%22%EA%B0%95%EB%B0%95%EC%9D%B4%20%EC%84%B8%EB%8B%A4%22%EA%B0%80%20%EC%95%84%EB%8B%88%EB%8B%A4.%20%EA%B7%B8%20%EA%B0%95%EB%B0%95%EC%9D%84%20%EC%96%B4%EB%94%94%EC%97%90%20%EA%B2%A8%EB%88%B4%EB%8A%90%EB%83%90%EB%8B%A4.%0A%0A%EC%9E%A1%EC%8A%A4%EB%8A%94%20%EC%A0%9C%ED%92%88%EC%9D%98%20%EA%B2%89%EA%B3%BC%20%EC%82%AC%EC%9A%A9%20%EA%B2%BD%ED%97%98%2C%20%EB%94%94%EC%9E%90%EC%9D%B8%EC%97%90%20%EA%B0%95%EB%B0%95%EC%9D%84%20%EC%8F%9F%EC%95%98%EB%8B%A4.%20%EC%98%88%EC%88%A0%EA%B0%80%EC%98%80%EB%8B%A4.%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%EA%B1%B0%EA%B8%B0%EC%84%9C%20%ED%95%9C%20%EC%B8%B5%20%EB%8D%94%20%EB%82%B4%EB%A0%A4%EA%B0%84%EB%8B%A4.%20%ED%99%94%EB%A9%B4%EC%9D%B4%20%EC%98%88%EC%81%9C%EA%B0%80%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%2C%20%EB%AC%BC%EB%A6%AC%20%EB%B2%95%EC%B9%99%EC%83%81%20%EC%9D%B4%EA%B2%8C%20%EC%A0%95%EB%A7%90%20%EC%B5%9C%EC%84%A0%EC%9D%B8%EA%B0%80%EB%A5%BC%20%EB%AC%BB%EB%8A%94%EB%8B%A4.%20%EA%B7%B8%EB%9E%98%EC%84%9C%20%EA%B7%B8%EC%9D%98%20%EA%B0%95%EB%B0%95%EC%9D%80%20%EA%B7%BC%EB%B3%B8%20%EA%B3%BC%ED%95%99%2C%20%EA%B3%B5%ED%95%99%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EA%B3%B5%EC%9E%A5%EC%9D%98%20%EC%A0%9C%EC%A1%B0%20%EB%9D%BC%EC%9D%B8%EA%B9%8C%EC%A7%80%20%EB%82%B4%EB%A0%A4%EA%B0%84%EB%8B%A4.%20%EB%A1%9C%EC%BC%93%EC%9D%84%20%EC%9E%AC%EC%82%AC%EC%9A%A9%ED%95%B4%20%EB%B9%84%EC%9A%A9%EC%9D%84%20%EB%92%A4%EC%97%8E%EC%9D%80%20%EA%B2%83%EB%8F%84%20%EC%97%AC%EA%B8%B0%EC%84%9C%20%EB%82%98%EC%99%94%EB%8B%A4.%20%EB%82%98%EB%8F%84%20'%EC%98%88%EC%81%9C%20%ED%91%9C%EB%A9%B4'%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20'%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%20%EA%B7%BC%EB%B3%B8%20%EA%B5%AC%EC%A1%B0'%EC%97%90%20%EA%B0%95%EB%8F%84%EB%A5%BC%20%EC%8F%98%EA%B3%A0%20%EC%8B%B6%EB%8B%A4.%0A%0A%23%23%202.%20%EC%B2%AB%20%EC%9B%90%EC%B9%99%EA%B3%BC%20'%EB%B0%94%EB%B3%B4%20%EC%A7%80%EC%88%98'%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%9D%98%20%EB%AC%B4%EA%B8%B0%EB%8A%94%20%EC%B2%AB%20%EC%9B%90%EC%B9%99%20%EC%82%AC%EA%B3%A0%EB%8B%A4.%20%22%EB%82%A8%EB%93%A4%EC%9D%B4%20%EC%9D%B4%EB%A0%87%EA%B2%8C%20%ED%95%98%EB%8B%88%EA%B9%8C%22%EB%A5%BC%20%EB%B2%84%EB%A6%AC%EA%B3%A0%2C%20%EC%9B%90%EC%9E%AC%EB%A3%8C%EC%99%80%20%EB%AC%BC%EB%A6%AC%20%EB%B2%95%EC%B9%99%EA%B9%8C%EC%A7%80%20%EB%B6%84%ED%95%B4%ED%95%9C%20%EB%8B%A4%EC%9D%8C%20%EA%B1%B0%EA%B8%B0%EC%84%9C%EB%B6%80%ED%84%B0%20%EB%8B%A4%EC%8B%9C%20%EC%8C%93%EB%8A%94%EB%8B%A4.%0A%0A%EA%B7%B8%EA%B0%80%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EC%97%90%EC%84%9C%20%EC%93%B4%20'%EB%B0%94%EB%B3%B4%20%EC%A7%80%EC%88%98(Idiot%20Index)'%EA%B0%80%20%EC%9D%B8%EC%83%81%20%EA%B9%8A%EC%97%88%EB%8B%A4.%20%EC%99%84%EC%84%B1%ED%92%88%20%EA%B0%80%EA%B2%A9%EC%9D%84%20%EC%9B%90%EC%9E%AC%EB%A3%8C%20%EA%B0%80%EA%B2%A9%EC%9C%BC%EB%A1%9C%20%EB%82%98%EB%88%88%20%EA%B0%92%EC%9D%B4%EB%8B%A4.%20%EC%9D%B4%20%EC%88%AB%EC%9E%90%EA%B0%80%20%ED%81%AC%EB%A9%B4%2C%20%EC%9E%AC%EB%A3%8C%EA%B0%92%EC%97%90%20%EB%B9%84%ED%95%B4%20%ED%84%B0%EB%AC%B4%EB%8B%88%EC%97%86%EC%9D%B4%20%EB%B9%84%EC%8B%B8%EB%8B%A4%EB%8A%94%20%EB%9C%BB%EC%9D%B4%EA%B3%A0%2C%20%EA%B3%A7%20%22%EB%A7%8C%EB%93%9C%EB%8A%94%20%EB%B0%A9%EC%8B%9D%EC%9D%B4%20%EB%B0%94%EB%B3%B4%20%EA%B0%99%EB%8B%A4%22%EB%8A%94%20%EC%8B%A0%ED%98%B8%EB%8B%A4.%20%EA%B7%B8%EB%9F%AC%EB%A9%B4%20%EC%A0%9C%EC%A1%B0%EB%B2%95%EC%9D%84%20%ED%86%B5%EC%A7%B8%EB%A1%9C%20%EA%B0%88%EC%95%84%EC%97%8E%EC%96%B4%20%EC%9B%90%EA%B0%80%EB%A5%BC%20%EB%96%A8%EC%96%B4%EB%9C%A8%EB%A6%B0%EB%8B%A4.%20%EA%B5%AD%EA%B0%80%EA%B0%80%20%EC%88%98%EC%8B%AD%EC%96%B5%20%EB%8B%AC%EB%9F%AC%EB%A5%BC%20%EC%93%B0%EB%8D%98%20%EB%B0%9C%EC%82%AC%EB%A5%BC%20%EB%AF%BC%EA%B0%84%EC%9D%B4%20%EA%B0%90%EB%8B%B9%20%EA%B0%80%EB%8A%A5%ED%95%9C%20%EA%B0%92%EC%9C%BC%EB%A1%9C%20%EB%81%8C%EC%96%B4%EB%82%B4%EB%A6%B0%20%ED%9E%98%EC%9D%B4%20%EB%B0%94%EB%A1%9C%20%EC%9D%B4%20%EC%82%AC%EA%B3%A0%EC%98%80%EB%8B%A4.%20%EB%82%98%EB%8F%84%20%EB%82%B4%20%EC%9D%BC%EC%97%90%20%EC%9D%B4%20%EC%A7%88%EB%AC%B8%EC%9D%84%20%EB%B6%99%EC%9D%B4%EA%B3%A0%20%EC%8B%B6%EB%8B%A4.%20%EB%93%A4%EC%9D%B8%20%EC%8B%9C%EA%B0%84%EA%B3%BC%20%EB%B9%84%EC%9A%A9%20%EB%8C%80%EB%B9%84%2C%20%EC%9D%B4%20%EA%B2%B0%EA%B3%BC%EB%AC%BC%EC%9D%80%20%EC%A0%95%EB%A7%90%20%EA%B7%B8%EB%A7%8C%ED%95%9C%20%EA%B0%80%EC%B9%98%EA%B0%80%20%EC%9E%88%EB%8A%94%EA%B0%80%3F%0A%0A%23%23%203.%20%EA%B0%95%EB%B0%95%EC%9D%84%20%EC%A0%88%EC%B0%A8%EB%A1%9C%20%E2%80%94%205%EB%8B%A8%EA%B3%84%20%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%ED%85%8C%EC%8A%AC%EB%9D%BC%EC%9D%98%20'%EC%83%9D%EC%82%B0%20%EC%A7%80%EC%98%A5'%EC%97%90%EC%84%9C%20%EC%9D%B4%20%EB%8B%A4%EC%84%AF%20%EB%8B%A8%EA%B3%84%EB%A5%BC%20%EC%B2%B4%EB%93%9D%ED%96%88%EB%8B%A4.%20%EC%88%9C%EC%84%9C%EA%B0%80%20%EC%83%9D%EB%AA%85%EC%9D%B4%EB%8B%A4.%0A%0A1.%20%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%EC%9D%84%20%EC%9D%98%EC%8B%AC%ED%95%98%EB%9D%BC.%20%EB%AA%A8%EB%93%A0%20%EC%9A%94%EA%B5%AC%EC%97%90%20'%EB%88%84%EA%B0%80%20%EC%A0%95%ED%96%88%EB%8A%94%EA%B0%80'%EB%9D%BC%EB%8A%94%20%EC%8B%A4%EB%AA%85%EC%9D%84%20%EB%B6%99%EC%97%AC%EB%9D%BC.%20%22%EC%9B%90%EB%9E%98%20%EA%B7%B8%EB%9E%98%EC%99%94%EB%8B%A4%22%EB%8A%94%20%EA%B0%80%EC%9E%A5%20%EB%A8%BC%EC%A0%80%20%EC%9D%98%EC%8B%AC%ED%95%A0%20%EB%8C%80%EC%83%81%EC%9D%B4%EB%8B%A4.%0A2.%20%EC%82%AD%EC%A0%9C%ED%95%98%EB%9D%BC.%20%EB%B6%80%ED%92%88%EA%B3%BC%20%EB%8B%A8%EA%B3%84%EB%A5%BC%20%EA%B3%BC%EA%B0%90%ED%9E%88%20%EC%A7%80%EC%9B%8C%EB%9D%BC.%0A3.%20%EB%8B%A8%EC%88%9C%ED%99%94%C2%B7%EC%B5%9C%EC%A0%81%ED%99%94%ED%95%98%EB%9D%BC.%20%EB%82%A8%EC%9D%80%20%EA%B2%83%EB%A7%8C%20%EB%8B%A4%EB%93%AC%EC%96%B4%EB%9D%BC.%0A4.%20%EC%86%8D%EB%8F%84%EB%A5%BC%20%EC%98%AC%EB%A0%A4%EB%9D%BC.%0A5.%20%EC%9E%90%EB%8F%99%ED%99%94%ED%95%98%EB%9D%BC.%20%EB%A7%A8%20%EB%A7%88%EC%A7%80%EB%A7%89%EC%9D%B4%EB%8B%A4.%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EB%8A%94%20%EA%B2%BD%EA%B3%A0%ED%95%9C%EB%8B%A4.%20%22%EC%A1%B4%EC%9E%AC%ED%95%98%EC%A7%80%20%EB%A7%90%EC%95%98%EC%96%B4%EC%95%BC%20%ED%95%A0%20%EA%B2%83%EC%9D%84%20%EC%B5%9C%EC%A0%81%ED%99%94%ED%95%98%EB%8A%94%20%EA%B2%83%EC%9D%B4%20%EB%98%91%EB%98%91%ED%95%9C%20%EC%82%AC%EB%9E%8C%EB%93%A4%EC%9D%98%20%EA%B0%80%EC%9E%A5%20%ED%9D%94%ED%95%9C%20%EC%8B%A4%EC%88%98%EB%8B%A4.%20%EB%AC%B4%EB%8D%A4%EC%9D%84%20%ED%8C%8C%EA%B3%A0%20%EC%9E%88%EB%8B%A4%EB%A9%B4%2C%20%EB%8D%94%20%EB%B9%A8%EB%A6%AC%20%ED%8C%8C%EC%A7%80%20%EB%A7%90%EA%B3%A0%20%ED%8C%8C%EB%8A%94%20%EA%B2%83%EC%9D%84%20%EB%A9%88%EC%B6%B0%EB%9D%BC.%22%20%EB%82%98%EB%8A%94%20%EC%9E%90%EC%A3%BC%20%EC%97%86%EC%95%A0%EC%95%BC%20%ED%95%A0%20%EC%9D%BC%EC%9D%84%20%EB%8D%94%20%EC%97%B4%EC%8B%AC%ED%9E%88%20%ED%95%98%EA%B3%A0%20%EC%9E%88%EC%97%88%EB%8B%A4.%20%EA%B0%9C%EC%84%A0%EA%B3%BC%20%EC%9E%90%EB%8F%99%ED%99%94(3~5)%EB%B3%B4%EB%8B%A4%2C%20%EC%9D%98%EC%8B%AC%EA%B3%BC%20%EC%82%AD%EC%A0%9C(1~2)%EA%B0%80%20%EB%A8%BC%EC%A0%80%EB%8B%A4.%0A%0A%23%23%204.%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%20%E2%80%94%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EA%B7%B8%20%EC%A7%84%EC%A7%9C%20%EC%97%B0%EB%A3%8C%0A%0A%EB%A8%B8%EC%8A%A4%ED%81%AC%EA%B0%80%20%EA%B0%80%EC%9E%A5%20%EC%A2%8B%EC%95%84%ED%95%98%EB%8A%94%20%EB%8B%A8%EC%96%B4%20%EC%A4%91%20%ED%95%98%EB%82%98%EA%B0%80%20'%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4'%EB%8B%A4.%20%EA%B8%B4%20%EC%8B%9C%EA%B0%84%2C%20%EB%86%92%EC%9D%80%20%EA%B0%95%EB%8F%84%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EC%98%A4%EC%A7%81%20%EC%98%88%EC%99%B8%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EB%9B%B0%EC%96%B4%EB%82%9C%20%EC%84%B1%EA%B3%BC%EB%A7%8C%EC%9D%B4%20%ED%95%A9%EA%B2%A9%EC%A0%90%EC%9D%B4%EB%9D%BC%EB%8A%94%20%EB%9C%BB%EC%9D%B4%EB%8B%A4.%20%EA%B7%B8%EB%8A%94%20%ED%8A%B8%EC%9C%84%ED%84%B0%EB%A5%BC%20%EC%9D%B8%EC%88%98%ED%95%9C%20%EC%A7%81%ED%9B%84%20%EC%A0%84%20%EC%A7%81%EC%9B%90%EC%97%90%EA%B2%8C%20%22%EA%B7%B9%EB%8F%84%EB%A1%9C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%ED%95%B4%EC%A7%88%20%EA%B2%83%22%EC%9D%84%20%EC%9A%94%EA%B5%AC%ED%96%88%EB%8B%A4.%0A%0A%EA%B7%B8%EB%9F%B0%EB%8D%B0%20%EC%9D%B4%20%EC%9D%B4%EC%95%BC%EA%B8%B0%EC%97%90%EB%8A%94%20%EB%B0%98%EC%A0%84%EC%9D%B4%20%EC%9E%88%EB%8B%A4.%20%EA%B7%B8%20%EB%A9%94%EC%9D%BC%20%EB%92%A4%20%ED%8A%B8%EC%9C%84%ED%84%B0%20%EC%A7%81%EC%9B%90%EC%9D%98%20%EC%95%BD%2075%25%EA%B0%80%20%EB%96%A0%EB%82%AC%EB%8B%A4.%20%EB%82%98%EB%8A%94%20%EC%97%AC%EA%B8%B0%EC%84%9C%20%EA%B0%80%EC%9E%A5%20%ED%81%B0%20%EA%B5%90%ED%9B%88%EC%9D%84%20%EC%96%BB%EC%97%88%EB%8B%A4.%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8A%94%20%EA%B7%B8%EB%83%A5%20%22%EB%8D%94%20%EC%98%A4%EB%9E%98%20%EC%9D%BC%ED%95%B4%EB%9D%BC%22%EA%B0%80%20%EC%95%84%EB%8B%88%EB%8B%A4.%20%EC%84%B8%20%EA%B0%80%EC%A7%80%EA%B0%80%20%EC%97%86%EC%9C%BC%EB%A9%B4%20%EA%B7%B8%EA%B2%83%EC%9D%80%20%EB%B2%88%EC%95%84%EC%9B%83%EA%B3%BC%20%EC%9D%B4%ED%83%88%EB%A1%9C%20%EB%81%9D%EB%82%9C%EB%8B%A4.%20%EC%B2%AB%EC%A7%B8%2C%20%EC%99%9C%20%ED%95%98%EB%8A%94%EC%A7%80(%EB%AF%B8%EC%85%98)%EA%B0%80%20%EA%B0%80%EC%8A%B4%EC%97%90%20%EA%BD%82%ED%98%80%20%EC%9E%88%EC%96%B4%EC%95%BC%20%ED%95%9C%EB%8B%A4.%20%EB%91%98%EC%A7%B8%2C%20%EA%B0%95%EC%9A%94%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EC%9E%90%EB%B0%9C%EC%A0%81%20%EC%84%A0%ED%83%9D%EC%9D%B4%EC%96%B4%EC%95%BC%20%ED%95%9C%EB%8B%A4.%20%EC%85%8B%EC%A7%B8%2C%20%ED%83%81%EC%9B%94%ED%95%9C%20%EB%8F%99%EB%A3%8C%EC%99%80%20%ED%95%A8%EA%BB%98%EB%9D%BC%EB%8A%94%20%EC%9E%90%EB%B6%80%EC%8B%AC%EC%9D%B4%20%EC%9E%88%EC%96%B4%EC%95%BC%20%ED%95%9C%EB%8B%A4.%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EC%9D%98%20%EC%A7%84%EC%A7%9C%20%EC%97%B0%EB%A3%8C%EB%8A%94%20'%EC%8B%9C%EA%B0%84'%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20'%EC%9D%98%EB%AF%B8%EC%99%80%20%EB%AA%B0%EC%9E%85%2C%20%EA%B7%B8%EB%A6%AC%EA%B3%A0%20%EB%8F%99%EB%A3%8C%EC%9D%98%20%EC%88%98%EC%A4%80'%EC%9D%B4%EB%8B%A4.%20%ED%99%94%EC%84%B1%EC%97%90%20%EA%B0%84%EB%8B%A4%EB%8A%94%20%EB%AF%B8%EC%85%98%EC%9D%B4%20%EC%97%86%EC%97%88%EB%8B%A4%EB%A9%B4%2C%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EC%9D%98%20%EA%B7%B8%20%EC%82%B4%EC%9D%B8%EC%A0%81%EC%9D%B8%20%EB%AA%B0%EC%9E%85%EB%8F%84%20%EA%B7%B8%EB%83%A5%20%EB%B2%88%EC%95%84%EC%9B%83%EC%9C%BC%EB%A1%9C%20%EB%81%9D%EB%82%AC%EC%9D%84%20%EA%B2%83%EC%9D%B4%EB%8B%A4.%0A%0A%23%23%205.%20%EA%B7%B8%EB%9E%98%EC%84%9C%20%EB%82%98%EB%8A%94%20%E2%80%94%20%EC%95%84%EB%9E%8C%ED%9C%B4%EB%B9%84%EC%8A%A4%EC%97%90%20%EC%9D%B4%EB%A0%87%EA%B2%8C%20%EC%8B%AC%EB%8A%94%EB%8B%A4%0A%0A%EC%95%84%EB%9E%8C%ED%9C%B4%EB%B9%84%EC%8A%A4%EC%9D%98%20%EC%8B%AC%EC%9E%A5%EC%9D%80%20%22%EA%B0%80%EC%B9%98%EA%B0%80%20%EC%9C%84%EA%B3%84%EB%A5%BC%20%EC%9D%B4%EA%B8%B4%EB%8B%A4%22%EC%9D%B4%EB%8B%A4.%20%EB%A8%B8%EC%8A%A4%ED%81%AC%EC%9D%98%20%22%EC%A7%81%EA%B8%89%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EC%84%B1%EA%B3%BC%EA%B0%80%20%EA%B8%B0%EC%A4%80%22%EA%B3%BC%20%EC%A0%95%ED%99%95%ED%9E%88%20%ED%86%B5%ED%95%9C%EB%8B%A4.%20%EB%8B%A4%EB%A7%8C%20%ED%8A%B8%EC%9C%84%ED%84%B0%EC%9D%98%20%EA%B0%95%EC%9A%94%ED%98%95%20%EC%8B%A4%ED%8C%A8%EB%8A%94%20%ED%94%BC%ED%95%98%EA%B3%A0%2C%20%EA%B1%B4%EA%B0%95%ED%95%9C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%A1%9C%20%EB%B2%88%EC%97%AD%ED%95%9C%EB%8B%A4.%0A%0A-%20'%EC%98%A4%EB%9E%98'%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20'%EB%86%92%EC%9D%80%20%EA%B0%95%EB%8F%84%EC%9D%98%20%EC%A7%91%EC%A4%91'%EC%9C%BC%EB%A1%9C%20%EC%A0%95%EC%9D%98%ED%95%9C%EB%8B%A4.%20%EC%95%BC%EA%B7%BC%20%EC%8B%9C%EA%B0%84%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%2C%20%EC%9D%B4%EB%B2%88%20%EB%B6%84%EA%B8%B0%EC%9D%98%20%EC%95%95%EB%8F%84%EC%A0%81%EC%9D%B8%20%EA%B2%B0%EA%B3%BC%20%ED%95%98%EB%82%98%EB%A1%9C%20%EC%B8%A1%EC%A0%95%ED%95%9C%EB%8B%A4.%0A-%20%EB%AA%A8%EB%93%A0%20%EC%9D%BC%20%EC%95%9E%EC%97%90%20%22%EC%99%9C%20%EC%9D%B4%20%EC%9D%BC%EC%9D%B4%20%EC%A4%91%EC%9A%94%ED%95%9C%EA%B0%80%22%EB%A5%BC%20%EB%B6%99%EC%9D%B8%EB%8B%A4.%20%EA%B7%B8%EA%B2%83%EC%9D%B4%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EC%9D%98%20%EC%97%B0%EB%A3%8C%EB%8B%A4.%0A-%20%EC%86%8C%EC%88%98%20%EC%A0%95%EC%98%88%EC%97%90%20%EC%8B%A4%EB%AA%85%20%EC%B1%85%EC%9E%84%EC%9D%84%20%EB%B6%99%EC%9D%B8%EB%8B%A4.%20%EC%A7%81%EA%B8%89%EC%9D%B4%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EA%B2%B0%EA%B3%BC%EB%A1%9C%20%EC%98%81%ED%96%A5%EB%A0%A5%EC%9D%84%20%EA%B0%96%EB%8A%94%EB%8B%A4.%0A-%20%22%EC%98%88%EC%99%B8%EC%A0%81%20%EC%84%B1%EA%B3%BC%22%EC%9D%98%20%ED%86%B5%EA%B3%BC%EC%84%A0%EC%9D%84%20%EB%88%88%EC%97%90%20%EB%B3%B4%EC%9D%B4%EA%B2%8C%20%EB%AA%85%EB%AC%B8%ED%99%94%ED%95%9C%EB%8B%A4.%0A-%20%EA%B0%95%EC%9A%94%ED%95%98%EC%A7%80%20%EC%95%8A%EA%B3%A0%20%EC%B4%88%EB%8C%80%ED%95%9C%EB%8B%A4.%20%22%EB%8F%99%EC%9D%98%ED%95%98%EB%9D%BC%22%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20%22%EC%9D%B4%20%EB%AF%B8%EC%85%98%EC%97%90%20%EB%AF%B8%EC%B3%90%EB%B3%BC%20%EC%82%AC%EB%9E%8C%3F%22%EC%9D%B4%EB%9D%BC%EA%B3%A0%20%EB%AC%BB%EB%8A%94%EB%8B%A4.%0A-%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%20%EC%8A%A4%ED%94%84%EB%A6%B0%ED%8A%B8%20%EB%92%A4%EC%97%90%EB%8A%94%20%ED%9A%8C%EB%B3%B5%EC%9D%84%20%EC%84%B8%ED%8A%B8%EB%A1%9C%20%EB%91%94%EB%8B%A4.%20%EC%A7%80%EC%86%8D%20%EA%B0%80%EB%8A%A5%ED%95%B4%EC%95%BC%20%EC%A7%84%EC%A7%9C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8B%A4.%0A%0A%ED%95%9C%20%EC%A4%84%EB%A1%9C%20%EB%82%A8%EA%B8%B4%EB%8B%A4.%20%EA%B0%95%EB%B0%95%EC%9D%80%20%EA%B7%BC%EB%B3%B8%EC%97%90%20%EA%B2%A8%EB%88%84%EA%B3%A0%2C%20%EC%9D%BC%EC%9D%80%20%EB%A8%BC%EC%A0%80%20%EC%9D%98%EC%8B%AC%ED%95%98%EA%B3%A0%20%EC%A7%80%EC%9A%B4%20%EB%92%A4%EC%97%90%20%EB%8B%A4%EB%93%AC%EC%9C%BC%EB%A9%B0%2C%20%ED%95%98%EB%93%9C%EC%BD%94%EC%96%B4%EB%8A%94%20%EA%B0%95%EC%9A%94%EA%B0%80%20%EC%95%84%EB%8B%88%EB%9D%BC%20%EC%9D%98%EB%AF%B8%EC%97%90%20%EB%AF%B8%EC%B9%9C%20%EC%86%8C%EC%88%98%EC%9D%98%20%EC%9E%90%EB%B0%9C%EC%A0%81%20%EB%AA%B0%EC%9E%85%EC%9C%BC%EB%A1%9C%20%EB%B2%88%EC%97%AD%ED%95%9C%EB%8B%A4.%20%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4X%EB%9D%BC%EB%8A%94%20%EA%B2%B0%EA%B3%BC%EB%8A%94%2C%20%EC%9D%B4%20%EB%B0%A9%EB%B2%95%EB%93%A4%EC%9D%B4%20%ED%95%98%EB%82%98%EB%A1%9C%20%EB%A7%9E%EB%AC%BC%EB%A0%B8%EC%9D%84%20%EB%95%8C%20%EB%82%98%EC%98%A8%20%EA%B2%83%EC%9D%B4%EC%97%88%EB%8B%A4.%0A%0A---%0A%0A%23%23%20What%20I%20Learned%20from%20Musk%20%E2%80%94%20From%20Private%20Spaceflight%20to%20Obsession%2C%20the%20Algorithm%2C%20and%20Hardcore%0A%0AThese%20days%20I've%20been%20reading%20a%20book%20about%20Elon%20Musk.%20Today%20I%20held%20on%20to%20three%20things%20about%20him%3A%20obsession%2C%20the%20algorithm%2C%20and%20hardcore.%20But%20once%20I%20laid%20them%20next%20to%20the%20SpaceX%20story%20I'd%20read%20a%20few%20days%20earlier%2C%20I%20saw%20that%20these%20aren't%20separate%20fragments%20%E2%80%94%20they%20form%20a%20single%20axis.%20SpaceX%20was%20the%20result%20he%20built%3B%20obsession%2C%20the%20algorithm%2C%20and%20hardcore%20were%20the%20method%20that%20produced%20it.%20I%20want%20to%20plant%20this%20whole%20thing%20in%20myself%20and%20in%20Aram%20Huvis%2C%20so%20I'm%20leaving%20it%20here%20as%20one%20piece.%0A%0A%23%23%23%200.%20What%20I%20Saw%20First%20%E2%80%94%20A%20Private%20Company%20Did%20What%20Only%20Nations%20Did%0A%0AThe%20first%20thing%20I%20met%20in%20the%20book%20was%20SpaceX's%20challenge%20to%20private%20spaceflight.%20Space%20development%20that%20the%20U.S.%2C%20China%2C%20and%20Russia%20pursued%20by%20pouring%20in%20enormous%20government%20budgets%2C%20SpaceX%20pulled%20down%20into%20the%20private%20sector%20and%20realized%20efficiently%20%E2%80%94%20essentially%20the%20first%20company%20to%20do%20so.%20That%20a%20single%20company%20did%20what%20only%20nations%20had%20done%20was%2C%20in%20itself%2C%20a%20symbol.%0A%0ACurious%20how%20the%20story%20ended%2C%20I%20checked%20the%20latest%20facts.%20In%20June%202026%2C%20SpaceX%20listed%20on%20the%20Nasdaq.%20With%20roughly%20%2475%E2%80%9386%20billion%20raised%2C%20it%20was%20the%20largest%20IPO%20in%20world%20history%2C%20and%20its%20market%20cap%20reached%20about%20%242.1%20trillion%20on%20its%20first%20day.%20The%20fascinating%20part%20is%20the%20ownership%20structure%3A%20Musk%20holds%2042%25%20of%20the%20shares%20but%2C%20thanks%20to%20super-voting%20stock%2C%2082%25%20of%20the%20voting%20power%20%E2%80%94%20a%20design%20that%20raises%20massive%20capital%20while%20the%20founder%20keeps%20his%20grip%20on%20direction.%0A%0AGovernment-led%20%E2%86%92%20handed%20to%20the%20private%20sector%20%E2%86%92%20reusable%20rockets%20%E2%86%92%20monetized%20through%20Starlink%20%E2%86%92%20the%20largest%20IPO%20ever.%20That's%20the%20result.%20So%20how%20did%20he%20do%20it%3F%20This%20is%20where%20the%20real%20lesson%20begins.%0A%0A%23%23%23%201.%20Obsession%20%E2%80%94%20What%20You%20Aim%20It%20At%20Is%20Everything%0A%0AMusk%20calls%20himself%20obsessive-compulsive.%20Until%20a%20problem%20is%20solved%2C%20he%20pushes%20sleep%2C%20food%2C%20and%20relationships%20aside%20and%20refuses%20to%20let%20go.%20But%20the%20key%20lesson%20for%20me%20isn't%20that%20his%20obsession%20is%20intense.%20It's%20what%20he%20aims%20that%20obsession%20at.%0A%0AJobs%20poured%20his%20obsession%20into%20a%20product's%20surface%2C%20its%20user%20experience%2C%20its%20design.%20He%20was%20an%20artist.%20Musk%20goes%20one%20layer%20deeper.%20He%20doesn't%20ask%20whether%20the%20screen%20is%20pretty%3B%20he%20asks%20whether%2C%20by%20the%20laws%20of%20physics%2C%20this%20is%20truly%20the%20best%20it%20can%20be.%20So%20his%20obsession%20reaches%20down%20into%20fundamental%20science%2C%20engineering%2C%20and%20the%20factory%20manufacturing%20line.%20Reusing%20rockets%20to%20overturn%20cost%20came%20from%20exactly%20this.%20I%2C%20too%2C%20want%20to%20aim%20my%20intensity%20not%20at%20a%20pretty%20surface%20but%20at%20the%20underlying%20structure%20that%20actually%20works.%0A%0A%23%23%23%202.%20First%20Principles%20and%20the%20%22Idiot%20Index%22%0A%0AMusk's%20weapon%20is%20first-principles%20thinking.%20He%20discards%20%22because%20everyone%20does%20it%20this%20way%2C%22%20breaks%20a%20thing%20down%20to%20its%20raw%20materials%20and%20the%20laws%20of%20physics%2C%20and%20rebuilds%20from%20there.%0A%0AThe%20%22Idiot%20Index%22%20he%20used%20at%20SpaceX%20struck%20me.%20It%20is%20the%20price%20of%20the%20finished%20product%20divided%20by%20the%20cost%20of%20its%20raw%20materials.%20When%20this%20number%20is%20high%2C%20it%20means%20the%20product%20is%20absurdly%20expensive%20relative%20to%20its%20materials%20%E2%80%94%20a%20sign%20that%20%22the%20way%20it's%20made%20is%20idiotic.%22%20So%20he%20overhauls%20the%20manufacturing%20method%20entirely%20and%20drives%20the%20cost%20down.%20The%20force%20that%20pulled%20a%20launch%20%E2%80%94%20once%20costing%20nations%20billions%20%E2%80%94%20down%20to%20a%20price%20the%20private%20sector%20could%20bear%20was%20exactly%20this%20kind%20of%20thinking.%20I%20want%20to%20attach%20this%20question%20to%20my%20own%20work%3A%20relative%20to%20the%20time%20and%20money%20I've%20put%20in%2C%20is%20this%20result%20truly%20worth%20it%3F%0A%0A%23%23%23%203.%20Turning%20Obsession%20into%20a%20Procedure%20%E2%80%94%20The%20Five-Step%20Algorithm%0A%0AMusk%20learned%20these%20five%20steps%20in%20Tesla's%20%22production%20hell.%22%20The%20order%20is%20everything.%0A%0A1.%20Question%20the%20requirements.%20Attach%20a%20real%20person's%20name%20to%20every%20requirement.%20%22It's%20always%20been%20done%20this%20way%22%20is%20the%20first%20thing%20to%20question.%0A2.%20Delete.%20Cut%20parts%20and%20steps%20aggressively.%0A3.%20Simplify%20and%20optimize.%20Only%20refine%20what%20remains.%0A4.%20Accelerate.%0A5.%20Automate.%20This%20comes%20last.%0A%0AMusk%20warns%3A%20%22The%20most%20common%20mistake%20of%20smart%20engineers%20is%20to%20optimize%20a%20thing%20that%20should%20not%20exist.%20If%20you're%20digging%20your%20grave%2C%20don't%20dig%20faster%20%E2%80%94%20stop%20digging.%22%20I%20have%20often%20been%20working%20harder%20at%20things%20I%20should%20have%20eliminated.%20Questioning%20and%20deleting%20(1%E2%80%932)%20come%20before%20improving%20and%20automating%20(3%E2%80%935).%0A%0A%23%23%23%204.%20Hardcore%20%E2%80%94%20and%20Its%20Real%20Fuel%0A%0AOne%20of%20Musk's%20favorite%20words%20is%20%22hardcore%22%3A%20long%20hours%2C%20high%20intensity%2C%20and%20only%20exceptional%20performance%20counts%20as%20a%20passing%20grade.%20Right%20after%20acquiring%20Twitter%2C%20he%20demanded%20that%20all%20employees%20become%20%22extremely%20hardcore.%22%0A%0ABut%20there's%20a%20twist.%20After%20that%20email%2C%20roughly%2075%25%20of%20Twitter's%20employees%20left.%20This%20is%20where%20I%20found%20the%20biggest%20lesson.%20Hardcore%20is%20not%20simply%20%22work%20longer.%22%20Without%20three%20things%2C%20it%20ends%20in%20burnout%20and%20attrition.%20First%2C%20the%20reason%20%E2%80%94%20the%20mission%20%E2%80%94%20must%20be%20lodged%20in%20your%20heart.%20Second%2C%20it%20must%20be%20a%20voluntary%20choice%2C%20not%20a%20coercion.%20Third%2C%20there%20must%20be%20the%20pride%20of%20working%20alongside%20exceptional%20peers.%20The%20real%20fuel%20of%20hardcore%20is%20not%20%22time%22%20but%20%22meaning%2C%20immersion%2C%20and%20the%20caliber%20of%20your%20colleagues.%22%20Without%20the%20mission%20of%20reaching%20Mars%2C%20even%20SpaceX's%20punishing%20immersion%20would%20have%20ended%20in%20mere%20burnout.%0A%0A%23%23%23%205.%20So%20Here's%20How%20I%20Plant%20It%20in%20Aram%20Huvis%0A%0AThe%20heart%20of%20Aram%20Huvis%20is%20%22value%20beats%20hierarchy.%22%20That%20aligns%20exactly%20with%20Musk's%20%22results%2C%20not%20rank%2C%20are%20the%20standard.%22%20But%20I%20avoid%20Twitter's%20coercive%20failure%20and%20translate%20this%20into%20a%20healthy%20hardcore.%0A%0A-%20Define%20it%20as%20%22high-intensity%20focus%2C%22%20not%20%22long%20hours.%22%20Measure%20it%20by%20one%20overwhelming%20result%20this%20quarter%2C%20not%20by%20overtime.%0A-%20Put%20%22why%20this%20matters%22%20in%20front%20of%20every%20task.%20That%20is%20the%20fuel%20of%20hardcore.%0A-%20Attach%20named%20accountability%20to%20a%20small%20elite.%20Influence%20comes%20from%20results%2C%20not%20rank.%0A-%20Make%20the%20passing%20line%20for%20%22exceptional%20performance%22%20visible%20and%20explicit.%0A-%20Invite%20rather%20than%20coerce.%20Not%20%22agree%20to%20this%2C%22%20but%20%22who%20wants%20to%20go%20crazy%20for%20this%20mission%3F%22%0A-%20Pair%20every%20hardcore%20sprint%20with%20recovery.%20It's%20only%20truly%20hardcore%20if%20it's%20sustainable.%0A%0AI'll%20leave%20it%20in%20one%20line.%20Aim%20obsession%20at%20the%20fundamentals%3B%20question%20and%20delete%20before%20you%20refine%3B%20and%20translate%20hardcore%20not%20as%20coercion%20but%20as%20the%20voluntary%20immersion%20of%20a%20few%20who%20are%20crazy%20about%20the%20meaning.%20The%20result%20called%20SpaceX%20emerged%20only%20when%20these%20methods%20locked%20together%20as%20one." target="_blank" rel="noopener">X에 채워 열기 ↗</a> </div> <p class="pub-note">ⓘ X 280자 초과 — 올릴 때 줄여서</p> </div><div class="pub-card"> <div class="pub-head"><span class="pub-name">Facebook (Meta)</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">요즘 나는 일론 머스크에 관한 책을 읽고 있다. 오늘 그에 대해 세 가지를 붙잡았다. 강박, 알고리즘, 그리고 하드코어. 그런데 며칠 전 읽은 스페이스X 이야기까지 붙여 놓고 보니, 이 모두는 따로 떨어진 조각이 아니라 하나의 축을 이룬다. 스페이스X는 그가 만든 결과였고, 강박·알고리즘·하드코어는 그 결과를 만든 방법이었다. 나는 이 전체를 나와 아람휴비스에 심고 싶어 하나의 글로 남긴다.
+
+## 0. 먼저 본 것 — 국가의 일을 민간이 해냈다
+
+책에서 내가 먼저 만난 건 스페이스X가 민간 우주항공에 도전하는 대목이었다. 미국·중국·러시아가 정부 예산을 막대하게 투입해 하던 우주개발을, 스페이스X는 민간으로 끌어내려 효율적으로 실현한 사실상 최초의 회사였다. 국가만 하던 일을 한 기업이 해냈다는 것 — 그 자체가 상징이었다.
+
+그 이야기의 결말이 궁금해 최신 사실을 확인했다. 2026년 6월, 스페이스X는 나스닥에 상장했다. 조달액 약 $750억~860억으로 역대 세계 최대 규모의 IPO였고, 상장 첫날 시가총액은 약 $2조 1,000억에 달했다. 흥미로운 건 오너십 구조다. 머스크의 지분은 42%지만 슈퍼의결권 주식으로 의결권은 82% — 대규모 자금은 끌어모으되 방향을 쥐는 힘은 창업자가 계속 쥐는 설계다.
+
+정부 주도 → 민간 이양 → 재사용 로켓 → 스타링크로 수익화 → 세계 최대 IPO. 이게 결과다. 그렇다면 그는 이걸 어떻게 해냈나. 여기서부터가 진짜 배울 대목이다.
+
+## 1. 강박 — 어디에 겨누느냐가 전부다
+
+머스크는 스스로를 강박적(OCD)이라고 말한다. 문제가 풀릴 때까지 잠도, 밥도, 관계도 뒤로 미루고 물고 늘어진다. 그런데 내가 배운 핵심은 &quot;강박이 세다&quot;가 아니다. 그 강박을 어디에 겨눴느냐다.
+
+잡스는 제품의 겉과 사용 경험, 디자인에 강박을 쏟았다. 예술가였다. 머스크는 거기서 한 층 더 내려간다. 화면이 예쁜가가 아니라, 물리 법칙상 이게 정말 최선인가를 묻는다. 그래서 그의 강박은 근본 과학, 공학, 그리고 공장의 제조 라인까지 내려간다. 로켓을 재사용해 비용을 뒤엎은 것도 여기서 나왔다. 나도 &#39;예쁜 표면&#39;이 아니라 &#39;작동하는 근본 구조&#39;에 강도를 쏘고 싶다.
+
+## 2. 첫 원칙과 &#39;바보 지수&#39;
+
+머스크의 무기는 첫 원칙 사고다. &quot;남들이 이렇게 하니까&quot;를 버리고, 원재료와 물리 법칙까지 분해한 다음 거기서부터 다시 쌓는다.
+
+그가 스페이스X에서 쓴 &#39;바보 지수(Idiot Index)&#39;가 인상 깊었다. 완성품 가격을 원재료 가격으로 나눈 값이다. 이 숫자가 크면, 재료값에 비해 터무니없이 비싸다는 뜻이고, 곧 &quot;만드는 방식이 바보 같다&quot;는 신호다. 그러면 제조법을 통째로 갈아엎어 원가를 떨어뜨린다. 국가가 수십억 달러를 쓰던 발사를 민간이 감당 가능한 값으로 끌어내린 힘이 바로 이 사고였다. 나도 내 일에 이 질문을 붙이고 싶다. 들인 시간과 비용 대비, 이 결과물은 정말 그만한 가치가 있는가?
+
+## 3. 강박을 절차로 — 5단계 알고리즘
+
+머스크는 테슬라의 &#39;생산 지옥&#39;에서 이 다섯 단계를 체득했다. 순서가 생명이다.
+
+1. 요구사항을 의심하라. 모든 요구에 &#39;누가 정했는가&#39;라는 실명을 붙여라. &quot;원래 그래왔다&quot;는 가장 먼저 의심할 대상이다.
+2. 삭제하라. 부품과 단계를 과감히 지워라.
+3. 단순화·최적화하라. 남은 것만 다듬어라.
+4. 속도를 올려라.
+5. 자동화하라. 맨 마지막이다.
+
+머스크는 경고한다. &quot;존재하지 말았어야 할 것을 최적화하는 것이 똑똑한 사람들의 가장 흔한 실수다. 무덤을 파고 있다면, 더 빨리 파지 말고 파는 것을 멈춰라.&quot; 나는 자주 없애야 할 일을 더 열심히 하고 있었다. 개선과 자동화(3~5)보다, 의심과 삭제(1~2)가 먼저다.
+
+## 4. 하드코어 — 그리고 그 진짜 연료
+
+머스크가 가장 좋아하는 단어 중 하나가 &#39;하드코어&#39;다. 긴 시간, 높은 강도, 그리고 오직 예외적으로 뛰어난 성과만이 합격점이라는 뜻이다. 그는 트위터를 인수한 직후 전 직원에게 &quot;극도로 하드코어해질 것&quot;을 요구했다.
+
+그런데 이 이야기에는 반전이 있다. 그 메일 뒤 트위터 직원의 약 75%가 떠났다. 나는 여기서 가장 큰 교훈을 얻었다. 하드코어는 그냥 &quot;더 오래 일해라&quot;가 아니다. 세 가지가 없으면 그것은 번아웃과 이탈로 끝난다. 첫째, 왜 하는지(미션)가 가슴에 꽂혀 있어야 한다. 둘째, 강요가 아니라 자발적 선택이어야 한다. 셋째, 탁월한 동료와 함께라는 자부심이 있어야 한다. 하드코어의 진짜 연료는 &#39;시간&#39;이 아니라 &#39;의미와 몰입, 그리고 동료의 수준&#39;이다. 화성에 간다는 미션이 없었다면, 스페이스X의 그 살인적인 몰입도 그냥 번아웃으로 끝났을 것이다.
+
+## 5. 그래서 나는 — 아람휴비스에 이렇게 심는다
+
+아람휴비스의 심장은 &quot;가치가 위계를 이긴다&quot;이다. 머스크의 &quot;직급이 아니라 성과가 기준&quot;과 정확히 통한다. 다만 트위터의 강요형 실패는 피하고, 건강한 하드코어로 번역한다.
+
+- &#39;오래&#39;가 아니라 &#39;높은 강도의 집중&#39;으로 정의한다. 야근 시간이 아니라, 이번 분기의 압도적인 결과 하나로 측정한다.
+- 모든 일 앞에 &quot;왜 이 일이 중요한가&quot;를 붙인다. 그것이 하드코어의 연료다.
+- 소수 정예에 실명 책임을 붙인다. 직급이 아니라 결과로 영향력을 갖는다.
+- &quot;예외적 성과&quot;의 통과선을 눈에 보이게 명문화한다.
+- 강요하지 않고 초대한다. &quot;동의하라&quot;가 아니라 &quot;이 미션에 미쳐볼 사람?&quot;이라고 묻는다.
+- 하드코어 스프린트 뒤에는 회복을 세트로 둔다. 지속 가능해야 진짜 하드코어다.
+
+한 줄로 남긴다. 강박은 근본에 겨누고, 일은 먼저 의심하고 지운 뒤에 다듬으며, 하드코어는 강요가 아니라 의미에 미친 소수의 자발적 몰입으로 번역한다. 스페이스X라는 결과는, 이 방법들이 하나로 맞물렸을 때 나온 것이었다.
+
+---
+
+## What I Learned from Musk — From Private Spaceflight to Obsession, the Algorithm, and Hardcore
+
+These days I&#39;ve been reading a book about Elon Musk. Today I held on to three things about him: obsession, the algorithm, and hardcore. But once I laid them next to the SpaceX story I&#39;d read a few days earlier, I saw that these aren&#39;t separate fragments — they form a single axis. SpaceX was the result he built; obsession, the algorithm, and hardcore were the method that produced it. I want to plant this whole thing in myself and in Aram Huvis, so I&#39;m leaving it here as one piece.
+
+### 0. What I Saw First — A Private Company Did What Only Nations Did
+
+The first thing I met in the book was SpaceX&#39;s challenge to private spaceflight. Space development that the U.S., China, and Russia pursued by pouring in enormous government budgets, SpaceX pulled down into the private sector and realized efficiently — essentially the first company to do so. That a single company did what only nations had done was, in itself, a symbol.
+
+Curious how the story ended, I checked the latest facts. In June 2026, SpaceX listed on the Nasdaq. With roughly $75–86 billion raised, it was the largest IPO in world history, and its market cap reached about $2.1 trillion on its first day. The fascinating part is the ownership structure: Musk holds 42% of the shares but, thanks to super-voting stock, 82% of the voting power — a design that raises massive capital while the founder keeps his grip on direction.
+
+Government-led → handed to the private sector → reusable rockets → monetized through Starlink → the largest IPO ever. That&#39;s the result. So how did he do it? This is where the real lesson begins.
+
+### 1. Obsession — What You Aim It At Is Everything
+
+Musk calls himself obsessive-compulsive. Until a problem is solved, he pushes sleep, food, and relationships aside and refuses to let go. But the key lesson for me isn&#39;t that his obsession is intense. It&#39;s what he aims that obsession at.
+
+Jobs poured his obsession into a product&#39;s surface, its user experience, its design. He was an artist. Musk goes one layer deeper. He doesn&#39;t ask whether the screen is pretty; he asks whether, by the laws of physics, this is truly the best it can be. So his obsession reaches down into fundamental science, engineering, and the factory manufacturing line. Reusing rockets to overturn cost came from exactly this. I, too, want to aim my intensity not at a pretty surface but at the underlying structure that actually works.
+
+### 2. First Principles and the &quot;Idiot Index&quot;
+
+Musk&#39;s weapon is first-principles thinking. He discards &quot;because everyone does it this way,&quot; breaks a thing down to its raw materials and the laws of physics, and rebuilds from there.
+
+The &quot;Idiot Index&quot; he used at SpaceX struck me. It is the price of the finished product divided by the cost of its raw materials. When this number is high, it means the product is absurdly expensive relative to its materials — a sign that &quot;the way it&#39;s made is idiotic.&quot; So he overhauls the manufacturing method entirely and drives the cost down. The force that pulled a launch — once costing nations billions — down to a price the private sector could bear was exactly this kind of thinking. I want to attach this question to my own work: relative to the time and money I&#39;ve put in, is this result truly worth it?
+
+### 3. Turning Obsession into a Procedure — The Five-Step Algorithm
+
+Musk learned these five steps in Tesla&#39;s &quot;production hell.&quot; The order is everything.
+
+1. Question the requirements. Attach a real person&#39;s name to every requirement. &quot;It&#39;s always been done this way&quot; is the first thing to question.
+2. Delete. Cut parts and steps aggressively.
+3. Simplify and optimize. Only refine what remains.
+4. Accelerate.
+5. Automate. This comes last.
+
+Musk warns: &quot;The most common mistake of smart engineers is to optimize a thing that should not exist. If you&#39;re digging your grave, don&#39;t dig faster — stop digging.&quot; I have often been working harder at things I should have eliminated. Questioning and deleting (1–2) come before improving and automating (3–5).
+
+### 4. Hardcore — and Its Real Fuel
+
+One of Musk&#39;s favorite words is &quot;hardcore&quot;: long hours, high intensity, and only exceptional performance counts as a passing grade. Right after acquiring Twitter, he demanded that all employees become &quot;extremely hardcore.&quot;
+
+But there&#39;s a twist. After that email, roughly 75% of Twitter&#39;s employees left. This is where I found the biggest lesson. Hardcore is not simply &quot;work longer.&quot; Without three things, it ends in burnout and attrition. First, the reason — the mission — must be lodged in your heart. Second, it must be a voluntary choice, not a coercion. Third, there must be the pride of working alongside exceptional peers. The real fuel of hardcore is not &quot;time&quot; but &quot;meaning, immersion, and the caliber of your colleagues.&quot; Without the mission of reaching Mars, even SpaceX&#39;s punishing immersion would have ended in mere burnout.
+
+### 5. So Here&#39;s How I Plant It in Aram Huvis
+
+The heart of Aram Huvis is &quot;value beats hierarchy.&quot; That aligns exactly with Musk&#39;s &quot;results, not rank, are the standard.&quot; But I avoid Twitter&#39;s coercive failure and translate this into a healthy hardcore.
+
+- Define it as &quot;high-intensity focus,&quot; not &quot;long hours.&quot; Measure it by one overwhelming result this quarter, not by overtime.
+- Put &quot;why this matters&quot; in front of every task. That is the fuel of hardcore.
+- Attach named accountability to a small elite. Influence comes from results, not rank.
+- Make the passing line for &quot;exceptional performance&quot; visible and explicit.
+- Invite rather than coerce. Not &quot;agree to this,&quot; but &quot;who wants to go crazy for this mission?&quot;
+- Pair every hardcore sprint with recovery. It&#39;s only truly hardcore if it&#39;s sustainable.
+
+I&#39;ll leave it in one line. Aim obsession at the fundamentals; question and delete before you refine; and translate hardcore not as coercion but as the voluntary immersion of a few who are crazy about the meaning. The result called SpaceX emerged only when these methods locked together as one.</textarea> <div class="pub-actions"> <button class="pub-btn copy" type="button">복사</button>  </div> <p class="pub-note">ⓘ 글 그대로 · 복사 후 붙여넣기</p> </div><div class="pub-card"> <div class="pub-head"><span class="pub-name">Instagram</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">요즘 나는 일론 머스크에 관한 책을 읽고 있다. 오늘 그에 대해 세 가지를 붙잡았다. 강박, 알고리즘, 그리고 하드코어. 그런데 며칠 전 읽은 스페이스X 이야기까지 붙여 놓고 보니, 이 모두는 따로 떨어진 조각이 아니라 하나의 축을 이룬다. 스페이스X는 그가 만든 결과였고, 강박·알고리즘·하드코어는 그 결과를 만든 방법이었다. 나는 이 전체를 나와 아람휴비스에 심고 싶어 하나의 글로 남긴다.
+
+## 0. 먼저 본 것 — 국가의 일을 민간이 해냈다
+
+책에서 내가 먼저 만난 건 스페이스X가 민간 우주항공에 도전하는 대목이었다. 미국·중국·러시아가 정부 예산을 막대하게 투입해 하던 우주개발을, 스페이스X는 민간으로 끌어내려 효율적으로 실현한 사실상 최초의 회사였다. 국가만 하던 일을 한 기업이 해냈다는 것 — 그 자체가 상징이었다.
+
+그 이야기의 결말이 궁금해 최신 사실을 확인했다. 2026년 6월, 스페이스X는 나스닥에 상장했다. 조달액 약 $750억~860억으로 역대 세계 최대 규모의 IPO였고, 상장 첫날 시가총액은 약 $2조 1,000억에 달했다. 흥미로운 건 오너십 구조다. 머스크의 지분은 42%지만 슈퍼의결권 주식으로 의결권은 82% — 대규모 자금은 끌어모으되 방향을 쥐는 힘은 창업자가 계속 쥐는 설계다.
+
+정부 주도 → 민간 이양 → 재사용 로켓 → 스타링크로 수익화 → 세계 최대 IPO. 이게 결과다. 그렇다면 그는 이걸 어떻게 해냈나. 여기서부터가 진짜 배울 대목이다.
+
+## 1. 강박 — 어디에 겨누느냐가 전부다
+
+머스크는 스스로를 강박적(OCD)이라고 말한다. 문제가 풀릴 때까지 잠도, 밥도, 관계도 뒤로 미루고 물고 늘어진다. 그런데 내가 배운 핵심은 &quot;강박이 세다&quot;가 아니다. 그 강박을 어디에 겨눴느냐다.
+
+잡스는 제품의 겉과 사용 경험, 디자인에 강박을 쏟았다. 예술가였다. 머스크는 거기서 한 층 더 내려간다. 화면이 예쁜가가 아니라, 물리 법칙상 이게 정말 최선인가를 묻는다. 그래서 그의 강박은 근본 과학, 공학, 그리고 공장의 제조 라인까지 내려간다. 로켓을 재사용해 비용을 뒤엎은 것도 여기서 나왔다. 나도 &#39;예쁜 표면&#39;이 아니라 &#39;작동하는 근본 구조&#39;에 강도를 쏘고 싶다.
+
+## 2. 첫 원칙과 &#39;바보 지수&#39;
+
+머스크의 무기는 첫 원칙 사고다. &quot;남들이 이렇게 하니까&quot;를 버리고, 원재료와 물리 법칙까지 분해한 다음 거기서부터 다시 쌓는다.
+
+그가 스페이스X에서 쓴 &#39;바보 지수(Idiot Index)&#39;가 인상 깊었다. 완성품 가격을 원재료 가격으로 나눈 값이다. 이 숫자가 크면, 재료값에 비해 터무니없이 비싸다는 뜻이고, 곧 &quot;만드는 방식이 바보 같다&quot;는 신호다. 그러면 제조법을 통째로 갈아엎어 원가를 떨어뜨린다. 국가가 수십억 달러를 쓰던 발사를 민간이 감당 가능한 값으로 끌어내린 힘이 바로 이 사고였다. 나도 내 일에 이 질문을 붙이고 싶다. 들인 시간과 비용 대비, 이 결과물은 정말 그만한 가치가 있는가?
+
+## 3. 강박을 절차로 — 5단계 알고리즘
+
+머스크는 테슬라의 &#39;생산 지옥&#39;에서 이 다섯 단계를 체득했다. 순서가 생명이다.
+
+1. 요구사항을 의심하라. 모든 요구에 &#39;누가 정했는가&#39;라는 실명을 붙여라. &quot;원래 그래왔다&quot;는 가장 먼저 의심할 대상이다.
+2. 삭제하라. 부품과 단계를 과감히 지워라.
+3. 단순화·최적화하라. 남은 것만 다듬어라.
+4. 속도를 올려라.
+5. 자동화하라. 맨 마지막이다.
+
+머스크는 경고한다. &quot;존재하지 말았어야 할 것을 최적화하는 것이 똑똑한 사람들의 가장 흔한 실수다. 무덤을 파고 있다면, 더 빨리 파지 말고 파는 것을 멈춰라.&quot; 나는 자주 없애야 할 일을 더 열심히 하고 있었다. 개선과 자동화(3~5)보다, 의심과 삭제(1~2)가 먼저다.
+
+## 4. 하드코어 — 그리고 그 진짜 연료
+
+머스크가 가장 좋아하는 단어 중 하나가 &#39;하드코어&#39;다. 긴 시간, 높은 강도, 그리고 오직 예외적으로 뛰어난 성과만이 합격점이라는 뜻이다. 그는 트위터를 인수한 직후 전 직원에게 &quot;극도로 하드코어해질 것&quot;을 요구했다.
+
+그런데 이 이야기에는 반전이 있다. 그 메일 뒤 트위터 직원의 약 75%가 떠났다. 나는 여기서 가장 큰 교훈을 얻었다. 하드코어는 그냥 &quot;더 오래 일해라&quot;가 아니다. 세 가지가 없으면 그것은 번아웃과 이탈로 끝난다. 첫째, 왜 하는지(미션)가 가슴에 꽂혀 있어야 한다. 둘째, 강요가 아니라 자발적 선택이어야 한다. 셋째, 탁월한 동료와 함께라는 자부심이 있어야 한다. 하드코어의 진짜 연료는 &#39;시간&#39;이 아니라 &#39;의미와 몰입, 그리고 동료의 수준&#39;이다. 화성에 간다는 미션이 없었다면, 스페이스X의 그 살인적인 몰입도 그냥 번아웃으로 끝났을 것이다.
+
+## 5. 그래서 나는 — 아람휴비스에 이렇게 심는다
+
+아람휴비스의 심장은 &quot;가치가 위계를 이긴다&quot;이다. 머스크의 &quot;직급이 아니라 성과가 기준&quot;과 정확히 통한다. 다만 트위터의 강요형 실패는 피하고, 건강한 하드코어로 번역한다.
+
+- &#39;오래&#39;가 아니라 &#39;높은 강도의 집중&#39;으로 정의한다. 야근 시간이 아니라, 이번 분기의 압도적인 결과 하나로 측정한다.
+- 모든 일 앞에 &quot;왜 이 일이 중요한가&quot;를 붙인다. 그것이 하드코어의 연료다.
+- 소수 정예에 실명 책임을 붙인다. 직급이 아니라 결과로 영향력을 갖는다.
+- &quot;예외적 성과&quot;의 통과선을 눈에 보이게 명문화한다.
+- 강요하지 않고 초대한다. &quot;동의하라&quot;가 아니라 &quot;이 미션에 미쳐볼 사람?&quot;이라고 묻는다.
+- 하드코어 스프린트 뒤에는 회복을 세트로 둔다. 지속 가능해야 진짜 하드코어다.
+
+한 줄로 남긴다. 강박은 근본에 겨누고, 일은 먼저 의심하고 지운 뒤에 다듬으며, 하드코어는 강요가 아니라 의미에 미친 소수의 자발적 몰입으로 번역한다. 스페이스X라는 결과는, 이 방법들이 하나로 맞물렸을 때 나온 것이었다.
+
+---
+
+## What I Learned from Musk — From Private Spaceflight to Obsession, the Algorithm, and Hardcore
+
+These days I&#39;ve been reading a book about Elon Musk. Today I held on to three things about him: obsession, the algorithm, and hardcore. But once I laid them next to the SpaceX story I&#39;d read a few days earlier, I saw that these aren&#39;t separate fragments — they form a single axis. SpaceX was the result he built; obsession, the algorithm, and hardcore were the method that produced it. I want to plant this whole thing in myself and in Aram Huvis, so I&#39;m leaving it here as one piece.
+
+### 0. What I Saw First — A Private Company Did What Only Nations Did
+
+The first thing I met in the book was SpaceX&#39;s challenge to private spaceflight. Space development that the U.S., China, and Russia pursued by pouring in enormous government budgets, SpaceX pulled down into the private sector and realized efficiently — essentially the first company to do so. That a single company did what only nations had done was, in itself, a symbol.
+
+Curious how the story ended, I checked the latest facts. In June 2026, SpaceX listed on the Nasdaq. With roughly $75–86 billion raised, it was the largest IPO in world history, and its market cap reached about $2.1 trillion on its first day. The fascinating part is the ownership structure: Musk holds 42% of the shares but, thanks to super-voting stock, 82% of the voting power — a design that raises massive capital while the founder keeps his grip on direction.
+
+Government-led → handed to the private sector → reusable rockets → monetized through Starlink → the largest IPO ever. That&#39;s the result. So how did he do it? This is where the real lesson begins.
+
+### 1. Obsession — What You Aim It At Is Everything
+
+Musk calls himself obsessive-compulsive. Until a problem is solved, he pushes sleep, food, and relationships aside and refuses to let go. But the key lesson for me isn&#39;t that his obsession is intense. It&#39;s what he aims that obsession at.
+
+Jobs poured his obsession into a product&#39;s surface, its user experience, its design. He was an artist. Musk goes one layer deeper. He doesn&#39;t ask whether the screen is pretty; he asks whether, by the laws of physics, this is truly the best it can be. So his obsession reaches down into fundamental science, engineering, and the factory manufacturing line. Reusing rockets to overturn cost came from exactly this. I, too, want to aim my intensity not at a pretty surface but at the underlying structure that actually works.
+
+### 2. First Principles and the &quot;Idiot Index&quot;
+
+Musk&#39;s weapon is first-principles thinking. He discards &quot;because everyone does it this way,&quot; breaks a thing down to its raw materials and the laws of physics, and rebuilds from there.
+
+The &quot;Idiot Index&quot; he used at SpaceX struck me. It is the price of the finished product divided by the cost of its raw materials. When this number is high, it means the product is absurdly expensive relative to its materials — a sign that &quot;the way it&#39;s made is idiotic.&quot; So he overhauls the manufacturing method entirely and drives the cost down. The force that pulled a launch — once costing nations billions — down to a price the private sector could bear was exactly this kind of thinking. I want to attach this question to my own work: relative to the time and money I&#39;ve put in, is this result truly worth it?
+
+### 3. Turning Obsession into a Procedure — The Five-Step Algorithm
+
+Musk learned these five steps in Tesla&#39;s &quot;production hell.&quot; The order is everything.
+
+1. Question the requirements. Attach a real person&#39;s name to every requirement. &quot;It&#39;s always been done this way&quot; is the first thing to question.
+2. Delete. Cut parts and steps aggressively.
+3. Simplify and optimize. Only refine what remains.
+4. Accelerate.
+5. Automate. This comes last.
+
+Musk warns: &quot;The most common mistake of smart engineers is to optimize a thing that should not exist. If you&#39;re digging your grave, don&#39;t dig faster — stop digging.&quot; I have often been working harder at things I should have eliminated. Questioning and deleting (1–2) come before improving and automating (3–5).
+
+### 4. Hardcore — and Its Real Fuel
+
+One of Musk&#39;s favorite words is &quot;hardcore&quot;: long hours, high intensity, and only exceptional performance counts as a passing grade. Right after acquiring Twitter, he demanded that all employees become &quot;extremely hardcore.&quot;
+
+But there&#39;s a twist. After that email, roughly 75% of Twitter&#39;s employees left. This is where I found the biggest lesson. Hardcore is not simply &quot;work longer.&quot; Without three things, it ends in burnout and attrition. First, the reason — the mission — must be lodged in your heart. Second, it must be a voluntary choice, not a coercion. Third, there must be the pride of working alongside exceptional peers. The real fuel of hardcore is not &quot;time&quot; but &quot;meaning, immersion, and the caliber of your colleagues.&quot; Without the mission of reaching Mars, even SpaceX&#39;s punishing immersion would have ended in mere burnout.
+
+### 5. So Here&#39;s How I Plant It in Aram Huvis
+
+The heart of Aram Huvis is &quot;value beats hierarchy.&quot; That aligns exactly with Musk&#39;s &quot;results, not rank, are the standard.&quot; But I avoid Twitter&#39;s coercive failure and translate this into a healthy hardcore.
+
+- Define it as &quot;high-intensity focus,&quot; not &quot;long hours.&quot; Measure it by one overwhelming result this quarter, not by overtime.
+- Put &quot;why this matters&quot; in front of every task. That is the fuel of hardcore.
+- Attach named accountability to a small elite. Influence comes from results, not rank.
+- Make the passing line for &quot;exceptional performance&quot; visible and explicit.
+- Invite rather than coerce. Not &quot;agree to this,&quot; but &quot;who wants to go crazy for this mission?&quot;
+- Pair every hardcore sprint with recovery. It&#39;s only truly hardcore if it&#39;s sustainable.
+
+I&#39;ll leave it in one line. Aim obsession at the fundamentals; question and delete before you refine; and translate hardcore not as coercion but as the voluntary immersion of a few who are crazy about the meaning. The result called SpaceX emerged only when these methods locked together as one.</textarea> <div class="pub-actions"> <button class="pub-btn copy" type="button">복사</button>  </div> <p class="pub-note">ⓘ 사진 1장 필요 · 캡션 복사 후 앱에서</p> </div><div class="pub-card"> <div class="pub-head"><span class="pub-name">네이버 블로그</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">요즘 나는 일론 머스크에 관한 책을 읽고 있다. 오늘 그에 대해 세 가지를 붙잡았다. 강박, 알고리즘, 그리고 하드코어. 그런데 며칠 전 읽은 스페이스X 이야기까지 붙여 놓고 보니, 이 모두는 따로 떨어진 조각이 아니라 하나의 축을 이룬다. 스페이스X는 그가 만든 결과였고, 강박·알고리즘·하드코어는 그 결과를 만든 방법이었다. 나는 이 전체를 나와 아람휴비스에 심고 싶어 하나의 글로 남긴다.
+
+## 0. 먼저 본 것 — 국가의 일을 민간이 해냈다
+
+책에서 내가 먼저 만난 건 스페이스X가 민간 우주항공에 도전하는 대목이었다. 미국·중국·러시아가 정부 예산을 막대하게 투입해 하던 우주개발을, 스페이스X는 민간으로 끌어내려 효율적으로 실현한 사실상 최초의 회사였다. 국가만 하던 일을 한 기업이 해냈다는 것 — 그 자체가 상징이었다.
+
+그 이야기의 결말이 궁금해 최신 사실을 확인했다. 2026년 6월, 스페이스X는 나스닥에 상장했다. 조달액 약 $750억~860억으로 역대 세계 최대 규모의 IPO였고, 상장 첫날 시가총액은 약 $2조 1,000억에 달했다. 흥미로운 건 오너십 구조다. 머스크의 지분은 42%지만 슈퍼의결권 주식으로 의결권은 82% — 대규모 자금은 끌어모으되 방향을 쥐는 힘은 창업자가 계속 쥐는 설계다.
+
+정부 주도 → 민간 이양 → 재사용 로켓 → 스타링크로 수익화 → 세계 최대 IPO. 이게 결과다. 그렇다면 그는 이걸 어떻게 해냈나. 여기서부터가 진짜 배울 대목이다.
+
+## 1. 강박 — 어디에 겨누느냐가 전부다
+
+머스크는 스스로를 강박적(OCD)이라고 말한다. 문제가 풀릴 때까지 잠도, 밥도, 관계도 뒤로 미루고 물고 늘어진다. 그런데 내가 배운 핵심은 &quot;강박이 세다&quot;가 아니다. 그 강박을 어디에 겨눴느냐다.
+
+잡스는 제품의 겉과 사용 경험, 디자인에 강박을 쏟았다. 예술가였다. 머스크는 거기서 한 층 더 내려간다. 화면이 예쁜가가 아니라, 물리 법칙상 이게 정말 최선인가를 묻는다. 그래서 그의 강박은 근본 과학, 공학, 그리고 공장의 제조 라인까지 내려간다. 로켓을 재사용해 비용을 뒤엎은 것도 여기서 나왔다. 나도 &#39;예쁜 표면&#39;이 아니라 &#39;작동하는 근본 구조&#39;에 강도를 쏘고 싶다.
+
+## 2. 첫 원칙과 &#39;바보 지수&#39;
+
+머스크의 무기는 첫 원칙 사고다. &quot;남들이 이렇게 하니까&quot;를 버리고, 원재료와 물리 법칙까지 분해한 다음 거기서부터 다시 쌓는다.
+
+그가 스페이스X에서 쓴 &#39;바보 지수(Idiot Index)&#39;가 인상 깊었다. 완성품 가격을 원재료 가격으로 나눈 값이다. 이 숫자가 크면, 재료값에 비해 터무니없이 비싸다는 뜻이고, 곧 &quot;만드는 방식이 바보 같다&quot;는 신호다. 그러면 제조법을 통째로 갈아엎어 원가를 떨어뜨린다. 국가가 수십억 달러를 쓰던 발사를 민간이 감당 가능한 값으로 끌어내린 힘이 바로 이 사고였다. 나도 내 일에 이 질문을 붙이고 싶다. 들인 시간과 비용 대비, 이 결과물은 정말 그만한 가치가 있는가?
+
+## 3. 강박을 절차로 — 5단계 알고리즘
+
+머스크는 테슬라의 &#39;생산 지옥&#39;에서 이 다섯 단계를 체득했다. 순서가 생명이다.
+
+1. 요구사항을 의심하라. 모든 요구에 &#39;누가 정했는가&#39;라는 실명을 붙여라. &quot;원래 그래왔다&quot;는 가장 먼저 의심할 대상이다.
+2. 삭제하라. 부품과 단계를 과감히 지워라.
+3. 단순화·최적화하라. 남은 것만 다듬어라.
+4. 속도를 올려라.
+5. 자동화하라. 맨 마지막이다.
+
+머스크는 경고한다. &quot;존재하지 말았어야 할 것을 최적화하는 것이 똑똑한 사람들의 가장 흔한 실수다. 무덤을 파고 있다면, 더 빨리 파지 말고 파는 것을 멈춰라.&quot; 나는 자주 없애야 할 일을 더 열심히 하고 있었다. 개선과 자동화(3~5)보다, 의심과 삭제(1~2)가 먼저다.
+
+## 4. 하드코어 — 그리고 그 진짜 연료
+
+머스크가 가장 좋아하는 단어 중 하나가 &#39;하드코어&#39;다. 긴 시간, 높은 강도, 그리고 오직 예외적으로 뛰어난 성과만이 합격점이라는 뜻이다. 그는 트위터를 인수한 직후 전 직원에게 &quot;극도로 하드코어해질 것&quot;을 요구했다.
+
+그런데 이 이야기에는 반전이 있다. 그 메일 뒤 트위터 직원의 약 75%가 떠났다. 나는 여기서 가장 큰 교훈을 얻었다. 하드코어는 그냥 &quot;더 오래 일해라&quot;가 아니다. 세 가지가 없으면 그것은 번아웃과 이탈로 끝난다. 첫째, 왜 하는지(미션)가 가슴에 꽂혀 있어야 한다. 둘째, 강요가 아니라 자발적 선택이어야 한다. 셋째, 탁월한 동료와 함께라는 자부심이 있어야 한다. 하드코어의 진짜 연료는 &#39;시간&#39;이 아니라 &#39;의미와 몰입, 그리고 동료의 수준&#39;이다. 화성에 간다는 미션이 없었다면, 스페이스X의 그 살인적인 몰입도 그냥 번아웃으로 끝났을 것이다.
+
+## 5. 그래서 나는 — 아람휴비스에 이렇게 심는다
+
+아람휴비스의 심장은 &quot;가치가 위계를 이긴다&quot;이다. 머스크의 &quot;직급이 아니라 성과가 기준&quot;과 정확히 통한다. 다만 트위터의 강요형 실패는 피하고, 건강한 하드코어로 번역한다.
+
+- &#39;오래&#39;가 아니라 &#39;높은 강도의 집중&#39;으로 정의한다. 야근 시간이 아니라, 이번 분기의 압도적인 결과 하나로 측정한다.
+- 모든 일 앞에 &quot;왜 이 일이 중요한가&quot;를 붙인다. 그것이 하드코어의 연료다.
+- 소수 정예에 실명 책임을 붙인다. 직급이 아니라 결과로 영향력을 갖는다.
+- &quot;예외적 성과&quot;의 통과선을 눈에 보이게 명문화한다.
+- 강요하지 않고 초대한다. &quot;동의하라&quot;가 아니라 &quot;이 미션에 미쳐볼 사람?&quot;이라고 묻는다.
+- 하드코어 스프린트 뒤에는 회복을 세트로 둔다. 지속 가능해야 진짜 하드코어다.
+
+한 줄로 남긴다. 강박은 근본에 겨누고, 일은 먼저 의심하고 지운 뒤에 다듬으며, 하드코어는 강요가 아니라 의미에 미친 소수의 자발적 몰입으로 번역한다. 스페이스X라는 결과는, 이 방법들이 하나로 맞물렸을 때 나온 것이었다.
+
+---
+
+## What I Learned from Musk — From Private Spaceflight to Obsession, the Algorithm, and Hardcore
+
+These days I&#39;ve been reading a book about Elon Musk. Today I held on to three things about him: obsession, the algorithm, and hardcore. But once I laid them next to the SpaceX story I&#39;d read a few days earlier, I saw that these aren&#39;t separate fragments — they form a single axis. SpaceX was the result he built; obsession, the algorithm, and hardcore were the method that produced it. I want to plant this whole thing in myself and in Aram Huvis, so I&#39;m leaving it here as one piece.
+
+### 0. What I Saw First — A Private Company Did What Only Nations Did
+
+The first thing I met in the book was SpaceX&#39;s challenge to private spaceflight. Space development that the U.S., China, and Russia pursued by pouring in enormous government budgets, SpaceX pulled down into the private sector and realized efficiently — essentially the first company to do so. That a single company did what only nations had done was, in itself, a symbol.
+
+Curious how the story ended, I checked the latest facts. In June 2026, SpaceX listed on the Nasdaq. With roughly $75–86 billion raised, it was the largest IPO in world history, and its market cap reached about $2.1 trillion on its first day. The fascinating part is the ownership structure: Musk holds 42% of the shares but, thanks to super-voting stock, 82% of the voting power — a design that raises massive capital while the founder keeps his grip on direction.
+
+Government-led → handed to the private sector → reusable rockets → monetized through Starlink → the largest IPO ever. That&#39;s the result. So how did he do it? This is where the real lesson begins.
+
+### 1. Obsession — What You Aim It At Is Everything
+
+Musk calls himself obsessive-compulsive. Until a problem is solved, he pushes sleep, food, and relationships aside and refuses to let go. But the key lesson for me isn&#39;t that his obsession is intense. It&#39;s what he aims that obsession at.
+
+Jobs poured his obsession into a product&#39;s surface, its user experience, its design. He was an artist. Musk goes one layer deeper. He doesn&#39;t ask whether the screen is pretty; he asks whether, by the laws of physics, this is truly the best it can be. So his obsession reaches down into fundamental science, engineering, and the factory manufacturing line. Reusing rockets to overturn cost came from exactly this. I, too, want to aim my intensity not at a pretty surface but at the underlying structure that actually works.
+
+### 2. First Principles and the &quot;Idiot Index&quot;
+
+Musk&#39;s weapon is first-principles thinking. He discards &quot;because everyone does it this way,&quot; breaks a thing down to its raw materials and the laws of physics, and rebuilds from there.
+
+The &quot;Idiot Index&quot; he used at SpaceX struck me. It is the price of the finished product divided by the cost of its raw materials. When this number is high, it means the product is absurdly expensive relative to its materials — a sign that &quot;the way it&#39;s made is idiotic.&quot; So he overhauls the manufacturing method entirely and drives the cost down. The force that pulled a launch — once costing nations billions — down to a price the private sector could bear was exactly this kind of thinking. I want to attach this question to my own work: relative to the time and money I&#39;ve put in, is this result truly worth it?
+
+### 3. Turning Obsession into a Procedure — The Five-Step Algorithm
+
+Musk learned these five steps in Tesla&#39;s &quot;production hell.&quot; The order is everything.
+
+1. Question the requirements. Attach a real person&#39;s name to every requirement. &quot;It&#39;s always been done this way&quot; is the first thing to question.
+2. Delete. Cut parts and steps aggressively.
+3. Simplify and optimize. Only refine what remains.
+4. Accelerate.
+5. Automate. This comes last.
+
+Musk warns: &quot;The most common mistake of smart engineers is to optimize a thing that should not exist. If you&#39;re digging your grave, don&#39;t dig faster — stop digging.&quot; I have often been working harder at things I should have eliminated. Questioning and deleting (1–2) come before improving and automating (3–5).
+
+### 4. Hardcore — and Its Real Fuel
+
+One of Musk&#39;s favorite words is &quot;hardcore&quot;: long hours, high intensity, and only exceptional performance counts as a passing grade. Right after acquiring Twitter, he demanded that all employees become &quot;extremely hardcore.&quot;
+
+But there&#39;s a twist. After that email, roughly 75% of Twitter&#39;s employees left. This is where I found the biggest lesson. Hardcore is not simply &quot;work longer.&quot; Without three things, it ends in burnout and attrition. First, the reason — the mission — must be lodged in your heart. Second, it must be a voluntary choice, not a coercion. Third, there must be the pride of working alongside exceptional peers. The real fuel of hardcore is not &quot;time&quot; but &quot;meaning, immersion, and the caliber of your colleagues.&quot; Without the mission of reaching Mars, even SpaceX&#39;s punishing immersion would have ended in mere burnout.
+
+### 5. So Here&#39;s How I Plant It in Aram Huvis
+
+The heart of Aram Huvis is &quot;value beats hierarchy.&quot; That aligns exactly with Musk&#39;s &quot;results, not rank, are the standard.&quot; But I avoid Twitter&#39;s coercive failure and translate this into a healthy hardcore.
+
+- Define it as &quot;high-intensity focus,&quot; not &quot;long hours.&quot; Measure it by one overwhelming result this quarter, not by overtime.
+- Put &quot;why this matters&quot; in front of every task. That is the fuel of hardcore.
+- Attach named accountability to a small elite. Influence comes from results, not rank.
+- Make the passing line for &quot;exceptional performance&quot; visible and explicit.
+- Invite rather than coerce. Not &quot;agree to this,&quot; but &quot;who wants to go crazy for this mission?&quot;
+- Pair every hardcore sprint with recovery. It&#39;s only truly hardcore if it&#39;s sustainable.
+
+I&#39;ll leave it in one line. Aim obsession at the fundamentals; question and delete before you refine; and translate hardcore not as coercion but as the voluntary immersion of a few who are crazy about the meaning. The result called SpaceX emerged only when these methods locked together as one.</textarea> <div class="pub-actions"> <button class="pub-btn copy" type="button">복사</button>  </div> <p class="pub-note">ⓘ 복사 후 블로그 글쓰기에</p> </div> </details><details class="pub-article"> <summary> <span class="pa-title">스펀지 클럽, 시작 전과 후의 나</span> <span class="pa-badge">내 글</span> <span class="pa-date">2026-07-03</span> </summary> <p class="pa-link"><a href="https://hyun-arch.github.io/writings/01-sponge">https://hyun-arch.github.io/writings/01-sponge</a></p> <div class="pub-card"> <div class="pub-head"><span class="pub-name">LinkedIn</span><span class="pub-tone">원문 그대로</span></div> <textarea class="pub-text" readonly rows="14">스펀지 클럽을 시작하기 전과 후에 나라는 사람의 성장과 변화를 위해서, 한 주 동안은 하루하루 끊임없는 도전을 하며 생활하였습니다. 특히 지속적인 AI와의 대화를 통해 나 자신에 대해 더 깊이 알고 느낄 수 있는 기회가 되었다고 생각합니다.
 
 지난 한 주 동안 미션을 수행하며 스폰지 클럽을 시작하기 전과 후의 제 모습에서 큰 변화를 느꼈습니다.
 
