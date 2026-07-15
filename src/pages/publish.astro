@@ -75,16 +75,27 @@ function fitText(core, limit, tail, weigh) {
   return { text, count: weigh(text), fits: weigh(text) <= limit };
 }
 
-// 카드 하나 만들기 — 항상 한도 안에 들어가게 + 카운트 표기.
-function card(key, name, tone, core, tail, note, shareBuilder) {
+// 플랫폼별 "열기" 버튼 대상 — 모든 카드가 하나씩 가진다.
+// X·스레드는 글까지 자동으로 채워 열고(로그인 시), 나머지는 해당 SNS를 연다(복사→붙여넣기).
+function openFor(key, text, articleUrl) {
+  switch (key) {
+    case 'x':         return { href: `https://x.com/intent/tweet?text=${enc(text)}`, label: 'X에 채워 열기' };
+    case 'threads':   return { href: `https://www.threads.com/intent/post?text=${enc(text)}`, label: '스레드에 채워 열기' };
+    case 'facebook':  return { href: `https://www.facebook.com/sharer/sharer.php?u=${enc(articleUrl)}`, label: '페이스북 공유창 열기' };
+    case 'linkedin':  return { href: 'https://www.linkedin.com/feed/?shareActive=true', label: '링크드인 글쓰기 열기' };
+    case 'instagram': return { href: 'https://www.instagram.com/', label: '인스타그램 열기' };
+    case 'naver':     return { href: 'https://blog.naver.com/', label: '네이버 블로그 열기' };
+    case 'full':      return { href: articleUrl, label: '원문 보기' };
+    default:          return null;
+  }
+}
+
+// 카드 하나 만들기 — 항상 한도 안에 들어가게 + 카운트 표기 + '열기' 버튼.
+function card(key, name, tone, core, tail, note, articleUrl) {
   const limit = LIMITS[key];
   const f = fitText(core, limit, tail, lenBy(key));
-  const out = { key, name, tone, text: f.text, count: f.count, limit, fits: f.fits, note };
-  if (shareBuilder) {
-    const s = shareBuilder(f.text);
-    out.share = s.url; out.shareLabel = s.label;
-  }
-  return out;
+  const o = openFor(key, f.text, articleUrl);
+  return { key, name, tone, text: f.text, count: f.count, limit, fits: f.fits, note, share: o && o.href, shareLabel: o && o.label };
 }
 
 // 빌드로그: 제목·핵심문장·요약으로 채널별 게시글 — 각 한도에 맞춰.
@@ -96,15 +107,12 @@ function genSummaryPosts(a) {
   const tags = hashtags(a.tags);
   const shortTags = hashtags(a.tags.slice(0, 3));
   return [
-    card('linkedin', 'LinkedIn', '전문·인사이트', core, `${link}\n\n${tags}`, '텍스트 복사 후 붙여넣기'),
-    card('threads', 'Threads', '짧고 강하게', core, `${link}\n${shortTags}`, '스레드 500자 안에 맞춤 · 버튼으로 채워 열기',
-      (txt) => ({ url: `https://www.threads.net/intent/post?text=${enc(txt)}`, label: '스레드에 채워 열기' })),
-    card('x', 'X (Twitter)', '한 방', core, `${link}\n${shortTags}`, 'X 280자(한글은 2자 계산) 안에 맞춤',
-      (txt) => ({ url: `https://x.com/intent/tweet?text=${enc(txt)}`, label: 'X에 채워 열기' })),
-    card('facebook', 'Facebook (Meta)', '따뜻하게', core, `${link}\n${shortTags}`, '텍스트 복사 후 붙여넣기',
-      () => ({ url: `https://www.facebook.com/sharer/sharer.php?u=${enc(a.url)}`, label: '페이스북 열기(링크)' })),
-    card('instagram', 'Instagram', '감성·캡션', `${ct} 🌊\n\n${a.desc}\n\n전문은 프로필 링크에서.`, `\n\n${tags} #독서기록`, '사진 1장 필요 · 캡션 복사 후 앱에서'),
-    card('naver', '네이버 블로그', '블로그 글', `[${ct}]\n\n${hook}${a.desc}`, `\n\n전문: ${a.url}`, '복사 후 블로그 글쓰기에'),
+    card('linkedin', 'LinkedIn', '전문·인사이트', core, `${link}\n\n${tags}`, '복사 후 링크드인 글쓰기에 붙여넣기', a.url),
+    card('threads', 'Threads', '짧고 강하게', core, `${link}\n${shortTags}`, '500자 안에 맞춤 · 로그인돼 있으면 채워 열림, 아니면 복사 후 붙여넣기', a.url),
+    card('x', 'X (Twitter)', '한 방', core, `${link}\n${shortTags}`, '280자(한글 2자) 안에 맞춤 · 버튼으로 채워 열기', a.url),
+    card('facebook', 'Facebook (Meta)', '따뜻하게', core, `${link}\n${shortTags}`, '복사 후 붙여넣기 · 버튼은 링크 공유창', a.url),
+    card('instagram', 'Instagram', '감성·캡션', `${ct} 🌊\n\n${a.desc}\n\n전문은 프로필 링크에서.`, `\n\n${tags} #독서기록`, '사진 1장 필요 · 캡션 복사 후 앱에서', a.url),
+    card('naver', '네이버 블로그', '블로그 글', `[${ct}]\n\n${hook}${a.desc}`, `\n\n전문: ${a.url}`, '복사 후 블로그 글쓰기에', a.url),
   ];
 }
 
@@ -115,16 +123,13 @@ function genFullPosts(a) {
   const tags = hashtags(a.tags.slice(0, 5));
   return [
     // 전체 글(전문) — 블로그/노트처럼 길이 제한 없는 곳에 통째로.
-    { key: 'full', name: '전체 글 (전문)', tone: '블로그·노트에 통째로', text: body, count: [...body].length, limit: 0, fits: true, note: '길이 제한 없는 곳(네이버·브런치·노트)에 그대로. SNS는 아래 플랫폼별 버전을 쓰세요.' },
-    card('linkedin', 'LinkedIn', '원문 그대로', body, link, '3,000자 안에 맞춤 · 복사 후 붙여넣기'),
-    card('threads', 'Threads', '요지 + 전문 링크', body, link, '500자 안에 맞춤 · 버튼으로 채워 열기',
-      (txt) => ({ url: `https://www.threads.net/intent/post?text=${enc(txt)}`, label: '스레드에 채워 열기' })),
-    card('x', 'X (Twitter)', '한 방 + 링크', body, link, '280자(한글은 2자 계산) 안에 맞춤',
-      (txt) => ({ url: `https://x.com/intent/tweet?text=${enc(txt)}`, label: 'X에 채워 열기' })),
-    card('facebook', 'Facebook (Meta)', '원문 그대로', body, link, '복사 후 붙여넣기',
-      () => ({ url: `https://www.facebook.com/sharer/sharer.php?u=${enc(a.url)}`, label: '페이스북 열기(링크)' })),
-    card('instagram', 'Instagram', '캡션', body, `${link}\n\n${tags}`, '사진 1장 필요 · 캡션 복사 후 앱에서'),
-    card('naver', '네이버 블로그', '원문 그대로', body, `\n\n원문: ${a.url}`, '복사 후 블로그 글쓰기에'),
+    { key: 'full', name: '전체 글 (전문)', tone: '블로그·노트에 통째로', text: body, count: [...body].length, limit: 0, fits: true, note: '길이 제한 없는 곳(네이버·브런치·노트)에 그대로. SNS는 아래 플랫폼별 버전을 쓰세요.', share: a.url, shareLabel: '원문 보기' },
+    card('linkedin', 'LinkedIn', '원문 그대로', body, link, '3,000자 안에 맞춤 · 복사 후 붙여넣기', a.url),
+    card('threads', 'Threads', '요지 + 전문 링크', body, link, '500자 안에 맞춤 · 로그인 시 채워 열림, 아니면 복사 후 붙여넣기', a.url),
+    card('x', 'X (Twitter)', '한 방 + 링크', body, link, '280자(한글 2자) 안에 맞춤 · 버튼으로 채워 열기', a.url),
+    card('facebook', 'Facebook (Meta)', '원문 그대로', body, link, '복사 후 붙여넣기 · 버튼은 링크 공유창', a.url),
+    card('instagram', 'Instagram', '캡션', body, `${link}\n\n${tags}`, '사진 1장 필요 · 캡션 복사 후 앱에서', a.url),
+    card('naver', '네이버 블로그', '원문 그대로', body, `\n\n원문: ${a.url}`, '복사 후 블로그 글쓰기에', a.url),
   ];
 }
 
