@@ -1,0 +1,114 @@
+---
+// 릴스 씬 1컷을 세로 사이즈(1080×1920)로 풀블리드 렌더 → 미리보기/캡처/HyperFrames 프레임.
+// nav/footer 없이 씬만. 디자인 시스템(엄격): 브랜드 노랑 #e9ed12 단일 포인트,
+// ExtraBold, 큰 자막(무음 시청 대응), 상하 안전영역, 하단 워터마크 — 매번 동일하게.
+import { video, sceneByN } from '../../../data/video.js';
+
+export function getStaticPaths() {
+  return video.scenes.map((s) => ({ params: { n: String(s.n) }, props: { s } }));
+}
+const { s } = Astro.props;
+const total = video.scenes.length;
+const dark = s.theme === 'dark';
+---
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --cream: #faf6ef; --ink: #17140f;
+      --pop: #e9ed12;                 /* 브랜드 노랑 — 고정 */
+      --mono: "Spline Sans Mono", ui-monospace, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1920px; }
+    body { font-family: "Pretendard", system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+    .frame {
+      width: 1080px; height: 1920px; padding: 200px 90px 180px;   /* 상하 안전영역(≈10%) */
+      display: flex; flex-direction: column; position: relative;
+    }
+    .frame.light { background: var(--cream); color: var(--ink); }
+    .frame.dark  { background: var(--ink);  color: #f4f0e6; }
+    .frame.dark.hook { background: radial-gradient(120% 70% at 50% 30%, #2a2519 0%, var(--ink) 60%, #0d0b07 100%); }
+
+    /* 배경 고스트 숫자 — 시선 무게 */
+    .ghost {
+      position: absolute; right: 30px; top: 260px; font-family: var(--mono);
+      font-weight: 700; font-size: 560px; line-height: 1; letter-spacing: -0.04em; user-select: none;
+    }
+    .frame.dark .ghost { color: var(--pop); opacity: 0.12; }
+    .frame.light .ghost { color: var(--ink); opacity: 0.05; }
+
+    .kicker {
+      font-family: var(--mono); font-weight: 600; font-size: 30px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 16px; z-index: 1;
+    }
+    .kicker::before { content: ''; width: 54px; height: 6px; background: var(--pop); border-radius: 3px; }
+    .frame.dark .kicker { color: var(--pop); }
+    .frame.light .kicker { color: var(--ink); }
+
+    .body { flex: 1; display: flex; flex-direction: column; justify-content: center; z-index: 1; }
+
+    h1 { font-weight: 800; letter-spacing: -0.035em; line-height: 1.08; font-size: 108px; }
+    .hook h1 { font-size: 124px; }
+    .frame.dark h1 { color: #fff; }
+    .frame.light h1 { color: var(--ink); }
+    h1 mark {
+      background: var(--pop); color: var(--ink); padding: 0.02em 0.14em 0.06em;
+      border-radius: 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    }
+
+    /* 화면 큰 자막 (무음 시청 대응) — 하단 안전영역 위 캡션 밴드 */
+    .onscreen {
+      margin-top: 48px; align-self: flex-start; font-size: 44px; font-weight: 800;
+      letter-spacing: -0.01em; line-height: 1.3; background: rgba(0,0,0,0.06);
+      border-left: 8px solid var(--pop); padding: 20px 30px; border-radius: 6px; max-width: 100%;
+    }
+    .frame.dark .onscreen { background: rgba(233,237,18,0.10); color: #f4f0e6; }
+    .frame.light .onscreen { background: rgba(23,20,15,0.05); color: var(--ink); }
+
+    .hook .body { justify-content: center; }
+    .hook h1 { text-align: left; }
+
+    .cta .body { align-items: center; text-align: center; justify-content: center; }
+    .cta .onscreen { align-self: center; background: var(--pop); color: var(--ink); border: 0; padding: 24px 46px; border-radius: 999px; }
+
+    .foot {
+      display: flex; align-items: center; justify-content: space-between; z-index: 1;
+      font-family: var(--mono); font-size: 28px; font-weight: 500;
+    }
+    .frame.light .foot { color: #8c8070; }
+    .frame.dark .foot { color: #9c9284; }
+    .brand-badge { display: flex; align-items: center; gap: 14px; }
+    .brand-badge .dot { width: 16px; height: 16px; border-radius: 50%; background: var(--pop); }
+    /* 진행 바 — 릴스 타임라인 느낌 */
+    .track { display: flex; gap: 8px; align-items: center; }
+    .track i { height: 8px; width: 34px; border-radius: 4px; background: currentColor; opacity: 0.28; }
+    .track i.on { opacity: 1; background: var(--pop); width: 54px; }
+  </style>
+</head>
+<body>
+  <div class={`frame ${dark ? 'dark' : 'light'} ${s.kind === '훅' ? 'hook' : ''} ${s.kind === 'CTA' ? 'cta' : ''}`}>
+    {(s.kind === '치트키') && <div class="ghost">{['①','②','③','④','⑤'][s.n - 2]}</div>}
+
+    <div class="kicker">{s.label}</div>
+
+    <div class="body">
+      <h1 set:html={s.title}></h1>
+      {s.onscreen && <div class="onscreen">{s.onscreen}</div>}
+    </div>
+
+    <div class="foot">
+      <span class="brand-badge"><span class="dot"></span>{video.handle} · Aramirror</span>
+      <span class="track">
+        {video.scenes.map((x) => (<i class={x.n === s.n ? 'on' : ''}></i>))}
+      </span>
+    </div>
+  </div>
+</body>
+</html>

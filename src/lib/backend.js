@@ -70,6 +70,27 @@ export async function sbCarouselDelete(id) {
   });
 }
 
+// ── 릴스 보관함 (videos 테이블) ──────────────────────────────
+export async function sbVideoList() {
+  return req(rest('videos?select=*&order=created_at.desc'), { headers: baseHeaders() });
+}
+
+export async function sbVideoInsert(row) {
+  const out = await req(rest('videos'), {
+    method: 'POST',
+    headers: { ...baseHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify(row),
+  });
+  return Array.isArray(out) ? out[0] : out;
+}
+
+export async function sbVideoDelete(id) {
+  await req(rest(`videos?id=eq.${encodeURIComponent(id)}`), {
+    method: 'DELETE',
+    headers: baseHeaders(),
+  });
+}
+
 // ── 활동 로그 (events 테이블) — "지하 엔진실" ─────────────────
 // 모든 활동(페이지 열람·몰입 세션·시계 사용 등)이 여기에 시간순으로 쌓인다.
 // 밤마다 종합하고 아침 5시 보고에 반영하는 데이터 원천.

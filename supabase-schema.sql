@@ -75,6 +75,33 @@ create policy "carousels public insert" on public.carousels for insert with chec
 create policy "carousels public delete" on public.carousels for delete using (true);
 
 -- ────────────────────────────────────────────────────────────
+-- 5-b) 릴스 보관함 테이블 (릴스 스튜디오 08 보관함 → 클라우드 승격)
+--    Storage = 렌더된 mp4/프레임 링크(media_urls) / Database = 아래 메타데이터
+create table if not exists public.videos (
+  id          uuid        primary key default gen_random_uuid(),
+  topic       text        not null,
+  format      text        not null default '9:16 릴스',
+  duration    int         not null default 0,
+  scenes      int         not null default 0,
+  reference   text        not null default '',           -- 참고한 원본 영상 링크
+  hash        text,
+  model       text        not null default '',
+  media_urls  jsonb       not null default '[]'::jsonb,
+  data        jsonb,                                      -- 스냅샷(스토리보드·스크립트·레퍼런스 해부)
+  created_at  timestamptz not null default now()
+);
+
+alter table public.videos enable row level security;
+
+drop policy if exists "videos public read"   on public.videos;
+drop policy if exists "videos public insert" on public.videos;
+drop policy if exists "videos public delete" on public.videos;
+
+create policy "videos public read"   on public.videos for select using (true);
+create policy "videos public insert" on public.videos for insert with check (true);
+create policy "videos public delete" on public.videos for delete using (true);
+
+-- ────────────────────────────────────────────────────────────
 -- 6) 활동 로그 테이블 (events) — "지하 엔진실"
 --    페이지 열람·몰입 세션·시계 사용 등 모든 활동이 시간순으로 쌓인다.
 --    밤마다 종합하고 아침 5시 보고에 반영하는 데이터 원천.
