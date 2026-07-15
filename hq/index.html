@@ -180,12 +180,12 @@
       <div class="stat r"><div class="n">3</div><div class="l">사장님 대기</div></div>
     </div>
 
-    <h2 class="sec">오늘 (7/9) 한눈</h2>
+    <h2 class="sec">오늘 (<span id="todayMD">—</span>) 한눈</h2>
     <div class="todo">
       <div class="i"><div class="k">🌅</div><div class="m">아침 5시 모닝리포트<span>매일 자동 · 세션마다 크론 재확인</span></div></div>
       <div class="i"><div class="k">🏀</div><div class="m">GTB 새벽농구 05:30<span>랜딩·정산계산기 라이브</span></div></div>
       <div class="i"><div class="k">💬</div><div class="m">셸 답례 대상 재계산<span>오래된 명단 금지 · 매일 새로</span></div></div>
-      <div class="i"><div class="k">🎯</div><div class="m">내일(7/10) 워크샵·해커톤<span>참석·시간·장소 확정 필요 🔴</span></div></div>
+      <div class="i"><div class="k">🎯</div><div class="m">내일(<span id="tmrMD">—</span>) 워크샵·해커톤<span>참석·시간·장소 확정 필요 🔴</span></div></div>
     </div>
 
     <div class="callr">
@@ -297,7 +297,7 @@
   <footer>
     이 화면 하나가 <b>아라미러 관제실</b>입니다 — 오늘·프로젝트·자동화·방을 층 구조 그대로.<br/>
     <a href="/log/">🧩 통합 기록: 무엇을 어떤 스킬로 어떻게 →</a><br/>
-    aramirror/hq · 업데이트 2026-07-09
+    aramirror/hq · <span id="updYMD">업데이트 —</span>
   </footer>
 </div>
 
@@ -337,6 +337,13 @@
     var hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
     document.getElementById('clock').textContent=
       d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+' ('+days[d.getDay()]+') '+hh+':'+mm+' · 라이브라 폰에서 바로';
+
+    // 오늘/내일/업데이트 날짜 — 접속할 때마다 자동 계산(하드코딩 금지)
+    var pad=function(n){return String(n).padStart(2,'0');};
+    var tm=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);  // 내일(자정 기준, DST 안전)
+    var t=document.getElementById('todayMD'); if(t)t.textContent=(d.getMonth()+1)+'/'+d.getDate();
+    var tr=document.getElementById('tmrMD'); if(tr)tr.textContent=(tm.getMonth()+1)+'/'+tm.getDate();
+    var up=document.getElementById('updYMD'); if(up)up.textContent='업데이트 '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   }
   tick(); setInterval(tick,10000);
 </script>
