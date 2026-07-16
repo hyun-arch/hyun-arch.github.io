@@ -175,9 +175,9 @@
   <!-- ============ 오늘 ============ -->
   <section class="panel on" id="today">
     <div class="stat-row">
-      <div class="stat g"><div class="n">7</div><div class="l">완료</div></div>
-      <div class="stat a"><div class="n">14</div><div class="l">진행중</div></div>
-      <div class="stat r"><div class="n">3</div><div class="l">사장님 대기</div></div>
+      <div class="stat g"><div class="n">—</div><div class="l">완료</div></div>
+      <div class="stat a"><div class="n">—</div><div class="l">진행중</div></div>
+      <div class="stat r"><div class="n">—</div><div class="l">사장님 대기</div></div>
     </div>
 
     <h2 class="sec">오늘 (<span id="todayMD">—</span>) 한눈</h2>
@@ -346,6 +346,18 @@
     var up=document.getElementById('updYMD'); if(up)up.textContent='업데이트 '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   }
   tick(); setInterval(tick,10000);
+
+  // 상단 통계 — 하드코딩 금지. 프로젝트·자동화 카드의 실제 상태(초록=완료·노랑=진행·빨강=대기)를 세어 반영.
+  (function(){
+    var c={g:0,a:0,r:0};
+    document.querySelectorAll('.card').forEach(function(el){
+      if(el.classList.contains('g'))c.g++;
+      else if(el.classList.contains('r'))c.r++;
+      else if(el.classList.contains('a'))c.a++;
+    });
+    var set=function(sel,n){var e=document.querySelector(sel+' .n'); if(e)e.textContent=n;};
+    set('.stat.g',c.g); set('.stat.a',c.a); set('.stat.r',c.r);
+  })();
 </script>
 </body>
 </html>
