@@ -15,7 +15,7 @@ import Base from '../layouts/Base.astro';
           <input id="pass" type="password" placeholder="관리자 암호" class="ad-input" />
           <button id="enter" class="ad-btn ad-primary">입장</button>
         </div>
-        <p class="ad-hint">기본 암호: <code>arami</code> — 첫 입장 후 하단에서 변경할 수 있습니다.</p>
+        <p class="ad-hint">⚠️ 이 잠금은 <b>편의 잠금</b>(어깨너머 방지)입니다. 정적 사이트라 온라인 실보안이 아니며, 진짜 잠금은 로그인(Supabase Auth) 도입 시 적용됩니다. 암호는 <code>.env</code>의 <code>PUBLIC_ADMIN_PASS</code>로 설정합니다.</p>
       </div>
 
       <div id="panel" hidden>
@@ -181,7 +181,11 @@ import Base from '../layouts/Base.astro';
     const localDate = () => { const d = new Date(), p = (n) => (n < 10 ? '0' : '') + n; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); };
 
     // ── 접근 게이트 ──────────────────────────────────
-    function currentPass() { return localStorage.getItem(PASS_KEY) || 'arami'; }
+    // ⚠️ 편의 잠금(convenience lock)일 뿐 진짜 보안이 아니다.
+    // 정적 사이트라 이 값은 빌드 번들에 들어가 소스로 보일 수 있다(어깨너머 방지용).
+    // 온라인 실보안은 다음 슬라이스의 Supabase Auth 로 붙인다.
+    const ENV_PASS = import.meta.env.PUBLIC_ADMIN_PASS || '';
+    function currentPass() { return localStorage.getItem(PASS_KEY) || ENV_PASS; }
     function unlock() {
       $('gate').hidden = true;
       $('panel').hidden = false;
@@ -190,7 +194,9 @@ import Base from '../layouts/Base.astro';
     $('enter').addEventListener('click', tryEnter);
     $('pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryEnter(); });
     function tryEnter() {
-      if ($('pass').value === currentPass()) {
+      const pass = currentPass();
+      if (!pass) { alert('관리자 잠금이 아직 설정되지 않았습니다. .env 에 PUBLIC_ADMIN_PASS 를 설정하세요.'); return; }
+      if ($('pass').value === pass) {
         sessionStorage.setItem(SESSION_KEY, '1');
         unlock();
       } else {

@@ -7,5 +7,10 @@ node_modules/
 # environment
 .env
 .env.production
+# 🔴 secret (local-only) data — 재무·매출 등. 절대 커밋·배포 안 됨.
+# (예시 템플릿과 README 만 커밋)
+src/data/_secret/*
+!src/data/_secret/README.md
+!src/data/_secret/*.example.js
 # os
 .DS_Store

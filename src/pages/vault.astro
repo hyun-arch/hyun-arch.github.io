@@ -1,0 +1,75 @@
+---
+// 🔴 금고(Vault) — 로컬 전용 비밀 데이터 뷰어.
+// loadSecret()은 프로덕션 빌드에서 항상 {} 라, 배포된 이 페이지에는 재무·매출이
+// 물리적으로 들어가지 않는다. 오직 로컬 `npm run dev` 에서만 실제 값이 보인다.
+import Base from '../layouts/Base.astro';
+import { loadSecret, isDev } from '../lib/tiers.js';
+
+const secret = loadSecret();
+const fin = secret.finance || null;
+const won = (n) => (typeof n === 'number' ? n.toLocaleString('ko-KR') + '원' : '—');
+---
+<Base title="금고">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">🔴 Vault · 로컬 전용 금고</p>
+      <h2>비밀 데이터 (재무 · 매출)</h2>
+
+      {isDev ? (
+        <p class="lead">지금은 <b>로컬(내 PC)</b>이라 실제 값이 보입니다. 이 페이지는 배포 산출물에는 데이터 없이 나갑니다.</p>
+      ) : (
+        <div class="v-locked">
+          <p class="v-lock-emoji">🔒</p>
+          <p class="lead">이 페이지의 비밀 데이터는 <b>로컬(내 PC)에서만</b> 열립니다.</p>
+          <p class="ad-hint">재무·매출은 배포 사이트에 <b>물리적으로 존재하지 않습니다</b> — 유출 경로가 빌드 단계에서 차단됩니다.</p>
+        </div>
+      )}
+
+      {isDev && fin && (
+        <div class="v-grid">
+          <div class="v-card">
+            <h3>매출 <span class="v-sub">updated {fin.updated}</span></h3>
+            <table class="v-table">
+              <thead><tr><th>월</th><th style="text-align:right">매출</th></tr></thead>
+              <tbody>
+                {fin.revenue?.monthly?.map((r) => (
+                  <tr><td>{r.month}</td><td style="text-align:right">{won(r.amount)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+            <p class="ad-hint">{fin.revenue?.note}</p>
+          </div>
+          <div class="v-card">
+            <h3>재무제표 요약</h3>
+            <ul class="v-kv">
+              <li><span>자산</span><b>{won(fin.financials?.assets)}</b></li>
+              <li><span>부채</span><b>{won(fin.financials?.liabilities)}</b></li>
+              <li><span>자본</span><b>{won(fin.financials?.equity)}</b></li>
+            </ul>
+            <p class="ad-hint">{fin.financials?.note}</p>
+          </div>
+        </div>
+      )}
+
+      {isDev && !fin && (
+        <p class="lead">아직 <code>src/data/_secret/finance.js</code> 가 없습니다. <code>finance.example.js</code> 를 복사해 만드세요.</p>
+      )}
+    </div>
+  </section>
+
+  <style>
+    .v-locked { border: 1px dashed var(--line); border-radius: var(--radius); padding: 40px; text-align: center; max-width: 520px; }
+    .v-lock-emoji { font-size: 2.4rem; margin: 0 0 8px; }
+    .v-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+    .v-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .v-card h3 { font-size: 1.1rem; margin: 0 0 14px; }
+    .v-sub { font-size: 0.78rem; color: var(--muted); font-weight: 400; }
+    .v-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .v-table th { text-align: left; color: var(--muted); font-weight: 600; font-size: 0.78rem; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+    .v-table td { padding: 9px 6px; border-bottom: 1px solid var(--line-soft); }
+    .v-kv { list-style: none; padding: 0; margin: 0; }
+    .v-kv li { display: flex; justify-content: space-between; padding: 10px 2px; border-bottom: 1px solid var(--line-soft); }
+    .v-kv span { color: var(--muted); }
+    @media (max-width: 640px) { .v-grid { grid-template-columns: 1fr; } }
+  </style>
+</Base>

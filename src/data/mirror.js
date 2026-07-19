@@ -182,6 +182,16 @@ export const domains = [
       {
         h: '셸 · 주고받기',
         items: [
+          { t: '자동 셸 선물 봇', slug: 'shell-gift-bot', status: 'live', from: '직접 제작',
+            lead: '매일 사라지는 셸을, 한 사람에게 몰리지 않게 조원에게 공정하게 돌아가며 선물하도록 돕는 봇. 순환 대상 계산 + 알림을 자동화했다.',
+            points: [
+              '나를 뺀 조원을 매일 한 명씩 순서대로 순환 (5조 11명 = 11일 한 바퀴). 기록이 남아 껐다 켜도 순서가 이어짐',
+              '선호 인원만 도는 favorites 모드 지원',
+              '방식 A(추천): GitHub Actions가 매일 00:01 KST에 오늘 대상+문구를 Slack DM으로 — 내 PC 꺼져도 동작, 전송 1탭만 내가',
+              '방식 B: 브라우저 완전 자동(0탭), 단 내 PC가 켜져 있어야 함',
+              '제약: `/셸 전달하기`는 Slack 슬래시 명령이라 API가 대신 못 눌러 — 마지막 전송만 사람 몫',
+            ],
+            links: [{ label: '셸 스튜디오 열기', href: '/shell-studio' }, { label: '셸 통합', href: '/m/shell-hub' }, { label: '오늘 답할 사람', href: '/m/shell-today' }] },
           { t: '받은 셸 / 보낸 셸', slug: 'shell-give-take', status: 'seed',
             lead: '주고받은 셸의 장부. 받은 것과 보낸 것을 나란히 놓으면 내가 갚을 사람이 보인다.',
             points: ['받은 셸 − 보낸 셸 = 미응답', 'Slack #셸-통합알림-bot 에서 매일 새로 계산', '오래된 명단을 그대로 읊지 않기'],
