@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>#05 v2 — 예쁜 자물쇠를 버리고, 그릇부터 다시 · Aramirror</title><meta name="description" content="회사 재무를 OS에 넣으려다 진짜 보안이 0이라는 걸 발견하고 보안 3계층을 세웠다. 자동 셸 선물 봇을 편입하고 셸 스튜디오를 만들고, 흩어진 프로그램을 지도에 모았다."><meta name="theme-color" content="#ffffff"><!-- OG / 공유카드 (자동생성 이미지) --><meta property="og:type" content="website"><meta property="og:site_name" content="Aramirror"><meta property="og:title" content="#05 v2 — 예쁜 자물쇠를 버리고, 그릇부터 다시"><meta property="og:description" content="회사 재무를 OS에 넣으려다 진짜 보안이 0이라는 걸 발견하고 보안 3계층을 세웠다. 자동 셸 선물 봇을 편입하고 셸 스튜디오를 만들고, 흩어진 프로그램을 지도에 모았다."><meta property="og:url" content="https://hyun-arch.github.io/build-logs/05-v2-security-shell"><meta property="og:image" content="https://hyun-arch.github.io/og/build-logs/05-v2-security-shell.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="#05 v2 — 예쁜 자물쇠를 버리고, 그릇부터 다시"><meta name="twitter:description" content="회사 재무를 OS에 넣으려다 진짜 보안이 0이라는 걸 발견하고 보안 3계층을 세웠다. 자동 셸 선물 봇을 편입하고 셸 스튜디오를 만들고, 흩어진 프로그램을 지도에 모았다."><meta name="twitter:image" content="https://hyun-arch.github.io/og/build-logs/05-v2-security-shell.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="/_astro/admin.BQRrx82t.css"><script type="module" src="/_astro/hoisted.LxOlJvP0.js"></script></head> <body> <nav class="nav"> <div class="wrap"> <a class="brand" href="/">Aramirror<span class="dot">.</span></a> <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button> <div class="links" id="navLinks"> <div class="nav-group"> <button class="nav-top nav-top--hq" type="button">총괄실</button> <div class="nav-menu"> <a href="/hq/index.html">대시보드</a> <a href="/vault">🔴 금고 (매출·재무)</a> <a href="/order/index.html">기획주문서</a> <a href="/eval/index.html">평가시트</a> <a href="/admin">관리자</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">세컨드브레인</button> <div class="nav-menu"> <a href="/ask">되묻기 · 멘토</a> <a href="/mirror">전체 지도</a> <a href="/wall">생각의 벽</a> <a href="/writings">글</a> <a href="/reading">독서 · 학습</a> <a href="/board">게시판</a> <a href="/publish">발행</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">시간 · 몰입</button> <div class="nav-menu"> <a href="/flow">몰입 · Flow</a> <a href="/masters">몰입의 거장</a> <a href="/sponge">스폰지 시계</a> <a href="/world">세계 시계</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">프로젝트</button> <div class="nav-menu"> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> <a href="/studio">캐러셀 스튜디오</a> <a href="/reels">릴스 스튜디오</a> <a href="/shell-studio">셸 스튜디오</a> </div> </div> <div class="nav-group"> <button class="nav-top" type="button">기록 · 안내</button> <div class="nav-menu"> <a href="/build-logs">Build Logs</a> <a href="/how">작동 방식</a> </div> </div> </div> </div> </nav> <main class="wrap prose"><h1 id="05-v2--그릇부터-다시">#05 v2 — 그릇부터 다시</h1>
+<p class="meta">2026-07-19 · Build Log</p>
+<blockquote>
+<p>새 기능을 얹기 전에, 그걸 안전하게 담을 그릇부터. 오늘은 그 그릇을 만든 날이다.</p>
+</blockquote>
+<h2 id="발단--재무를-넣되-절대-새면-안-된다">발단 — “재무를 넣되 절대 새면 안 된다”</h2>
+<p>회사 재무·매출까지 OS에 넣어 “나 = 시스템”으로 만들고 싶었다. “비밀번호 2중으로 막아줘”라고 했는데, 정직한 답이 돌아왔다. <strong>정적 사이트에서 클라이언트 비밀번호는 잠긴 문이 아니라 유리문에 친 커튼이다.</strong> 화면에 뜬 데이터는 이미 브라우저가 받아온 것이라, 소스만 보면 다 보인다.</p>
+<p>더 놀란 건 현재 상태였다. DB는 “누구나 읽기·쓰기”, 관리자 비번은 소스에 <code>arami</code>로 박혀 있었고, 민감정보 잠금은 예전에 제거돼 있었다. <strong>재무를 그냥 넣었으면 그대로 전 세계 공개될 뻔했다.</strong></p>
+<h2 id="무엇을-세웠나">무엇을 세웠나</h2>
+<ul>
+<li><strong>보안 3계층</strong> — 🟢 공개 / 🟡 로그인 / 🔴 비밀. 재무·매출은 🔴 로, <strong>배포에서 물리적으로 제외</strong>하고 내 PC(로컬)에서만 열리는 금고(<code>/vault</code>)로.</li>
+<li><strong>빌드 제외 파이프라인</strong> — <code>import.meta.env.DEV</code> + <code>import.meta.glob</code> 으로, 프로덕션 빌드엔 비밀 데이터가 통째로 사라진다(트리셰이킹). 배포 산출물을 grep 해서 <strong>재무 문자열 0건</strong>을 확인하고서야 믿었다.</li>
+<li><strong>하드코딩 비번 제거</strong> — <code>arami</code> 를 지우고 <code>.env</code> 기반 편의 잠금으로.</li>
+</ul>
+<h2 id="셸을-자동화하고-os에-모으다">셸을 자동화하고, OS에 모으다</h2>
+<ul>
+<li><strong>자동 셸 선물 봇 편입</strong> — 매일 사라지는 셸을 조원에게 공정하게 순환 선물. <strong>웹(클라우드)·PC 앱</strong> 두 방식을 실제로 돌려보고, **셸 스튜디오(<code>/shell-studio</code>)**로 한 화면에 모았다. 남들도 쓰게 매뉴얼까지.</li>
+<li><strong>흩어진 프로그램을 지도에</strong> — 매출 대시보드·재무재표·CRM·Claude 사용량·Calendar 등을 지도에 등록. 재무는 이름만 두고 숫자는 금고에만.</li>
+<li><strong>재무 실데이터 연동</strong> — Revenue 매출 + 3개년 재무상태표(엑셀)를 금고에 실제로 연결.</li>
+</ul>
+<h2 id="오늘의-교훈">오늘의 교훈</h2>
+<ul>
+<li><strong>보안은 예쁜 자물쇠가 아니라, 데이터가 물리적으로 어디 사는가다.</strong></li>
+<li><strong>“됐다”는 실제로 눌러봐야 진짜 된 거다.</strong> 정적 페이지 링크가 dev에서 404 나던 걸, 응답코드를 끝까지 찍어 잡았다.</li>
+<li>편한 거짓말보다 불편한 사실. “그 방식으론 안 됩니다”가 진짜 도움이었다.</li>
+</ul></main> <footer> <div class="wrap"> <div class="foot-links"> <a href="/hq/index.html">총괄실</a> <a href="/order/index.html">기획주문서</a> <a href="/eval/index.html">평가시트</a> <a href="/how">작동 방식</a> <a href="/gtb">농구클럽 · GTB</a> <a href="/spongeclub">스폰지클럽</a> </div>
+Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br>
+© 2026 Aram Huvis · built with Claude Code
+</div> </footer>     </body> </html>
