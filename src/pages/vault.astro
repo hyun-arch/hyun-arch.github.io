@@ -7,7 +7,8 @@ import { loadSecret, isDev } from '../lib/tiers.js';
 
 const secret = loadSecret();
 const fin = secret.finance || null;
-const won = (n) => (typeof n === 'number' ? n.toLocaleString('ko-KR') + '원' : '—');
+const fmt = (n) => (typeof n === 'number' ? n.toLocaleString('ko-KR') : '—');
+const pct = (a, t) => (t ? Math.round((a / t) * 1000) / 10 + '%' : '—');
 ---
 <Base title="금고">
   <section style="padding-top:80px">
@@ -26,27 +27,59 @@ const won = (n) => (typeof n === 'number' ? n.toLocaleString('ko-KR') + '원' : 
       )}
 
       {isDev && fin && (
-        <div class="v-grid">
+        <div class="v-stack">
           <div class="v-card">
-            <h3>매출 <span class="v-sub">updated {fin.updated}</span></h3>
-            <table class="v-table">
-              <thead><tr><th>월</th><th style="text-align:right">매출</th></tr></thead>
-              <tbody>
-                {fin.revenue?.monthly?.map((r) => (
-                  <tr><td>{r.month}</td><td style="text-align:right">{won(r.amount)}</td></tr>
-                ))}
-              </tbody>
-            </table>
+            <h3>매출 <span class="v-sub">{fin.source} · updated {fin.updated} · 단위 {fin.unit}</span></h3>
+            <div class="v-tablewrap">
+              <table class="v-table">
+                <thead><tr>
+                  <th>구분</th><th class="r">실적</th><th class="r">확정</th>
+                  <th class="r">수주잔고</th><th class="r">목표</th><th class="r">달성률</th>
+                </tr></thead>
+                <tbody>
+                  {fin.revenue?.rows?.map((r) => (
+                    <tr class={r.seg === '전체' ? 'total' : ''}>
+                      <td>{r.seg}</td>
+                      <td class="r">{fmt(r.actual)}</td>
+                      <td class="r">{fmt(r.confirmed)}</td>
+                      <td class="r">{fmt(r.booked)}</td>
+                      <td class="r">{fmt(r.target)}</td>
+                      <td class="r">{pct(r.actual, r.target)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p class="ad-hint">{fin.revenue?.note}</p>
           </div>
           <div class="v-card">
-            <h3>재무제표 요약</h3>
-            <ul class="v-kv">
-              <li><span>자산</span><b>{won(fin.financials?.assets)}</b></li>
-              <li><span>부채</span><b>{won(fin.financials?.liabilities)}</b></li>
-              <li><span>자본</span><b>{won(fin.financials?.equity)}</b></li>
-            </ul>
+            <h3>재무상태표 <span class="v-sub">{fin.financials?.basis}</span></h3>
+            <div class="v-tablewrap">
+              <table class="v-table">
+                <thead><tr>
+                  <th>항목</th>
+                  {fin.financials?.years?.map((y) => (<th class="r">{y}</th>))}
+                </tr></thead>
+                <tbody>
+                  {fin.financials?.rows?.map((r) => (
+                    <tr class={r.item === '자산총계' ? 'total' : ''}>
+                      <td>{r.item}</td>
+                      {r.vals.map((v) => (
+                        <td class="r">{r.pct ? fmt(v) + '%' : fmt(v)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p class="ad-hint">{fin.financials?.note}</p>
+          </div>
+          <div class="v-card">
+            <h3>미수금 <span class="v-sub">미회수 잔액 · {fin.unit}</span></h3>
+            <ul class="v-kv">
+              <li><span>국내</span><b>{fmt(fin.receivables?.domestic)}</b></li>
+              <li><span>해외</span><b>{fmt(fin.receivables?.overseas)}</b></li>
+            </ul>
           </div>
         </div>
       )}
@@ -60,7 +93,11 @@ const won = (n) => (typeof n === 'number' ? n.toLocaleString('ko-KR') + '원' : 
   <style>
     .v-locked { border: 1px dashed var(--line); border-radius: var(--radius); padding: 40px; text-align: center; max-width: 520px; }
     .v-lock-emoji { font-size: 2.4rem; margin: 0 0 8px; }
-    .v-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+    .v-stack { display: flex; flex-direction: column; gap: 18px; margin-top: 8px; }
+    .v-tablewrap { overflow-x: auto; }
+    .v-table .r { text-align: right; font-variant-numeric: tabular-nums; }
+    .v-table tr.total td { font-weight: 700; border-bottom: 2px solid var(--line); }
+    .v-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     .v-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
     .v-card h3 { font-size: 1.1rem; margin: 0 0 14px; }
     .v-sub { font-size: 0.78rem; color: var(--muted); font-weight: 400; }
