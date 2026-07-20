@@ -39,12 +39,14 @@ export function loadSecret() {
   return out;
 }
 
-// 특정 계층을 지금 화면에 보여줘도 되는지.
-//   secret → dev 에서만 true
-//   auth   → (다음 슬라이스) 로그인 여부로 판정. 지금은 dev 에서만 열어둔다.
+// 특정 계층을 지금 화면에 보여줘도 되는지 (빌드타임 판정).
+//   secret → dev 에서만 true (배포 산출물에서 물리적으로 제외)
+//   auth   → 빌드타임엔 판정 불가. 실제 로그인 게이트는 클라이언트에서
+//            src/lib/auth.js(requireAuth/authHeader)로 처리한다. 데이터는 빌드에 넣지 말고
+//            로그인 후 런타임에 Supabase(RLS=authenticated)에서 fetch 하는 것이 원칙.
 //   public → 항상 true
 export function canShowTier(tier) {
   if (tier === 'secret') return isDev;
-  if (tier === 'auth') return isDev; // TODO: Supabase Auth 로그인 상태로 교체
+  if (tier === 'auth') return isDev; // 빌드타임 미리보기용. 배포 게이트는 auth.js 가 담당.
   return true;
 }

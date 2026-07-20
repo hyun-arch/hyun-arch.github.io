@@ -1,15 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
-import { shell, stages, modes, manual, rotationRule } from '../data/shell.js';
+import { shell, stages, modes, manual, rotationRule, collector } from '../data/shell.js';
 ---
 <Base title="셸 스튜디오">
   <section style="padding-top:80px">
     <div class="wrap">
-      <p class="section-kicker">Shell Studio · 셸 선물 OS</p>
-      <h2>오늘 누구에게 셸을? <mark>한 화면</mark>에서</h2>
+      <p class="section-kicker">Shell Studio · 셸 선물 &amp; 수집 OS</p>
+      <h2>셸을 <mark>쓰고 벌기</mark>, 한 화면에서</h2>
       <p class="lead">
-        매일 사라지는 셸을, 한 사람에게 몰리지 않게 <b>{shell.team}</b> 조원에게 공정하게 돌아가며 선물한다.
-        대상 계산·문구 생성은 자동, 마지막 전송 한 번만 내가.
+        <b>{shell.team}</b>의 셸 봇 전체를 한 곳에. <b>선물봇(쓰는 쪽)</b>은 매일 사라지는 셸을
+        한 사람에게 몰리지 않게 공정하게 돌려 선물하고, <b>수집봇(버는 쪽)</b>은 셸 벌 기회를
+        놓치지 않게 감시·알림한다. 대상 계산·문구·감지는 자동, 마지막 한 번만 내가.
       </p>
 
       <div class="stage-nav">
@@ -99,6 +100,47 @@ import { shell, stages, modes, manual, rotationRule } from '../data/shell.js';
               <ol class="man-steps">
                 {t.steps.map((s) => (<li>{s}</li>))}
               </ol>
+            </div>
+          ))}
+        </div>
+
+        <p class="setup-link"><a href="/m/shell-gift-bot">→ 지도에서 이 봇 상세 보기</a></p>
+      </div>
+
+      <!-- 06 수집봇 (셸 버는 쪽) -->
+      <div class="block" id="collect">
+        <h3 class="blk-h"><span class="blk-n">06</span> 수집봇 — 셸 버는 쪽</h3>
+        <p class="blk-d">{collector.intro}</p>
+        <p class="rule-note">{collector.tips}</p>
+
+        <div class="col-tools">
+          {collector.tools.map((t) => (
+            <div class="col-tool">
+              <div class="col-top">
+                <span class="col-k">{t.key}</span>
+                <h4>{t.name}</h4>
+                <code class="col-file">{t.file}</code>
+              </div>
+              <p class="col-how">{t.how}</p>
+
+              {t.detect && (
+                <p class="col-detect">
+                  <span class="col-lbl">감지</span>
+                  {t.detect.map((d) => (<span class="col-badge">{d}</span>))}
+                </p>
+              )}
+              {t.noise && <p class="col-noise">{t.noise}</p>}
+
+              <div class="col-cmds">
+                {t.cmds.map((cm) => (
+                  <div class="col-cmd">
+                    <code>{cm.c}</code><span>{cm.d}</span>
+                  </div>
+                ))}
+              </div>
+
+              {t.sched && <p class="col-sched">⏱ 자동 실행 · {t.sched}</p>}
+              {t.guard && <p class="col-guard">{t.guard}</p>}
             </div>
           ))}
         </div>
@@ -235,9 +277,34 @@ import { shell, stages, modes, manual, rotationRule } from '../data/shell.js';
     .setup-link { margin-top: 18px; }
     .setup-link a { color: var(--fg); text-decoration: underline; }
 
+    /* 06 수집봇 */
+    .col-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .col-tool { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .col-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .col-k { font-family: var(--mono); font-size: 0.9rem; color: var(--bg); background: var(--fg);
+      width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
+    .col-top h4 { margin: 0; font-size: 1.05rem; }
+    .col-file { margin-left: auto; font-family: var(--mono); font-size: 0.76rem; color: var(--muted);
+      border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; }
+    .col-how { color: var(--fg-soft); font-size: 0.92rem; line-height: 1.6; margin: 0 0 14px; }
+    .col-detect { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; }
+    .col-lbl { font-size: 0.78rem; color: var(--muted); margin-right: 4px; }
+    .col-badge { font-size: 0.78rem; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+      background: var(--bg-soft); }
+    .col-noise { font-size: 0.82rem; color: var(--muted); margin: 0 0 14px; }
+    .col-cmds { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 0; }
+    .col-cmd { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .col-cmd code { font-family: var(--mono); font-size: 0.82rem; background: var(--bg-soft);
+      border: 1px solid var(--line-soft); border-radius: 8px; padding: 6px 10px; word-break: break-all; }
+    .col-cmd span { font-size: 0.82rem; color: var(--muted); }
+    .col-sched { font-size: 0.84rem; color: var(--fg-soft); margin: 14px 0 0; }
+    .col-guard { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin: 12px 0 0;
+      border-left: 2px solid var(--line); padding-left: 12px; }
+
     @media (max-width: 640px) {
       .modes { grid-template-columns: 1fr; }
       .man-tracks { grid-template-columns: 1fr; }
+      .col-tools { grid-template-columns: 1fr; }
       .today-card { flex-direction: column; text-align: center; }
     }
   </style>

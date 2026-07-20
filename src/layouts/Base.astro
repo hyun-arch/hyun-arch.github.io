@@ -52,11 +52,13 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
         <div class="links" id="navLinks">
           <a class="nav-solo" href="/mirror">🗺 거울 지도</a>
+          <a class="nav-auth" id="navAuth" href="/login">로그인</a>
           <div class="nav-group">
             <button class="nav-top nav-top--hq" type="button">총괄실</button>
             <div class="nav-menu">
               <a href="/hq/index.html">대시보드</a>
               <a href="/vault">🔴 금고 (매출·재무)</a>
+              <a href="/projects">🟡 진행 프로젝트 (로그인)</a>
               <a href="/order/index.html">기획주문서</a>
               <a href="/eval/index.html">평가시트</a>
               <a href="/admin">관리자</a>
@@ -136,6 +138,14 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       }
       .nav-solo:hover { background:color-mix(in srgb, var(--accent) 22%, transparent); transform:translateY(-1px); }
       .nav-solo::after { display:none; }
+      .nav-auth {
+        font-size:0.82rem; font-weight:600; color:var(--muted); text-decoration:none;
+        padding:6px 12px; border-radius:999px; border:1px solid var(--line);
+        transition:color .15s, border-color .15s; white-space:nowrap;
+      }
+      .nav-auth:hover { color:var(--fg); border-color:var(--accent); }
+      .nav-auth::after { display:none; }
+      .nav-auth[data-authed="1"] { color:var(--accent); border-color:var(--accent); }
       .nav-toggle { display:none; background:none; border:0; color:var(--fg); font-size:1.4rem; cursor:pointer; margin-left:auto; line-height:1; padding:6px; }
       .nav .links { align-items:center; }
       .nav-group { position:relative; }
@@ -234,6 +244,29 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       // 지하 엔진실 — 모든 페이지 열람을 자동 기록하고 window.aramLog를 전역 노출
       import { logEvent } from '../lib/events.js';
       logEvent('page_view', { path: location.pathname, ref: document.referrer || null });
+    </script>
+
+    <script>
+      // 🟡 nav 로그인 상태 표시 — 로그인/로그아웃에 따라 라벨·링크 토글
+      import { getUser, refreshIfNeeded, onAuthChange } from '../lib/auth.js';
+      const el = document.getElementById('navAuth') as HTMLAnchorElement | null;
+      function paint(user) {
+        if (!el) return;
+        if (user) {
+          el.textContent = '● ' + (user.email ? user.email.split('@')[0] : '로그인됨');
+          el.href = '/projects';
+          el.dataset.authed = '1';
+          el.title = '로그인됨 · 진행 프로젝트 열기';
+        } else {
+          el.textContent = '로그인';
+          el.href = '/login';
+          delete el.dataset.authed;
+          el.title = '로그인';
+        }
+      }
+      paint(getUser());
+      refreshIfNeeded().then(() => paint(getUser()));
+      onAuthChange((s) => paint(s?.user || null));
     </script>
   </body>
 </html>

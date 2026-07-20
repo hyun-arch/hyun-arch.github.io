@@ -1,0 +1,114 @@
+---
+// 🟡 진행 프로젝트 — 준민감(auth) 데이터. 로그인해야만 열린다.
+// 원칙: 데이터를 빌드 산출물에 넣지 않는다. 로그인 후 이 페이지가 런타임에
+//   Supabase(projects 테이블, RLS=authenticated 전용)에서 직접 가져온다.
+//   → 미로그인 상태의 배포 HTML 에는 프로젝트 내용이 "존재하지 않는다".
+import Base from '../layouts/Base.astro';
+---
+<Base title="진행 프로젝트">
+  <section style="padding-top:96px">
+    <div class="wrap">
+      <p class="section-kicker">🟡 진행 프로젝트 · 로그인 전용</p>
+
+      <!-- 로그인 안 됨: 잠금 화면 -->
+      <div id="pjLock" class="pj-lock" hidden>
+        <p class="pj-lock-emoji">🔒</p>
+        <h2>로그인이 필요합니다</h2>
+        <p class="lead">진행 프로젝트는 준민감 정보라 로그인한 사장님만 볼 수 있습니다.</p>
+        <a id="pjLogin" class="pj-btn" href="/login?redirect=/projects">로그인하기 →</a>
+      </div>
+
+      <!-- 로그인 됨: 실제 내용 -->
+      <div id="pjView" hidden>
+        <div class="pj-head">
+          <h2>진행 프로젝트</h2>
+          <div class="pj-user"><span id="pjWho"></span><button id="pjOut" type="button">로그아웃</button></div>
+        </div>
+        <p id="pjStatus" class="lead">불러오는 중…</p>
+        <div id="pjList" class="pj-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .pj-lock { border: 1px dashed var(--line); border-radius: var(--radius); padding: 44px 32px;
+      text-align: center; max-width: 520px; margin: 20px 0; }
+    .pj-lock-emoji { font-size: 2.4rem; margin: 0 0 6px; }
+    .pj-lock h2 { font-size: 1.4rem; margin: 0 0 8px; }
+    .pj-btn { display: inline-block; margin-top: 16px; font-weight: 700; color: #fff;
+      background: var(--accent); border-radius: 12px; padding: 12px 22px; }
+    .pj-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .pj-user { font-size: 0.86rem; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+    .pj-user button { font: inherit; font-size: 0.84rem; color: var(--fg-soft); background: var(--bg-2);
+      border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+    .pj-list { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+    .pj-item { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--bg-2); }
+    .pj-item h3 { font-size: 1.05rem; margin: 0 0 6px; }
+    .pj-item p { margin: 0; color: var(--fg-soft); font-size: 0.94rem; line-height: 1.6; }
+    .pj-item .pj-meta { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); margin-top: 8px; }
+  </style>
+
+  <script>
+    import { getUser, signOut, refreshIfNeeded, isAuthed, authHeader, onAuthChange } from '../lib/auth.js';
+    import { SUPABASE_URL } from '../lib/config.js';
+
+    const lock = document.getElementById('pjLock') as HTMLElement;
+    const view = document.getElementById('pjView') as HTMLElement;
+    const who = document.getElementById('pjWho') as HTMLElement;
+    const status = document.getElementById('pjStatus') as HTMLElement;
+    const list = document.getElementById('pjList') as HTMLElement;
+    const outBtn = document.getElementById('pjOut') as HTMLButtonElement;
+
+    const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+    async function loadProjects() {
+      status.textContent = '불러오는 중…';
+      list.innerHTML = '';
+      const hdr = await authHeader();
+      if (!hdr) { gate(); return; }
+      try {
+        const r = await fetch(
+          `${SUPABASE_URL}/rest/v1/projects?select=*&order=updated_at.desc`,
+          { headers: { ...hdr, 'Content-Type': 'application/json' } }
+        );
+        if (r.status === 404 || r.status === 400) {
+          // 테이블 아직 없음 — 구조만 완성, 데이터 연결은 다음 단계
+          status.innerHTML = '아직 <code>projects</code> 테이블이 없습니다. 로그인 보안 뼈대는 정상 동작 중이며, '
+            + '테이블 생성 + RLS(authenticated 전용) 연결이 다음 단계입니다.';
+          return;
+        }
+        if (!r.ok) { status.textContent = `불러오기 실패 (${r.status})`; return; }
+        const rows = await r.json();
+        if (!rows.length) { status.textContent = '등록된 진행 프로젝트가 없습니다.'; return; }
+        status.textContent = `${rows.length}건`;
+        list.innerHTML = rows.map((p) => `
+          <div class="pj-item">
+            <h3>${esc(p.title || p.name || '제목 없음')}</h3>
+            <p>${esc(p.summary || p.description || '')}</p>
+            <div class="pj-meta">${esc(p.status || '')} · ${esc(p.updated_at || '')}</div>
+          </div>`).join('');
+      } catch (e) {
+        status.textContent = '네트워크 오류로 불러오지 못했습니다.';
+      }
+    }
+
+    function gate() {
+      lock.hidden = false;
+      view.hidden = true;
+    }
+    function enter() {
+      lock.hidden = true;
+      view.hidden = false;
+      who.textContent = getUser()?.email || '사장님';
+      loadProjects();
+    }
+
+    (async () => {
+      await refreshIfNeeded();
+      if (isAuthed()) enter(); else gate();
+    })();
+
+    onAuthChange(() => { if (isAuthed()) enter(); else gate(); });
+    outBtn.addEventListener('click', async () => { await signOut(); gate(); });
+  </script>
+</Base>

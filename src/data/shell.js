@@ -28,6 +28,7 @@ export const stages = [
   { id: 'message', n: '03', t: '전송 문구' },
   { id: 'modes',   n: '04', t: '두 가지 방식' },
   { id: 'manual',  n: '05', t: '사용 매뉴얼' },
+  { id: 'collect', n: '06', t: '수집봇 (벌기)' },
 ];
 
 // 실제 순환 규칙(rotation.py 기준). 웹 미리보기는 이걸 날짜로 근사한 것.
@@ -54,6 +55,38 @@ export const modes = [
     files: 'auto_send.py · run_auto.bat',
   },
 ];
+
+// ── 수집봇 (셸 버는 쪽) ──────────────────────────────────────
+// 선물봇이 셸을 '쓰는' 쪽이면, 수집봇은 셸을 '버는' 쪽. 실제 코드: collector.py · sns_verify.py
+export const collector = {
+  intro: '선물봇이 셸을 쓰는 쪽이라면, 수집봇은 셸을 버는 쪽입니다. 매일 사라지는 셸을 벌 기회를 놓치지 않게 도와줍니다.',
+  tips: '💡 가장 큰 기회는 공유회 개최입니다. 매일 받는 셸 1개보다, 개최 1회(7월 한정 20개)가 훨씬 큽니다.',
+  tools: [
+    {
+      key: '①', name: '셸 기회 감지 알림', file: 'collector.py',
+      how: '공지·공유회·5조 채널을 30분마다 감시해서, 셸 벌 기회가 올라오면 내 DM으로 즉시 알림.',
+      detect: ['선착순', '이벤트', '셸 지급', '공유회 개최·모집', '인증하면'],
+      noise: '일상적인 셸 주고받기 봇 메시지는 잡음이라 자동 제외',
+      cmds: [
+        { c: 'python collector.py', d: '새 기회 감지 → DM' },
+        { c: 'python collector.py --dry-run', d: '감지만, DM 안 보냄' },
+        { c: 'python collector.py --reset', d: '기준점 초기화' },
+      ],
+      sched: '작업 스케줄러 SpongeClub-Shell-Collector (30분 간격)',
+    },
+    {
+      key: '②', name: 'SNS 인증 도우미', file: 'sns_verify.py',
+      how: '실제로 올린 SNS 게시물 링크를 주면 /sns인증 제출을 자동화. 관리자 승인 후 +1셸.',
+      detect: null,
+      noise: null,
+      cmds: [
+        { c: 'python sns_verify.py https://www.instagram.com/p/XX␣/', d: 'SNS 링크로 인증 제출' },
+      ],
+      sched: null,
+      guard: '⚠️ 게시물 없이 자동으로 인증을 쏘는 기능은 일부러 넣지 않았습니다 (실제 활동만 인증).',
+    },
+  ],
+};
 
 // 남들도 내 봇을 쓸 수 있게 하는 매뉴얼 (1~6조 공통 + 방식별).
 export const manual = {
