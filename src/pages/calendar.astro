@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import { cal, features, integrations, runModes, setup } from '../data/calendar.js';
+---
+<Base title="달력 (Luxe Calendar)">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Calendar · 일정 · 예약 · 미팅 OS</p>
+      <h2>{cal.name} — <mark>{cal.ko}</mark></h2>
+      <p class="lead">{cal.intro}</p>
+      <p class="cal-stack"><span>스택</span> <code>{cal.stack}</code></p>
+
+      <!-- 핵심 기능 -->
+      <div class="block" id="features">
+        <h3 class="blk-h"><span class="blk-n">기능</span> 다섯 가지</h3>
+        <p class="blk-d">앱의 상단 탭이 곧 기능이다. 일정만 보는 달력이 아니라 예약·미팅까지 조율한다.</p>
+        <div class="cal-grid">
+          {features.map((f) => (
+            <div class="cal-card">
+              <span class="cal-n">{f.n}</span>
+              <h4>{f.t}</h4>
+              <p>{f.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 뒤에서 도는 연동 -->
+      <div class="block" id="integrations">
+        <h3 class="blk-h"><span class="blk-n">연동</span> 뒤에서 자동으로</h3>
+        <p class="blk-d">화면 뒤에서 구글·알림·메일이 자동으로 돈다.</p>
+        <div class="cal-int">
+          {integrations.map((it) => (
+            <div class="cal-introw">
+              <b>{it.t}</b>
+              <span>{it.d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 실행 방식 -->
+      <div class="block" id="run">
+        <h3 class="blk-h"><span class="blk-n">실행</span> 두 가지 방식</h3>
+        <p class="blk-d">셸 봇과 같은 구조 — 웹(개발 서버)과 PC 앱(Electron), 둘 다 한 레포에 들어있다. 실제 코드: <code>Project/Calender</code>.</p>
+        <div class="cal-modes">
+          {runModes.map((m) => (
+            <div class="cal-mode">
+              <div class="cal-mode-top">
+                <span class="cal-k">방식 {m.key}</span><h4>{m.name}</h4>
+                <span class="cal-tag">{m.tag}</span>
+              </div>
+              <p class="cal-how">{m.how}</p>
+              <ul class="cal-kv">
+                <li><span>실행 위치</span><b>{m.where}</b></li>
+                <li><span>필요한 것</span><b>{m.need}</b></li>
+                <li><span>명령·파일</span><b><code>{m.files}</code></b></li>
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 설정 -->
+      <div class="block" id="setup">
+        <h3 class="blk-h"><span class="blk-n">설정</span> 처음 한 번 (사장님 몫)</h3>
+        <p class="blk-d">구글·DB·메일 키는 민감값이라 코드로 못 넣는다. 아래만 한 번 채우면 굴러간다.</p>
+        <ol class="cal-steps">
+          {setup.map((s) => (<li>{s}</li>))}
+        </ol>
+        <p class="rule-note">🟡 이 앱은 서버·로그인·DB가 필요한 동적 앱이라, 정적 라이브(GitHub Pages)엔 통째로 올리지 않는다. 위 방식으로 내 PC에서 돌린다.</p>
+        <p class="setup-link"><a href="/m/calendar-app">→ 지도에서 이 앱 상세 보기</a></p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .cal-stack { color: var(--muted); font-size: 0.9rem; margin: 8px 0 6px; }
+    .cal-stack span { color: var(--fg-soft); font-weight: 600; }
+    .cal-stack code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-soft);
+      border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 8px; }
+
+    .block { border-top: 1px solid var(--line); padding: 30px 0; }
+    .blk-h { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+    .blk-n { font-family: var(--mono); color: var(--muted); margin-right: 8px; font-size: 0.9rem; }
+    .blk-d { color: var(--fg-soft); margin: 0 0 20px; line-height: 1.6; }
+    .blk-d code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-soft); padding: 2px 6px; border-radius: 6px; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .cal-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; background: var(--bg-2); }
+    .cal-n { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); }
+    .cal-card h4 { margin: 8px 0 6px; font-size: 1.02rem; letter-spacing: -0.02em; }
+    .cal-card p { margin: 0; color: var(--fg-soft); font-size: 0.9rem; line-height: 1.6; }
+
+    .cal-int { display: flex; flex-direction: column; gap: 2px; }
+    .cal-introw { display: grid; grid-template-columns: 160px 1fr; gap: 16px; align-items: baseline;
+      padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
+    .cal-introw b { font-size: 0.96rem; }
+    .cal-introw span { color: var(--fg-soft); font-size: 0.9rem; line-height: 1.55; }
+
+    .cal-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cal-mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+    .cal-mode-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .cal-k { font-family: var(--mono); font-size: 0.72rem; color: var(--bg); background: var(--fg);
+      padding: 3px 9px; border-radius: 999px; }
+    .cal-mode-top h4 { margin: 0; font-size: 1.05rem; }
+    .cal-tag { margin-left: auto; font-size: 0.7rem; color: var(--muted); border: 1px solid var(--line);
+      border-radius: 999px; padding: 2px 9px; }
+    .cal-how { color: var(--fg-soft); font-size: 0.9rem; line-height: 1.55; margin: 0 0 14px; }
+    .cal-kv { list-style: none; padding: 0; margin: 0; }
+    .cal-kv li { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0;
+      border-bottom: 1px solid var(--line-soft); font-size: 0.9rem; }
+    .cal-kv li span { color: var(--muted); white-space: nowrap; }
+    .cal-kv li b { text-align: right; }
+    .cal-kv li code { font-family: var(--mono); font-size: 0.82em; }
+
+    .cal-steps { margin: 0; padding-left: 20px; line-height: 1.85; color: var(--fg-soft); }
+    .cal-steps li { margin-bottom: 4px; }
+    .rule-note { color: var(--muted); font-size: 0.85rem; margin: 18px 0 0; line-height: 1.6;
+      border-left: 2px solid var(--line); padding-left: 12px; }
+    .setup-link { margin-top: 18px; }
+    .setup-link a { color: var(--fg); text-decoration: underline; }
+
+    @media (max-width: 720px) {
+      .cal-grid { grid-template-columns: 1fr; }
+      .cal-modes { grid-template-columns: 1fr; }
+      .cal-introw { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</Base>
