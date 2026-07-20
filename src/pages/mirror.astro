@@ -2,66 +2,94 @@
 import Base from '../layouts/Base.astro';
 import { domains, statusMeta } from '../data/mirror.js';
 
-// 공개 지도(2026-07-06 개정): 비밀번호 잠금 제거. 누구나 바로 열람.
-// mirror.js 평문을 빌드 때 그대로 정적 렌더한다(브라우저 복호화 없음).
 const hrefOf = (it) => it.to || ('/m/' + it.slug);
+
+// 대륙 색은 mirror.js(d.color)에서 단일 출처로 가져와 놀이터·상세와 통일한다.
+function counts(d) {
+  let live = 0, building = 0, total = 0;
+  d.branches.forEach((b) => b.items.forEach((it) => {
+    total++;
+    if (it.status === 'live') live++;
+    else if (it.status === 'building') building++;
+  }));
+  return { live, building, total, branches: d.branches.length };
+}
 ---
-<Base title="거울 · 전체 지도">
-  <header class="hero" style="padding:120px 0 40px">
-    <div class="wrap">
-      <p class="kicker">The Mirror · 전체 지도</p>
-      <h1>나라는 사람 전체를,<br /><mark>한눈에</mark> 비춘다.</h1>
-      <p class="sub">
-        개인 · 회사 · 사람 · 지식 · 자산 — 다섯 영역이 각각 그 아래로 다시 구조화된다.
-        <strong>어느 항목이든 눌러보세요</strong> — 그 칸의 실제 내용과 기능이 열립니다.
-      </p>
-    </div>
-  </header>
+<Base title="거울 지도">
+  <section class="map">
+    <!-- ── 히어로 ─────────────────────────────── -->
+    <header class="map-hero">
+      <p class="eyebrow">The Mirror · 거울 지도</p>
+      <h1>나라는 사람 전체를,<br /><mark>대륙</mark>에서 <mark>골목</mark>까지 비춘다.</h1>
+      <p class="lead">다섯 대륙을 고르면 그 안의 지역으로, 다시 장소로 <b>들어갑니다.</b> 큰 그림에서 시작해 필요한 곳까지 파고들어요.</p>
+    </header>
 
-  <section style="padding-top:16px; min-height:50vh">
-    <div class="wrap">
-      <div class="controls">
-        <div class="filters" role="group" aria-label="상태 필터">
-          <button class="chip is-on" data-status="all" type="button">전체</button>
-          <button class="chip" data-status="live" type="button"><i class="dot live"></i>작동 중</button>
-          <button class="chip" data-status="building" type="button"><i class="dot building"></i>만드는 중</button>
-          <button class="chip" data-status="seed" type="button"><i class="dot seed"></i>내용 있음</button>
-          <button class="chip" data-status="idea" type="button"><i class="dot idea"></i>아이디어</button>
-        </div>
-        <div class="tools">
-          <input id="mirror-search" class="search" type="search" placeholder="제목·설명 검색…" aria-label="검색" autocomplete="off" />
-          <button id="expand-all" class="toggle-all" type="button">모두 펼치기</button>
-          <button id="collapse-all" class="toggle-all" type="button">모두 접기</button>
-        </div>
+    <!-- ── 레벨 1: 대륙 개요 ──────────────────── -->
+    <div class="view" id="view" data-level="overview">
+      <div class="continents" id="continents">
+        {domains.map((d) => {
+          const c = counts(d);
+          return (
+            <button class="cont" type="button" data-key={d.key} style={`--dc:${d.color}`} aria-label={`${d.title} 대륙 열기`}>
+              <span class="cont-glow" aria-hidden="true"></span>
+              <span class="cont-face" aria-hidden="true">
+                <span class="cf-body"><span class="cf-eye l"></span><span class="cf-eye r"></span><span class="cf-cheek l"></span><span class="cf-cheek r"></span></span>
+                <span class="cf-badge">{d.icon}</span>
+              </span>
+              <span class="cont-num">대륙 {d.key}</span>
+              <span class="cont-title">{d.title}</span>
+              <span class="cont-en">{d.en} · {d.tagline}</span>
+              <span class="cont-meta">
+                <span class="cm"><i class="dot live"></i>{c.live} 작동</span>
+                <span class="cm"><i class="dot building"></i>{c.building} 만드는 중</span>
+                <span class="cm">{c.branches}개 지역 · {c.total}곳</span>
+              </span>
+              <span class="cont-enter">들어가기 →</span>
+            </button>
+          );
+        })}
       </div>
-      <p class="no-match" hidden>검색·필터에 맞는 항목이 없어요.</p>
 
-      <div class="tree">
-        {domains.map((d) => (
-          <details class="domain" data-domain={d.key} open>
-            <summary>
-              <span class="dom-icon">{d.icon}</span>
-              <span class="dom-num">{d.key}</span>
-              <span class="dom-title">{d.title}<span class="dom-en">{d.en}</span></span>
-              <span class="dom-tag">{d.tagline}</span>
-              <span class="chev" aria-hidden="true">▾</span>
-            </summary>
-            <div class="branches">
-              {d.branches.map((c, ci) => (
-                <div class="branch" data-branch={`${d.key}-${ci}`}>
-                  <h4>{c.h}</h4>
+      <!-- ── 레벨 2: 대륙 상세(지역→장소) ─────── -->
+      {domains.map((d) => (
+          <section class="detail" id={`d-${d.key}`} data-key={d.key} style={`--dc:${d.color}`} hidden>
+            <div class="detail-bar">
+              <button class="back" type="button" data-back>← 전체 지도</button>
+              <div class="crumb"><span>거울 지도</span> <b>/</b> <span class="cr-here">{d.icon} {d.title}</span></div>
+              <div class="dfilter" role="group" aria-label="상태 필터">
+                <button class="fchip on" data-status="all" type="button">전체</button>
+                <button class="fchip" data-status="live" type="button"><i class="dot live"></i>작동</button>
+                <button class="fchip" data-status="building" type="button"><i class="dot building"></i>제작</button>
+                <button class="fchip" data-status="idea" type="button"><i class="dot idea"></i>아이디어</button>
+              </div>
+            </div>
+
+            <div class="detail-head">
+              <span class="dh-face" aria-hidden="true">
+                <span class="cf-body"><span class="cf-eye l"></span><span class="cf-eye r"></span><span class="cf-cheek l"></span><span class="cf-cheek r"></span></span>
+                <span class="cf-badge">{d.icon}</span>
+              </span>
+              <div>
+                <h2>{d.title} <span class="dh-en">{d.en}</span></h2>
+                <p>{d.tagline}</p>
+              </div>
+            </div>
+
+            <div class="regions">
+              {d.branches.map((b) => (
+                <div class="region">
+                  <h3>{b.h}</h3>
                   <ul>
-                    {c.items.map((it) => {
+                    {b.items.map((it) => {
                       const m = statusMeta(it.status);
-                      const hay = ((it.t || '') + ' ' + (it.lead || '') + ' ' + (it.from || '')).toLowerCase();
                       return (
-                        <li class="item" data-status={it.status} data-search={hay}>
-                          <a class="node" href={hrefOf(it)}>
+                        <li class="place" data-status={it.status}>
+                          <a class="place-a" href={hrefOf(it)}>
                             <span class={`dot ${m.cls}`} title={m.label}></span>
-                            <span class="node-t">{it.t}</span>
-                            {it.from && <span class="from" title="출처">{it.from}</span>}
-                            {it.to && <span class="ext" title="기능 페이지">↗</span>}
-                            <span class="go" aria-hidden="true">→</span>
+                            <span class="place-t">{it.t}</span>
+                            {it.from && <span class="from">{it.from}</span>}
+                            {it.to && <span class="ext" title="바로 기능 페이지">↗</span>}
+                            <span class="go">→</span>
                           </a>
                         </li>
                       );
@@ -70,188 +98,164 @@ const hrefOf = (it) => it.to || ('/m/' + it.slug);
                 </div>
               ))}
             </div>
-          </details>
-        ))}
-      </div>
+            <p class="no-hit" hidden>이 상태에 해당하는 장소가 없어요.</p>
+          </section>
+      ))}
+    </div>
 
-      <div class="legend">
-        <span><i class="dot live"></i>작동 중</span>
-        <span><i class="dot building"></i>만드는 중</span>
-        <span><i class="dot seed"></i>내용 있음</span>
-        <span><i class="dot idea"></i>아이디어</span>
-      </div>
-      <p class="foot-note">
-        이 지도는 살아있다 — 텔레그램에 던지는 모든 게 알아서 제자리 칸에 쌓이고, 밤마다 다시 엮인다.
-      </p>
+    <div class="legend">
+      <span><i class="dot live"></i>작동 중</span>
+      <span><i class="dot building"></i>만드는 중</span>
+      <span><i class="dot seed"></i>내용 있음</span>
+      <span><i class="dot idea"></i>아이디어</span>
+      <span class="legend-note">· 텔레그램에 던지면 알아서 제자리 칸에 쌓이고, 밤마다 다시 엮여요.</span>
     </div>
   </section>
 
-  <style>
-    /* 컨트롤: 필터 칩 + 검색 + 펼치기/접기 */
-    .controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      gap: 14px 18px; margin: 0 2px 20px; }
-    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 999px;
-      border: 1px solid var(--line); background: var(--bg-card); color: var(--fg-soft);
-      font-size: 0.86rem; font-weight: 600; cursor: pointer; line-height: 1;
-      transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease; }
-    .chip:hover { background: var(--bg-soft); color: var(--fg); }
-    .chip.is-on { background: var(--fg); border-color: var(--fg); color: var(--bg-card); }
-    .chip.is-on .dot { box-shadow: 0 0 0 1px var(--bg-card); }
-    .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-    .search { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
-      background: var(--bg-card); color: var(--fg); font-size: 0.88rem; min-width: 180px;
-      transition: border-color 0.14s ease; }
-    .search:focus { outline: none; border-color: var(--muted); }
-    .search::placeholder { color: var(--muted); }
-    .toggle-all { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line);
-      background: var(--bg-card); color: var(--fg-soft); font-size: 0.84rem; font-weight: 600;
-      cursor: pointer; transition: background 0.14s ease, color 0.14s ease; }
-    .toggle-all:hover { background: var(--bg-soft); color: var(--fg); }
-    .no-match { color: var(--muted); font-size: 0.95rem; text-align: center; margin: 40px 2px; }
+  <style is:global>
+    .map { max-width: 1120px; margin: 0 auto; padding: 96px 18px 60px; }
+    .map-hero { text-align: center; max-width: 720px; margin: 0 auto 34px; }
+    .map-hero .eyebrow { font-family: var(--mono); font-size: .8rem; color: var(--accent); letter-spacing: .04em; }
+    .map-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 10px 0 12px; letter-spacing: -.02em; text-wrap: balance; line-height: 1.15; }
+    .map-hero h1 mark { background: none; color: var(--accent); }
+    .map-hero .lead { color: var(--fg-soft); line-height: 1.65; max-width: 560px; margin: 0 auto; }
+    .map-hero .lead b { color: var(--fg); }
 
-    /* 출처 배지 */
-    .from { color: var(--muted); font-size: 0.74rem; font-weight: 600; padding: 2px 7px; border-radius: 999px;
-      background: var(--bg-soft); border: 1px solid var(--line-soft); white-space: nowrap; }
-
-    /* 필터/검색으로 숨김 */
-    .item[hidden], .branch[hidden], .domain[hidden] { display: none; }
-
-    /* 지도 트리 */
-    .tree { display: flex; flex-direction: column; gap: 14px; }
-    .domain { border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-card);
-      overflow: hidden; transition: box-shadow 0.2s ease, border-color 0.2s ease; }
-    .domain[open] { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05); }
-    .domain > summary { display: flex; align-items: center; gap: 16px; padding: 22px 26px; cursor: pointer;
-      list-style: none; user-select: none; }
-    .domain > summary::-webkit-details-marker { display: none; }
-    .domain > summary:hover { background: var(--bg-soft); }
-    .dom-icon { font-size: 1.5rem; line-height: 1; }
-    .dom-num { color: var(--muted); font-weight: 700; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
-    .dom-title { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
-    .dom-en { color: var(--muted); font-weight: 500; font-size: 0.8rem; margin-left: 9px; letter-spacing: 0.02em; }
-    .dom-tag { color: var(--muted); font-size: 0.92rem; margin-left: auto; text-align: right; }
-    .chev { color: var(--muted); font-size: 0.85rem; transition: transform 0.2s ease; }
-    .domain[open] .chev { transform: rotate(180deg); }
-    .branches { display: grid; gap: 0; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      border-top: 1px solid var(--line-soft); }
-    .branch { padding: 20px 20px; border-top: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
-    .branch h4 { margin: 0 0 8px; font-size: 0.98rem; font-weight: 700; letter-spacing: -0.01em; }
-    .branch ul { list-style: none; padding: 0; margin: 0; }
-    .branch li { margin: 0; }
-    .node { display: flex; align-items: center; gap: 9px; padding: 8px 10px; margin: 1px -10px; border-radius: 9px;
-      color: var(--fg-soft); font-size: 0.93rem; line-height: 1.4; text-decoration: none;
-      transition: background 0.14s ease, color 0.14s ease; }
-    .node:hover { background: var(--bg-soft); color: var(--fg); }
-    .node-t { flex: 1; }
-    .ext { color: var(--muted); font-size: 0.8rem; }
-    .go { color: var(--muted); font-size: 0.85rem; opacity: 0; transform: translateX(-4px);
-      transition: opacity 0.14s ease, transform 0.14s ease; }
-    .node:hover .go { opacity: 1; transform: translateX(0); }
-    .dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: var(--line); }
-    .dot.live { background: #2fa15a; }
-    .dot.building { background: #e0a217; }
-    .dot.seed { background: #5a6fd0; }
-    .dot.idea { background: #c9ccd6; }
-    .legend { display: flex; flex-wrap: wrap; gap: 18px; margin: 26px 2px 0; color: var(--muted); font-size: 0.86rem; }
-    .legend span { display: inline-flex; align-items: center; gap: 7px; }
-    .legend i.dot { display: inline-block; }
-    .foot-note { color: var(--muted); font-size: 0.95rem; margin: 22px 2px 0; text-align: center; }
-
-    @media (max-width: 680px) {
-      .domain > summary { flex-wrap: wrap; gap: 10px 12px; padding: 18px 18px; position: relative; }
-      .dom-tag { margin-left: 0; width: 100%; text-align: left; order: 5; font-size: 0.86rem; }
-      .chev { position: absolute; right: 18px; top: 20px; }
-      .branches { grid-template-columns: 1fr; }
-      .branch { padding: 16px 18px; border-right: none; }
-      .go { opacity: 1; transform: none; }
+    /* ── 대륙 개요 ── */
+    .continents { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .cont {
+      position: relative; text-align: left; cursor: pointer; overflow: hidden;
+      display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto auto; gap: 3px 16px;
+      padding: 22px; border-radius: 22px; color: var(--fg);
+      background: linear-gradient(155deg, color-mix(in srgb, var(--dc) 14%, var(--bg-1)), var(--bg-1) 72%);
+      border: 1px solid color-mix(in srgb, var(--dc) 30%, var(--line));
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s;
     }
-    @media (max-width: 680px) {
-      .controls { flex-direction: column; align-items: stretch; }
-      .search { flex: 1; min-width: 0; }
-      .tools { justify-content: flex-start; }
+    .cont:hover, .cont:focus-visible { transform: translateY(-4px); border-color: var(--dc); box-shadow: 0 20px 46px rgba(0,0,0,.5); outline: none; }
+    .cont:focus-visible { box-shadow: 0 0 0 2px var(--dc), 0 20px 46px rgba(0,0,0,.5); }
+    .cont-glow { position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: radial-gradient(circle, color-mix(in srgb, var(--dc) 45%, transparent), transparent 70%); opacity: .5; pointer-events: none; transition: opacity .2s; }
+    .cont:hover .cont-glow { opacity: .9; }
+    .cont-face, .dh-face { position: relative; width: 60px; height: 56px; grid-row: 1 / 4; }
+    .dh-face { grid-row: auto; flex: 0 0 auto; }
+    .cf-body { position: absolute; inset: 0; border-radius: 50% 50% 46% 46%; background: linear-gradient(160deg, color-mix(in srgb, var(--dc) 90%, #fff 10%), color-mix(in srgb, var(--dc) 64%, #000 36%)); box-shadow: inset 0 -7px 11px rgba(0,0,0,.28), 0 7px 16px rgba(0,0,0,.42); animation: bob 3s var(--ease) infinite; }
+    .cont:hover .cf-body { animation-duration: 1.2s; }
+    .cf-eye { position: absolute; top: 24px; width: 8px; height: 11px; background: #1a1620; border-radius: 50%; animation: blink 5s infinite; }
+    .cf-eye::after { content: ""; position: absolute; top: 1px; left: 1.5px; width: 3px; height: 3px; background: #fff; border-radius: 50%; }
+    .cf-eye.l { left: 17px; } .cf-eye.r { right: 17px; }
+    .cf-cheek { position: absolute; top: 33px; width: 7px; height: 4px; background: rgba(255,120,120,.5); border-radius: 50%; }
+    .cf-cheek.l { left: 12px; } .cf-cheek.r { right: 12px; }
+    .cf-badge { position: absolute; top: -6px; right: -8px; width: 26px; height: 26px; font-size: 1rem; background: var(--bg); border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; box-shadow: 0 3px 8px rgba(0,0,0,.45); }
+    .cont-num { grid-column: 2; font-family: var(--mono); font-size: .7rem; color: var(--dc); letter-spacing: .06em; text-transform: uppercase; }
+    .cont-title { grid-column: 2; font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+    .cont-en { grid-column: 2; font-size: .82rem; color: var(--fg-soft); }
+    .cont-meta { grid-column: 1 / 3; display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-soft); }
+    .cm { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .cont-enter { position: absolute; right: 20px; bottom: 20px; font-size: .82rem; font-weight: 700; color: var(--dc); opacity: 0; transform: translateX(-6px); transition: opacity .2s, transform .2s; }
+    .cont:hover .cont-enter, .cont:focus-visible .cont-enter { opacity: 1; transform: none; }
+
+    /* ── 뷰 전환 ── */
+    .view[data-level="overview"] .detail { display: none; }
+    .view[data-level="detail"] .continents { display: none; }
+    /* 대륙 안으로 들어가면 히어로는 접어 빈 공간을 없앤다 */
+    .map:has(.view[data-level="detail"]) .map-hero { display: none; }
+    .detail { animation: drillIn .32s var(--ease); }
+    @keyframes drillIn { from { opacity: 0; transform: scale(.97) translateY(8px); } }
+
+    /* ── 상세(지역→장소) ── */
+    .detail-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+    .back { background: var(--bg-2); border: 1px solid var(--line); color: var(--fg); font: inherit; font-size: .86rem; font-weight: 600; padding: 8px 14px; border-radius: 999px; cursor: pointer; transition: border-color .15s, background .15s; }
+    .back:hover { border-color: var(--dc); background: color-mix(in srgb, var(--dc) 12%, var(--bg-2)); }
+    .crumb { font-size: .84rem; color: var(--muted); }
+    .crumb b { color: var(--faint); margin: 0 2px; }
+    .crumb .cr-here { color: var(--fg); font-weight: 600; }
+    .dfilter { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+    .fchip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); color: var(--fg-soft); font-size: .8rem; font-weight: 600; cursor: pointer; transition: background .14s, color .14s, border-color .14s; }
+    .fchip:hover { color: var(--fg); }
+    .fchip.on { background: color-mix(in srgb, var(--dc) 20%, transparent); border-color: var(--dc); color: #fff; }
+
+    .detail-head { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; padding: 20px; border-radius: 20px; background: linear-gradient(155deg, color-mix(in srgb, var(--dc) 14%, var(--bg-1)), var(--bg-1) 70%); border: 1px solid color-mix(in srgb, var(--dc) 26%, var(--line)); }
+    .detail-head h2 { margin: 0; font-size: 1.5rem; letter-spacing: -.02em; }
+    .dh-en { font-size: .82rem; color: var(--muted); font-weight: 500; margin-left: 8px; }
+    .detail-head p { margin: 3px 0 0; color: var(--fg-soft); font-size: .9rem; }
+
+    .regions { columns: 320px 3; column-gap: 16px; }
+    .region { break-inside: avoid; margin: 0 0 16px; padding: 18px; border-radius: 18px; background: var(--bg-1); border: 1px solid var(--line); }
+    .region h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+    .region h3::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dc); }
+    .region ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+    .place-a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; margin: 0 -6px; border-radius: 10px; color: var(--fg-soft); font-size: .92rem; text-decoration: none; transition: background .14s, color .14s; }
+    .place-a:hover, .place-a:focus-visible { background: color-mix(in srgb, var(--dc) 12%, var(--bg-2)); color: var(--fg); outline: none; }
+    .place-t { flex: 1; line-height: 1.35; }
+    .from { font-size: .7rem; color: var(--muted); background: var(--bg-2); border: 1px solid var(--line-soft); padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+    .ext { color: var(--muted); font-size: .78rem; }
+    .go { color: var(--dc); font-size: .85rem; opacity: 0; transform: translateX(-4px); transition: opacity .14s, transform .14s; }
+    .place-a:hover .go { opacity: 1; transform: none; }
+    .place[hidden] { display: none; }
+    .no-hit { text-align: center; color: var(--muted); padding: 30px; }
+
+    /* 상태 점 */
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; background: var(--line); box-shadow: 0 0 6px currentColor; }
+    .dot.live { background: #6fe08a; color: #6fe08a; }
+    .dot.building { background: #ffc061; color: #ffc061; }
+    .dot.seed { background: #a78bfa; color: #a78bfa; }
+    .dot.idea { background: #6b6f7a; color: transparent; }
+
+    .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 30px 2px 0; color: var(--muted); font-size: .84rem; }
+    .legend > span { display: inline-flex; align-items: center; gap: 7px; }
+    .legend-note { color: var(--faint); }
+
+    @media (max-width: 620px) {
+      .continents { grid-template-columns: 1fr; }
+      .regions { columns: 1; }
+      .dfilter { margin-left: 0; width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cf-body, .cf-eye { animation: none !important; }
+      .detail, .cont { animation: none !important; transition: none !important; }
     }
   </style>
 
   <script is:inline>
     (function () {
-      const KEY = 'mirror.open.v1';
-      const domainsEls = Array.from(document.querySelectorAll('.domain'));
-      const items = Array.from(document.querySelectorAll('.item'));
-      const branches = Array.from(document.querySelectorAll('.branch'));
-      const chips = Array.from(document.querySelectorAll('.chip'));
-      const searchEl = document.getElementById('mirror-search');
-      const noMatch = document.querySelector('.no-match');
-      const tree = document.querySelector('.tree');
+      const view = document.getElementById('view');
+      const conts = Array.from(document.querySelectorAll('.cont'));
+      const details = Array.from(document.querySelectorAll('.detail'));
 
-      let curStatus = 'all';
-      let curQuery = '';
-
-      // 열림상태 저장/복원
-      function loadOpen() {
-        try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+      function openDomain(key) {
+        details.forEach((d) => { d.hidden = d.dataset.key !== key; });
+        view.dataset.level = 'detail';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + key);
       }
-      function saveOpen(map) {
-        try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) {}
-      }
-      const openMap = loadOpen();
-      domainsEls.forEach((d) => {
-        const id = d.dataset.domain;
-        if (Object.prototype.hasOwnProperty.call(openMap, id)) d.open = !!openMap[id];
-        d.addEventListener('toggle', () => {
-          openMap[id] = d.open;
-          saveOpen(openMap);
-        });
-      });
-
-      // 필터 + 검색 적용
-      function apply() {
-        items.forEach((li) => {
-          const okStatus = curStatus === 'all' || li.dataset.status === curStatus;
-          const okSearch = !curQuery || (li.dataset.search || '').indexOf(curQuery) !== -1;
-          li.hidden = !(okStatus && okSearch);
-        });
-        // 항목이 하나도 안 보이는 브랜치/도메인은 숨김
-        branches.forEach((b) => {
-          const anyVisible = b.querySelector('.item:not([hidden])');
-          b.hidden = !anyVisible;
-        });
-        let anyDomainVisible = false;
-        domainsEls.forEach((d) => {
-          const anyVisible = d.querySelector('.item:not([hidden])');
-          d.hidden = !anyVisible;
-          if (anyVisible) anyDomainVisible = true;
-        });
-        if (noMatch) noMatch.hidden = anyDomainVisible;
-        if (tree) tree.hidden = !anyDomainVisible;
+      function backToMap() {
+        view.dataset.level = 'overview';
+        details.forEach((d) => { d.hidden = true; });
+        history.replaceState(null, '', location.pathname);
       }
 
-      chips.forEach((c) => {
-        c.addEventListener('click', () => {
-          chips.forEach((x) => x.classList.remove('is-on'));
-          c.classList.add('is-on');
-          curStatus = c.dataset.status;
-          apply();
-        });
+      conts.forEach((c) => c.addEventListener('click', () => openDomain(c.dataset.key)));
+      document.querySelectorAll('[data-back]').forEach((b) => b.addEventListener('click', backToMap));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && view.dataset.level === 'detail') backToMap(); });
+
+      // 대륙별 상태 필터
+      details.forEach((d) => {
+        const chips = Array.from(d.querySelectorAll('.fchip'));
+        const places = Array.from(d.querySelectorAll('.place'));
+        const noHit = d.querySelector('.no-hit');
+        const regions = Array.from(d.querySelectorAll('.region'));
+        chips.forEach((c) => c.addEventListener('click', () => {
+          chips.forEach((x) => x.classList.toggle('on', x === c));
+          const s = c.dataset.status;
+          places.forEach((p) => { p.hidden = !(s === 'all' || p.dataset.status === s); });
+          let any = false;
+          regions.forEach((r) => { const vis = r.querySelector('.place:not([hidden])'); r.style.display = vis ? '' : 'none'; if (vis) any = true; });
+          if (noHit) noHit.hidden = any;
+        }));
       });
 
-      if (searchEl) {
-        searchEl.addEventListener('input', () => {
-          curQuery = searchEl.value.trim().toLowerCase();
-          apply();
-        });
-      }
-
-      const expandBtn = document.getElementById('expand-all');
-      const collapseBtn = document.getElementById('collapse-all');
-      if (expandBtn) expandBtn.addEventListener('click', () => {
-        domainsEls.forEach((d) => { d.open = true; });
-      });
-      if (collapseBtn) collapseBtn.addEventListener('click', () => {
-        domainsEls.forEach((d) => { d.open = false; });
-      });
-
-      apply();
+      // 딥링크(#01 등)로 들어오면 해당 대륙 열기
+      const h = location.hash.replace('#', '');
+      if (h && details.some((d) => d.dataset.key === h)) openDomain(h);
     })();
   </script>
 </Base>

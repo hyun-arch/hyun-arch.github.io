@@ -2,78 +2,91 @@
 import Base from '../../layouts/Base.astro';
 import { detailItems, statusMeta } from '../../data/mirror.js';
 
-// 공개 상세(2026-07-06 개정): 비밀번호 잠금 제거. mirror.js 평문을 빌드 때 정적 렌더.
 export function getStaticPaths() {
   return detailItems().map((it) => ({ params: { slug: it.slug }, props: { it } }));
 }
 const { it } = Astro.props;
 const m = statusMeta(it.status);
+const dc = it.domainColor || '#ff7a4d';
 ---
 <Base title={it.t + ' · 거울'}>
-  <section style="padding-top:96px; min-height:60vh">
-    <div class="wrap" style="max-width:760px">
-      <a class="back" href="/mirror">← 전체 지도</a>
+  <article class="place-pg" style={`--dc:${dc}`}>
+    <div class="pp-inner">
+      <a class="pp-back" href={`/mirror#${it.domainKey}`}>← {it.domainIcon} {it.domainTitle} 대륙으로</a>
 
-      <div id="detail-root">
-        <p class="crumb"><span>{it.domainIcon} {it.domainTitle}</span><span class="sep">›</span><span>{it.branch}</span></p>
-        <div class="head"><h1>{it.t}</h1><span class={`badge ${m.cls}`}>{m.label}</span></div>
+      <p class="pp-crumb">
+        <span class="pp-face" aria-hidden="true">{it.domainIcon}</span>
+        <span>{it.domainTitle}</span><b>/</b><span>{it.branch}</span>
+      </p>
 
-        {it.lead && <p class="lead">{it.lead}</p>}
-        {it.from && <p class="credit">💡 스폰지클럽에서 녹임 · <b>{it.from}</b></p>}
+      <div class="pp-head">
+        <h1>{it.t}</h1>
+        <span class={`pp-badge ${m.cls}`}><i class="dot"></i>{m.label}</span>
+      </div>
 
-        {it.points && it.points.length > 0 && (
-          <ul class="points">{it.points.map((p) => <li>{p}</li>)}</ul>
-        )}
+      {it.lead && <p class="pp-lead">{it.lead}</p>}
+      {it.from && <p class="pp-credit">💡 스폰지클럽에서 녹임 · <b>{it.from}</b></p>}
 
-        {it.links && it.links.length > 0 && (
-          <div class="jump">
-            <span class="jump-label">이동</span>
-            {it.links.map((l) => (
-              <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label} →</a>
-            ))}
-          </div>
-        )}
+      {it.points && it.points.length > 0 && (
+        <ul class="pp-points">{it.points.map((p) => <li>{p}</li>)}</ul>
+      )}
 
-        <div class="capture">
-          <p class="capture-t">이 칸에 생각 던지기</p>
-          <p class="capture-d">텔레그램에 <b>{it.t}</b> 관련해서 한 줄 던지면, 밤마다 알아서 이 칸에 쌓여. 지금은 씨앗 내용이고, 던질수록 자라난다.</p>
+      {it.links && it.links.length > 0 && (
+        <div class="pp-jump">
+          <span class="pp-jump-l">이동</span>
+          {it.links.map((l) => (
+            <a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label} →</a>
+          ))}
+        </div>
+      )}
+
+      <div class="pp-capture">
+        <span class="pp-cap-ic">🌱</span>
+        <div>
+          <p class="pp-cap-t">이 칸에 생각 던지기</p>
+          <p class="pp-cap-d">텔레그램에 <b>{it.t}</b> 관련해서 한 줄 던지면, 밤마다 알아서 이 칸에 쌓여요. 지금은 씨앗 내용이고, 던질수록 자라납니다.</p>
         </div>
       </div>
     </div>
-  </section>
+  </article>
 
-  <style>
-    .back { display: inline-block; color: var(--muted); font-size: 0.92rem; text-decoration: none; margin-bottom: 22px; }
-    .back:hover { color: var(--fg); }
-    #detail-root .crumb { color: var(--muted); font-size: 0.88rem; margin: 0 0 10px; display: flex; gap: 8px; align-items: center; }
-    #detail-root .crumb .sep { opacity: 0.5; }
-    #detail-root .head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 6px; }
-    #detail-root .head h1 { margin: 0; font-size: 2rem; letter-spacing: -0.03em; }
-    #detail-root .badge { font-size: 0.76rem; font-weight: 700; padding: 4px 10px; border-radius: 999px;
-      border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
-    #detail-root .badge.live { background: #eafaef; border-color: #bfe8cd; color: #1f7a44; }
-    #detail-root .badge.building { background: #fff6e5; border-color: #f2dcae; color: #96660a; }
-    #detail-root .badge.seed { background: #eef2ff; border-color: #cdd7f2; color: #3a4ea0; }
-    #detail-root .badge.idea { background: var(--bg-soft); }
-    #detail-root .lead { margin: 18px 0 0; font-size: 1.12rem; line-height: 1.7; color: var(--fg-soft); }
-    #detail-root .credit { margin: 14px 0 0; font-size: 0.88rem; color: var(--accent-strong); background: var(--accent-soft);
-      display: inline-block; padding: 6px 12px; border-radius: 999px; }
-    #detail-root .credit b { font-weight: 700; }
-    #detail-root .points { margin: 26px 0 0; padding: 0; list-style: none; }
-    #detail-root .points li { position: relative; padding: 12px 0 12px 22px; line-height: 1.6;
-      border-top: 1px solid var(--line-soft); color: var(--fg); }
-    #detail-root .points li:last-child { border-bottom: 1px solid var(--line-soft); }
-    #detail-root .points li::before { content: ''; position: absolute; left: 4px; top: 1.15em; width: 6px; height: 6px;
-      border-radius: 50%; background: var(--fg); }
-    #detail-root .jump { margin: 30px 0 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    #detail-root .jump-label { color: var(--muted); font-size: 0.85rem; margin-right: 4px; }
-    #detail-root .jump a { border: 1px solid var(--line); border-radius: 999px; padding: 8px 15px; font-size: 0.9rem;
-      font-weight: 600; color: var(--fg); text-decoration: none; transition: background 0.15s ease; }
-    #detail-root .jump a:hover { background: var(--bg-soft); }
-    #detail-root .capture { margin: 44px 0 0; padding: 22px 24px; border-radius: var(--radius);
-      background: var(--bg-soft); border: 1px dashed var(--line); }
-    #detail-root .capture-t { margin: 0 0 6px; font-weight: 700; }
-    #detail-root .capture-d { margin: 0; color: var(--fg-soft); line-height: 1.65; font-size: 0.96rem; }
-    @media (max-width: 680px) { #detail-root .head h1 { font-size: 1.6rem; } }
+  <style is:global>
+    .place-pg { max-width: 780px; margin: 0 auto; padding: 96px 18px 72px; }
+    .place-pg .pp-inner {
+      position: relative; border-radius: 24px; padding: 34px clamp(20px, 5vw, 44px) 40px;
+      background:
+        radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--dc) 14%, transparent), transparent 55%),
+        var(--bg-1);
+      border: 1px solid color-mix(in srgb, var(--dc) 26%, var(--line));
+    }
+    .pp-back { display: inline-block; color: var(--muted); font-size: .9rem; text-decoration: none; margin-bottom: 22px; transition: color .15s; }
+    .pp-back:hover { color: var(--dc); }
+    .pp-crumb { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: .84rem; color: var(--muted); }
+    .pp-crumb b { color: var(--faint); }
+    .pp-face { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: color-mix(in srgb, var(--dc) 20%, var(--bg-2)); border: 1px solid color-mix(in srgb, var(--dc) 30%, var(--line)); }
+    .pp-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 4px; }
+    .pp-head h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.1rem); letter-spacing: -.03em; text-wrap: balance; }
+    .pp-badge { display: inline-flex; align-items: center; gap: 7px; font-size: .76rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg-soft); white-space: nowrap; }
+    .pp-badge .dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+    .pp-badge.live { color: #6fe08a; border-color: color-mix(in srgb, #6fe08a 34%, transparent); }
+    .pp-badge.building { color: #ffc061; border-color: color-mix(in srgb, #ffc061 34%, transparent); }
+    .pp-badge.seed { color: #a78bfa; border-color: color-mix(in srgb, #a78bfa 34%, transparent); }
+    .pp-badge.idea { color: var(--muted); }
+    .pp-lead { margin: 18px 0 0; font-size: 1.12rem; line-height: 1.72; color: var(--fg); }
+    .pp-credit { margin: 16px 0 0; display: inline-block; font-size: .86rem; color: var(--dc); background: color-mix(in srgb, var(--dc) 12%, transparent); border: 1px solid color-mix(in srgb, var(--dc) 26%, transparent); padding: 6px 13px; border-radius: 999px; }
+    .pp-credit b { font-weight: 700; }
+    .pp-points { margin: 28px 0 0; padding: 0; list-style: none; }
+    .pp-points li { position: relative; padding: 13px 0 13px 24px; line-height: 1.65; color: var(--fg-soft); border-top: 1px solid var(--line-soft); }
+    .pp-points li:last-child { border-bottom: 1px solid var(--line-soft); }
+    .pp-points li::before { content: ""; position: absolute; left: 3px; top: 1.25em; width: 7px; height: 7px; border-radius: 50%; background: var(--dc); box-shadow: 0 0 8px color-mix(in srgb, var(--dc) 60%, transparent); }
+    .pp-jump { margin: 30px 0 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .pp-jump-l { color: var(--muted); font-size: .84rem; margin-right: 2px; }
+    .pp-jump a { border: 1px solid color-mix(in srgb, var(--dc) 30%, var(--line)); border-radius: 999px; padding: 8px 15px; font-size: .9rem; font-weight: 600; color: var(--fg); text-decoration: none; transition: background .15s, border-color .15s; }
+    .pp-jump a:hover { background: color-mix(in srgb, var(--dc) 14%, transparent); border-color: var(--dc); }
+    .pp-capture { margin: 40px 0 0; padding: 20px 22px; border-radius: 18px; background: var(--bg-2); border: 1px dashed color-mix(in srgb, var(--dc) 36%, var(--line)); display: flex; gap: 14px; align-items: flex-start; }
+    .pp-cap-ic { font-size: 1.5rem; }
+    .pp-cap-t { margin: 0 0 5px; font-weight: 700; }
+    .pp-cap-d { margin: 0; color: var(--fg-soft); line-height: 1.65; font-size: .94rem; }
+    .pp-cap-d b { color: var(--fg); }
   </style>
 </Base>

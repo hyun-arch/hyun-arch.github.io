@@ -21,7 +21,7 @@ const S = {
 
 export const domains = [
   {
-    icon: '🧍', key: '01', title: '개인', en: 'Personal',
+    icon: '🧍', key: '01', title: '개인', en: 'Personal', color: '#ff7a4d',
     tagline: '나를 나이게 하는 것들',
     branches: [
       {
@@ -113,7 +113,7 @@ export const domains = [
   },
 
   {
-    icon: '🏢', key: '02', title: '회사 · 아람휴비스', en: 'Company',
+    icon: '🏢', key: '02', title: '회사 · 아람휴비스', en: 'Company', color: '#ffb457',
     tagline: '가치가 위계를 이긴다',
     branches: [
       {
@@ -186,7 +186,7 @@ export const domains = [
   },
 
   {
-    icon: '👥', key: '03', title: '사람 · 관계', en: 'People',
+    icon: '👥', key: '03', title: '사람 · 관계', en: 'People', color: '#ff5d8f',
     tagline: '오고 가는 마음의 기록',
     branches: [
       {
@@ -241,7 +241,7 @@ export const domains = [
   },
 
   {
-    icon: '🧠', key: '04', title: '지식 · LLM 위키', en: 'Knowledge',
+    icon: '🧠', key: '04', title: '지식 · LLM 위키', en: 'Knowledge', color: '#a78bfa',
     tagline: '던지면 엮이고 서술된다',
     branches: [
       {
@@ -289,7 +289,7 @@ export const domains = [
   },
 
   {
-    icon: '📦', key: '05', title: '자산 · 아웃풋', en: 'Assets',
+    icon: '📦', key: '05', title: '자산 · 아웃풋', en: 'Assets', color: '#34d3c0',
     tagline: '생각이 밖으로 나가 가치가 된다',
     branches: [
       {
@@ -338,7 +338,7 @@ export function detailItems() {
     for (const b of d.branches) {
       for (const it of b.items) {
         if (it.to) continue;
-        out.push({ ...it, domainTitle: d.title, domainIcon: d.icon, branch: b.h });
+        out.push({ ...it, domainTitle: d.title, domainIcon: d.icon, domainColor: d.color, domainKey: d.key, branch: b.h });
       }
     }
   }

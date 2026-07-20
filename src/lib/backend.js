@@ -110,3 +110,34 @@ export async function sbEventList({ type, since, limit = 200 } = {}) {
   if (since) q += `&occurred_at=gte.${encodeURIComponent(since)}`;
   return req(rest(q), { headers: baseHeaders() });
 }
+
+// ── 자료실 (assets 테이블) — 링크·영상·이미지·메모 등 던진 자산 ─────
+// 테이블이 아직 없으면(42P01) 호출부에서 localStorage 폴백으로 처리한다.
+export async function sbAssetList({ limit = 500 } = {}) {
+  return req(rest(`assets?select=*&order=created_at.desc&limit=${limit}`), { headers: baseHeaders() });
+}
+
+export async function sbAssetInsert(row) {
+  const out = await req(rest('assets'), {
+    method: 'POST',
+    headers: { ...baseHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify(row),
+  });
+  return Array.isArray(out) ? out[0] : out;
+}
+
+export async function sbAssetUpdate(id, patch) {
+  const out = await req(rest(`assets?id=eq.${encodeURIComponent(id)}`), {
+    method: 'PATCH',
+    headers: { ...baseHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify(patch),
+  });
+  return Array.isArray(out) ? out[0] : out;
+}
+
+export async function sbAssetDelete(id) {
+  await req(rest(`assets?id=eq.${encodeURIComponent(id)}`), {
+    method: 'DELETE',
+    headers: baseHeaders(),
+  });
+}

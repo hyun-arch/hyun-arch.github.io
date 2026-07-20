@@ -51,6 +51,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         <a class="brand" href="/">Aramirror<span class="dot">.</span></a>
         <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
         <div class="links" id="navLinks">
+          <a class="nav-solo" href="/play">🎮 놀이터</a>
           <div class="nav-group">
             <button class="nav-top nav-top--hq" type="button">총괄실</button>
             <div class="nav-menu">
@@ -65,6 +66,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
             <button class="nav-top" type="button">세컨드브레인</button>
             <div class="nav-menu">
               <a href="/ask">되묻기 · 멘토</a>
+              <a href="/archive">📥 자료실</a>
               <a href="/mirror">전체 지도</a>
               <a href="/wall">생각의 벽</a>
               <a href="/writings">글</a>
@@ -128,6 +130,13 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       footer .foot-links a { color:inherit; text-decoration:underline; text-underline-offset:2px; font-size:0.9rem; }
 
       /* ===== 5층 그룹 네비게이션 ===== */
+      .nav-solo {
+        font-size:0.88rem; font-weight:700; color:var(--fg); text-decoration:none;
+        padding:6px 12px; border-radius:999px; border:1px solid var(--accent);
+        background:var(--accent-soft); transition:background .15s, transform .15s; white-space:nowrap;
+      }
+      .nav-solo:hover { background:color-mix(in srgb, var(--accent) 22%, transparent); transform:translateY(-1px); }
+      .nav-solo::after { display:none; }
       .nav-toggle { display:none; background:none; border:0; color:var(--fg); font-size:1.4rem; cursor:pointer; margin-left:auto; line-height:1; padding:6px; }
       .nav .links { align-items:center; }
       .nav-group { position:relative; }

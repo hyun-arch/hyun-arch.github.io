@@ -1,0 +1,224 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="자료실">
+  <section class="arch">
+    <header class="arch-head">
+      <p class="kicker">Archive · 던지면 모이고, 분류되고, 엑기스만 남는다</p>
+      <h1>자료실</h1>
+      <p class="sub">링크·영상·이미지·메모 — 뭐든 그냥 던지세요. 종류와 공간이 자동으로 붙고, 핵심 요약은 정제 패스에서 채워집니다.</p>
+    </header>
+
+    <!-- 던지기 -->
+    <div class="drop" id="drop">
+      <textarea id="dropInput" rows="2" placeholder="여기에 링크를 붙이거나 메모를 쓰세요.  이미지는 파일 선택 또는 이 영역에 드래그&드롭."></textarea>
+      <div class="drop-row">
+        <label class="filebtn">📎 이미지<input type="file" id="dropFile" accept="image/*" hidden /></label>
+        <span class="drop-hint" id="dropHint">자동으로 종류·공간·태그가 붙어요</span>
+        <button class="throw" id="dropBtn" type="button">던지기 →</button>
+      </div>
+    </div>
+
+    <div class="pending" id="pending" hidden>
+      <span id="pendingText">요약 대기 0건</span>
+      <button id="distillBtn" type="button">정제 요청 (복사) ⧉</button>
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <main class="grid" id="grid" aria-live="polite"></main>
+  </section>
+
+  <style is:global>
+    .arch { max-width: 1120px; margin: 0 auto; padding: 90px 18px 70px; }
+    .arch-head .kicker { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); letter-spacing: 0.02em; }
+    .arch-head h1 { font-size: 2rem; margin: 6px 0 8px; letter-spacing: -0.02em; }
+    .arch-head .sub { color: var(--muted); max-width: 640px; line-height: 1.6; }
+
+    /* 던지기 */
+    .drop { margin: 22px 0 10px; background: var(--bg-1); border: 1px solid var(--line); border-radius: 20px; padding: 14px; transition: border-color .18s, background .18s; }
+    .drop.drag { border-color: var(--accent); background: var(--accent-soft); }
+    .drop textarea { width: 100%; background: transparent; border: 0; color: var(--fg); font: inherit; font-size: 1rem; resize: vertical; outline: none; }
+    .drop textarea::placeholder { color: var(--faint); }
+    .drop-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .filebtn { font-size: 0.85rem; color: var(--fg-soft); background: var(--bg-2); border: 1px solid var(--line); padding: 7px 12px; border-radius: 10px; cursor: pointer; }
+    .filebtn:hover { color: var(--fg); }
+    .drop-hint { font-size: 0.78rem; color: var(--muted); flex: 1; }
+    .throw { background: var(--grad); color: #1a1206; font-weight: 700; border: 0; padding: 9px 18px; border-radius: 999px; cursor: pointer; font-size: 0.9rem; }
+    .throw:hover { filter: brightness(1.06); }
+
+    .pending { display: flex; align-items: center; gap: 12px; justify-content: space-between; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 14px; padding: 10px 14px; margin: 8px 0; font-size: 0.85rem; color: var(--fg-soft); }
+    .pending[hidden] { display: none; }
+    .pending button { background: none; border: 1px solid var(--accent); color: var(--fg); padding: 5px 12px; border-radius: 999px; cursor: pointer; font-size: 0.8rem; }
+
+    /* 공간 칩 */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 20px; }
+    .chip { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); color: var(--fg-soft); cursor: pointer; font-size: 0.86rem; transition: background .15s, border-color .15s, color .15s; }
+    .chip:hover { color: var(--fg); }
+    .chip.on { border-color: var(--sc, var(--accent)); color: #fff; background: color-mix(in srgb, var(--sc, var(--accent)) 18%, transparent); }
+    .chip .ct { font-family: var(--mono); font-size: 0.74rem; opacity: 0.8; }
+
+    /* 그리드 / 공간 섹션 */
+    .space-sec { margin-bottom: 30px; }
+    .space-sec-h { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line-soft); }
+    .space-sec-h .ic { font-size: 1.2rem; }
+    .space-sec-h h2 { font-size: 1.05rem; margin: 0; }
+    .space-sec-h .d { font-size: 0.78rem; color: var(--muted); }
+    .cluster-tag { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin: 14px 0 8px; }
+    .cards-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+
+    .acard { position: relative; background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: transform .15s, border-color .15s; }
+    .acard:hover { transform: translateY(-2px); border-color: var(--line); }
+    .acard .thumb { aspect-ratio: 16/9; background: #0a0a0e center/cover no-repeat; display: block; }
+    .acard .thumb.ph { display: grid; place-items: center; font-size: 1.8rem; color: var(--faint); background: linear-gradient(135deg, var(--bg-1), var(--bg-2)); }
+    .acard .body { padding: 11px 12px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .acard .kbadge { font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .acard .t { font-size: 0.9rem; font-weight: 600; line-height: 1.35; color: var(--fg); word-break: break-word; }
+    .acard .t a { color: inherit; text-decoration: none; }
+    .acard .t a:hover { text-decoration: underline; }
+    .acard .ess { font-size: 0.8rem; color: var(--fg-soft); line-height: 1.5; border-left: 2px solid var(--accent); padding-left: 8px; }
+    .acard .waiting { font-size: 0.76rem; color: var(--faint); font-style: italic; }
+    .acard .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: auto; }
+    .acard .tags i { font-style: normal; font-size: 0.68rem; color: var(--muted); background: rgba(255,255,255,.04); padding: 2px 7px; border-radius: 999px; }
+    .acard .acts { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
+    .acard:hover .acts { opacity: 1; }
+    .acard .acts button { width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-glass); backdrop-filter: blur(6px); color: var(--fg-soft); cursor: pointer; font-size: 0.8rem; line-height: 1; }
+    .acard .acts button:hover { color: #fff; border-color: var(--accent); }
+
+    .empty { text-align: center; color: var(--muted); padding: 50px 20px; border: 1px dashed var(--line); border-radius: 18px; }
+    .empty b { color: var(--fg-soft); }
+  </style>
+
+  <script>
+    import { SPACES, spaceOf, classify, listAssets, addAsset, updateAsset, removeAsset, cluster } from '../lib/assets.js';
+
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const KIND_ICON = { link: '🔗', video: '🎬', image: '🖼', note: '📝' };
+
+    let items = [];
+    let active = 'all';
+
+    function render() {
+      // 칩(공간 필터 + 개수)
+      const counts = {};
+      items.forEach((a) => { counts[a.space] = (counts[a.space] || 0) + 1; });
+      const chips = [`<button class="chip ${active === 'all' ? 'on' : ''}" data-s="all">전체 <span class="ct">${items.length}</span></button>`];
+      SPACES.forEach((s) => {
+        chips.push(`<button class="chip ${active === s.key ? 'on' : ''}" data-s="${s.key}" style="--sc:${s.color}">${s.icon} ${esc(s.name)} <span class="ct">${counts[s.key] || 0}</span></button>`);
+      });
+      $('chips').innerHTML = chips.join('');
+
+      // 정제 대기 배너
+      const pend = items.filter((a) => a.status === 'pending' || (!a.essence && !a.summary));
+      const pEl = $('pending');
+      if (pend.length) { pEl.hidden = false; $('pendingText').textContent = `요약 대기 ${pend.length}건 — 핵심 요약이 채워지길 기다리는 자료`; }
+      else pEl.hidden = true;
+
+      // 그리드
+      const spaces = active === 'all' ? SPACES.map((s) => s.key) : [active];
+      let html = '';
+      let shown = 0;
+      spaces.forEach((sk) => {
+        const list = items.filter((a) => a.space === sk);
+        if (!list.length) return;
+        shown += list.length;
+        const s = spaceOf(sk);
+        html += `<section class="space-sec"><div class="space-sec-h"><span class="ic">${s.icon}</span><h2>${esc(s.name)}</h2><span class="d">${esc(s.desc)}</span></div>`;
+        const clusters = cluster(list);
+        clusters.forEach((cl) => {
+          if (clusters.length > 1 && cl.list.length > 1) html += `<p class="cluster-tag">▸ ${esc(cl.key)} · ${cl.list.length}건</p>`;
+          html += '<div class="cards-row">' + cl.list.map(cardHTML).join('') + '</div>';
+        });
+        html += '</section>';
+      });
+      $('grid').innerHTML = shown ? html : `<div class="empty">아직 던진 자료가 없어요.<br><b>위에 링크나 메모를 던져보세요.</b> 자동으로 공간에 담깁니다.</div>`;
+    }
+
+    function cardHTML(a) {
+      const thumb = a.thumb
+        ? `<a class="thumb" style="background-image:url('${esc(a.thumb)}')" href="${esc(a.url || '#')}" target="_blank" rel="noopener" aria-label="열기"></a>`
+        : `<div class="thumb ph">${KIND_ICON[a.kind] || '📄'}</div>`;
+      const titleInner = a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.title || a.url)}</a>` : esc(a.title || a.note || '메모');
+      const ess = (a.essence || a.summary)
+        ? `<p class="ess">${esc(a.essence || a.summary)}</p>`
+        : (a.note ? `<p class="waiting">${esc(a.note).slice(0, 120)}</p>` : `<p class="waiting">요약 대기 — 정제 패스에서 핵심을 뽑아드려요</p>`);
+      const tags = (a.tags || []).slice(0, 4).map((t) => `<i>${esc(t)}</i>`).join('');
+      return `<article class="acard" data-id="${esc(a.id)}">
+        <div class="acts"><button data-act="move" title="공간 이동">↔</button><button data-act="del" title="삭제">✕</button></div>
+        ${thumb}
+        <div class="body">
+          <span class="kbadge">${KIND_ICON[a.kind] || '📄'} ${esc(a.kind)}</span>
+          <div class="t">${titleInner}</div>
+          ${ess}
+          <div class="tags">${tags}</div>
+        </div>
+      </article>`;
+    }
+
+    async function reload() { items = await listAssets(); render(); }
+
+    // ── 던지기 ──
+    async function throwIt() {
+      const val = $('dropInput').value.trim();
+      if (!val) { $('dropInput').focus(); return; }
+      const draft = classify(val);
+      await addAsset(draft);
+      $('dropInput').value = '';
+      try { (window.aramLog || (() => {}))('asset_add', { kind: draft.kind, space: draft.space }); } catch (_) {}
+      await reload();
+    }
+
+    async function throwImage(file) {
+      if (!file) return;
+      if (file.size > 1.6 * 1024 * 1024) { alert('이미지가 커요(1.6MB 초과). 지금 버전은 작은 이미지만 저장돼요 — 큰 파일 업로드는 다음 단계에서 붙일게요.'); return; }
+      const dataUrl = await new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file); });
+      const draft = classify(file.name, { kind: 'image', thumb: dataUrl, url: '', title: file.name });
+      draft.kind = 'image';
+      await addAsset(draft);
+      try { (window.aramLog || (() => {}))('asset_add', { kind: 'image', space: draft.space }); } catch (_) {}
+      await reload();
+    }
+
+    $('dropBtn').addEventListener('click', throwIt);
+    $('dropInput').addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') throwIt(); });
+    $('dropFile').addEventListener('change', (e) => throwImage(e.target.files[0]));
+
+    // 드래그&드롭
+    const drop = $('drop');
+    ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); if (ev === 'dragleave' && drop.contains(e.relatedTarget)) return; drop.classList.remove('drag'); }));
+    drop.addEventListener('drop', (e) => {
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith('image/')) throwImage(f);
+      else { const t = e.dataTransfer.getData('text'); if (t) { $('dropInput').value = t; throwIt(); } }
+    });
+
+    // 칩 필터
+    $('chips').addEventListener('click', (e) => { const b = e.target.closest('.chip'); if (!b) return; active = b.dataset.s; render(); });
+
+    // 카드 액션 (이동/삭제)
+    $('grid').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-act]'); if (!btn) return;
+      const id = btn.closest('.acard').dataset.id;
+      if (btn.dataset.act === 'del') { await removeAsset(id); await reload(); }
+      else if (btn.dataset.act === 'move') {
+        const cur = items.find((a) => String(a.id) === String(id));
+        const keys = SPACES.map((s) => s.key);
+        const next = keys[(keys.indexOf(cur.space) + 1) % keys.length];
+        await updateAsset(id, { space: next });
+        await reload();
+      }
+    });
+
+    // 정제 요청 — 요약 대기 자료를 JSON으로 복사(클로드에게 넘겨 요약 채우기)
+    $('distillBtn').addEventListener('click', async () => {
+      const pend = items.filter((a) => a.status === 'pending' || (!a.essence && !a.summary))
+        .map((a) => ({ id: a.id, kind: a.kind, url: a.url, title: a.title, note: a.note }));
+      try { await navigator.clipboard.writeText(JSON.stringify(pend, null, 2)); $('distillBtn').textContent = '복사됨 ✓ — 클로드에게 붙여넣기'; }
+      catch (_) { $('distillBtn').textContent = '복사 실패 — 콘솔 확인'; console.log(JSON.stringify(pend, null, 2)); }
+      setTimeout(() => { $('distillBtn').textContent = '정제 요청 (복사) ⧉'; }, 2600);
+    });
+
+    reload();
+  </script>
+</Base>
