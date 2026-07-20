@@ -1,158 +1,280 @@
 ---
+// 달력 — 그냥 보는 게 아니라 "말로 던지면 잡히는" 일정 도구.
+// 정적 사이트라 서버 없이: 자연어 → 날짜·시간 파싱 → 구글 캘린더 저장 링크(한 번 탭).
 import Base from '../layouts/Base.astro';
-import { cal, features, integrations, runModes, setup } from '../data/calendar.js';
 ---
-<Base title="달력 (Luxe Calendar)">
-  <section style="padding-top:80px">
+<Base title="달력">
+  <section style="padding-top:84px">
     <div class="wrap">
-      <p class="section-kicker">Calendar · 일정 · 예약 · 미팅 OS</p>
-      <h2>{cal.name} — <mark>{cal.ko}</mark></h2>
-      <p class="lead">{cal.intro}</p>
-      <p class="cal-stack"><span>스택</span> <code>{cal.stack}</code></p>
+      <p class="section-kicker">📅 달력 · 말하면 잡힌다</p>
+      <h1 class="cal-h1">일정, <mark>한 줄로 던지면</mark> 끝</h1>
+      <p class="cal-lead">
+        “내일 오후 3시 김대표 미팅”처럼 <b>그냥 편하게 한 줄</b> 치세요.
+        날짜·시간을 알아서 잡아, <b>구글 캘린더에 한 번 눌러 저장</b>합니다.
+      </p>
 
-      <!-- 구글 캘린더 실연동 (임베드) -->
-      <div class="block" id="google">
-        <h3 class="blk-h"><span class="blk-n">연동</span> 구글 캘린더 — 여기서 바로</h3>
-        <p class="blk-d">
-          사장님 구글 캘린더(본인 + 볼로냐·전시미팅·회의실·AIIA·Seongnam 프로젝트 캘린더)를
-          <b>모두 합쳐</b> 이 화면에 박아뒀습니다. 아래에 오늘 일정이 그대로 보이면 연동된 겁니다.
-        </p>
+      <!-- ⚡ 빠른 일정 추가 -->
+      <div class="qa">
+        <div class="qa-inbox">
+          <input id="qaInput" type="text" autocomplete="off"
+            placeholder="예: 내일 오후 3시 김대표 미팅" aria-label="일정 입력" />
+          <button id="qaGo" type="button" class="qa-go">잡기</button>
+        </div>
+
+        <div class="qa-ex">
+          <span>눌러서 예시:</span>
+          <button type="button" class="qa-chip">내일 오후 3시 김대표 미팅</button>
+          <button type="button" class="qa-chip">금요일 12시 반 점심 약속</button>
+          <button type="button" class="qa-chip">7월 25일 종일 워크숍</button>
+          <button type="button" class="qa-chip">오늘 저녁 7시~9시 회식</button>
+        </div>
+
+        <!-- 인식 결과 카드 -->
+        <div id="qaCard" class="qa-card" hidden>
+          <div class="qa-card-body">
+            <p class="qa-when" id="qaWhen">—</p>
+            <p class="qa-title" id="qaTitle">—</p>
+          </div>
+          <div class="qa-actions">
+            <a id="qaSave" class="qa-save" target="_blank" rel="noopener">📅 구글 캘린더에 저장</a>
+            <p class="qa-hint">버튼을 누르면 구글 캘린더가 <b>미리 채워진 채</b> 열립니다. “저장”만 누르면 끝.</p>
+          </div>
+        </div>
+        <p id="qaErr" class="qa-err" hidden></p>
+
+        <p class="qa-tel">💬 아니면 <b>텔레그램에 그냥 던지세요</b> — 날짜·시간 있는 약속이면 제가 바로 캘린더에 넣어드립니다.</p>
+      </div>
+
+      <!-- 내 일정 보기 (구글 캘린더 통합) -->
+      <div class="cal-see">
+        <div class="cal-see-head">
+          <h2>내 일정 한눈에</h2>
+          <a class="cal-open" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener">구글에서 열기 ↗</a>
+        </div>
         <div class="gcal-wrap">
           <iframe
             title="구글 캘린더 (통합)"
             src="https://calendar.google.com/calendar/embed?ctz=Asia%2FSeoul&mode=WEEK&wkst=2&showTitle=0&showPrint=0&showTz=0&src=hyun%40aramhuvis.com&src=c_7896bcef6802c9f6262d15f5f14ecec437e192103854ce304586b1bc176ebea5%40group.calendar.google.com&src=c_186292f4af3265ed4e4f541283b1cc30f4aac8dad74559d443f62ae1664a4a27%40group.calendar.google.com&src=c_e81ab5f59597cd678049eccef9bee70e4a43c7376d031d70e44964da42fadc8c%40group.calendar.google.com&src=c_322c21398b32c9aee8950b73ec82be7529569d71bb8d479150cdd2b8491de70c%40group.calendar.google.com&src=c_d3af50d1aa283259bb698c80f6f8b6153f21934795aa3bbd50c51a73d80568a4%40group.calendar.google.com&color=%23039BE5&color=%237CB342&color=%23F09300&color=%238E24AA&color=%23E67C73&color=%230B8043"
-            loading="lazy"
-            style="border:0"
-          ></iframe>
+            loading="lazy" style="border:0"></iframe>
         </div>
-        <p class="rule-note">
-          🔑 일정이 안 보이면 이 브라우저에 <b>hyun@aramhuvis.com 구글 계정으로 로그인</b>돼 있는지 확인하세요
-          (비공개 캘린더라 로그인해야 사장님 일정이 뜹니다).
-          <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener">→ 구글 캘린더 전체 열기</a>
+        <p class="cal-note">🔑 일정이 안 보이면 이 브라우저에 <b>hyun@aramhuvis.com</b> 구글 계정으로 로그인만 하면 됩니다.</p>
+      </div>
+
+      <details class="cal-more">
+        <summary>이 달력의 “진짜 앱”(예약링크·미팅조율·알림)이 궁금하면 →</summary>
+        <p>
+          위 도구는 아라미러 안에서 바로 쓰는 <b>빠른 추가 + 보기</b>입니다.
+          예약 링크(남이 내 빈 시간 예약)·미팅 자동 조율·웹푸시 알림 같은 풀 기능은
+          사장님이 개발한 <b>Luxe Calendar</b>(Next.js·Electron PC앱)에 있고,
+          그건 서버가 필요해 내 PC에서 돌립니다. 실제 코드: <code>Project/Calender</code>.
         </p>
-      </div>
-
-      <!-- 핵심 기능 -->
-      <div class="block" id="features">
-        <h3 class="blk-h"><span class="blk-n">기능</span> 다섯 가지</h3>
-        <p class="blk-d">앱의 상단 탭이 곧 기능이다. 일정만 보는 달력이 아니라 예약·미팅까지 조율한다.</p>
-        <div class="cal-grid">
-          {features.map((f) => (
-            <div class="cal-card">
-              <span class="cal-n">{f.n}</span>
-              <h4>{f.t}</h4>
-              <p>{f.d}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- 뒤에서 도는 연동 -->
-      <div class="block" id="integrations">
-        <h3 class="blk-h"><span class="blk-n">연동</span> 뒤에서 자동으로</h3>
-        <p class="blk-d">화면 뒤에서 구글·알림·메일이 자동으로 돈다.</p>
-        <div class="cal-int">
-          {integrations.map((it) => (
-            <div class="cal-introw">
-              <b>{it.t}</b>
-              <span>{it.d}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- 실행 방식 -->
-      <div class="block" id="run">
-        <h3 class="blk-h"><span class="blk-n">실행</span> 두 가지 방식</h3>
-        <p class="blk-d">셸 봇과 같은 구조 — 웹(개발 서버)과 PC 앱(Electron), 둘 다 한 레포에 들어있다. 실제 코드: <code>Project/Calender</code>.</p>
-        <div class="cal-modes">
-          {runModes.map((m) => (
-            <div class="cal-mode">
-              <div class="cal-mode-top">
-                <span class="cal-k">방식 {m.key}</span><h4>{m.name}</h4>
-                <span class="cal-tag">{m.tag}</span>
-              </div>
-              <p class="cal-how">{m.how}</p>
-              <ul class="cal-kv">
-                <li><span>실행 위치</span><b>{m.where}</b></li>
-                <li><span>필요한 것</span><b>{m.need}</b></li>
-                <li><span>명령·파일</span><b><code>{m.files}</code></b></li>
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- 설정 -->
-      <div class="block" id="setup">
-        <h3 class="blk-h"><span class="blk-n">설정</span> 처음 한 번 (사장님 몫)</h3>
-        <p class="blk-d">구글·DB·메일 키는 민감값이라 코드로 못 넣는다. 아래만 한 번 채우면 굴러간다.</p>
-        <ol class="cal-steps">
-          {setup.map((s) => (<li>{s}</li>))}
-        </ol>
-        <p class="rule-note">🟡 이 앱은 서버·로그인·DB가 필요한 동적 앱이라, 정적 라이브(GitHub Pages)엔 통째로 올리지 않는다. 위 방식으로 내 PC에서 돌린다.</p>
-        <p class="setup-link"><a href="/m/calendar-app">→ 지도에서 이 앱 상세 보기</a></p>
-      </div>
+      </details>
     </div>
   </section>
 
+  <script>
+    // ── 자연어 → 날짜·시간 파서 (한국어) ────────────────────────
+    const $ = (id) => document.getElementById(id);
+    const input = $('qaInput'), card = $('qaCard'), err = $('qaErr');
+    const pad = (n) => String(n).padStart(2, '0');
+    const WD = ['일','월','화','수','목','금','토'];
+
+    function parse(raw) {
+      let t = ' ' + raw.trim() + ' ';
+      const now = new Date();
+      let base = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      let dateSet = false, allDay = true;
+      let startH = 9, startM = 0, endH = null, endM = null;
+
+      // 상대 날짜
+      const rel = [['그글피',4],['글피',3],['모레',2],['내일',1],['오늘',0]];
+      for (const [w,d] of rel) { if (t.includes(w)) { base.setDate(base.getDate()+d); dateSet=true; t=t.replace(w,' '); break; } }
+
+      // 다음주/이번주 + 요일
+      let weekOffset = 0;
+      if (t.includes('다음주') || t.includes('담주')) { weekOffset = 7; t=t.replace(/다음주|담주/,' '); }
+      else if (t.includes('이번주')) { t=t.replace('이번주',' '); }
+      const wdM = t.match(/([일월화수목금토])\s*요일|([월화수목금토일])요/);
+      if (wdM) {
+        const ch = (wdM[1]||wdM[2]);
+        const target = WD.indexOf(ch);
+        if (target >= 0) {
+          let diff = (target - base.getDay() + 7) % 7;
+          if (diff === 0 && !t.includes('오늘')) diff = 7; // "금요일"은 다가오는 금요일
+          base.setDate(base.getDate() + diff + weekOffset);
+          dateSet = true;
+        }
+        t = t.replace(/[일월화수목금토]\s*요일|[월화수목금토일]요/,' ');
+      }
+
+      // N월 N일
+      const md = t.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일?/);
+      if (md) {
+        let mo = +md[1]-1, dy = +md[2];
+        let y = now.getFullYear();
+        let cand = new Date(y, mo, dy);
+        if (cand < new Date(now.getFullYear(), now.getMonth(), now.getDate())) cand = new Date(y+1, mo, dy);
+        base = cand; dateSet = true; t = t.replace(md[0],' ');
+      } else {
+        // N일 (이번달/다음달)
+        const dm = t.match(/(?:^|\s)(\d{1,2})\s*일(?!정|\s*간)/);
+        if (dm && !dateSet) {
+          let dy = +dm[1]; let cand = new Date(now.getFullYear(), now.getMonth(), dy);
+          if (cand < new Date(now.getFullYear(), now.getMonth(), now.getDate())) cand = new Date(now.getFullYear(), now.getMonth()+1, dy);
+          base = cand; dateSet = true; t = t.replace(dm[0],' ');
+        }
+      }
+
+      // 오전/오후/저녁/아침/점심 힌트
+      let ampm = null;
+      if (/오후|저녁|밤|낮/.test(t)) ampm = 'pm';
+      if (/오전|아침|새벽/.test(t)) ampm = 'am';
+      if (/점심/.test(t) && !/\d/.test(t)) { startH = 12; startM = 0; allDay = false; }
+      t = t.replace(/오전|오후|저녁|밤|낮|아침|새벽/g,' ');
+
+      // 시간 범위:  A시(반|M분)? ~|부터 B시(반|M분)?
+      const range = t.match(/(\d{1,2})\s*시(?:\s*(반|\d{1,2})\s*분?)?\s*(?:~|-|부터|에서)\s*(\d{1,2})\s*시(?:\s*(반|\d{1,2})\s*분?)?/);
+      const single = t.match(/(\d{1,2})\s*시(?:\s*(반|\d{1,2})\s*분?)?/);
+      const toMin = (v) => v === '반' ? 30 : (v ? +v : 0);
+      if (range) {
+        startH = +range[1]; startM = toMin(range[2]); endH = +range[3]; endM = toMin(range[4]);
+        allDay = false; t = t.replace(range[0],' ');
+      } else if (single) {
+        startH = +single[1]; startM = toMin(single[2]); allDay = false; t = t.replace(single[0],' ');
+      }
+      // 오전/오후 보정
+      if (!allDay && ampm === 'pm' && startH < 12) startH += 12;
+      if (!allDay && ampm === 'pm' && endH !== null && endH < 12) endH += 12;
+      if (!allDay && ampm === 'am' && startH === 12) startH = 0;
+      if (/종일|하루종일|온종일/.test(raw)) allDay = true;
+      t = t.replace(/종일|하루종일|온종일/g,' ');
+
+      // 제목 = 남은 텍스트 정리
+      let title = t.replace(/\s+/g,' ').replace(/[~\-]/g,' ').trim();
+      title = title.replace(/^(에|에서|,|\.)\s*/,'').trim();
+      if (!title) title = '일정';
+
+      // 종료시간 기본값
+      if (!allDay && endH === null) {
+        let e = new Date(base); e.setHours(startH, startM + 60, 0, 0);
+        endH = e.getHours(); endM = e.getMinutes();
+        if (e.getDate() !== base.getDate()) { endH = 23; endM = 59; }
+      }
+
+      return { base, allDay, startH, startM, endH, endM, title, dateSet };
+    }
+
+    function gcalUrl(p) {
+      const d = p.base;
+      const ymd = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+      let dates;
+      if (p.allDay) {
+        const e = new Date(d); e.setDate(e.getDate()+1);
+        const ymd2 = `${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}`;
+        dates = `${ymd}/${ymd2}`;
+      } else {
+        dates = `${ymd}T${pad(p.startH)}${pad(p.startM)}00/${ymd}T${pad(p.endH)}${pad(p.endM)}00`;
+      }
+      const u = new URL('https://calendar.google.com/calendar/render');
+      u.searchParams.set('action','TEMPLATE');
+      u.searchParams.set('text', p.title);
+      u.searchParams.set('dates', dates);
+      u.searchParams.set('ctz','Asia/Seoul');
+      return u.toString();
+    }
+
+    function whenLabel(p) {
+      const d = p.base;
+      const dstr = `${d.getMonth()+1}월 ${d.getDate()}일 (${WD[d.getDay()]})`;
+      if (p.allDay) return `${dstr} · 종일`;
+      const ap = (h) => h < 12 ? '오전' : '오후';
+      const h12 = (h) => { const x = h%12; return x===0?12:x; };
+      const s = `${ap(p.startH)} ${h12(p.startH)}시${p.startM?' '+p.startM+'분':''}`;
+      const e = `${ap(p.endH)} ${h12(p.endH)}시${p.endM?' '+p.endM+'분':''}`;
+      return `${dstr} · ${s} ~ ${e}`;
+    }
+
+    function run() {
+      const v = input.value.trim();
+      err.hidden = true; card.hidden = true;
+      if (!v) { input.focus(); return; }
+      const p = parse(v);
+      if (!p.dateSet && p.allDay && p.title === '일정') {
+        err.hidden = false; err.textContent = '날짜나 내용을 못 알아들었어요. 예: “내일 3시 회의”처럼 써보세요.';
+        return;
+      }
+      $('qaWhen').textContent = whenLabel(p);
+      $('qaTitle').textContent = p.title;
+      $('qaSave').href = gcalUrl(p);
+      card.hidden = false;
+      card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }
+
+    $('qaGo').addEventListener('click', run);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') run(); });
+    document.querySelectorAll('.qa-chip').forEach((c) =>
+      c.addEventListener('click', () => { input.value = c.textContent; run(); }));
+  </script>
+
   <style>
-    .cal-stack { color: var(--muted); font-size: 0.9rem; margin: 8px 0 6px; }
-    .cal-stack span { color: var(--fg-soft); font-weight: 600; }
-    .cal-stack code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-soft);
-      border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 8px; }
+    .cal-h1 { font-size: clamp(2rem, 5.5vw, 3rem); font-weight: 800; letter-spacing: -0.04em; margin: 6px 0 14px; line-height: 1.1; }
+    .cal-lead { color: var(--fg-soft); font-size: 1.1rem; line-height: 1.7; max-width: 640px; margin: 0 0 30px; }
+    .cal-lead b { color: var(--fg); }
 
-    .gcal-wrap { position: relative; width: 100%; border: 1px solid var(--line); border-radius: var(--radius);
-      overflow: hidden; background: #fff; }
+    /* 빠른 추가 */
+    .qa { border: 1px solid var(--line); border-radius: 22px; padding: 26px; background: var(--bg-1); }
+    .qa-inbox { display: flex; gap: 10px; }
+    .qa-inbox input { flex: 1; font: inherit; font-size: 1.12rem; padding: 16px 18px; border-radius: 14px;
+      border: 1px solid var(--line); background: var(--bg-2); color: var(--fg); }
+    .qa-inbox input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .qa-go { font: inherit; font-size: 1.08rem; font-weight: 800; color: #fff; cursor: pointer;
+      background: var(--accent); border: 0; border-radius: 14px; padding: 0 26px; white-space: nowrap;
+      transition: transform .12s; }
+    .qa-go:hover { transform: translateY(-1px); }
+
+    .qa-ex { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+    .qa-ex > span { font-size: 0.84rem; color: var(--muted); margin-right: 2px; }
+    .qa-chip { font: inherit; font-size: 0.86rem; color: var(--fg-soft); background: var(--bg-2);
+      border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: border-color .15s, color .15s; }
+    .qa-chip:hover { border-color: var(--accent); color: var(--fg); }
+
+    .qa-card { margin-top: 20px; border: 1px solid var(--accent); border-radius: 16px; overflow: hidden;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 20px 22px; background: var(--accent-soft); }
+    .qa-card[hidden] { display: none; }
+    .qa-when { font-family: var(--mono); font-size: 0.9rem; color: var(--accent); margin: 0 0 6px; font-weight: 600; }
+    .qa-title { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; color: var(--fg); }
+    .qa-actions { text-align: right; }
+    .qa-save { display: inline-block; font-size: 1.02rem; font-weight: 800; color: #fff; background: var(--accent);
+      border-radius: 12px; padding: 13px 22px; text-decoration: none; transition: transform .12s; }
+    .qa-save:hover { transform: translateY(-1px); }
+    .qa-hint { font-size: 0.8rem; color: var(--muted); margin: 8px 0 0; max-width: 260px; }
+    .qa-err { margin: 16px 0 0; color: #ff8a8a; font-size: 0.92rem; }
+    .qa-tel { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--line-soft);
+      color: var(--fg-soft); font-size: 0.94rem; line-height: 1.6; }
+    .qa-tel b { color: var(--fg); }
+
+    /* 일정 보기 */
+    .cal-see { margin-top: 40px; }
+    .cal-see-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .cal-see-head h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; margin: 0; }
+    .cal-open { font-size: 0.9rem; color: var(--fg-soft); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+    .gcal-wrap { width: 100%; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #fff; }
     .gcal-wrap iframe { display: block; width: 100%; height: 620px; }
-    .rule-note a { color: var(--fg); text-decoration: underline; margin-left: 6px; }
-    @media (max-width: 720px) { .gcal-wrap iframe { height: 500px; } }
+    .cal-note { color: var(--muted); font-size: 0.86rem; margin: 12px 0 0; }
 
-    .block { border-top: 1px solid var(--line); padding: 30px 0; }
-    .blk-h { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
-    .blk-n { font-family: var(--mono); color: var(--muted); margin-right: 8px; font-size: 0.9rem; }
-    .blk-d { color: var(--fg-soft); margin: 0 0 20px; line-height: 1.6; }
-    .blk-d code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-soft); padding: 2px 6px; border-radius: 6px; }
+    .cal-more { margin: 34px 0 20px; border-top: 1px solid var(--line-soft); padding-top: 18px; }
+    .cal-more summary { cursor: pointer; color: var(--fg-soft); font-size: 0.92rem; }
+    .cal-more p { color: var(--fg-soft); font-size: 0.92rem; line-height: 1.7; margin: 12px 0 0; }
+    .cal-more code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-soft); padding: 2px 6px; border-radius: 6px; }
 
-    .cal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .cal-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; background: var(--bg-2); }
-    .cal-n { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); }
-    .cal-card h4 { margin: 8px 0 6px; font-size: 1.02rem; letter-spacing: -0.02em; }
-    .cal-card p { margin: 0; color: var(--fg-soft); font-size: 0.9rem; line-height: 1.6; }
-
-    .cal-int { display: flex; flex-direction: column; gap: 2px; }
-    .cal-introw { display: grid; grid-template-columns: 160px 1fr; gap: 16px; align-items: baseline;
-      padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
-    .cal-introw b { font-size: 0.96rem; }
-    .cal-introw span { color: var(--fg-soft); font-size: 0.9rem; line-height: 1.55; }
-
-    .cal-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .cal-mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
-    .cal-mode-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-    .cal-k { font-family: var(--mono); font-size: 0.72rem; color: var(--bg); background: var(--fg);
-      padding: 3px 9px; border-radius: 999px; }
-    .cal-mode-top h4 { margin: 0; font-size: 1.05rem; }
-    .cal-tag { margin-left: auto; font-size: 0.7rem; color: var(--muted); border: 1px solid var(--line);
-      border-radius: 999px; padding: 2px 9px; }
-    .cal-how { color: var(--fg-soft); font-size: 0.9rem; line-height: 1.55; margin: 0 0 14px; }
-    .cal-kv { list-style: none; padding: 0; margin: 0; }
-    .cal-kv li { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0;
-      border-bottom: 1px solid var(--line-soft); font-size: 0.9rem; }
-    .cal-kv li span { color: var(--muted); white-space: nowrap; }
-    .cal-kv li b { text-align: right; }
-    .cal-kv li code { font-family: var(--mono); font-size: 0.82em; }
-
-    .cal-steps { margin: 0; padding-left: 20px; line-height: 1.85; color: var(--fg-soft); }
-    .cal-steps li { margin-bottom: 4px; }
-    .rule-note { color: var(--muted); font-size: 0.85rem; margin: 18px 0 0; line-height: 1.6;
-      border-left: 2px solid var(--line); padding-left: 12px; }
-    .setup-link { margin-top: 18px; }
-    .setup-link a { color: var(--fg); text-decoration: underline; }
-
-    @media (max-width: 720px) {
-      .cal-grid { grid-template-columns: 1fr; }
-      .cal-modes { grid-template-columns: 1fr; }
-      .cal-introw { grid-template-columns: 1fr; gap: 4px; }
+    @media (max-width: 640px) {
+      .qa-inbox { flex-direction: column; }
+      .qa-go { padding: 14px; }
+      .qa-card { flex-direction: column; align-items: stretch; }
+      .qa-actions { text-align: left; }
+      .qa-hint { max-width: none; }
+      .gcal-wrap iframe { height: 500px; }
     }
   </style>
 </Base>
