@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+
+// 📚 책장(Shelf) — 텔레그램에 아무거나 던지면 규칙대로 자동 분류되는 라우팅 지도.
+// 사장님 지시(2026-07-20): "내가 던지는 걸 책장 분류하듯 정리해줘. 항상."
+// 실제 라우팅은 프로젝트 루트 CLAUDE.md + vault/ 폴더가 담당. 이 페이지는 그 구조의 '거울'.
+
+const shelves = [
+  { icon: '🗓', label: '약속 · 마감', in: '날짜 · 시간이 있는 일', to: '구글 캘린더', note: '마감 있으면 할 일에도 같이 올림', color: '#5a6fd0' },
+  { icon: '✅', label: '할 일', in: '날짜 없는 해야 할 일', to: 'todos.md', note: '"~했음" 하면 [x] 처리', color: '#2fa15a' },
+  { icon: '📎', label: '링크 · 영상', in: '유튜브 · 웹 아티클', to: 'vault/clips/', note: '자막·본문 긁어 요약+원자노트', color: '#e0a217' },
+  { icon: '🧠', label: '기억할 신호', in: '개인 메모 · 아이디어', to: 'vault/inbox.md', note: '#주제 태그 붙여 저장', color: '#c0559b' },
+  { icon: '🖼', label: '이미지 · PDF', in: '첨부 파일', to: '내용 따라 분류 ★', note: '형식이 아니라 내용물이 목적지', color: '#4aa3c0' },
+  { icon: '🗂', label: '주간 리뷰', in: '매주 일요일 자동', to: 'vault/weekly/', note: '지난 7일 inbox → 3불릿 요약', color: '#8a7fd0' },
+];
+
+const attach = [
+  ['스샷 속에 약속이 있으면', '→ 캘린더'],
+  ['스샷 속에 마감이 있으면', '→ 할 일 + 캘린더'],
+  ['읽을 자료면', '→ 인사이트 추출해 참고 저장'],
+  ['맘·영수증이면', '→ 한 문단으로 참고 저장'],
+];
+---
+<Base title="책장">
+  <section style="padding-top:80px">
+    <div class="wrap" style="max-width:860px">
+      <p class="section-kicker">📚 Shelf · 던지면 알아서 꽂히는 책장</p>
+      <h2>아무거나 던지세요. 제가 분류합니다.</h2>
+      <p class="lead">
+        "이거 어디에 정리하지?" 고민할 필요 없어요. 텔레그램에 <b>그냥 던지면</b>
+        아래 규칙대로 알맞은 칸에 자동으로 꽂힙니다. <b>항상.</b>
+      </p>
+
+      <div class="throw">
+        <span class="throw-in">📱 텔레그램에 아무거나 던짐</span>
+        <span class="throw-arrow">↓ &nbsp;CLAUDE.md 규칙이 판단</span>
+      </div>
+
+      <div class="grid">
+        {shelves.map((s) => (
+          <div class="book" style={`--c:${s.color}`}>
+            <div class="book-top">
+              <span class="book-icon">{s.icon}</span>
+              <span class="book-label">{s.label}</span>
+            </div>
+            <p class="book-in">{s.in}</p>
+            <p class="book-to">{s.to}</p>
+            <p class="book-note">{s.note}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="grp">★ 첨부는 형식이 아니라 내용물이 목적지를 정한다</h3>
+      <p class="mini">컨테이너(스샷·PDF)가 아니라 그 안에 든 내용이 어디로 갈지 결정합니다.</p>
+      <div class="attach">
+        {attach.map(([a, b]) => (
+          <div class="att-row"><span>{a}</span><b>{b}</b></div>
+        ))}
+      </div>
+
+      <div class="rhythm">
+        <div class="r-card"><span class="r-when">매일 아침</span><span class="r-what">모닝 브리핑 — 일정 + 투두 + 프로젝트 진척</span></div>
+        <div class="r-card"><span class="r-when">매주 일요일</span><span class="r-what">주간 리뷰 — 지난 7일 inbox를 3불릿으로 요약</span></div>
+      </div>
+
+      <p class="foot">
+        이 라우팅은 코드가 아니라 <b>규칙 문서(CLAUDE.md)</b>입니다.
+        "○○도 처리해줘"는 파서 짜는 게 아니라 규칙 한 줄 추가로 끝나요. 그래서 책장은 계속 늘어납니다.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .throw { display:flex; flex-direction:column; align-items:center; gap:8px; margin:30px 0 26px; text-align:center; }
+    .throw-in { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:11px 22px; font-weight:700; background:var(--bg-card); }
+    .throw-arrow { color:var(--muted); font-size:0.9rem; }
+
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .book {
+      border:1px solid var(--line); border-left:3px solid var(--c); border-radius:12px;
+      background:var(--bg-card); padding:16px 16px 15px; transition:border-color .15s, transform .15s;
+    }
+    .book:hover { border-color:var(--c); transform:translateY(-2px); }
+    .book-top { display:flex; align-items:center; gap:9px; }
+    .book-icon { font-size:1.25rem; }
+    .book-label { font-weight:700; letter-spacing:-0.01em; }
+    .book-in { color:var(--muted); font-size:0.86rem; margin:10px 0 0; }
+    .book-to { font-weight:700; color:var(--c); font-size:0.95rem; margin:8px 0 0; font-variant-numeric:tabular-nums; }
+    .book-note { color:var(--fg-soft); font-size:0.82rem; margin:5px 0 0; line-height:1.5; }
+
+    .grp { margin:44px 0 10px; font-size:1.08rem; letter-spacing:-0.02em; }
+    .mini { color:var(--muted); font-size:0.9rem; margin:-2px 0 14px; }
+    .attach { display:flex; flex-direction:column; gap:8px; }
+    .att-row { display:flex; justify-content:space-between; gap:12px; border:1px solid var(--line); border-radius:10px; padding:12px 16px; background:var(--bg-card); }
+    .att-row span { color:var(--fg-soft); }
+    .att-row b { color:var(--fg); white-space:nowrap; }
+
+    .rhythm { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:34px 0 0; }
+    .r-card { border:1px solid var(--line); border-radius:12px; padding:16px 18px; background:var(--bg-card); }
+    .r-when { display:block; font-weight:700; color:var(--fg); }
+    .r-what { display:block; color:var(--muted); font-size:0.88rem; margin-top:6px; line-height:1.5; }
+
+    .foot { margin:32px 0 0; padding:18px 20px; border:1px dashed var(--line); border-radius:12px; color:var(--fg-soft); line-height:1.7; font-size:0.92rem; }
+
+    @media (max-width:720px) {
+      .grid { grid-template-columns:1fr 1fr; }
+      .rhythm { grid-template-columns:1fr; }
+    }
+    @media (max-width:460px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</Base>
