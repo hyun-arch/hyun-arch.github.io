@@ -310,7 +310,7 @@
     document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});
     var p=t.getAttribute('data-p');
     document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('on',x.id===p)});
-    if(p==='rooms' && !roomLoaded){ loadRoom('/order/','📋 기획주문서'); roomLoaded=true; }
+    if(p==='rooms' && !roomLoaded){ loadRoom('/order/index.html','📋 기획주문서'); roomLoaded=true; }
     window.scrollTo({top:0,behavior:'smooth'});
   });
 
