@@ -10,6 +10,28 @@ import { cal, features, integrations, runModes, setup } from '../data/calendar.j
       <p class="lead">{cal.intro}</p>
       <p class="cal-stack"><span>스택</span> <code>{cal.stack}</code></p>
 
+      <!-- 구글 캘린더 실연동 (임베드) -->
+      <div class="block" id="google">
+        <h3 class="blk-h"><span class="blk-n">연동</span> 구글 캘린더 — 여기서 바로</h3>
+        <p class="blk-d">
+          사장님 구글 캘린더(본인 + 볼로냐·전시미팅·회의실·AIIA·Seongnam 프로젝트 캘린더)를
+          <b>모두 합쳐</b> 이 화면에 박아뒀습니다. 아래에 오늘 일정이 그대로 보이면 연동된 겁니다.
+        </p>
+        <div class="gcal-wrap">
+          <iframe
+            title="구글 캘린더 (통합)"
+            src="https://calendar.google.com/calendar/embed?ctz=Asia%2FSeoul&mode=WEEK&wkst=2&showTitle=0&showPrint=0&showTz=0&src=hyun%40aramhuvis.com&src=c_7896bcef6802c9f6262d15f5f14ecec437e192103854ce304586b1bc176ebea5%40group.calendar.google.com&src=c_186292f4af3265ed4e4f541283b1cc30f4aac8dad74559d443f62ae1664a4a27%40group.calendar.google.com&src=c_e81ab5f59597cd678049eccef9bee70e4a43c7376d031d70e44964da42fadc8c%40group.calendar.google.com&src=c_322c21398b32c9aee8950b73ec82be7529569d71bb8d479150cdd2b8491de70c%40group.calendar.google.com&src=c_d3af50d1aa283259bb698c80f6f8b6153f21934795aa3bbd50c51a73d80568a4%40group.calendar.google.com&color=%23039BE5&color=%237CB342&color=%23F09300&color=%238E24AA&color=%23E67C73&color=%230B8043"
+            loading="lazy"
+            style="border:0"
+          ></iframe>
+        </div>
+        <p class="rule-note">
+          🔑 일정이 안 보이면 이 브라우저에 <b>hyun@aramhuvis.com 구글 계정으로 로그인</b>돼 있는지 확인하세요
+          (비공개 캘린더라 로그인해야 사장님 일정이 뜹니다).
+          <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener">→ 구글 캘린더 전체 열기</a>
+        </p>
+      </div>
+
       <!-- 핵심 기능 -->
       <div class="block" id="features">
         <h3 class="blk-h"><span class="blk-n">기능</span> 다섯 가지</h3>
@@ -79,6 +101,12 @@ import { cal, features, integrations, runModes, setup } from '../data/calendar.j
     .cal-stack span { color: var(--fg-soft); font-weight: 600; }
     .cal-stack code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-soft);
       border: 1px solid var(--line-soft); border-radius: 6px; padding: 2px 8px; }
+
+    .gcal-wrap { position: relative; width: 100%; border: 1px solid var(--line); border-radius: var(--radius);
+      overflow: hidden; background: #fff; }
+    .gcal-wrap iframe { display: block; width: 100%; height: 620px; }
+    .rule-note a { color: var(--fg); text-decoration: underline; margin-left: 6px; }
+    @media (max-width: 720px) { .gcal-wrap iframe { height: 500px; } }
 
     .block { border-top: 1px solid var(--line); padding: 30px 0; }
     .blk-h { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
