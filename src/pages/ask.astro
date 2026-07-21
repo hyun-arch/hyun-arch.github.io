@@ -1,59 +1,56 @@
 ---
 import Base from '../layouts/Base.astro';
-
-// 되묻는 멘토 — Aramirror의 심장.
-// AI는 답을 대신 주지 않는다. 되물어서, 사장님 안의 생각을 밖으로 꺼낸다.
-// 5개 렌즈: 근거 · 반대 · 전제 · 확장 · 실행
-const lenses = [
-  { key: 'why',    label: '근거',  sub: '왜?',     color: '#ff6a3d' },
-  { key: 'oppose', label: '반대',  sub: '정말?',   color: '#ff4d6d' },
-  { key: 'assume', label: '전제',  sub: '당연히?', color: '#ffb457' },
-  { key: 'expand', label: '확장',  sub: '그러면?', color: '#7db4ff' },
-  { key: 'act',    label: '실행',  sub: '그래서?', color: '#6ee7a8' },
-];
+// 되묻기 멘토 — 던지면 ①따뜻한 한마디 ②이득 관점 분석 ③날카로운 되묻기 를 돌려준다.
+// 정적 페이지라 즉석 분석은 의도 감지 + 템플릿. 더 깊은 분석은 텔레그램(봇=나)으로 이어진다.
 ---
 <Base title="되묻기 · 멘토">
-  <section style="padding-top:88px; padding-bottom:40px">
-    <div class="wrap ask-wrap">
-      <p style="margin-bottom:14px">
-        <a href="/mirror" style="color:var(--muted);text-decoration:none;font-size:0.9rem">← 전체 지도</a>
+  <section class="ask-hero">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>되묻기 멘토 · Your Mentor</p>
+      <h1 data-reveal="60">던지면, <mark>이득이 되는 답</mark>을 돌려드려요</h1>
+      <p class="ask-sub" data-reveal="120">
+        고민·아이디어·감정, 뭐든 편하게 던지세요. 사장님한테 <b>정말 도움이 되는 관점</b>으로
+        — 기회·조심할 점·본질·다음 한 걸음까지 — 정리해 돌려드립니다.
       </p>
-      <p class="section-kicker" data-reveal>The Mentor</p>
-      <h2 data-reveal="60">되묻기</h2>
-      <p class="lead" data-reveal="120">
-        생각을 던지면 답을 주지 않는다. <strong>되묻는다.</strong>
-        다섯 방향(근거·반대·전제·확장·실행)에서 질문이 돌아온다.
-        그 질문에 사장님이 답하면서 — 생각이 사장님 밖으로 꺼내지고, 단단해진다.
-      </p>
+    </div>
+  </section>
 
-      <!-- 입력: 마찰 0 -->
-      <div class="throw" data-reveal="160">
+  <section class="ask-main">
+    <div class="wrap ask-wrap">
+      <!-- 오늘의 좋은 말 -->
+      <div class="word" data-reveal>
+        <div class="word-top">
+          <span class="word-badge">☀️ 오늘의 한 마디</span>
+          <button id="wordNew" class="word-refresh" type="button">다른 말 →</button>
+        </div>
+        <p id="wordText" class="word-text">—</p>
+      </div>
+
+      <!-- 던지기 -->
+      <div class="throw" data-reveal="80">
         <textarea id="thought" rows="3"
-          placeholder="지금 떠오른 생각을 그대로 던지세요. 정리 안 해도 돼요.&#10;예) 이번 워크샵을 해커톤으로 바꿀까 고민 중이다."></textarea>
+          placeholder="지금 떠오른 걸 그대로 던지세요. 정리 안 해도 돼요.&#10;예) 이번 워크샵을 해커톤으로 바꿀까 고민 중이다."></textarea>
         <div class="throw-row">
-          <span class="hint" id="hint">Ctrl+Enter 로도 던질 수 있어요</span>
-          <button id="throwBtn" class="btn accent">되물어줘 →</button>
+          <span class="hint">Ctrl+Enter 로도 보낼 수 있어요</span>
+          <button id="throwBtn" class="btn accent">분석해줘 →</button>
         </div>
       </div>
 
-      <!-- 되묻기 결과 -->
+      <!-- 결과 -->
       <div id="answer" class="answer" hidden>
         <p class="echo">“<span id="echoText"></span>”</p>
-        <div class="lens-grid" id="lensGrid">
-          {lenses.map((l) => (
-            <div class="lens" data-lens={l.key} style={`--lc:${l.color}`}>
-              <div class="lens-head">
-                <span class="lens-badge">{l.label}</span>
-                <span class="lens-sub">{l.sub}</span>
-              </div>
-              <p class="lens-q"></p>
-            </div>
-          ))}
+        <p id="affirm" class="affirm"></p>
+        <div class="gain-grid" id="gainGrid"></div>
+        <div class="reask" id="reask">
+          <span class="reask-badge">🔎 스스로에게</span>
+          <p id="reaskQ"></p>
         </div>
         <div class="answer-actions">
-          <button id="saveBtn" class="btn-outline">생각DB에 저장 ↓</button>
+          <button id="saveBtn" class="btn-outline">💾 생각DB에 저장</button>
+          <a id="deepBtn" class="btn-ghost" href="#" >🚀 더 깊이 분석받기 (텔레그램)</a>
           <button id="reThrow" class="btn-ghost">다른 각도로 다시</button>
         </div>
+        <p class="deep-note">더 깊은 분석은 <b>텔레그램에 그대로 던지면</b> 제가 직접 읽고, 사장님 이득 중심으로 답해드려요.</p>
       </div>
     </div>
   </section>
@@ -63,254 +60,256 @@ const lenses = [
     <div class="wrap ask-wrap">
       <div class="db-head">
         <div>
-          <p class="section-kicker">My Thought DB</p>
-          <h3 style="margin:4px 0 0">생각DB <span id="dbCount" class="db-count">0</span></h3>
+          <p class="section-kicker">내 생각 서랍</p>
+          <h3>던진 생각 <span id="dbCount" class="db-count">0</span></h3>
         </div>
         <button id="clearDb" class="btn-ghost" hidden>전체 비우기</button>
       </div>
-      <p class="lead" style="margin-top:8px">
-        던진 생각은 이 기기에 그대로 쌓입니다. 출처는 곧 사장님입니다.
-      </p>
       <div id="dbList" class="db-list"></div>
-      <p id="dbEmpty" class="db-empty">아직 던진 생각이 없어요. 위에서 첫 생각을 던져보세요.</p>
+      <p id="dbEmpty" class="db-empty">아직 던진 생각이 없어요. 위에서 첫 생각을 던져보세요. 🌱</p>
     </div>
   </section>
 
   <style>
-    .ask-wrap { max-width: 860px; }
-    .throw {
-      margin-top: 26px; background: var(--bg-2); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 18px; transition: border-color .2s, box-shadow .2s;
-    }
+    .ask-hero { padding: 118px 0 26px; text-align: center; border-top: 0; }
+    .ask-hero h1 { font-size: clamp(2.1rem, 5.5vw, 3.1rem); font-weight: 800; letter-spacing: -0.04em;
+      line-height: 1.1; margin: 8px 0 18px; }
+    .ask-sub { max-width: 620px; margin: 0 auto; color: var(--fg-soft); font-size: 1.12rem; line-height: 1.7; }
+    .ask-sub b { color: var(--fg); }
+    .ask-main { padding: 20px 0 40px; border-top: 0; }
+    .ask-wrap { max-width: 800px; }
+
+    /* 오늘의 좋은 말 */
+    .word { border-radius: 20px; padding: 24px 26px; margin-bottom: 26px;
+      background: linear-gradient(135deg, rgba(255,180,87,0.16), rgba(255,106,61,0.10));
+      border: 1px solid rgba(242,98,47,0.22); }
+    .word-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .word-badge { font-size: 0.82rem; font-weight: 700; color: var(--accent); }
+    .word-refresh { background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.86rem; cursor: pointer; }
+    .word-refresh:hover { color: var(--accent); }
+    .word-text { margin: 0; font-size: 1.28rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.5; color: var(--fg); }
+
+    /* 던지기 */
+    .throw { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 18px; transition: border-color .2s, box-shadow .2s; box-shadow: var(--shadow-soft); }
     .throw:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
-    #thought {
-      width: 100%; background: transparent; border: 0; resize: vertical; color: var(--fg);
-      font: inherit; font-size: 1.05rem; line-height: 1.6; outline: none; min-height: 78px;
-    }
+    #thought { width: 100%; background: transparent; border: 0; resize: vertical; color: var(--fg);
+      font: inherit; font-size: 1.06rem; line-height: 1.6; outline: none; min-height: 76px; }
     #thought::placeholder { color: var(--faint); }
     .throw-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; gap: 12px; }
     .hint { color: var(--muted); font-size: 0.82rem; }
 
-    .btn-ghost {
-      background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.9rem;
-      cursor: pointer; padding: 8px 10px; border-radius: 10px;
-    }
-    .btn-ghost:hover { color: var(--fg); background: var(--bg-1); }
+    .btn-ghost { background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.9rem;
+      cursor: pointer; padding: 8px 12px; border-radius: 10px; text-decoration: none; }
+    .btn-ghost:hover { color: var(--accent); background: var(--accent-soft); }
 
-    .answer { margin-top: 30px; }
-    .echo {
-      font-size: 1.15rem; color: var(--fg); line-height: 1.5; margin: 0 0 22px;
-      padding-left: 16px; border-left: 3px solid var(--accent);
-    }
-    .lens-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .lens {
-      background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px;
-      padding: 18px; position: relative; overflow: hidden;
-      opacity: 0; transform: translateY(10px); animation: lensIn .5s var(--ease) forwards;
-    }
-    .lens::before {
-      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--lc);
-    }
-    .lens:nth-child(1){animation-delay:.04s}.lens:nth-child(2){animation-delay:.12s}
-    .lens:nth-child(3){animation-delay:.20s}.lens:nth-child(4){animation-delay:.28s}
-    .lens:nth-child(5){animation-delay:.36s}
-    @keyframes lensIn { to { opacity: 1; transform: none; } }
-    .lens-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
-    .lens-badge {
-      font-size: 0.78rem; font-weight: 700; color: var(--lc);
-      border: 1px solid color-mix(in srgb, var(--lc) 40%, transparent);
-      padding: 2px 9px; border-radius: 999px;
-    }
-    .lens-sub { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
-    .lens-q { margin: 0; font-size: 1rem; color: var(--fg-soft); line-height: 1.55; }
+    /* 결과 */
+    .answer { margin-top: 28px; }
+    .echo { font-size: 1.12rem; color: var(--fg); line-height: 1.5; margin: 0 0 14px;
+      padding-left: 16px; border-left: 3px solid var(--accent); font-weight: 600; }
+    .affirm { margin: 0 0 20px; font-size: 1.06rem; color: var(--fg-soft); line-height: 1.6; }
+    .affirm b { color: var(--fg); }
 
-    .answer-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+    .gain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .gain { background: var(--bg-1); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px;
+      box-shadow: var(--shadow-soft); opacity: 0; transform: translateY(10px); animation: gIn .5s var(--ease) forwards; }
+    .gain:nth-child(1){animation-delay:.05s}.gain:nth-child(2){animation-delay:.13s}
+    .gain:nth-child(3){animation-delay:.21s}.gain:nth-child(4){animation-delay:.29s}
+    @keyframes gIn { to { opacity: 1; transform: none; } }
+    .gain h4 { margin: 0 0 8px; font-size: 0.98rem; font-weight: 700; letter-spacing: -0.01em; }
+    .gain p { margin: 0; font-size: 0.97rem; color: var(--fg-soft); line-height: 1.6; }
 
-    .db-section { border-top: 1px solid var(--line-soft); margin-top: 20px; }
+    .reask { margin-top: 16px; background: var(--accent-soft); border: 1px solid rgba(242,98,47,0.20);
+      border-radius: 14px; padding: 16px 18px; }
+    .reask-badge { font-size: 0.8rem; font-weight: 700; color: var(--accent); }
+    .reask p { margin: 6px 0 0; font-size: 1.04rem; color: var(--fg); line-height: 1.55; font-weight: 600; }
+
+    .answer-actions { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
+    .deep-note { margin: 12px 0 0; font-size: 0.86rem; color: var(--muted); line-height: 1.6; }
+    .deep-note b { color: var(--fg-soft); }
+
+    /* 생각DB */
+    .db-section { border-top: 1px solid var(--line-soft); }
     .db-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-    .db-count {
-      display: inline-block; font-family: var(--mono); font-size: 0.9rem; color: var(--accent);
-      background: var(--accent-soft); padding: 1px 10px; border-radius: 999px; vertical-align: middle;
-    }
-    .db-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-    .db-card {
-      background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
-    }
+    .db-head h3 { margin: 4px 0 0; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; }
+    .db-count { display: inline-block; font-family: var(--mono); font-size: 0.9rem; color: var(--accent);
+      background: var(--accent-soft); padding: 1px 10px; border-radius: 999px; vertical-align: middle; }
+    .db-list { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+    .db-card { background: var(--bg-1); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
+      box-shadow: var(--shadow-soft); }
     .db-card .db-thought { margin: 0 0 8px; font-size: 1.02rem; color: var(--fg); line-height: 1.5; }
     .db-card .db-meta { display: flex; align-items: center; gap: 12px; }
     .db-card .db-date { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
-    .db-card .db-del {
-      margin-left: auto; background: none; border: 0; color: var(--faint); cursor: pointer;
-      font-size: 0.82rem; padding: 4px 8px; border-radius: 8px;
-    }
-    .db-card .db-del:hover { color: var(--a3); background: var(--bg-1); }
+    .db-card .db-del { margin-left: auto; background: none; border: 0; color: var(--faint); cursor: pointer;
+      font-size: 0.82rem; padding: 4px 8px; border-radius: 8px; }
+    .db-card .db-del:hover { color: var(--a3); background: var(--accent-soft); }
     .db-empty { color: var(--muted); margin-top: 20px; }
 
-    @media (max-width: 640px) {
-      .lens-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 640px) { .gain-grid { grid-template-columns: 1fr; } }
   </style>
 
   <script is:inline>
     (function () {
       var K = 'aramirror.ask.';
-      var thoughtEl = document.getElementById('thought');
-      var throwBtn = document.getElementById('throwBtn');
-      var answerEl = document.getElementById('answer');
-      var echoEl = document.getElementById('echoText');
-      var lensEls = Array.from(document.querySelectorAll('#lensGrid .lens'));
-      var saveBtn = document.getElementById('saveBtn');
-      var reThrow = document.getElementById('reThrow');
-      var dbList = document.getElementById('dbList');
-      var dbEmpty = document.getElementById('dbEmpty');
-      var dbCount = document.getElementById('dbCount');
-      var clearDb = document.getElementById('clearDb');
+      var $ = function (id){ return document.getElementById(id); };
       var current = '';
 
       function get(k, d){ try { var v = localStorage.getItem(K+k); return v==null?d:JSON.parse(v); } catch(e){ return d; } }
       function set(k, v){ try { localStorage.setItem(K+k, JSON.stringify(v)); } catch(e){} }
 
-      // ── 되묻기 엔진: 생각의 결을 읽고 5개 렌즈로 질문을 생성 ──
-      // 답을 주지 않는다. 사장님이 스스로 답하게 만드는 질문만 돌려준다.
-      function questionsFor(t) {
+      // ── 오늘의 좋은 말 ──────────────────────────────────────
+      var WORDS = [
+        '벌여놓은 게 많다는 건, 그만큼 세상에 하고 싶은 게 많다는 뜻입니다. 이제 그중 셋만 남기면 돼요.',
+        '몰입은 시간이 아니라 밀도입니다. 오늘 진짜 몰입한 2시간이, 흩어진 10시간을 이깁니다.',
+        '“힘들었지만 행복했다”는, 크게 걸어본 사람만 쓸 수 있는 문장이에요. 사장님이 그 길 위에 있습니다.',
+        '남의 정답을 수입하지 않고, 사장님만의 개념을 만들고 있습니다. 그게 진짜 자산입니다.',
+        '완벽한 준비보다, 이번 주에 눈에 보이는 조각 하나가 사장님을 더 멀리 데려갑니다.',
+        '실패는 끝이 아니라 데이터입니다. 크게 거는 사람만 가질 수 있는 데이터요.',
+        '오늘 죽는다 생각하면 본질만 남습니다. 그 본질에만 힘을 쓰세요 — 나머지는 놓아도 됩니다.',
+        '손은 제가, 방향은 사장님이. 잡일·조사·정리는 제가 다 맡을 테니 사장님은 결정에만 몰입하세요.',
+        '“왜 그렇게까지 해?”라는 말을 듣는 사람이, 결국 세상에 흔적을 남깁니다.',
+        '가장 큰 기회는 늘 “귀찮은 것” 안에 숨어 있습니다. 오늘 하나만 파보세요.',
+        '비교의 대상은 어제의 사장님뿐입니다. 오늘 1도만 나아가도 충분히 이깁니다.',
+        '지금 흔들리는 건 방향이 틀려서가 아니라, 크게 가고 있어서입니다.'
+      ];
+      var wordIdx = -1;
+      function newWord() {
+        var i = Math.floor(Math.random() * WORDS.length);
+        if (WORDS.length > 1 && i === wordIdx) i = (i + 1) % WORDS.length;
+        wordIdx = i; $('wordText').textContent = WORDS[i];
+      }
+      $('wordNew').addEventListener('click', newWord);
+      newWord();
+
+      // ── 이득 분석 엔진: 의도 감지 → 이득 카드 + 되묻기 ─────────
+      function analyze(t) {
         var s = t.trim();
-        var isDecision = /(할까|말까|고민|결정|택|골라|vs|아니면|둘 중|바꿀까|해야|말아야)/.test(s);
-        var isPlan     = /(하겠|만들|시작|진행|추진|계획|론칭|출시|배포|도입)/.test(s);
-        var isFeeling  = /(힘들|불안|답답|화나|지친|막막|두렵|설레|짜증|외로)/.test(s);
-        var isBelief   = /(이다|중요|필요|맞다|옳|틀렸|해야 한다|본질|핵심)/.test(s);
+        var kind =
+          /(할까|말까|고민|결정|택|골라|vs|아니면|둘 중|바꿀까|해야 하나|말아야)/.test(s) ? 'decision' :
+          /(하겠|만들|시작|진행|추진|계획|론칭|출시|배포|도입|해보|벌여)/.test(s) ? 'plan' :
+          /(힘들|불안|답답|화나|지친|막막|두렵|짜증|외로|버겁|스트레스|번아웃)/.test(s) ? 'feeling' :
+          /(아이디어|어때|이런 건|하면 좋을|생각인데|콘셉트|기획)/.test(s) ? 'idea' : 'belief';
 
-        var Q = {
-          why: [
-            '왜 지금 이 생각이 떠올랐을까? 계기가 된 사건이 하나 있었나요?',
-            '이게 사장님에게 왜 중요한가요? 한 줄로 말한다면?'
-          ],
-          oppose: [
-            '정반대로 결정한다면, 그게 더 나은 경우는 어떤 상황일까요?',
-            '이 생각이 틀렸다면, 가장 먼저 무엇 때문에 틀렸을까요?'
-          ],
-          assume: [
-            '이 말 안에 “당연히 그렇다”고 깔고 있는 전제는 무엇인가요?',
-            '그 전제가 사실이 아니라면, 결론이 어떻게 바뀌나요?'
-          ],
-          expand: [
-            '이게 정말 이뤄지면, 그다음엔 무엇이 따라올까요?',
-            '한 달 뒤·1년 뒤의 사장님이 이걸 본다면 뭐라고 할까요?'
-          ],
-          act: [
-            '그래서 오늘, 딱 한 가지만 한다면 무엇인가요?',
-            '가장 작게 시작할 수 있는 첫 한 걸음은?'
-          ]
+        var A = {
+          decision: {
+            affirm: '두 길이 보인다는 건 이미 답의 절반을 안다는 뜻이에요. 남은 절반은 <b>“내가 무엇을 원하나”</b>에 있습니다.',
+            gains: [
+              ['💡 기회', '각 선택지가 사장님에게 “무엇을 주는지”를 적어보면, 숫자보다 마음이 먼저 답을 알려줍니다.'],
+              ['⚠️ 조심', '되돌릴 수 있는 결정은 빠르게, 되돌릴 수 없는 것만 신중히. 지금 이건 어느 쪽인가요?'],
+              ['🎯 본질', '진짜 질문은 “A냐 B냐”가 아니라 “나는 왜 이걸 하려는가”일 때가 많습니다.'],
+              ['👣 다음 한 걸음', '크게 걸기 전에, 작게 시험해볼 방법 하나를 오늘 정하세요.']
+            ],
+            reask: '두 선택지 각각에서, 사장님이 진짜로 얻고 싶은 것 딱 한 가지는 무엇인가요?'
+          },
+          plan: {
+            affirm: '실행으로 옮기는 순간 이미 대부분을 이깁니다. <b>방향만 맞으면 속도는 사장님의 자산</b>이에요.',
+            gains: [
+              ['💡 기회', '완성이 아니라 “이번 주에 눈에 보이는 조각” 하나면 됩니다. 그게 다음을 끌어옵니다.'],
+              ['⚠️ 조심', '한 번에 다 하려다 아무것도 안 되기 쉬워요. 범위를 잔인하게 좁히세요.'],
+              ['🎯 본질', '이 일이 사장님·회사에 남기는 “자산”이 곧 이득의 크기입니다. 그게 뭔가요?'],
+              ['👣 다음 한 걸음', '이번 주 안에 만들 첫 조각 하나를 지금 정하세요.']
+            ],
+            reask: '이걸 아예 안 하면 무슨 일이 생기나요? 그게 정말 문제라면, 지금이 적기입니다.'
+          },
+          feeling: {
+            affirm: '그 무게는 사장님이 크게 걸었다는 증거예요. <b>몰입한 사람만 느끼는 피로</b>입니다.',
+            gains: [
+              ['🌿 기회', '감정은 신호예요 — 무엇이 채워지지 않았는지 알려주는. 그걸 읽으면 방향이 보입니다.'],
+              ['⚠️ 조심', '지금은 큰 결정을 미루기 좋은 때. 몸부터 회복하고, 판단은 내일로.'],
+              ['🎯 본질', '지금 진짜 필요한 건 해결일까요, 아니면 잠깐의 쉼일까요?'],
+              ['👣 다음 한 걸음', '이 순간을 1도만 낫게 할 아주 작은 행동 하나. 물 한 잔, 5분 산책도 좋아요.']
+            ],
+            reask: '지금 사실이라고 믿고 있는 것 중, 아직 확인 안 된 건 무엇인가요?'
+          },
+          idea: {
+            affirm: '아이디어를 꺼내놓은 것만으로 이미 반은 실현된 겁니다. <b>이제 이득으로 바꿀 차례</b>예요.',
+            gains: [
+              ['💡 기회', '이 아이디어가 “누구의 어떤 문제”를 풀어주나요? 거기에 이득의 크기가 있습니다.'],
+              ['⚠️ 조심', '멋있는 아이디어보다 “작게 검증 가능한” 아이디어가 이깁니다. 가장 싸게 테스트할 방법은?'],
+              ['🎯 본질', '이걸 한 문장으로 말하면? 한 문장이 안 되면 아직 덜 익은 거예요.'],
+              ['👣 다음 한 걸음', '이번 주에 “진짜인지” 확인할 가장 작은 실험 하나를 설계하세요.']
+            ],
+            reask: '이 아이디어로 가장 크게 이득 볼 사람은 누구이고, 그 사람은 왜 지금 이걸 원할까요?'
+          },
+          belief: {
+            affirm: '생각을 밖으로 꺼내는 순간, 그건 사장님의 자산이 됩니다. <b>여기 그대로 쌓아두세요.</b>',
+            gains: [
+              ['💡 기회', '이 생각이 사장님에게 왜 중요한지 한 줄로 적어보면, 다음 행동이 선명해집니다.'],
+              ['⚠️ 조심', '“당연히 그렇다”고 깔고 있는 전제는 무엇인가요? 그게 흔들리면 결론도 바뀝니다.'],
+              ['🎯 본질', '이 말의 핵심을 한 문장으로 줄이면 무엇이 남나요?'],
+              ['👣 다음 한 걸음', '이 생각을 이득으로 잇는 가장 작은 행동 하나는?']
+            ],
+            reask: '한 달 뒤·1년 뒤의 사장님이 이 생각을 본다면, 뭐라고 말해줄까요?'
+          }
         };
-
-        if (isDecision) {
-          Q.why[0] = '두 선택지 각각, 사장님이 진짜로 얻고 싶은 건 무엇인가요?';
-          Q.act[0] = '어느 쪽이든, 되돌릴 수 없게 되기 전에 시험해볼 방법이 있나요?';
-        }
-        if (isPlan) {
-          Q.oppose[0] = '이걸 아예 안 한다면 무슨 일이 생기나요? 정말 그게 문제인가요?';
-          Q.act[0] = '이번 주 안에 눈에 보이게 만들 수 있는 첫 조각은 무엇인가요?';
-        }
-        if (isFeeling) {
-          Q.why[0] = '이 감정은 무엇이 채워지지 않아서 생겼을까요?';
-          Q.assume[0] = '지금 사실이라고 믿고 있는 것 중, 아직 확인 안 된 건 무엇인가요?';
-          Q.act[0] = '지금 이 순간을 1도라도 낫게 만들 작은 행동 하나는?';
-        }
-        if (isBelief) {
-          Q.oppose[0] = '이 주장에 가장 강하게 반대하는 사람이 있다면, 뭐라고 할까요?';
-          Q.assume[0] = '“이게 맞다”는 건 어떤 근거 위에 서 있나요? 그 근거는 튼튼한가요?';
-        }
-
-        var pick = function (arr) { return arr[0]; };
-        return [
-          pick(Q.why), pick(Q.oppose), pick(Q.assume), pick(Q.expand), pick(Q.act)
-        ];
+        return A[kind];
       }
 
-      function renderAnswer(t) {
+      function render(t) {
         current = t;
-        echoEl.textContent = t;
-        var qs = questionsFor(t);
-        lensEls.forEach(function (el, i) {
-          var q = el.querySelector('.lens-q');
-          q.textContent = qs[i] || '';
-          // 애니메이션 재시작
-          el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+        $('echoText').textContent = t;
+        var a = analyze(t);
+        $('affirm').innerHTML = a.affirm;
+        var grid = $('gainGrid');
+        grid.innerHTML = '';
+        a.gains.forEach(function (g) {
+          var el = document.createElement('div');
+          el.className = 'gain';
+          var h = document.createElement('h4'); h.textContent = g[0];
+          var p = document.createElement('p'); p.textContent = g[1];
+          el.appendChild(h); el.appendChild(p); grid.appendChild(el);
         });
-        answerEl.hidden = false;
-        saveBtn.textContent = '생각DB에 저장 ↓';
-        saveBtn.disabled = false;
+        $('reaskQ').textContent = a.reask;
+        $('deepBtn').href = 'https://t.me/Arami_claude_bot';
+        $('answer').hidden = false;
+        $('saveBtn').textContent = '💾 생각DB에 저장';
+        $('saveBtn').disabled = false;
       }
 
       function doThrow() {
-        var t = thoughtEl.value.trim();
-        if (!t) { thoughtEl.focus(); return; }
-        renderAnswer(t);
-        answerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        var t = $('thought').value.trim();
+        if (!t) { $('thought').focus(); return; }
+        render(t);
+        $('answer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
-
-      throwBtn.addEventListener('click', doThrow);
-      thoughtEl.addEventListener('keydown', function (e) {
+      $('throwBtn').addEventListener('click', doThrow);
+      $('thought').addEventListener('keydown', function (e) {
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); doThrow(); }
       });
-      reThrow.addEventListener('click', doThrow);
+      $('reThrow').addEventListener('click', doThrow);
 
       // ── 생각DB ──
       function db(){ return get('db', []); }
       function saveDb(list){ set('db', list); }
-
-      function fmt(ts) {
-        var d = new Date(ts);
-        var p = function (n){ return (n<10?'0':'')+n; };
-        return d.getFullYear() + '.' + p(d.getMonth()+1) + '.' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-      }
-
+      function fmt(ts) { var d = new Date(ts), p = function (n){ return (n<10?'0':'')+n; };
+        return d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
       function renderDb() {
         var list = db();
-        dbCount.textContent = list.length;
-        clearDb.hidden = list.length === 0;
-        dbEmpty.hidden = list.length !== 0;
-        dbList.innerHTML = '';
+        $('dbCount').textContent = list.length;
+        $('clearDb').hidden = list.length === 0;
+        $('dbEmpty').hidden = list.length !== 0;
+        var wrap = $('dbList'); wrap.innerHTML = '';
         list.forEach(function (item) {
-          var card = document.createElement('div');
-          card.className = 'db-card';
-          var p = document.createElement('p');
-          p.className = 'db-thought';
-          p.textContent = item.text;
-          var meta = document.createElement('div');
-          meta.className = 'db-meta';
-          var date = document.createElement('span');
-          date.className = 'db-date';
-          date.textContent = fmt(item.ts);
-          var del = document.createElement('button');
-          del.className = 'db-del';
-          del.textContent = '지우기';
-          del.addEventListener('click', function () {
-            saveDb(db().filter(function (x){ return x.id !== item.id; }));
-            renderDb();
-          });
+          var card = document.createElement('div'); card.className = 'db-card';
+          var p = document.createElement('p'); p.className = 'db-thought'; p.textContent = item.text;
+          var meta = document.createElement('div'); meta.className = 'db-meta';
+          var date = document.createElement('span'); date.className = 'db-date'; date.textContent = fmt(item.ts);
+          var del = document.createElement('button'); del.className = 'db-del'; del.textContent = '지우기';
+          del.addEventListener('click', function () { saveDb(db().filter(function (x){ return x.id !== item.id; })); renderDb(); });
           meta.appendChild(date); meta.appendChild(del);
-          card.appendChild(p); card.appendChild(meta);
-          dbList.appendChild(card);
+          card.appendChild(p); card.appendChild(meta); wrap.appendChild(card);
         });
       }
-
-      saveBtn.addEventListener('click', function () {
+      $('saveBtn').addEventListener('click', function () {
         if (!current) return;
         var list = db();
-        list.unshift({ id: 'th_' + Date.now() + '_' + Math.floor(Math.random()*1e4), text: current, ts: Date.now() });
-        saveDb(list);
-        renderDb();
-        saveBtn.textContent = '저장됨 ✓';
-        saveBtn.disabled = true;
-        thoughtEl.value = '';
+        list.unshift({ id: 'th_'+Date.now()+'_'+Math.floor(Math.random()*1e4), text: current, ts: Date.now() });
+        saveDb(list); renderDb();
+        $('saveBtn').textContent = '저장됨 ✓'; $('saveBtn').disabled = true; $('thought').value = '';
       });
-
-      clearDb.addEventListener('click', function () {
-        if (db().length && confirm('생각DB를 전부 비울까요? 되돌릴 수 없어요.')) {
-          saveDb([]); renderDb();
-        }
+      $('clearDb').addEventListener('click', function () {
+        if (db().length && confirm('생각 서랍을 전부 비울까요? 되돌릴 수 없어요.')) { saveDb([]); renderDb(); }
       });
-
       renderDb();
     })();
   </script>

@@ -1,32 +1,32 @@
 /* ─────────────────────────────────────────────────────────────
-   Aramirror — "Obsidian Glass" design system  v2
-   Deep obsidian canvas · luminous warm-white type ·
-   coral→amber aurora accent · glass surfaces · cinematic motion
-   목표: 애플 홈페이지보다 100배 세련되게.
+   Aramirror — "Warm Daylight" design system  v3
+   Sunlit cream canvas · warm ink type · coral→amber sunrise accent ·
+   soft paper cards · gentle warm shadows · cheerful & cozy
+   목표: 들어오면 기분 좋아지고, 자꾸 오고 싶은 따뜻한 공간.
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* canvas */
-  --bg:        #08080b;   /* obsidian near-black */
-  --bg-1:      #0c0d12;   /* raised panel */
-  --bg-2:      #111219;   /* card */
-  --bg-glass:  rgba(20, 21, 28, 0.55);
+  /* canvas — sunlit warm paper */
+  --bg:        #fdf6ee;   /* warm cream */
+  --bg-1:      #ffffff;   /* raised white panel */
+  --bg-2:      #fffaf3;   /* card, warm white */
+  --bg-glass:  rgba(255, 252, 247, 0.62);
 
-  /* type */
-  --fg:        #f4f1ea;   /* luminous warm white */
-  --fg-soft:   #c3bfb6;   /* body */
-  --muted:     #7d7a72;   /* secondary */
-  --faint:     #4a4842;   /* hairline text */
+  /* type — warm ink (not pure black) */
+  --fg:        #2c2320;   /* warm near-black */
+  --fg-soft:   #5e5349;   /* body */
+  --muted:     #97897c;   /* secondary */
+  --faint:     #cabbac;   /* hairline text */
 
-  /* lines */
-  --line:      rgba(255, 255, 255, 0.09);
-  --line-soft: rgba(255, 255, 255, 0.05);
+  /* lines — warm hairlines */
+  --line:      rgba(70, 45, 25, 0.12);
+  --line-soft: rgba(70, 45, 25, 0.07);
 
-  /* accent — the aurora */
+  /* accent — sunrise (밝고 따뜻) */
   --a1:        #ff6a3d;   /* coral */
   --a2:        #ffb457;   /* amber */
-  --a3:        #ff4d6d;   /* rose (deep) */
-  --accent:    #ff7a4d;
-  --accent-glow: rgba(255, 106, 61, 0.35);
+  --a3:        #ff4d6d;   /* rose */
+  --accent:    #f2622f;   /* 살짝 진하게 — 밝은 배경 대비 가독 */
+  --accent-glow: rgba(255, 106, 61, 0.30);
   --grad: linear-gradient(105deg, var(--a3) 0%, var(--a1) 45%, var(--a2) 100%);
 
   --mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, "Segoe UI Mono", monospace;
@@ -35,12 +35,15 @@
   --readw: 720px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* ── backward-compat aliases (v1 이름을 다크 테마 값으로 매핑) ──
-     다른 페이지들이 아직 v1 변수명을 참조 → 다크 버전으로 이어줌 */
-  --bg-soft:      var(--bg-1);
-  --bg-card:      var(--bg-2);
+  /* soft warm shadow presets */
+  --shadow:      0 18px 44px rgba(196, 110, 54, 0.14);
+  --shadow-soft: 0 10px 30px rgba(196, 110, 54, 0.10);
+
+  /* ── backward-compat aliases (기존 페이지 변수명 유지) ── */
+  --bg-soft:      #fdeee1;   /* 따뜻한 피치 틴트 (은은한 채움) */
+  --bg-card:      #ffffff;
   --accent-strong: var(--a1);
-  --accent-soft:  rgba(255, 106, 61, 0.10);
+  --accent-soft:  rgba(242, 98, 47, 0.12);
   --dark:         var(--bg-1);
   --dark-soft:    var(--bg-2);
 }
@@ -65,17 +68,18 @@ body {
   overflow-x: hidden;
   position: relative;
   background:
-    radial-gradient(60rem 60rem at 78% -10%, rgba(255, 106, 61, 0.10), transparent 60%),
-    radial-gradient(48rem 48rem at 8% 8%, rgba(255, 77, 109, 0.07), transparent 55%),
+    radial-gradient(58rem 52rem at 82% -12%, rgba(255, 180, 87, 0.28), transparent 62%),
+    radial-gradient(46rem 46rem at 4% 4%, rgba(255, 122, 150, 0.16), transparent 58%),
+    radial-gradient(40rem 40rem at 50% 108%, rgba(255, 138, 92, 0.12), transparent 60%),
     var(--bg);
   background-attachment: fixed;
 }
 
-/* subtle film grain for depth */
+/* subtle paper grain for warmth */
 body::after {
   content: "";
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  opacity: 0.035; mix-blend-mode: overlay;
+  opacity: 0.025; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -87,10 +91,10 @@ a { color: inherit; text-decoration: none; transition: color 0.2s var(--ease); }
 /* ── nav ─────────────────────────────────────────────────── */
 .nav {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(8, 8, 11, 0.6);
-  backdrop-filter: saturate(160%) blur(22px);
-  -webkit-backdrop-filter: saturate(160%) blur(22px);
-  border-bottom: 1px solid var(--line-soft);
+  background: rgba(255, 249, 242, 0.78);
+  backdrop-filter: saturate(150%) blur(22px);
+  -webkit-backdrop-filter: saturate(150%) blur(22px);
+  border-bottom: 1px solid var(--line);
 }
 .nav .wrap { display: flex; align-items: center; gap: 28px; height: 62px; }
 .nav .brand { font-weight: 700; letter-spacing: -0.03em; font-size: 1.12rem; }
@@ -152,13 +156,13 @@ a { color: inherit; text-decoration: none; transition: color 0.2s var(--ease); }
   display: inline-flex; align-items: center; gap: 8px;
   border-radius: 999px; padding: 15px 30px; font-size: 1rem; font-weight: 600;
   font-family: inherit; cursor: pointer; border: 1px solid transparent;
-  background: var(--fg); color: #0a0a0c; text-decoration: none;
+  background: var(--fg); color: var(--bg); text-decoration: none;
   transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.2s ease;
 }
-.btn:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,0.4); }
+.btn:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .btn.accent {
-  background: var(--grad); color: #150a06; position: relative;
-  box-shadow: 0 8px 30px var(--accent-glow);
+  background: var(--grad); color: #fff; position: relative;
+  box-shadow: 0 10px 26px var(--accent-glow);
 }
 .btn.accent:hover { box-shadow: 0 18px 48px var(--accent-glow); }
 .btn-outline {
@@ -168,7 +172,7 @@ a { color: inherit; text-decoration: none; transition: color 0.2s var(--ease); }
   backdrop-filter: blur(8px);
   text-decoration: none; transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), background 0.25s ease;
 }
-.btn-outline:hover { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.05); transform: translateY(-3px); }
+.btn-outline:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-3px); }
 
 /* ── sections ────────────────────────────────────────────── */
 section { padding: 108px 0; border-top: 1px solid var(--line-soft); position: relative; }
@@ -181,7 +185,7 @@ h2 {
   font-size: clamp(1.9rem, 4vw, 3rem); letter-spacing: -0.035em;
   font-weight: 800; line-height: 1.1; margin: 0 0 16px;
 }
-h2 mark, .accent-word {
+h2 mark, .accent-word, mark {
   background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .lead { color: var(--muted); font-size: 1.14rem; margin: 0 0 44px; max-width: 640px; line-height: 1.65; }
@@ -201,7 +205,7 @@ h2 mark, .accent-word {
   -webkit-mask-composite: xor; mask-composite: exclude;
   opacity: 0; transition: opacity 0.35s var(--ease);
 }
-.card:hover { transform: translateY(-6px); box-shadow: 0 26px 60px rgba(0,0,0,0.45); }
+.card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
 .card:hover::before { opacity: 0.9; }
 .card .n { font-family: var(--mono); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
   background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -220,12 +224,12 @@ h2 mark, .accent-word {
 /* ── dark numbered section → now a glass feature slab ────── */
 section.dark-section {
   background:
-    radial-gradient(40rem 30rem at 85% 20%, rgba(255,77,109,0.10), transparent 60%),
-    var(--bg-1);
+    radial-gradient(40rem 30rem at 85% 20%, rgba(255,180,87,0.16), transparent 60%),
+    var(--bg-soft);
   border-top: 1px solid var(--line-soft);
 }
 .dark-section .section-kicker { }
-.dark-section h2 { color: #fff; }
+.dark-section h2 { color: var(--fg); }
 .num-grid { display: grid; gap: 0; grid-template-columns: 1fr 1fr; margin-top: 48px;
   border-top: 1px solid var(--line); }
 .num-item {
@@ -233,12 +237,12 @@ section.dark-section {
   transition: background 0.3s var(--ease); border-radius: 4px;
 }
 .num-item:nth-child(1), .num-item:nth-child(2) { border-top: none; }
-.num-item:hover { background: rgba(255,255,255,0.02); }
+.num-item:hover { background: rgba(242,98,47,0.04); }
 .num-item .ni {
   font-family: var(--mono); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em;
   background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.num-item h4 { margin: 12px 0 10px; font-size: 1.22rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+.num-item h4 { margin: 12px 0 10px; font-size: 1.22rem; font-weight: 700; color: var(--fg); letter-spacing: -0.02em; }
 .num-item p { margin: 0; color: var(--fg-soft); font-size: 1rem; line-height: 1.65; }
 @media (max-width: 680px) { .num-grid { grid-template-columns: 1fr; }
   .num-item, .num-item:nth-child(2) { border-top: 1px solid var(--line); padding-right: 0; } }
@@ -270,7 +274,7 @@ section.dark-section {
 .logs li { border-top: 1px solid var(--line-soft); }
 .logs li:last-child { border-bottom: 1px solid var(--line-soft); }
 .logs a { display: flex; gap: 20px; align-items: baseline; padding: 26px 12px; border-radius: 12px; transition: background 0.25s var(--ease), padding-left 0.25s var(--ease); }
-.logs a:hover { background: rgba(255,255,255,0.03); padding-left: 20px; }
+.logs a:hover { background: rgba(242,98,47,0.05); padding-left: 20px; }
 .logs .id { font-weight: 700; font-variant-numeric: tabular-nums;
   background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .logs .t { font-weight: 600; }
@@ -296,7 +300,7 @@ section.dark-section {
   border-radius: 16px; padding: 22px 24px; margin-bottom: 16px;
   transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease), border-color 0.3s var(--ease);
 }
-.wall .item:hover { box-shadow: 0 18px 44px rgba(0,0,0,0.4); transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+.wall .item:hover { box-shadow: var(--shadow); transform: translateY(-4px); border-color: var(--accent); }
 .wall .item h4 { margin: 0 0 8px; font-size: 1.08rem; font-weight: 700; letter-spacing: -0.02em; }
 .wall .item p { margin: 0; color: var(--fg-soft); font-size: 0.98rem; line-height: 1.65; }
 .wall .item .src { display: inline-block; margin-top: 14px; font-size: 0.78rem; color: var(--muted); }
