@@ -102,8 +102,13 @@ export const domains = [
         h: '도구 · 앱',
         items: [
           { t: 'Claude 사용량 미터', slug: 'claude-usage', status: 'live', tier: 'auth',
-            lead: '내 클로드 사용량을 로컬 서버로 띄워 보는 미터. 얼마나 쓰는지·어디에 쓰는지 가시화.',
-            points: ['usage_server.py 로 로컬 실행(사용량서버.bat)', '지하 엔진실(events)과 연결해 활동량과 함께 보기'] },
+            lead: '내 클로드 사용량(세션·주간·모델별)을 어디서든 폰으로 보는 미터. 이제 로컬 서버를 넘어 인터넷 주소로 띄워 두었다.',
+            points: [
+              '20분마다 PC가 사용량을 읽어 GitHub Pages로 스냅샷 푸시 → 폰에서 바로 확인',
+              '토큰은 내 PC에서만 읽고 절대 업로드 안 함 (숫자만 올라감) · 비밀번호+검색차단',
+              '로컬 실시간판은 usage_server.py(사용량서버.bat)로 여전히 사용 가능',
+            ],
+            links: [{ label: '사용량 열기 (비번 필요)', href: 'https://hyun-arch.github.io/claude-usage/', external: true }] },
           { t: 'Calendar — 일정', slug: 'calendar-app', status: 'building',
             lead: '오늘 일정·할일·리포트가 켜면 바로 보이는 무로그인 원스크린.',
             points: ['관제실(/hq) 오늘 뷰와 연결', '날짜 있는 리마인드는 여기로 모으기'] },
@@ -133,6 +138,16 @@ export const domains = [
       {
         h: '시스템 · 프로그램',
         items: [
+          { t: '경영 대시보드 — 직원보고·KPI', slug: 'management-dashboard', status: 'live', tier: 'auth',
+            lead: '직원이 폰으로 30초 보고하면 → 대표는 한 화면으로 본다. AI가 “형이 알아야 할 것”과 이상신호(미보고·정체된 일)를 뽑아 맨 위에 올린다. 13개 팀·20명의 실제 KPI 기준서를 그대로 반영.',
+            points: [
+              '4화면 — 대표 홈(AI요약·이상신호·부서 KPI) · 부서별 방 · 직원 보고 · AI 전략실 (하단 탭 이동)',
+              '실제 KPI 기준서(평가항목·가중치·A~E 등급) 그대로 — 직원 보고가 실적을 채운다',
+              'AI 전략실이 지금 데이터로 위험 인물·매출 급소·팀 순위를 실시간 계산',
+              '핵심은 “보고 취합”이 아니라 암묵지 해결 — 대표가 못 챙기는 부서 신호를 AI가 먼저 포착',
+              '사내 자료라 비밀번호로 보호 + 검색 차단(noindex). 실적·보고 내용은 아직 샘플',
+            ],
+            links: [{ label: '대시보드 열기 (비번 필요)', href: 'https://hyun-arch.github.io/aramhuvis-dashboard/', external: true }] },
           { t: '매출 대시보드 (Revenue)', slug: 'revenue-dashboard', status: 'live', tier: 'secret',
             lead: '🔴 대외비. 2026 사업본부 매출·목표달성·미수금을 한눈에 보는 단일 파일 웹 대시보드. 실제 수치는 금고(로컬)에서만.',
             points: ['매출 3단 구분: 실적(회계 인식)/확정(수주)/예상(파이프라인)', '해외·국내·기기별·담당자별·월별 뷰 + 미수금 aging', '실 수치는 배포 안 됨 — /vault(로컬)에서만 열람'],
