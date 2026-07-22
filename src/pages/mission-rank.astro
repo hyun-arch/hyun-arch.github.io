@@ -1,0 +1,176 @@
+---
+import Base from '../layouts/Base.astro';
+import { people, archetypes, lessons, stats } from '../data/mission-rank.js';
+const s = stats();
+const medal = (r) => (r === 1 ? '🥇' : r <= 3 ? '🥈' : r <= 6 ? '🥉' : '');
+const gColor = { '1조':'#c46e36','2조':'#3c8f6b','3조':'#4a6fb0','4조':'#b0504a','5조':'#8a5cc4','6조':'#c49a2e' };
+---
+<Base title="스폰지클럽 4주 과제 랭킹">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Spongeclub S2 · 1~4주차 전수 심사</p>
+      <h2>71명의 4주 과제, <mark>1등부터 71등까지</mark></h2>
+      <p class="lead">
+        깃허브에 올라온 모든 사람의 주차 과제(1~4주차 submission.md 전량)를 6개 조로 나눠 병렬 정독하고,
+        <b>실행·완성도 / 문제의 예리함 / 생각의 깊이 / 4주 궤적 / 재현·확산성</b> 5축(100점)으로 채점했다.
+        점수만이 아니라 <b>왜 그 점수인지</b>, 그리고 <b>각자의 생각의 길</b>에서 사장님이 배울 점을 뽑았다.
+        (4주차는 71명 중 3명만 실제 작성 → 사실상 1~3주 기준)
+      </p>
+
+      <div class="overview">
+        <div class="ov-stat"><div class="v">{s.total}</div><div class="l">전체 인원</div></div>
+        <div class="ov-stat"><div class="v">{s.submitted}</div><div class="l">실제 제출</div></div>
+        <div class="ov-stat"><div class="v">{s.empty}</div><div class="l">빈 템플릿</div></div>
+        <div class="ov-stat"><div class="v">{s.avg}</div><div class="l">제출자 평균점</div></div>
+      </div>
+
+      <!-- 사장님 본인 카드 -->
+      {s.my && (
+        <div class="me-card">
+          <div class="me-top">
+            <span class="me-badge">사장님 본인</span>
+            <span class="me-rank">전체 ~10위 · <b>{s.my.score}점</b> · {s.my.g}</span>
+          </div>
+          <p class="me-one">{s.my.one}</p>
+          <div class="me-cols">
+            <div><span class="pl">생각의 길</span><p>{s.my.mind}</p></div>
+            <div><span class="pl">⚠ 보완할 점</span><p>{s.my.learn}</p></div>
+          </div>
+        </div>
+      )}
+
+      <!-- 아키타입 -->
+      <div class="themes">
+        <p class="th-h">상위권이 공유한 생각의 길 (아키타입)</p>
+        <div class="arch-row">
+          {archetypes.map((a) => (
+            <details class="arch">
+              <summary><b>{a.key}</b><span class="arch-who">{a.who}</span></summary>
+              <p>{a.desc}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      <!-- 마스터 랭킹 -->
+      <p class="th-h" style="margin-top:34px">전체 랭킹 (클릭해서 펼치기)</p>
+      <div class="ranks">
+        {people.map((p) => (
+          <details class={`rk ${p.self ? 'self' : ''} ${p.empty ? 'empty' : ''}`}>
+            <summary>
+              <span class="r-rank">{medal(p.rank)}<b>{p.rank}</b></span>
+              <span class="r-name">{p.name}{p.self && <span class="me">나</span>}</span>
+              <span class="r-grp" style={`--gc:${gColor[p.g]}`}>{p.g}</span>
+              <span class="r-job">{p.job}</span>
+              <span class="r-score">{p.score}</span>
+              <span class="chev">▾</span>
+            </summary>
+            <div class="r-body">
+              <p class="r-one">{p.one}</p>
+              <div class="r-grid">
+                <div><span class="pl">생각의 길</span><p>{p.mind}</p></div>
+                <div><span class="pl">→ 사장님이 배울 점</span><p>{p.learn}</p></div>
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <!-- 사장님 교훈 -->
+      <div class="lessons">
+        <p class="th-h">사장님이 가져갈 핵심 교훈 7</p>
+        <div class="less-grid">
+          {lessons.map((l) => (
+            <div class="less">
+              <span class="less-n">{l.n}</span>
+              <b>{l.t}</b>
+              <p>{l.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 만들어진 과정 -->
+      <div class="process">
+        <p class="th-h">이 페이지가 만들어진 과정</p>
+        <div class="flow">
+          <div class="fstep"><span class="fn">01</span><b>레포 pull</b><p>spongeclub-2 전량 최신화</p></div>
+          <span class="farrow">→</span>
+          <div class="fstep"><span class="fn">02</span><b>6조 병렬 정독</b><p>Fable 6개 에이전트가 71명×48개 submission.md</p></div>
+          <span class="farrow">→</span>
+          <div class="fstep"><span class="fn">03</span><b>루브릭 채점</b><p>5축 100점 + 생각의 길 추출</p></div>
+          <span class="farrow">→</span>
+          <div class="fstep"><span class="fn">04</span><b>랭킹·아라미러</b><p>1~71등 + 배울 점 반영</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .overview { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 8px 0 24px; }
+    .ov-stat { border: 1px solid var(--line); border-radius: 14px; padding: 20px; text-align: center; background: var(--bg-card); }
+    .ov-stat .v { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; color: var(--accent); font-family: var(--mono); }
+    .ov-stat .l { color: var(--muted); font-size: 0.86rem; margin-top: 4px; }
+
+    .me-card { border: 2px solid var(--accent); border-radius: 18px; padding: 22px 24px; margin: 0 0 30px; background: var(--accent-soft); }
+    .me-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .me-badge { background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+    .me-rank { font-family: var(--mono); color: var(--accent-strong); font-size: 0.95rem; }
+    .me-one { font-size: 1.06rem; font-weight: 600; margin: 12px 0 0; line-height: 1.5; }
+    .me-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+    .me-cols p { margin: 5px 0 0; font-size: 0.94rem; line-height: 1.55; color: var(--fg-soft); }
+
+    .th-h { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.74rem; color: var(--accent); font-weight: 700; margin: 0 0 12px; }
+    .pl { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; }
+
+    .arch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .arch { border: 1px solid var(--line); border-radius: 12px; background: var(--bg-card); padding: 0; }
+    .arch > summary { display: flex; align-items: baseline; gap: 10px; padding: 12px 16px; cursor: pointer; list-style: none; }
+    .arch > summary::-webkit-details-marker { display: none; }
+    .arch-who { color: var(--muted); font-size: 0.8rem; margin-left: auto; }
+    .arch p { margin: 0; padding: 0 16px 14px; font-size: 0.9rem; line-height: 1.55; color: var(--fg-soft); }
+
+    .ranks { display: flex; flex-direction: column; gap: 6px; }
+    .rk { border: 1px solid var(--line); border-radius: 12px; background: var(--bg-card); overflow: hidden; }
+    .rk.self { border-color: var(--accent); border-width: 2px; }
+    .rk.empty { opacity: 0.55; }
+    .rk > summary { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 10px 12px; padding: 13px 18px; cursor: pointer; list-style: none; }
+    .rk > summary::-webkit-details-marker { display: none; }
+    .rk > summary:hover { background: var(--bg-soft); }
+    .r-rank { font-family: var(--mono); color: var(--muted); font-size: 0.8rem; display: flex; align-items: center; gap: 3px; }
+    .r-rank b { color: var(--fg); font-size: 1.05rem; }
+    .r-name { font-weight: 700; font-size: 1rem; grid-row: 1; }
+    .r-name .me { font-size: 0.6rem; background: var(--accent); color: #fff; border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
+    .r-grp { font-size: 0.68rem; font-weight: 700; color: #fff; background: var(--gc); border-radius: 5px; padding: 2px 6px; justify-self: start; }
+    .r-job { color: var(--muted); font-size: 0.82rem; grid-column: 2; grid-row: 2; }
+    .r-score { font-family: var(--mono); font-weight: 800; font-size: 1.25rem; color: var(--accent); grid-column: 3; grid-row: 1 / span 2; align-self: center; }
+    .chev { display: none; }
+
+    .r-body { padding: 2px 18px 18px; border-top: 1px solid var(--line-soft); }
+    .r-one { font-size: 0.98rem; font-weight: 600; margin: 12px 0 0; line-height: 1.5; }
+    .r-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+    .r-grid p { margin: 5px 0 0; font-size: 0.9rem; line-height: 1.55; color: var(--fg-soft); }
+
+    .lessons { margin-top: 40px; }
+    .less-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+    .less { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--bg-card); }
+    .less-n { font-family: var(--mono); color: var(--accent); font-weight: 700; font-size: 0.8rem; }
+    .less b { display: block; margin: 6px 0 6px; font-size: 1.04rem; }
+    .less p { margin: 0; color: var(--fg-soft); font-size: 0.9rem; line-height: 1.55; }
+
+    .process { margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--line-soft); }
+    .flow { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
+    .fstep { flex: 1; min-width: 150px; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; background: var(--bg-card); }
+    .fstep .fn { font-family: var(--mono); color: var(--accent); font-weight: 700; font-size: 0.82rem; }
+    .fstep b { display: block; margin: 6px 0 4px; font-size: 1rem; }
+    .fstep p { margin: 0; color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+    .farrow { align-self: center; color: var(--accent); font-weight: 700; }
+
+    @media (max-width: 680px) {
+      .overview { grid-template-columns: repeat(2,1fr); }
+      .arch-row, .me-cols, .r-grid, .less-grid { grid-template-columns: 1fr; }
+      .rk > summary { grid-template-columns: 44px 1fr auto; }
+      .farrow { display: none; }
+    }
+  </style>
+</Base>
