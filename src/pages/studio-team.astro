@@ -1,0 +1,179 @@
+---
+import Base from '../layouts/Base.astro';
+
+// 스튜디오팀 구조 — 지금 붙어있는 스킬 + 오케스트레이션 + 서브에이전트가 어떻게 일하는지
+// 4주차 미션(하네스·오케스트레이션 정의)과 직결. 쉬운 말 + 3층 구조 시각화.
+
+// A층: 지휘 (오케스트레이션 — "스킬을 부리는 스킬")
+const orchestration = [
+  { name: 'Workflow', role: '여러 스킬·에이전트를 순서대로/동시에 불러 한 마디로 끝냄 (pipeline·parallel·fan-out)', tag: '지휘봉' },
+  { name: '서브에이전트 팀', role: 'Explore(탐색) · Plan(설계) · general(잡무) · claude(만능) — 파트별 분업', tag: '팀원' },
+  { name: '예약 · 반복', role: 'cron(아침 5시 브리핑) · loop · 백그라운드 Task — 시켜두면 알아서 반복', tag: '자동' },
+  { name: 'Fable 고속', role: '가벼운 조회·정리는 초고속 모델로 병렬 처리', tag: '속도' },
+];
+
+// B층: 일하는 스킬 (실제 결과물을 뽑는 손)
+const workSkills = [
+  { g: '영상', items: 'HyperFrames(HTML→MP4) · media-use(이미지·TTS·자막) · product-launch-video', flow: '장면기획 → 이미지 → TTS → 렌더 → 업로드' },
+  { g: '세컨드브레인', items: 'wiki-ingest · wiki-query · autoresearch · save · canvas · obsidian', flow: '자료 → 정리 → 원자노트 → 책장 분류' },
+  { g: '리서치', items: 'deep-research · autoresearch (웹 검색 → 검증 → 리포트)', flow: '질문 → 다중검색 → 팩트체크 → 정리' },
+  { g: '슬랙', items: 'slack messaging · block-kit · digest · standup', flow: '읽기 → 요약 → 초안 → 발행' },
+  { g: '문서·덱', items: 'pptx 파이프라인 · 캐러셀 스튜디오 · 카드뉴스', flow: '브리프 → 구성 → 비주얼 → 파일' },
+  { g: '생각·추천', items: 'think(10원칙) · guided-journaling · skillers-finder', flow: '되묻기 → 구조화 → 스킬 추천' },
+];
+
+// C층: 연결 (손·발 — MCP 입출력)
+const connections = [
+  { name: '텔레그램', desc: '사장님 채널 (지시 받고 답)' },
+  { name: '슬랙', desc: '스폰지클럽 (셸·채널)' },
+  { name: 'Gmail', desc: '메일 읽기·초안' },
+  { name: '구글 캘린더', desc: '일정 넣기·조회' },
+  { name: '구글 드라이브', desc: '파일 다리' },
+  { name: '크롬 자동화', desc: '웹 클릭·캡처' },
+];
+---
+<Base title="스튜디오팀 구조 — 지금 어떻게 일하나">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Skillers S2 · 4주차 · 스튜디오팀 구조</p>
+      <h2>지금 <mark>스튜디오팀</mark>은 이렇게 일한다</h2>
+      <p class="lead">
+        붙어있는 <b>스킬</b>과 <b>오케스트레이션·서브에이전트</b>가 어떻게 맞물려 도는지, 3층으로 쉽게 그렸다.<br />
+        한 줄 요약: <b>연결(손·발)</b>이 물어오면 → <b>일하는 스킬</b>이 만들고 → <b>지휘(오케)</b>가 그 스킬들을 순서대로 불러 한 마디로 끝낸다.
+      </p>
+
+      <!-- 두 개념 정의 (4주차 미션1) -->
+      <div class="defs">
+        <div class="def">
+          <span class="dk">하네스 <em>Harness</em></span>
+          <p><b>팀이 일하는 작업실 그 자체.</b> Claude Code + 규칙(CLAUDE.md) + 기억(memory) + 채널. 모든 스킬·에이전트가 이 안에서 돌아간다. = <b>그릇.</b></p>
+        </div>
+        <div class="def">
+          <span class="dk">오케스트레이션 <em>Orchestration</em></span>
+          <p><b>여러 스킬·에이전트를 순서대로·동시에 불러 한 마디로 끝내는 지휘.</b> "일하는 스킬"이 손이라면, 이건 <b>손들을 부리는 지휘자.</b></p>
+        </div>
+      </div>
+
+      <!-- 하네스 프레임 안에 3층 -->
+      <div class="harness">
+        <span class="hframe-label">하네스 (작업실) — 규칙 · 기억 · 채널이 이 안을 감싼다</span>
+
+        <!-- A층 -->
+        <div class="layer layer-a">
+          <div class="lhead"><span class="lnum">A</span><div><b>지휘 · 오케스트레이션</b><span class="lsub">"스킬을 부리는 스킬"</span></div></div>
+          <div class="cards">
+            {orchestration.map((o) => (
+              <div class="card">
+                <div class="c-top"><b>{o.name}</b><span class="pill">{o.tag}</span></div>
+                <p>{o.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="down">▼ 필요한 스킬을 골라 순서대로 호출 ▼</div>
+
+        <!-- B층 -->
+        <div class="layer layer-b">
+          <div class="lhead"><span class="lnum">B</span><div><b>일하는 스킬</b><span class="lsub">실제 결과물을 뽑는 손</span></div></div>
+          <div class="cards cards-3">
+            {workSkills.map((w) => (
+              <div class="card">
+                <div class="c-top"><b>{w.g}</b></div>
+                <p class="c-items">{w.items}</p>
+                <p class="c-flow">{w.flow}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="down">▼ 결과를 안팎으로 주고받음 ▼</div>
+
+        <!-- C층 -->
+        <div class="layer layer-c">
+          <div class="lhead"><span class="lnum">C</span><div><b>연결 · 손발</b><span class="lsub">바깥 세상과 주고받는 입출구 (MCP)</span></div></div>
+          <div class="conns">
+            {connections.map((c) => (
+              <div class="conn"><b>{c.name}</b><span>{c.desc}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 실제 흐름 예시 -->
+      <div class="example">
+        <p class="ex-h">지금 실제로 도는 예시 — "이 주제로 쇼츠 만들어" 한 마디</p>
+        <div class="ex-flow">
+          <div class="es"><span class="en">1</span><b>텔레그램</b><p>지시 받음 (C층)</p></div>
+          <span class="ea">→</span>
+          <div class="es"><span class="en">2</span><b>Workflow 지휘</b><p>순서 짜기 (A층)</p></div>
+          <span class="ea">→</span>
+          <div class="es"><span class="en">3</span><b>media-use</b><p>이미지·TTS 생성 (B층)</p></div>
+          <span class="ea">→</span>
+          <div class="es"><span class="en">4</span><b>HyperFrames</b><p>MP4 렌더 (B층)</p></div>
+          <span class="ea">→</span>
+          <div class="es"><span class="en">5</span><b>텔레그램</b><p>영상 전송 (C층)</p></div>
+        </div>
+        <p class="ex-note">→ 사장님은 <b>"이 주제로 쇼츠"</b> 한 마디만. 중간에 손 끼는 칸이 없다. 이게 <b>오케스트레이션</b>이 하는 일.</p>
+      </div>
+
+      <p class="foot-note">
+        4주차 미션 메모 — 오케 스킬은 일하는 스킬보다 훨씬 적어서 <b>직접 만드는 게 기본</b>. 일단 <b>순서대로 합치는 것</b>까지가 기본, 서브에이전트(파트별 분업)는 <b>퀄이 필요할 때</b> 붙이는 옵션. (검색어: subagent · workflow · pipeline · orchestration · team)
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .defs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 8px 0 28px; }
+    .def { border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; background: var(--bg-card); }
+    .dk { font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; }
+    .dk em { font-family: var(--mono); font-style: normal; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-left: 8px; }
+    .def p { margin: 10px 0 0; color: var(--fg-soft); line-height: 1.6; }
+
+    /* 하네스 프레임 */
+    .harness { position: relative; border: 2px dashed var(--accent); border-radius: 22px; padding: 40px 20px 24px; margin: 8px 0 36px; background: color-mix(in srgb, var(--accent-soft) 40%, transparent); }
+    .hframe-label { position: absolute; top: -13px; left: 22px; background: var(--bg-1, #fff); padding: 2px 12px; font-family: var(--mono); font-size: 0.72rem; color: var(--accent-strong); font-weight: 700; border: 1px solid var(--accent); border-radius: 999px; }
+
+    .layer { border: 1px solid var(--line); border-radius: 16px; background: var(--bg-card); padding: 18px 20px; }
+    .lhead { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .lnum { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--accent); color: #fff; font-family: var(--mono); font-weight: 700; flex: 0 0 auto; }
+    .lhead b { font-size: 1.1rem; letter-spacing: -0.02em; }
+    .lsub { color: var(--muted); font-size: 0.85rem; margin-left: 8px; }
+
+    .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .cards-3 { grid-template-columns: repeat(3, 1fr); }
+    .card { border: 1px solid var(--line-soft); border-radius: 12px; padding: 13px 15px; background: var(--bg-soft); }
+    .c-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .c-top b { font-size: 0.98rem; }
+    .pill { font-family: var(--mono); font-size: 0.64rem; font-weight: 700; color: var(--accent-strong); background: var(--accent-soft); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+    .card p { margin: 7px 0 0; color: var(--fg-soft); font-size: 0.86rem; line-height: 1.5; }
+    .c-items { font-size: 0.84rem !important; }
+    .c-flow { font-family: var(--mono); font-size: 0.74rem !important; color: var(--accent) !important; margin-top: 8px !important; }
+
+    .down { text-align: center; font-family: var(--mono); font-size: 0.74rem; color: var(--accent); font-weight: 600; padding: 10px 0; letter-spacing: 0.02em; }
+
+    .conns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .conn { border: 1px solid var(--line-soft); border-radius: 12px; padding: 12px 15px; background: var(--bg-soft); }
+    .conn b { display: block; font-size: 0.95rem; }
+    .conn span { color: var(--muted); font-size: 0.82rem; }
+
+    /* 예시 흐름 */
+    .example { margin: 8px 0 0; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--bg-card); }
+    .ex-h { font-weight: 800; font-size: 1.08rem; letter-spacing: -0.02em; margin: 0 0 16px; }
+    .ex-flow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+    .es { flex: 1; min-width: 120px; border: 1px solid var(--line-soft); border-radius: 12px; padding: 12px 14px; background: var(--bg-soft); }
+    .es .en { font-family: var(--mono); color: var(--accent); font-weight: 700; font-size: 0.8rem; }
+    .es b { display: block; margin: 4px 0 3px; font-size: 0.95rem; }
+    .es p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
+    .ea { align-self: center; color: var(--accent); font-weight: 700; }
+    .ex-note { margin: 16px 0 0; color: var(--fg-soft); line-height: 1.6; }
+
+    .foot-note { margin: 32px 0 0; padding: 18px 20px; background: var(--bg-soft); border-radius: 12px; color: var(--fg-soft); line-height: 1.6; font-size: 0.95rem; }
+
+    @media (max-width: 760px) {
+      .defs { grid-template-columns: 1fr; }
+      .cards, .cards-3, .conns { grid-template-columns: 1fr; }
+      .ea { display: none; }
+    }
+  </style>
+</Base>
