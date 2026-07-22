@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+
+// 3주차 미션 제출 — 로빌(ROBIL) / BodyLog
+// 흐름(기록→분석→코칭→배포→확인)에서 "사람이 손으로 하던 멈추던 칸" → API → 스킬
+const stops = [
+  { n: 1, stop: '먹은 걸 일일이 타이핑 → 귀찮아서 기록 포기', api: 'Claude API (Vision + 구조화 출력)', skill: 'claude-api', code: true },
+  { n: 2, stop: '잘못 기록한 걸 찾아서 손으로 수정',            api: 'Claude API (Tool use)',            skill: 'claude-api', code: true },
+  { n: 3, stop: '운동 일정을 캘린더에서 옮겨 적기',            api: 'Google Calendar API',              skill: 'Google Calendar MCP' },
+  { n: 4, stop: '운동 영상을 유튜브에서 직접 검색',            api: 'YouTube Data API v3',              skill: '(API 키 직접 연동)' },
+  { n: 5, stop: '오늘 상태 보려고 매번 앱 열기',              api: 'Cloudflare Workers + KV',          skill: 'Cloudflare MCP' },
+  { n: 6, stop: '코드 고칠 때마다 손으로 드래그 배포',        api: 'Netlify API / GitHub Actions',     skill: 'Netlify MCP' },
+  { n: 7, stop: '데이터가 폰에만 → 백업을 손으로',            api: 'Supabase (DB·Auth·Storage)',       skill: 'Supabase MCP' },
+];
+
+// 붙여서 "완성시킨" 구간 (이번에 실제로 한 것)
+const built = [
+  {
+    mark: '①', title: '식사 기록 — 타이핑 → 사진 한 장',
+    body: 'Claude API Vision + 구조화 출력(json_schema)으로, 밥상 사진 한 장이면 메뉴·칼로리·단백질이 표로 자동 입력된다. 손으로 치던 칸이 사라졌다.',
+  },
+];
+---
+<Base title="로빌(ROBIL) — 3주차 미션">
+  <section style="padding-top:80px">
+    <div class="wrap">
+      <p class="section-kicker">Spongeclub S2 · 3주차 미션 제출</p>
+      <h2>로빌<span class="rb">ROBIL</span> — 흐름이 <mark>멈추던 칸</mark>에 스킬을 붙였다</h2>
+      <p class="lead">
+        만든 것: 개인용 AI 헬스 코칭 앱 <b>BodyLog</b> — 단일 <code>index.html</code>, 서버 0 · 월 $0.<br />
+        <b>BodyLog(기록)</b> + <b>Buildup(축적)</b>. 아침 루틴을 <b>영양·운동·휴식</b> 3축으로 코칭한다.
+      </p>
+
+      <!-- 앱 한눈 -->
+      <div class="appcard">
+        <div class="ac-phone">
+          <div class="ph-top"><span class="ph-brand">BodyLog</span><span class="ph-date">2026.07.22 (수)</span></div>
+          <div class="ph-stats">
+            <div><b>58.5</b><span>kg</span></div>
+            <div><b>2256</b><span>kcal</span></div>
+            <div><b>127.4</b><span>g 단백질</span></div>
+          </div>
+          <div class="ph-routine">
+            <span class="rk">아침 루틴</span>
+            <div class="ph-chips"><span>✓ 수면</span><span>✓ 제출</span><span>✓ 분석</span></div>
+          </div>
+        </div>
+        <div class="ac-desc">
+          <p class="ac-h">기록 → 분석 → 코칭 → 배포 → 확인</p>
+          <p>이 흐름을 매일 돌린다. 그 안에서 <b>사람이 손으로 해야 해서 멈추던 지점</b>을 먼저 찾고, 칸마다 딱 맞는 API·스킬을 붙여 흐름이 끊기지 않게 만들었다.</p>
+        </div>
+      </div>
+
+      <!-- 1. 멈추던 칸 찾기 -->
+      <div class="block">
+        <p class="block-h"><span class="bn">1</span> 내 흐름에서 "멈추던 칸" 찾기</p>
+        <p class="block-sub">기록 → 분석 → 코칭 → 배포 → 확인. 이 흐름에서 사람이 손으로 해야 해서 멈추던 지점을 먼저 찾았습니다.</p>
+        <div class="table">
+          <div class="tr th">
+            <span class="c-n">#</span>
+            <span class="c-stop">멈추던 칸 (사람이 하던 일)</span>
+            <span class="c-api">필요한 API·툴</span>
+            <span class="c-skill">그 API를 다루는 스킬</span>
+          </div>
+          {stops.map((s) => (
+            <div class="tr">
+              <span class="c-n">{s.n}</span>
+              <span class="c-stop">{s.stop}</span>
+              <span class="c-api">{s.api}</span>
+              <span class="c-skill">{s.code ? <code class="skill">{s.skill}</code> : <span class="skill-t">{s.skill}</span>}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- 2. 완성시킨 구간 -->
+      <div class="block">
+        <p class="block-h"><span class="bn">2</span> 붙여서 "완성시킨" 구간 <span class="tag-real">이번에 실제로 한 것</span></p>
+        <div class="built">
+          {built.map((b) => (
+            <div class="bi">
+              <span class="bi-mark">{b.mark}</span>
+              <div>
+                <p class="bi-t">{b.title}</p>
+                <p class="bi-b">{b.body}</p>
+              </div>
+            </div>
+          ))}
+          <p class="more">2~7번 칸도 같은 방식으로 순서대로 붙여 완성한다. (다음 업데이트에 이어서 채움)</p>
+        </div>
+      </div>
+
+      <p class="foot-note">
+        3주차 미션 취지 — <b>흐름이 멈추는 칸에 스킬을 붙이고 채널에 등록</b> — 에 그대로 맞춘 제출물.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .rb { font-family: var(--mono); font-size: 0.5em; font-weight: 600; letter-spacing: 0.1em; color: var(--accent); vertical-align: middle; margin-left: 10px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 8px; }
+    .lead code { font-family: var(--mono); font-size: 0.86em; background: var(--bg-soft); border: 1px solid var(--line-soft); border-radius: 6px; padding: 1px 6px; }
+
+    /* 앱 한눈 카드 */
+    .appcard { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: center; margin: 8px 0 40px; padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg-card); }
+    .ac-phone { border: 1px solid var(--line); border-radius: 18px; padding: 18px; background: var(--bg-soft); }
+    .ph-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .ph-brand { font-weight: 800; letter-spacing: -0.02em; }
+    .ph-date { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+    .ph-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 16px 0; }
+    .ph-stats > div { text-align: center; }
+    .ph-stats b { display: block; font-family: var(--mono); font-size: 1.2rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+    .ph-stats span { font-size: 0.7rem; color: var(--muted); }
+    .ph-routine .rk { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; }
+    .ph-chips { display: flex; gap: 6px; margin-top: 8px; }
+    .ph-chips span { font-size: 0.74rem; background: var(--accent-soft); color: var(--accent-strong); border-radius: 999px; padding: 3px 10px; }
+    .ac-desc .ac-h { font-family: var(--mono); font-weight: 600; color: var(--accent); margin: 0 0 8px; letter-spacing: -0.01em; }
+    .ac-desc p { color: var(--fg-soft); line-height: 1.65; margin: 0; }
+
+    /* 블록 공통 */
+    .block { margin: 32px 0; }
+    .block-h { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 6px; }
+    .bn { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 0.9rem; }
+    .block-sub { color: var(--fg-soft); margin: 0 0 18px; line-height: 1.6; }
+    .tag-real { font-family: var(--mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.02em; color: var(--accent-strong); background: var(--accent-soft); border-radius: 999px; padding: 3px 10px; }
+
+    /* 표 */
+    .table { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--bg-card); }
+    .tr { display: grid; grid-template-columns: 44px 1fr 1.1fr 0.9fr; align-items: center; gap: 12px; padding: 15px 20px; border-top: 1px solid var(--line-soft); }
+    .tr:first-child { border-top: 0; }
+    .tr.th { background: var(--bg-soft); font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+    .tr.th span { color: var(--muted); }
+    .c-n { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+    .c-stop { font-weight: 600; line-height: 1.45; }
+    .c-api { color: var(--fg-soft); font-size: 0.92rem; line-height: 1.45; }
+    .c-skill code.skill { font-family: var(--mono); font-size: 0.82rem; background: var(--accent-soft); color: var(--accent-strong); border-radius: 7px; padding: 3px 9px; }
+    .c-skill .skill-t { font-size: 0.88rem; color: var(--fg-soft); }
+
+    /* 완성 구간 */
+    .built { border: 1px solid var(--line); border-radius: 16px; background: var(--bg-card); padding: 8px 20px 20px; }
+    .bi { display: flex; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
+    .bi:last-of-type { border-bottom: 0; }
+    .bi-mark { font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1.2; }
+    .bi-t { font-size: 1.05rem; font-weight: 700; margin: 4px 0 6px; }
+    .bi-b { color: var(--fg-soft); line-height: 1.6; margin: 0; }
+    .more { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin: 6px 0 0; letter-spacing: 0.01em; }
+
+    .foot-note { margin: 36px 0 0; padding: 18px 20px; background: var(--bg-soft); border-radius: 12px; color: var(--fg-soft); line-height: 1.6; }
+
+    @media (max-width: 760px) {
+      .appcard { grid-template-columns: 1fr; }
+      .tr { grid-template-columns: 30px 1fr; }
+      .tr .c-api::before { content: "API· "; color: var(--muted); font-family: var(--mono); font-size: 0.7rem; }
+      .tr.th .c-api, .tr.th .c-skill { display: none; }
+      .c-api, .c-skill { grid-column: 2; }
+      .c-api { margin-top: 2px; }
+    }
+  </style>
+</Base>
