@@ -312,10 +312,12 @@ footer { border-top: 1px solid var(--line-soft); padding: 64px 0 80px; color: va
 footer a:hover { color: var(--fg); }
 
 /* ── scroll reveal ───────────────────────────────────────── */
-[data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
-[data-reveal].in { opacity: 1; transform: none; }
+/* 숨김 상태는 JS가 켜졌을 때(.reveal-js)만 적용한다. JS가 없거나 스크립트가
+   안 돌면 .reveal-js가 안 붙어 콘텐츠가 그냥 보인다 → 백지 사고 방지. */
+.reveal-js [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.reveal-js [data-reveal].in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .reveal-js [data-reveal] { opacity: 1; transform: none; transition: none; }
   .hero::before { animation: none; }
   html { scroll-behavior: auto; }
 }

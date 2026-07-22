@@ -20,6 +20,8 @@ const pageUrl = new URL(path || '/', Astro.site).href;
     <title>{pageTitle} · Aramirror</title>
     <meta name="description" content={desc} />
     <meta name="theme-color" content="#ffffff" />
+    <!-- 등장 애니메이션 활성화 표시. JS가 실제로 도는 경우에만 콘텐츠를 숨겼다 보여준다. -->
+    <script is:inline>document.documentElement.classList.add('reveal-js');</script>
     <!-- OG / 공유카드 (자동생성 이미지) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Aramirror" />
@@ -179,25 +181,31 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       }
     </style>
 
-    <script>
-      // scroll reveal — 요소가 뷰포트에 들어오면 스르륵 나타남
-      const els = document.querySelectorAll('[data-reveal]');
-      if ('IntersectionObserver' in window && els.length) {
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              const el = e.target as HTMLElement;
-              const delay = el.dataset.reveal ? Number(el.dataset.reveal) : 0;
-              el.style.transitionDelay = delay + 'ms';
-              el.classList.add('in');
-              io.unobserve(el);
-            }
-          });
-        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-        els.forEach((el) => io.observe(el));
-      } else {
-        els.forEach((el) => el.classList.add('in'));
-      }
+    <script is:inline>
+      // scroll reveal — 요소가 뷰포트에 들어오면 스르륵 나타남.
+      // is:inline 으로 즉시 실행(무거운 번들/네트워크에 안 묶임) + 안전장치로 절대 백지 안 됨.
+      (function () {
+        var els = document.querySelectorAll('[data-reveal]');
+        if (!els.length) return;
+        function showAll() { for (var i = 0; i < els.length; i++) els[i].classList.add('in'); }
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                var el = e.target;
+                el.style.transitionDelay = (el.dataset.reveal ? Number(el.dataset.reveal) : 0) + 'ms';
+                el.classList.add('in');
+                io.unobserve(el);
+              }
+            });
+          }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+          for (var i = 0; i < els.length; i++) io.observe(els[i]);
+          // 안전장치: 어떤 이유로든 1초 안에 안 켜졌으면 전부 강제 표시(백지 방지)
+          setTimeout(showAll, 1000);
+        } else {
+          showAll();
+        }
+      })();
     </script>
 
     <script>
