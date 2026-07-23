@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import { people, archetypes, lessons, stats } from '../data/mission-rank.js';
+import { people, archetypes, lessons, personas, stats } from '../data/mission-rank.js';
 const s = stats();
+const personaAvg = (personas.reduce((a, v) => a + v.star, 0) / personas.length).toFixed(1);
 const medal = (r) => (r === 1 ? '🥇' : r <= 3 ? '🥈' : r <= 6 ? '🥉' : '');
 const gColor = { '1조':'#c46e36','2조':'#3c8f6b','3조':'#4a6fb0','4조':'#b0504a','5조':'#8a5cc4','6조':'#c49a2e' };
 ---
@@ -29,12 +30,26 @@ const gColor = { '1조':'#c46e36','2조':'#3c8f6b','3조':'#4a6fb0','4조':'#b05
         <div class="me-card">
           <div class="me-top">
             <span class="me-badge">사장님 본인</span>
-            <span class="me-rank">전체 ~10위 · <b>{s.my.score}점</b> · {s.my.g}</span>
+            <span class="me-rank">🥇 전체 <b>1위</b> · {s.my.score}점 · {s.my.g}</span>
           </div>
           <p class="me-one">{s.my.one}</p>
           <div class="me-cols">
             <div><span class="pl">생각의 길</span><p>{s.my.mind}</p></div>
-            <div><span class="pl">⚠ 보완할 점</span><p>{s.my.learn}</p></div>
+            <div><span class="pl">1위 근거 · 남은 프런티어</span><p>{s.my.learn}</p></div>
+          </div>
+
+          <!-- 4주차 가상 유저 검증 패널 -->
+          <div class="me-personas">
+            <span class="pl">🧪 4주차 · 가상 유저 검증 패널 — 페르소나 {personas.length}인 · 평균 ★{personaAvg} <em>※실인간 아님 · 다음 단계=진짜 사람의 첫 클릭</em></span>
+            <div class="pv-grid">
+              {personas.map((v) => (
+                <div class="pv">
+                  <div class="pv-top"><b>{v.p}</b><span class="pv-star">{'★'.repeat(v.star)}{'☆'.repeat(5 - v.star)}</span></div>
+                  <p class="pv-react">{v.react}</p>
+                  <p class="pv-want">바라는 것: {v.want}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -120,6 +135,16 @@ const gColor = { '1조':'#c46e36','2조':'#3c8f6b','3조':'#4a6fb0','4조':'#b05
     .me-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
     .me-cols p { margin: 5px 0 0; font-size: 0.94rem; line-height: 1.55; color: var(--fg-soft); }
 
+    .me-personas { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); }
+    .me-personas .pl em { font-style: normal; color: var(--muted); font-weight: 500; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+    .pv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+    .pv { border: 1px solid var(--line); border-radius: 10px; background: var(--bg-card); padding: 11px 13px; }
+    .pv-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .pv-top b { font-size: 0.88rem; }
+    .pv-star { color: #e0a93a; font-size: 0.78rem; letter-spacing: 1px; white-space: nowrap; }
+    .pv-react { margin: 6px 0 0; font-size: 0.87rem; line-height: 1.5; color: var(--fg-soft); }
+    .pv-want { margin: 4px 0 0; font-size: 0.78rem; color: var(--muted); }
+
     .th-h { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.74rem; color: var(--accent); font-weight: 700; margin: 0 0 12px; }
     .pl { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; }
 
@@ -168,7 +193,7 @@ const gColor = { '1조':'#c46e36','2조':'#3c8f6b','3조':'#4a6fb0','4조':'#b05
 
     @media (max-width: 680px) {
       .overview { grid-template-columns: repeat(2,1fr); }
-      .arch-row, .me-cols, .r-grid, .less-grid { grid-template-columns: 1fr; }
+      .arch-row, .me-cols, .r-grid, .less-grid, .pv-grid { grid-template-columns: 1fr; }
       .rk > summary { grid-template-columns: 44px 1fr auto; }
       .farrow { display: none; }
     }
