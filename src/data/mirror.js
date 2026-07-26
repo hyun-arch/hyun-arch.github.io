@@ -28,6 +28,7 @@ export const domains = [
         h: '몰입 · 사색',
         items: [
           { t: '플로우 타이머', to: '/flow', status: 'live' },
+          { t: '거장 & 스승 — 몰입의 거장·자문의 스승', to: '/masters', status: 'live' },
           { t: '리버스 저널링', slug: 'reverse-journal', status: 'building', from: '지수 · 미미',
             lead: '저녁 캡처가 비어 있으면, 봇이 먼저 질문을 던져 한 줄이라도 끌어낸다. 모으는 게 아니라 끌어내 주기.',
             points: ['조용한 날엔 8가지 결 랜덤 질문을 먼저 발송', '“오래 조용하면 먼저 말 걸기” 능동형 체크인', '한 줄이라도 남으면 사색 노트로 연결'],
@@ -90,6 +91,7 @@ export const domains = [
       {
         h: '독서',
         items: [
+          { t: '독서 · 학습 노트', to: '/reading', status: 'live' },
           { t: '읽는 중', slug: 'reading-now', status: 'seed', lead: '지금 펼쳐둔 책들. 끝내야 한다는 압박 없이, 지금 만나는 문장만.',
             points: ['데미안 — 헤르만 헤세', '몰입 — 황농문', '읽다 만 책도 그대로 둔다, 언제든 다시'] },
           { t: '완독 · 서평', slug: 'read-done', status: 'idea', lead: '다 읽은 책은 별점이 아니라 “나를 어떻게 바꿨나” 한 문단으로.',
@@ -109,9 +111,10 @@ export const domains = [
               '로컬 실시간판은 usage_server.py(사용량서버.bat)로 여전히 사용 가능',
             ],
             links: [{ label: '사용량 열기 (비번 필요)', href: 'https://hyun-arch.github.io/claude-usage/', external: true }] },
-          { t: 'Calendar — 일정', slug: 'calendar-app', status: 'building',
-            lead: '오늘 일정·할일·리포트가 켜면 바로 보이는 무로그인 원스크린.',
-            points: ['관제실(/hq) 오늘 뷰와 연결', '날짜 있는 리마인드는 여기로 모으기'] },
+          { t: 'Calendar — 일정', to: '/calendar', status: 'live' },
+          { t: '아람봇 — FAQ 상담', to: '/arambot', status: 'live' },
+          { t: '스폰지 시계', to: '/sponge', status: 'live' },
+          { t: '세계 시계', to: '/world', status: 'live' },
         ],
       },
     ],
@@ -160,6 +163,10 @@ export const domains = [
             lead: '회사 CRM. 고객·거래·이력을 한 곳에서. (로그인 계층)',
             points: ['영업 파이프라인과 매출 대시보드로 연결', '반복 알림·후속조치 자동화 목표'] },
           { t: 'Aram Huvis OS — 회사 OS', to: '/m/aramhuvis-os', status: 'building' },
+          { t: '릴라이 홈 — B2C 패키지', slug: 'lilai-home', status: 'building', tier: 'secret',
+            lead: '🔴 대외비. 릴라이(lilai.ai) AI 두피케어의 가정용 B2C 패키지 계획. 상세는 금고(로컬)에서만.',
+            points: ['🔒 계획서·예산·매출 시나리오는 로컬 금고 전용 — 공개 빌드 제외'],
+            links: [{ label: '금고(로컬 전용)', href: '/vault' }] },
           { t: '진행 중 프로젝트', slug: 'projects-active', status: 'idea', lead: '지금 손대고 있는 것들의 한눈 목록. 상태 라벨로 어디까지 왔는지.',
             points: ['각 프로젝트: 다음 한 걸음만 적기', '멈춘 건 멈춤이라고 정직하게'] },
           { t: '아이디어 백로그', slug: 'idea-backlog', status: 'building', lead: '“이거 되겠다” 싶은 것들의 대기열. 버리지 말고 쌓아두기.',
@@ -207,6 +214,9 @@ export const domains = [
       {
         h: '스폰지클럽',
         items: [
+          { t: '스폰지클럽 1주차 기획', to: '/spongeclub', status: 'live' },
+          { t: '로빌(ROBIL) — 3주차 미션', to: '/robil', status: 'live' },
+          { t: '🏆 4주 과제 랭킹 (71명 전수)', to: '/mission-rank', status: 'live' },
           { t: '이기적인 스킬러스', slug: 'skillers', status: 'seed',
             lead: '스폰지클럽의 스킬러스 채널. 클로드 코드 스킬을 서로 나누고 후기를 남기는 곳.',
             points: ['내게 맞는 스킬 추천받고 바로 설치', '쓴 스킬은 채널에 후기 공유', '/스킬등록 초안까지 만들어 올리기'] },
@@ -320,7 +330,10 @@ export const domains = [
       {
         h: '글 · SNS',
         items: [
+          { t: '스튜디오팀 구조 — 지금 어떻게 일하나', to: '/studio-team', status: 'live' },
           { t: '캐러셀 스튜디오', to: '/studio', status: 'live' },
+          { t: '릴스 스튜디오', to: '/reels', status: 'live' },
+          { t: '글 (writings)', to: '/writings', status: 'live' },
           { t: '빌드로그', to: '/build-logs', status: 'live' },
           { t: '이중언어 포스트 (KR/EN)', slug: 'bilingual', status: 'seed',
             lead: '빌드로그·블로그 글은 기본으로 한국어 아래 영어 번역을 붙인다.',
@@ -332,6 +345,8 @@ export const domains = [
         h: '웹서비스',
         items: [
           { t: 'Aramirror 자체', to: '/', status: 'live' },
+          { t: 'GTB — 새벽 농구 운영 OS', to: '/gtb', status: 'live' },
+          { t: '셸 스튜디오', to: '/shell-studio', status: 'live' },
         ],
       },
       {
