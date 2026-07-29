@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>관제실 v2 · Mission Control Board</title>
+<meta name="description" content="사장님 전용 관제실 — 프로젝트를 완성·진행·대기·완료 피켓으로 딱딱 나눈 칸반 보드." />
+<style>
+  :root{
+    --bg:#08090d; --bg2:#10121a; --card:#161a27; --card2:#1b2030; --line:#242a3b; --line2:#2f3750;
+    --ink:#eef0f7; --dim:#98a0b3; --faint:#6b7385;
+    --coral:#ff6b5e; --coral2:#ff8a7a; --gold:#f5c451;
+    --green:#54d08a; --amber:#f2b34a; --red:#ff6b6b; --blue:#5aa9ff; --violet:#a98bff;
+    --shadow:0 18px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:
+    radial-gradient(1200px 600px at 50% -12%,rgba(255,107,94,.10),transparent 60%),
+    radial-gradient(900px 500px at 100% 0,rgba(90,169,255,.06),transparent 55%),var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 16px 100px}
+
+  /* ===== 상단바 ===== */
+  .topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;
+    padding:10px 16px;background:rgba(6,7,10,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line)}
+  .topbar .bd{font-weight:900;font-size:16px;color:#fff;text-decoration:none}
+  .topbar .bd i{color:var(--coral);font-style:normal}
+  .topbar .rm{color:var(--coral);font-weight:800;font-size:13px;display:flex;align-items:center;gap:5px}
+  .home{margin-left:auto;position:relative}
+  .home>button{font:inherit;font-size:13px;font-weight:800;color:var(--dim);background:var(--bg2);
+    border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;display:flex;align-items:center;gap:6px}
+  .home>button::after{content:"▾";font-size:.8em;opacity:.7}
+  .home.open>button{color:#fff;border-color:var(--coral)}
+  .menu{position:absolute;right:0;top:calc(100% + 8px);min-width:236px;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+    padding:8px;display:none;max-height:72vh;overflow:auto}
+  .home.open .menu{display:block}
+  .menu .flr{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--faint);
+    text-transform:uppercase;padding:9px 10px 3px}
+  .menu a{display:block;color:var(--ink);text-decoration:none;font-size:14px;padding:8px 10px;border-radius:9px}
+  .menu a:hover{background:var(--bg2)}
+
+  /* ===== 헤더 ===== */
+  header{padding:22px 16px 6px;max-width:1240px;margin:0 auto}
+  .kicker{color:var(--coral);font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase}
+  h1{font-size:26px;line-height:1.15;margin:7px 0 3px;font-weight:900;letter-spacing:-.02em;
+    background:linear-gradient(120deg,#fff,#ffb8ae);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--dim);font-size:13.5px;margin:0}
+  .clock{color:var(--faint);font-size:12px;margin-top:6px;font-variant-numeric:tabular-nums}
+
+  /* ===== 탭 ===== */
+  .tabs{position:sticky;top:44px;z-index:20;background:rgba(8,9,13,.9);backdrop-filter:blur(12px);
+    display:flex;gap:8px;overflow-x:auto;padding:11px 16px;margin:12px -16px 4px;border-bottom:1px solid var(--line)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;font-size:13.5px;font-weight:800;color:var(--dim);border:1px solid var(--line);
+    background:var(--bg2);padding:8px 15px;border-radius:999px;cursor:pointer;user-select:none;white-space:nowrap}
+  .tab.on{color:#fff;background:linear-gradient(120deg,#ff6b5e,#ff8a7a);border-color:transparent}
+  .panel{display:none;animation:fade .25s ease} .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ===== 대시보드 요약 스트립 ===== */
+  .dash{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 6px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;position:relative;overflow:hidden}
+  .tile::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--faint)}
+  .tile.g::before{background:var(--green)} .tile.a::before{background:var(--amber)}
+  .tile.b::before{background:var(--blue)} .tile.r::before{background:var(--red)} .tile.v::before{background:var(--violet)}
+  .tile .n{font-size:26px;font-weight:900;line-height:1;letter-spacing:-.02em}
+  .tile .l{color:var(--dim);font-size:12px;margin-top:6px;font-weight:700}
+  .tile .s{color:var(--faint);font-size:10.5px;margin-top:2px}
+  .tile.g .n{color:var(--green)} .tile.a .n{color:var(--amber)}
+  .tile.b .n{color:var(--blue)} .tile.r .n{color:var(--red)} .tile.v .n{color:var(--violet)}
+
+  /* 진행률 종합 바 */
+  .megabar{margin:14px 0 2px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 16px}
+  .megabar .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .megabar .top b{font-size:13px;color:var(--dim);font-weight:700}
+  .megabar .top .pct{font-size:18px;font-weight:900;color:var(--gold)}
+  .track{height:9px;background:var(--bg2);border-radius:999px;overflow:hidden;display:flex}
+  .track > span{height:100%;display:block}
+  .track .sg{background:linear-gradient(90deg,#54d08a,#7be0a6)}
+  .track .sd{background:linear-gradient(90deg,#5aa9ff,#8ec6ff)}
+  .track .sp{background:linear-gradient(90deg,#f2b34a,#f5c451)}
+  .track .sb{background:#39415c}
+  .leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px}
+  .leg span{font-size:11.5px;color:var(--dim);display:flex;align-items:center;gap:5px}
+  .leg i{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+  /* ===== 필터 ===== */
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 4px}
+  .filters button{font:inherit;font-size:12px;font-weight:800;color:var(--dim);background:var(--bg2);
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer}
+  .filters button.on{color:#fff;border-color:var(--coral);background:rgba(255,107,94,.12)}
+
+  /* ===== 칸반 보드 ===== */
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px;align-items:start}
+  .col{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+    border:1px solid var(--line);border-radius:18px;padding:12px 11px 14px;min-height:120px;transition:border-color .15s,background .15s}
+  .col.drop{border-color:var(--coral);background:rgba(255,107,94,.06)}
+  .colhead{display:flex;align-items:center;gap:8px;padding:2px 4px 12px;position:sticky}
+  .dotc{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+  .colttl{font-size:13.5px;font-weight:900;letter-spacing:-.01em}
+  .colsub{font-size:10.5px;color:var(--faint);font-weight:700;margin-top:1px}
+  .colcnt{margin-left:auto;font-size:12px;font-weight:900;color:var(--dim);
+    background:var(--bg2);border:1px solid var(--line);border-radius:999px;min-width:24px;text-align:center;padding:2px 7px}
+
+  .pk{background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:12px 13px;margin-bottom:10px;
+    cursor:grab;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.25);transition:transform .12s,box-shadow .12s,border-color .12s}
+  .pk:hover{border-color:var(--coral);transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.4)}
+  .pk.drag{opacity:.45}
+  .pk .dom{font-size:10px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;color:var(--faint)}
+  .pk .dom b{padding:1px 7px;border-radius:999px;border:1px solid var(--line2)}
+  .pk h3{margin:6px 0 0;font-size:14.5px;font-weight:800;line-height:1.32;letter-spacing:-.01em}
+  .pk .next{color:var(--coral2);font-size:12px;margin-top:7px;line-height:1.4}
+  .pk .next b{color:var(--gold)}
+  .pk .metr{height:5px;background:var(--bg2);border-radius:999px;margin-top:9px;overflow:hidden}
+  .pk .metr>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#54d08a,#7be0a6)}
+  .pk.s-progress .metr>i{background:linear-gradient(90deg,#f2b34a,#f5c451)}
+  .pk.s-backlog .metr>i{background:linear-gradient(90deg,#ff6b6b,#ff8a7a)}
+  .pk.s-done .metr>i{background:linear-gradient(90deg,#5aa9ff,#8ec6ff)}
+  .pk .foot{display:flex;align-items:center;gap:8px;margin-top:11px}
+  .avs{display:flex}
+  .av{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:12px;border:2px solid var(--card);margin-left:-7px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .av:first-child{margin-left:0}
+  .pk .live{margin-left:auto;font-size:10px;font-weight:900;color:var(--green);
+    border:1px solid rgba(84,208,138,.4);background:rgba(84,208,138,.1);border-radius:999px;padding:2px 8px}
+  .pk .open{margin-left:auto;font-size:11px;font-weight:800;color:var(--coral2);text-decoration:none;
+    border:1px solid var(--line2);border-radius:999px;padding:3px 10px}
+  .pk .open:hover{border-color:var(--coral)}
+  .pk .mv{display:none;gap:5px;margin-top:10px}
+  .pk .mv button{flex:1;font:inherit;font-size:11px;font-weight:800;color:var(--dim);
+    background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:6px 4px;cursor:pointer}
+  .pk .mv button:hover{color:#fff;border-color:var(--coral)}
+  .empty{color:var(--faint);font-size:12px;text-align:center;padding:22px 8px;border:1px dashed var(--line);border-radius:12px}
+
+  .hint{color:var(--faint);font-size:11.5px;text-align:center;margin:20px 0 0}
+  .hint b{color:var(--coral2)}
+  .resetb{display:inline-block;margin-top:6px;font-size:11px;color:var(--dim);background:var(--bg2);
+    border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer}
+
+  /* ===== 오늘 ===== */
+  h2.sec{font-size:12.5px;letter-spacing:.05em;color:var(--faint);text-transform:uppercase;
+    margin:22px 0 8px;font-weight:800;display:flex;align-items:center;gap:8px}
+  h2.sec .fl{color:var(--coral);font-weight:900}
+  .todo{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 4px;margin-top:10px}
+  .todo .i{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .todo .i:last-child{border-bottom:0}
+  .todo .k{font-size:16px} .todo .m{flex:1;font-size:14px} .todo .m span{display:block;color:var(--faint);font-size:12px;margin-top:1px}
+  .callr{margin-top:12px;background:linear-gradient(180deg,rgba(255,107,107,.10),rgba(255,107,107,.03));
+    border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:13px 15px}
+  .callr h3{margin:0 0 6px;font-size:14px;color:var(--red)}
+  .callr li{font-size:13.5px;margin:5px 0}
+  .greenbox{margin-top:10px;border:1px solid rgba(84,208,138,.3);background:rgba(84,208,138,.05);
+    border-radius:14px;padding:12px 15px}
+  .greenbox h3{margin:0 0 4px;font-size:14px;color:var(--green)}
+  .greenbox p{margin:0;color:var(--dim);font-size:13px}
+
+  /* ===== 방 ===== */
+  .seg{display:flex;gap:7px;margin:16px 0 10px;flex-wrap:wrap}
+  .seg button{font:inherit;font-size:13px;font-weight:800;color:var(--dim);background:var(--bg2);
+    border:1px solid var(--line);border-radius:999px;padding:8px 15px;cursor:pointer}
+  .seg button.on{color:#fff;background:linear-gradient(120deg,#ff6b5e,#ff8a7a);border-color:transparent}
+  .roomhead{display:flex;align-items:center;gap:8px;margin:4px 0 8px}
+  .roomhead b{font-size:15px}
+  .roomhead a.open{margin-left:auto;font-size:12px;color:var(--coral2);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+  .roomframe{width:100%;height:74vh;border:1px solid var(--line);border-radius:14px;background:var(--bg2);display:block}
+
+  footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--faint);font-size:12px;text-align:center}
+  footer a{color:var(--coral2);text-decoration:none}
+
+  /* ===== 반응형 ===== */
+  @media (max-width:1000px){ .dash{grid-template-columns:repeat(3,1fr)} .board{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:640px){
+    .dash{grid-template-columns:repeat(2,1fr)}
+    .board{grid-template-columns:1fr;gap:14px}
+    .pk{cursor:default}
+    .pk .mv{display:flex}         /* 모바일: 드래그 대신 이동 버튼 */
+    .colhead{position:sticky;top:92px;background:rgba(8,9,13,.85);backdrop-filter:blur(6px);z-index:5;border-radius:10px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="bd" href="/">Aramirror<i>.</i></a>
+  <span class="rm">🎛 관제실 <span style="color:var(--faint);font-weight:700">v2</span></span>
+  <div class="home" id="home">
+    <button type="button" id="homeBtn">🪞 본체</button>
+    <div class="menu" id="homeMenu">
+      <div class="flr">5F · 총괄실</div>
+      <a href="/hq/index_v2.html">관제실 v2 (지금 여기)</a>
+      <a href="/hq/index.html">관제실 v1 (예전)</a>
+      <a href="/order/index.html">기획주문서</a>
+      <a href="/eval/index.html">평가시트</a>
+      <a href="/admin/">관리자</a>
+      <div class="flr">4F · 세컨드브레인</div>
+      <a href="/mirror/">전체 지도</a>
+      <a href="/wall/">생각의 벽</a>
+      <a href="/board/">게시판</a>
+      <a href="/publish/">발행</a>
+      <div class="flr">3F · 시간 · 몰입</div>
+      <a href="/flow/">몰입 · Flow</a>
+      <a href="/sponge/">스폰지 시계</a>
+      <div class="flr">2F · 프로젝트</div>
+      <a href="/gtb/">농구클럽 · GTB</a>
+      <a href="/spongeclub/">스폰지클럽</a>
+      <a href="/studio/">캐러셀 스튜디오</a>
+      <div class="flr">1F · 기록 · 안내</div>
+      <a href="/build-logs/">Build Logs</a>
+      <a href="/how/">작동 방식</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker">Mission Control · 관제실</div>
+  <h1>사장님 관제실</h1>
+  <p class="sub">프로젝트를 <b style="color:var(--ink)">대기 · 진행 · 완성 · 완료</b> 피켓으로 딱딱 나눠 한눈에.</p>
+  <div class="clock" id="clock">—</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <div class="tab on" data-p="board">🗂 보드</div>
+  <div class="tab" data-p="today">🌅 오늘</div>
+  <div class="tab" data-p="auto">⚙️ 자동화</div>
+  <div class="tab" data-p="rooms">🚪 방</div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ 보드 ============ -->
+  <section class="panel on" id="board">
+    <!-- 요약 대시보드 -->
+    <div class="dash">
+      <div class="tile b"><div class="n" id="d-total">—</div><div class="l">전체 프로젝트</div><div class="s">움직이는 판</div></div>
+      <div class="tile a"><div class="n" id="d-prog">—</div><div class="l">🔨 진행 중</div><div class="s">지금 손대는</div></div>
+      <div class="tile g"><div class="n" id="d-ship">—</div><div class="l">🚀 완료·배포</div><div class="s">라이브</div></div>
+      <div class="tile r"><div class="n" id="d-back">—</div><div class="l">📥 대기·미완성</div><div class="s">사장님 결정 포함</div></div>
+      <div class="tile v"><div class="n" id="d-wait">—</div><div class="l">🙋 사장님 대기</div><div class="s">한 줄이면 끝</div></div>
+    </div>
+
+    <!-- 종합 진행률 -->
+    <div class="megabar">
+      <div class="top"><b>전체 진행률 (가중 평균)</b><span class="pct" id="megaPct">—%</span></div>
+      <div class="track">
+        <span class="sg" id="seg-g"></span><span class="sd" id="seg-d"></span><span class="sp" id="seg-p"></span><span class="sb" id="seg-b"></span>
+      </div>
+      <div class="leg">
+        <span><i style="background:#54d08a"></i>완료</span>
+        <span><i style="background:#5aa9ff"></i>완성</span>
+        <span><i style="background:#f5c451"></i>진행</span>
+        <span><i style="background:#39415c"></i>대기</span>
+      </div>
+    </div>
+
+    <!-- 도메인 필터 -->
+    <div class="filters" id="filters">
+      <button class="on" data-f="all">전체</button>
+      <button data-f="회사">🏢 회사</button>
+      <button data-f="나">🙋 개인</button>
+      <button data-f="가족">👨‍👦 가족</button>
+      <button data-f="커뮤니티">🧽 커뮤니티</button>
+      <button data-f="서비스">🚀 서비스</button>
+    </div>
+
+    <!-- 칸반 -->
+    <div class="board" id="kanban"></div>
+
+    <p class="hint">피켓을 <b>끌어다 옮기면</b> 단계가 바뀝니다 (모바일은 카드 아래 이동 버튼). 위치는 이 브라우저에 저장돼요.<br/>
+      <span class="resetb" id="resetBoard">↺ 원래 상태로 되돌리기</span></p>
+  </section>
+
+  <!-- ============ 오늘 ============ -->
+  <section class="panel" id="today">
+    <h2 class="sec">오늘 (<span id="todayMD">—</span>) 한눈</h2>
+    <div class="todo">
+      <div class="i"><div class="k">🌅</div><div class="m">아침 5시 모닝리포트<span>매일 자동 · 세션마다 크론 재확인</span></div></div>
+      <div class="i"><div class="k">🏀</div><div class="m">GTB 새벽농구 05:30<span>랜딩·정산계산기 라이브</span></div></div>
+      <div class="i"><div class="k">🧽</div><div class="m">스폰지클럽 5주차 제출<span>submission v2 완료 · 게시는 안 함</span></div></div>
+    </div>
+    <div class="callr">
+      <h3>🔴 사장님만 풀 수 있는 것 (한 줄이면 끝)</h3>
+      <ol style="margin:0;padding-left:18px">
+        <li><b>events DB</b> — Supabase에서 SQL 한 번 Run (시계·활동 클라우드 누적)</li>
+        <li><b>캐러셀 보관함</b> — Supabase URL + 키 (주시면 배포 완료)</li>
+        <li><b>'이인'</b> — 무엇인지 한 줄 (관제실 v2에 반영)</li>
+      </ol>
+    </div>
+    <div class="greenbox">
+      <h3>🟢 확인 없이 제가 계속 미는 것</h3>
+      <p>관제실 v2 고도화 · 모닝리포트 · 아들 미션 · 스폰지 과제</p>
+    </div>
+  </section>
+
+  <!-- ============ 자동화 ============ -->
+  <section class="panel" id="auto">
+    <div class="dash" style="grid-template-columns:repeat(3,1fr)">
+      <div class="tile g"><div class="n" id="a-run">—</div><div class="l">🟢 가동 중</div><div class="s">지금 도는</div></div>
+      <div class="tile a"><div class="n" id="a-wait">—</div><div class="l">🟡 대기·준비</div><div class="s">키·SQL 대기</div></div>
+      <div class="tile b"><div class="n" id="a-tot">—</div><div class="l">전체 자동화</div><div class="s">파이프라인</div></div>
+    </div>
+    <div class="board" id="autoboard" style="grid-template-columns:repeat(2,1fr)"></div>
+  </section>
+
+  <!-- ============ 방 ============ -->
+  <section class="panel" id="rooms">
+    <div class="seg" id="roomSeg">
+      <button class="on" data-r="/order/index.html" data-t="📋 기획주문서">📋 기획주문서</button>
+      <button data-r="/eval/index.html" data-t="📝 평가시트">📝 평가시트</button>
+      <button data-r="/admin/" data-t="🛠️ 관리자">🛠️ 관리자</button>
+    </div>
+    <div class="roomhead"><b id="roomTitle">📋 기획주문서</b><a class="open" id="roomOpen" href="/order/index.html" target="_blank">새 탭 ↗</a></div>
+    <iframe class="roomframe" id="roomFrame" title="방"></iframe>
+  </section>
+
+  <footer>
+    이 한 화면이 <b>아라미러 관제실 v2</b> — 프로젝트를 피켓으로 나눈 칸반 + 오늘 · 자동화 · 방.<br/>
+    <a href="/hq/index.html">← 예전 관제실(v1)</a> · <span id="updYMD">업데이트 —</span>
+  </footer>
+</div>
+
+<script>
+/* ===================== 데이터 =====================
+   담당(who): 이름·이모지·색. "한 사람만"이 아니라 여러 명 붙는다.
+   status: backlog(대기·미완성) / progress(진행중) / done(완성) / shipped(완료·배포)
+=================================================== */
+var WHO = {
+  boss:  {e:"👑", c:"#f5c451", n:"사장님"},
+  claude:{e:"🤖", c:"#5aa9ff", n:"클로드"},
+  design:{e:"🎨", c:"#a98bff", n:"크리에이티브"},
+  video: {e:"🎬", c:"#ff6b5e", n:"비디오"},
+  deck:  {e:"📊", c:"#54d08a", n:"덱"},
+  copy:  {e:"✍️", c:"#ff8a7a", n:"카피"},
+  n8n:   {e:"🔗", c:"#54d08a", n:"n8n"},
+};
+
+var DOMC = {"회사":"#5aa9ff","나":"#a98bff","가족":"#f2b34a","커뮤니티":"#54d08a","서비스":"#ff6b5e"};
+
+var PROJECTS = [
+  {id:"eval",   dom:"회사", title:"인사평가 시스템",        pct:80, status:"progress", who:["boss","claude","deck"], next:"직원 피드백 → 웹앱 확정", link:"/eval/index.html"},
+  {id:"hos",    dom:"회사", title:"아람휴비스 OS",          pct:55, status:"progress", who:["boss","claude"],        next:"아라미러에 회사 OS 화면 붙이기"},
+  {id:"turn",   dom:"회사", title:"흑자전환 150일 총력전",   pct:25, status:"progress", who:["boss","claude","deck"], next:"해외 진단기 급소 답 · 일/주/월 리포팅", link:"/os"},
+  {id:"web",    dom:"나",   title:"아라미러 웹 (본체)",      pct:100,status:"shipped",  who:["boss","claude","design"],next:"상시 고도화 · 배포 자동화", link:"https://hyun-arch.github.io/", live:true},
+  {id:"me",     dom:"나",   title:"아라미러 개인앱 /me",     pct:60, status:"progress", who:["claude"],               next:"기능 다듬기 + 본체와 연결"},
+  {id:"hqv2",   dom:"나",   title:"관제실 v2 (이 화면)",     pct:70, status:"progress", who:["boss","claude","design"],next:"'이인' 컨셉·영상 반영해 고도화"},
+  {id:"gtb",    dom:"서비스",title:"GTB 새벽 농구클럽",       pct:70, status:"shipped",  who:["boss","claude"],        next:"회원 DB(Supabase) 붙이기", link:"/gtb/", live:true},
+  {id:"inupt",  dom:"서비스",title:"INUPT 데일리 매칭",       pct:60, status:"progress", who:["boss","claude"],        next:"매칭 로직·데이터 붙이기, 실사용 테스트", link:"https://inupt-dashboard-mu.vercel.app"},
+  {id:"selfish",dom:"커뮤니티",title:"이기적멤버십 AX",        pct:50, status:"progress", who:["boss","claude","n8n"],  next:"유입→풀→전환 실제 수치·채널", link:"https://new.selfishclub.xyz"},
+  {id:"chess",  dom:"가족", title:"아빠와 아들 AI창업 30일",  pct:40, status:"progress", who:["boss","claude"],        next:"매일 아들 맞춤 미션 (체스)"},
+  {id:"carou",  dom:"나",   title:"캐러셀 보관함 (스튜디오07)",pct:90, status:"backlog",  who:["boss"],                 wait:true, next:"Supabase URL + 키 (주시면 배포 완료)"},
+  {id:"events", dom:"회사", title:"지하 엔진실 · events DB",  pct:85, status:"backlog",  who:["boss"],                 wait:true, next:"Supabase SQL 한 번 Run"},
+  {id:"lilai",  dom:"서비스",title:"릴라이 홈 B2C 패키지",     pct:20, status:"backlog",  who:["boss","claude","deck"], next:"사장님 결정 5개 · 예산·매출 시나리오"},
+];
+
+var AUTOS = [
+  {title:"텔레그램 봇 @Arami_claude_bot", status:"run",  note:"규칙 · 무조건 답 먼저, 일 나중", who:["claude"]},
+  {title:"아침 5시 모닝리포트",           status:"run",  note:"cron · 세션마다 재확인·재설정", who:["claude"]},
+  {title:"🐚 자동 셸 선물 봇",            status:"run",  note:"GitHub Actions 00:01 KST · 조원 순환", who:["claude"]},
+  {title:"[멤버십3.0] 가입 자동 발송",     status:"run",  note:"Webhook→중복방지→슬랙·알림톡·이메일", who:["n8n"]},
+  {title:"셀피쉬DB main_flow",           status:"run",  note:"신청+결제 대형 플로우", who:["n8n"]},
+  {title:"PPT 자동 제작 파이프라인",       status:"wait", note:"HTML→헤드리스 PNG→python-pptx", who:["claude","deck"]},
+  {title:"지하 엔진실 · events 적재",      status:"wait", note:"SQL 대기 · 밤 종합 → 아침 보고", who:["boss","claude"]},
+];
+
+var COLS = [
+  {key:"backlog",  ttl:"📥 대기 · 미완성", sub:"아직 / 막힘 / 사장님 결정", color:"#ff6b6b"},
+  {key:"progress", ttl:"🔨 진행 중",       sub:"지금 손대는 중",           color:"#f2b34a"},
+  {key:"done",     ttl:"✅ 완성",          sub:"다 됐고 배포 전",          color:"#5aa9ff"},
+  {key:"shipped",  ttl:"🚀 완료 · 배포",   sub:"라이브로 돌아감",          color:"#54d08a"},
+];
+
+/* ===================== 상태 저장 ===================== */
+var LSKEY = "aramirror.hq2.board";
+function loadOverride(){ try{ return JSON.parse(localStorage.getItem(LSKEY)||"{}"); }catch(e){ return {}; } }
+function saveOverride(o){ try{ localStorage.setItem(LSKEY, JSON.stringify(o)); }catch(e){} }
+var override = loadOverride();
+function statusOf(p){ return override[p.id] || p.status; }
+
+/* ===================== 렌더 ===================== */
+var $ = function(id){ return document.getElementById(id); };
+var esc = function(s){ return String(s).replace(/[&<>"]/g,function(m){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m];}); };
+var curFilter = "all";
+
+function avatarsHTML(who){
+  return '<div class="avs">'+ (who||[]).map(function(k){
+    var w = WHO[k]||{e:"•",c:"#888",n:k};
+    return '<div class="av" title="'+esc(w.n)+'" style="background:'+w.c+'22;border-color:'+w.c+'55">'+w.e+'</div>';
+  }).join('') +'</div>';
+}
+
+function pkHTML(p){
+  var st = statusOf(p);
+  var footRight = p.live ? '<span class="live">● LIVE</span>'
+                : (p.link ? '<a class="open" href="'+p.link+'" target="_blank" rel="noopener">열기 ↗</a>' : '');
+  var mv = COLS.filter(function(c){return c.key!==st;}).slice(0,3).map(function(c){
+    var lbl = c.ttl.replace(/^[^ ]+ /,'');
+    return '<button data-move="'+p.id+'" data-to="'+c.key+'">'+esc(lbl)+'</button>';
+  }).join('');
+  return ''+
+  '<article class="pk s-'+st+'" draggable="true" data-id="'+p.id+'">'+
+    '<div class="dom"><b style="color:'+(DOMC[p.dom]||'#888')+';border-color:'+(DOMC[p.dom]||'#555')+'66">'+esc(p.dom)+'</b>'+
+       (p.wait?' &nbsp;🙋 사장님 대기':'')+'</div>'+
+    '<h3>'+esc(p.title)+'</h3>'+
+    '<div class="next">→ '+esc(p.next||'')+'</div>'+
+    '<div class="metr"><i style="width:'+(p.pct||0)+'%"></i></div>'+
+    '<div class="foot">'+avatarsHTML(p.who)+footRight+'</div>'+
+    '<div class="mv">'+mv+'</div>'+
+  '</article>';
+}
+
+function renderBoard(){
+  var host = $("kanban");
+  host.innerHTML = COLS.map(function(c){
+    var items = PROJECTS.filter(function(p){ return statusOf(p)===c.key && (curFilter==="all"||p.dom===curFilter); });
+    var body = items.length ? items.map(pkHTML).join('') : '<div class="empty">비어 있음</div>';
+    return '<div class="col" data-col="'+c.key+'">'+
+      '<div class="colhead"><span class="dotc" style="background:'+c.color+'"></span>'+
+        '<div><div class="colttl">'+c.ttl+'</div><div class="colsub">'+c.sub+'</div></div>'+
+        '<span class="colcnt">'+items.length+'</span></div>'+
+      body +'</div>';
+  }).join('');
+  bindDnD();
+  renderDash();
+}
+
+function renderDash(){
+  var c={backlog:0,progress:0,done:0,shipped:0}, wait=0, sum=0;
+  PROJECTS.forEach(function(p){ var s=statusOf(p); c[s]=(c[s]||0)+1; if(p.wait)wait++; sum+=(p.pct||0); });
+  var tot=PROJECTS.length;
+  $("d-total").textContent=tot; $("d-prog").textContent=c.progress;
+  $("d-ship").textContent=c.shipped; $("d-back").textContent=c.backlog; $("d-wait").textContent=wait;
+  var pct = tot? Math.round(sum/tot) : 0;
+  $("megaPct").textContent = pct+"%";
+  var f=function(k){ return tot? (c[k]/tot*100).toFixed(1)+"%" : "0%"; };
+  $("seg-g").style.width=f("shipped"); $("seg-d").style.width=f("done");
+  $("seg-p").style.width=f("progress"); $("seg-b").style.width=f("backlog");
+}
+
+function renderAuto(){
+  var run=AUTOS.filter(function(a){return a.status==="run";});
+  var wait=AUTOS.filter(function(a){return a.status==="wait";});
+  $("a-run").textContent=run.length; $("a-wait").textContent=wait.length; $("a-tot").textContent=AUTOS.length;
+  function card(a){
+    var live = a.status==="run" ? '<span class="live">● 가동</span>' : '<span class="live" style="color:var(--amber);border-color:rgba(242,179,74,.4);background:rgba(242,179,74,.1)">● 대기</span>';
+    return '<article class="pk '+(a.status==="run"?"s-shipped":"s-progress")+'" style="cursor:default">'+
+      '<h3>'+esc(a.title)+'</h3>'+
+      '<div class="next">→ '+esc(a.note||'')+'</div>'+
+      '<div class="foot">'+avatarsHTML(a.who)+live+'</div></article>';
+  }
+  var groups=[{t:"🟢 가동 중",arr:run},{t:"🟡 대기 · 준비",arr:wait}];
+  $("autoboard").innerHTML = groups.map(function(g){
+    return '<div class="col"><div class="colhead"><span class="dotc" style="background:'+(g.t[0]==="🟢"?"#54d08a":"#f2b34a")+'"></span>'+
+      '<div><div class="colttl">'+g.t+'</div></div><span class="colcnt">'+g.arr.length+'</span></div>'+
+      g.arr.map(card).join('')+'</div>';
+  }).join('');
+}
+
+/* ===================== 드래그&드롭 + 이동버튼 ===================== */
+var dragId=null;
+function bindDnD(){
+  document.querySelectorAll('.pk[draggable]').forEach(function(el){
+    el.addEventListener('dragstart',function(e){ dragId=el.dataset.id; el.classList.add('drag'); try{e.dataTransfer.setData('text/plain',dragId);}catch(_){}} );
+    el.addEventListener('dragend',function(){ el.classList.remove('drag'); dragId=null; document.querySelectorAll('.col.drop').forEach(function(c){c.classList.remove('drop');}); });
+  });
+  document.querySelectorAll('.col[data-col]').forEach(function(col){
+    col.addEventListener('dragover',function(e){ e.preventDefault(); col.classList.add('drop'); });
+    col.addEventListener('dragleave',function(){ col.classList.remove('drop'); });
+    col.addEventListener('drop',function(e){ e.preventDefault(); col.classList.remove('drop');
+      if(dragId){ moveTo(dragId, col.dataset.col); } });
+  });
+  // 모바일 이동 버튼
+  document.querySelectorAll('button[data-move]').forEach(function(b){
+    b.addEventListener('click',function(){ moveTo(b.dataset.move, b.dataset.to); });
+  });
+}
+function moveTo(id, to){
+  var p=PROJECTS.find(function(x){return x.id===id;}); if(!p)return;
+  if(statusOf(p)===to)return;
+  override[id]=to; saveOverride(override);
+  renderBoard();
+}
+
+/* ===================== 탭 / 네비 / 시계 ===================== */
+(function(){
+  var home=$('home'), homeBtn=$('homeBtn');
+  homeBtn.addEventListener('click',function(e){e.stopPropagation();home.classList.toggle('open');});
+  document.addEventListener('click',function(e){ if(!e.target.closest('#home')) home.classList.remove('open'); });
+
+  var roomLoaded=false, autoLoaded=false;
+  $('tabs').addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(!t)return;
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t)});
+    var p=t.getAttribute('data-p');
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('on',x.id===p)});
+    if(p==='auto'&&!autoLoaded){ renderAuto(); autoLoaded=true; }
+    if(p==='rooms'&&!roomLoaded){ loadRoom('/order/index.html','📋 기획주문서'); roomLoaded=true; }
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  $('filters').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});
+    curFilter=b.dataset.f; renderBoard();
+  });
+
+  $('resetBoard').addEventListener('click',function(){
+    override={}; saveOverride(override); renderBoard();
+  });
+
+  var frame=$('roomFrame'), rTitle=$('roomTitle'), rOpen=$('roomOpen');
+  window.loadRoom=function(src,title){ frame.src=src; rTitle.textContent=title; rOpen.href=src; };
+  $('roomSeg').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});
+    window.loadRoom(b.getAttribute('data-r'), b.getAttribute('data-t'));
+  });
+
+  function tick(){
+    var d=new Date(), days=['일','월','화','수','목','금','토'];
+    var hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
+    $('clock').textContent=d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+' ('+days[d.getDay()]+') '+hh+':'+mm+' · 라이브';
+    var pad=function(n){return String(n).padStart(2,'0');};
+    var t=$('todayMD'); if(t)t.textContent=(d.getMonth()+1)+'/'+d.getDate();
+    var up=$('updYMD'); if(up)up.textContent='업데이트 '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+  tick(); setInterval(tick,10000);
+
+  renderBoard();
+})();
+</script>
+</body>
+</html>
