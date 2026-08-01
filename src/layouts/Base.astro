@@ -370,7 +370,8 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       }
       @media (max-width: 680px) {
         .os-dock { right:14px; bottom:14px; }
-        .os-nudge { left:14px; right:84px; bottom:16px; max-width:none; }
+        /* 모바일에선 ⚡ 옆이 아니라 위로 — 겹치면 둘 다 못 누른다 */
+        .os-nudge { left:14px; right:14px; bottom:82px; max-width:none; }
         .os-nudge-msg { font-size:.82rem; }
         .os-pal { top:6vh; max-height:84vh; }
       }
