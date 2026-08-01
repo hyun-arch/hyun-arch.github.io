@@ -12,5 +12,8 @@
   "dependencies": {
     "astro": "^4.16.18",
     "astro-og-canvas": "^0.7.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
   }
 }
