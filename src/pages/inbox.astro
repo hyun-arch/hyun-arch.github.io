@@ -205,6 +205,7 @@ const g = (id) => geneMap[id];
 
   <script>
     import * as OS from '../lib/os-core.js';
+    import * as GM from '../lib/game.js';
 
     const $ = (s) => document.querySelector(s);
     const $$ = (s) => Array.prototype.slice.call(document.querySelectorAll(s));
@@ -310,9 +311,9 @@ const g = (id) => geneMap[id];
       if (!(t instanceof HTMLElement)) return;
       const up = t.dataset.up, dn = t.dataset.dn, del = t.dataset.del, dv = t.dataset.v,
             done = t.dataset.done, dec = t.dataset.dec, dd = t.dataset.dd;
-      if (up) { OS.promote(up, 1); renderAll(); }
+      if (up) { OS.promote(up, 1); GM.bump('up'); renderAll(); }
       else if (dn) { OS.promote(dn, -1); renderAll(); }
-      else if (del) { OS.removeItem(del); renderAll(); }
+      else if (del) { OS.removeItem(del); GM.bump('deleted'); renderAll(); }
       else if (done) { OS.toggleDone(done); renderAll(); }
       else if (dv) {
         const cur = OS.getItem(dv);
@@ -362,6 +363,15 @@ const g = (id) => geneMap[id];
     OS.onChange(renderAll);
     window.addEventListener('aramos:captured', renderAll);
     renderAll();
+
+    // 정직 로그를 실제로 눈으로 본 순간에만 "웃는돌의 정직" 배지가 열린다
+    if ('IntersectionObserver' in window) {
+      const hio = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) { GM.bump('honest'); hio.disconnect(); } });
+      }, { threshold: 0.4 });
+      const h = document.querySelector('.ib-honest');
+      if (h) hio.observe(h);
+    }
 
     // /inbox?f=todo · ?f=unknown 딥링크 (먼저 말 거는 배너가 여기로 보낸다)
     const q = new URLSearchParams(location.search).get('f');

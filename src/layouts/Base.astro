@@ -465,7 +465,9 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       //  147명 유전자를 "글"이 아니라 "동작"으로. 모든 페이지에서 산다.
       // ══════════════════════════════════════════════════════════
       import * as OS from '../lib/os-core.js';
+      import * as GM from '../lib/game.js';
       window.aramOS = OS; // 콘솔에서도 만질 수 있게 — 내 데이터는 내 것
+      window.aramGame = GM;
 
       const $ = (id) => document.getElementById(id);
       const idxEl = $('osIndex');
@@ -629,9 +631,17 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         } else { go.textContent = '보기'; go.href = n.to; go.onclick = null; }
         nud.hidden = false;
       }
+      // 응답하면 잭의 재호출 배지가 오른다 (무시가 아니라 처리를 센다)
+      $('osNudgeGo')?.addEventListener('click', () => { try { GM.bump('nudge'); } catch (e) {} });
       $('osNudgeX')?.addEventListener('click', () => { OS.snooze(4); nud.hidden = true; });
 
-      OS.onChange(() => { refreshBadge(); refreshRecent(); });
+      // 상태가 바뀌면 넛지도 다시 판단한다 — 안 그러면 "아직 안 던지셨어요"가 던진 뒤에도 남는다
+      var nudT;
+      OS.onChange(() => {
+        refreshBadge(); refreshRecent();
+        clearTimeout(nudT);
+        nudT = setTimeout(showNudge, 400);
+      });
       refreshBadge();
       setTimeout(showNudge, 1400);
 
