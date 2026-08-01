@@ -1,5 +1,57 @@
 ---
 import '../styles/global.css';
+import { domains } from '../data/mirror.js';
+import { people as crew, geneMap } from '../data/dna.js';
+
+// ── 전역 검색 색인 (⌘K 커맨드 팔레트용) ──
+// 아람미러의 모든 것을 한 곳에서 찾아 열 수 있어야 한다. 마찰 0. (띵크·린디 유전자)
+const navIndex = [
+  { t: '홈', h: '/', k: 'page' },
+  { t: '흑자전환 OS (150일)', h: '/os', k: 'page' },
+  { t: '총괄실 대시보드', h: '/hq/index.html', k: 'page' },
+  { t: '금고 — 매출·재무', h: '/vault', k: 'page' },
+  { t: '관리자', h: '/admin', k: 'page' },
+  { t: '인박스 — 승격 파이프라인', h: '/inbox', k: 'page' },
+  { t: '아람봇 — FAQ 상담', h: '/arambot', k: 'page' },
+  { t: '받아쓰기 (음성→글자)', h: '/stt', k: 'page' },
+  { t: '되묻기 · 멘토', h: '/ask', k: 'page' },
+  { t: '책장 (분류함)', h: '/shelf', k: 'page' },
+  { t: '자료실', h: '/archive', k: 'page' },
+  { t: '생각의 벽', h: '/wall', k: 'page' },
+  { t: '글', h: '/writings', k: 'page' },
+  { t: '독서 · 학습', h: '/reading', k: 'page' },
+  { t: '게시판', h: '/board', k: 'page' },
+  { t: '발행', h: '/publish', k: 'page' },
+  { t: '몰입 · Flow', h: '/flow', k: 'page' },
+  { t: '거장 & 스승', h: '/masters', k: 'page' },
+  { t: '스폰지 시계', h: '/sponge', k: 'page' },
+  { t: '세계 시계', h: '/world', k: 'page' },
+  { t: '농구클럽 · GTB', h: '/gtb', k: 'page' },
+  { t: '스폰지클럽', h: '/spongeclub', k: 'page' },
+  { t: '아람미러 DNA — 147명 이식 현황', h: '/dna', k: 'page' },
+  { t: '4주 과제 랭킹', h: '/mission-rank', k: 'page' },
+  { t: '스튜디오팀 구조', h: '/studio-team', k: 'page' },
+  { t: '캐러셀 스튜디오', h: '/studio', k: 'page' },
+  { t: '릴스 스튜디오', h: '/reels', k: 'page' },
+  { t: '셸 스튜디오', h: '/shell-studio', k: 'page' },
+  { t: '달력', h: '/calendar', k: 'page' },
+  { t: 'Build Logs', h: '/build-logs', k: 'page' },
+  { t: '작동 방식', h: '/how', k: 'page' },
+];
+const mapIndex = domains.flatMap((d) =>
+  d.branches.flatMap((b) =>
+    b.items.map((it) => ({
+      t: it.t, h: it.to || '/m/' + it.slug, k: 'map',
+      d: d.title, s: it.status, from: it.from || null, gene: it.gene || null,
+    }))
+  )
+);
+const crewIndex = crew
+  .filter((p) => p.gene !== 'empty')
+  .map((p) => ({ t: p.n, h: '/dna#' + encodeURIComponent(p.n), k: 'crew', d: `${p.gen}기 ${p.g}`, sub: p.work, gene: p.gene }));
+const searchIndex = [...navIndex, ...mapIndex, ...crewIndex];
+const geneLite = Object.fromEntries(Object.entries(geneMap).map(([k, v]) => [k, { ic: v.ic, ko: v.ko, c: v.c }]));
+
 const { title, frontmatter } = Astro.props;
 const pageTitle = frontmatter?.title ?? title ?? 'Aramirror';
 const desc = frontmatter?.description ?? 'AI는 나를 대신하지 않는다 — 거울이 된다. 내 생각이 자산·가치로 기능하는 환경.';
@@ -65,6 +117,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
           <div class="nav-group">
             <button class="nav-top" type="button">세컨드브레인</button>
             <div class="nav-menu">
+              <a href="/inbox">📥 인박스 (던진 것 → 자산)</a>
               <a href="/arambot">🤖 아람봇 (FAQ 상담)</a>
               <a href="/stt">🎙️ 받아쓰기 (음성→글자)</a>
               <a href="/ask">되묻기 · 멘토</a>
@@ -118,6 +171,57 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       <slot />
     )}
 
+    <!-- ══════════════════════════════════════════════════════════
+         전역 OS 레이어 — 아람미러 어느 페이지에서든 살아있다.
+         스폰지클럽 147명에게서 뽑은 유전자를 실제 동작으로 박은 자리.
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- ⚡ 퀵캡처 독 : 던지는 순간과 저장되는 순간의 거리를 0으로 (띵크·린디·곽동욱) -->
+    <div class="os-dock" id="osDock">
+      <button class="os-fab" id="osFab" type="button" aria-label="한 줄 던지기 (C)" title="한 줄 던지기 · C">
+        <span class="os-fab-ic">⚡</span>
+        <span class="os-fab-n" id="osFabN" hidden>0</span>
+      </button>
+      <div class="os-cap" id="osCap" hidden>
+        <div class="os-cap-top">
+          <span class="os-cap-t">⚡ 한 줄 던지기</span>
+          <a class="os-cap-go" href="/inbox">인박스 →</a>
+          <button class="os-cap-x" id="osCapX" type="button" aria-label="닫기">✕</button>
+        </div>
+        <textarea id="osCapIn" rows="2" placeholder="아무거나. 알아서 분류돼요 —  예) 내일 10시 경영회의 / 이번 주까지 지표 정리 #경영 / https://..."></textarea>
+        <div class="os-cap-route" id="osCapRoute" hidden></div>
+        <div class="os-cap-bot">
+          <span class="os-cap-hint">⌘/Ctrl + Enter 로 저장</span>
+          <button class="os-cap-save" id="osCapSave" type="button">던지기</button>
+        </div>
+        <div class="os-cap-recent" id="osCapRecent"></div>
+      </div>
+    </div>
+
+    <!-- 🔁 먼저 말 거는 루프 : 내가 열어야 도는 시스템은 안 돈다 (다니·골프청년·잭) -->
+    <div class="os-nudge" id="osNudge" hidden>
+      <span class="os-nudge-ic" id="osNudgeIc">📌</span>
+      <span class="os-nudge-msg" id="osNudgeMsg"></span>
+      <a class="os-nudge-go" id="osNudgeGo" href="/inbox">보기</a>
+      <button class="os-nudge-x" id="osNudgeX" type="button" aria-label="나중에">나중에</button>
+    </div>
+
+    <!-- ⌘K 커맨드 팔레트 : 아람미러 전체를 한 곳에서 검색·이동 -->
+    <div class="os-pal-scrim" id="osPalScrim" hidden></div>
+    <div class="os-pal" id="osPal" hidden role="dialog" aria-modal="true" aria-label="전체 검색">
+      <div class="os-pal-in">
+        <span class="os-pal-ic">⌘</span>
+        <input id="osPalQ" type="text" placeholder="페이지 · 지도 부품 · 크루 147명 · 내가 던진 것 — 전부 검색" autocomplete="off" />
+        <kbd>ESC</kbd>
+      </div>
+      <div class="os-pal-list" id="osPalList"></div>
+      <div class="os-pal-foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> 이동</span><span><kbd>↵</kbd> 열기</span><span><kbd>C</kbd> 한 줄 던지기</span>
+      </div>
+    </div>
+
+    <script type="application/json" id="osIndex" set:html={JSON.stringify({ idx: searchIndex, genes: geneLite })} />
+
     <footer>
       <div class="wrap">
         <div class="foot-links">
@@ -166,6 +270,111 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       .nav-menu a { padding:9px 12px; border-radius:9px; font-size:0.9rem; color:var(--fg-soft); white-space:nowrap; }
       .nav-menu a:hover { background:var(--bg-2); color:var(--fg); }
       .nav-menu a::after { display:none; }
+
+      /* ══════ 전역 OS 레이어 ══════ */
+      .os-dock { position:fixed; right:20px; bottom:20px; z-index:70; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+      .os-fab {
+        width:56px; height:56px; border-radius:50%; border:0; cursor:pointer; position:relative;
+        background:var(--grad); color:#fff; font-size:1.4rem; line-height:1;
+        box-shadow:0 12px 30px rgba(255,106,61,.36); transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+      }
+      .os-fab:hover { transform:translateY(-3px) scale(1.05); box-shadow:0 18px 44px rgba(255,106,61,.5); }
+      .os-fab:active { transform:scale(.96); }
+      .os-fab-n {
+        position:absolute; top:-2px; right:-2px; min-width:20px; height:20px; padding:0 5px;
+        border-radius:999px; background:#2c2320; color:#fff; font-size:.68rem; font-weight:700;
+        display:grid; place-items:center; font-family:var(--mono);
+      }
+      .os-cap {
+        width:min(400px, calc(100vw - 40px)); background:var(--bg-1); border:1px solid var(--line);
+        border-radius:18px; box-shadow:0 26px 60px rgba(120,70,30,.24); padding:14px 16px 12px;
+        animation:osUp .26s var(--ease);
+      }
+      @keyframes osUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+      .os-cap-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+      .os-cap-t { font-weight:800; font-size:.92rem; }
+      .os-cap-go { margin-left:auto; font-size:.78rem; color:var(--accent); font-weight:700; }
+      .os-cap-x { background:none; border:0; cursor:pointer; color:var(--muted); font-size:.85rem; padding:2px 4px; }
+      .os-cap textarea {
+        width:100%; font-family:inherit; font-size:.95rem; line-height:1.55; resize:vertical;
+        border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:var(--bg-2); color:var(--fg);
+      }
+      .os-cap textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+      .os-cap-route {
+        margin-top:8px; font-size:.78rem; color:var(--fg-soft); background:var(--bg-2);
+        border:1px dashed var(--line); border-radius:10px; padding:8px 11px; line-height:1.5;
+      }
+      .os-cap-route b { color:var(--accent-strong); }
+      .os-cap-bot { display:flex; align-items:center; gap:10px; margin-top:10px; }
+      .os-cap-hint { font-size:.72rem; color:var(--faint); }
+      .os-cap-save {
+        margin-left:auto; font-family:inherit; font-weight:700; font-size:.86rem; cursor:pointer;
+        border:0; border-radius:999px; padding:9px 20px; background:var(--fg); color:var(--bg);
+        transition:transform .2s var(--ease);
+      }
+      .os-cap-save:hover { transform:translateY(-2px); }
+      .os-cap-recent { margin-top:10px; display:flex; flex-direction:column; gap:5px; }
+      .os-cap-recent .r {
+        font-size:.78rem; color:var(--muted); display:flex; gap:7px; align-items:baseline;
+        border-top:1px solid var(--line-soft); padding-top:6px;
+      }
+      .os-cap-recent .r i { font-style:normal; }
+      .os-cap-recent .r span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+      .os-nudge {
+        position:fixed; left:20px; bottom:22px; z-index:69; max-width:min(420px, calc(100vw - 40px));
+        display:flex; align-items:center; gap:10px; padding:12px 14px;
+        background:var(--bg-1); border:1px solid var(--line); border-left:4px solid var(--accent);
+        border-radius:14px; box-shadow:0 18px 44px rgba(120,70,30,.18); animation:osUp .3s var(--ease);
+      }
+      .os-nudge.hot { border-left-color:#d94b3a; }
+      .os-nudge.cool { border-left-color:#4a6fb0; }
+      .os-nudge-ic { font-size:1.05rem; }
+      .os-nudge-msg { font-size:.88rem; color:var(--fg); line-height:1.45; }
+      .os-nudge-go { font-size:.8rem; font-weight:700; color:var(--accent); white-space:nowrap; margin-left:auto; }
+      .os-nudge-x { background:none; border:0; cursor:pointer; color:var(--faint); font-size:.76rem; white-space:nowrap; }
+
+      .os-pal-scrim { position:fixed; inset:0; z-index:90; background:rgba(30,20,12,.44); backdrop-filter:blur(3px); }
+      .os-pal-scrim[hidden], .os-pal[hidden], .os-cap[hidden], .os-nudge[hidden] { display:none !important; }
+      .os-pal {
+        position:fixed; z-index:91; left:50%; top:12vh; transform:translateX(-50%);
+        width:min(660px, calc(100vw - 32px)); background:var(--bg-1); border:1px solid var(--line);
+        border-radius:20px; box-shadow:0 40px 90px rgba(90,50,20,.3); overflow:hidden;
+        display:flex; flex-direction:column; max-height:72vh; animation:osPal .24s var(--ease);
+      }
+      @keyframes osPal { from{opacity:0;transform:translateX(-50%) translateY(-8px)} to{opacity:1;transform:translateX(-50%)} }
+      .os-pal-in { display:flex; align-items:center; gap:10px; padding:15px 18px; border-bottom:1px solid var(--line); }
+      .os-pal-ic { font-family:var(--mono); color:var(--accent); font-weight:700; }
+      .os-pal-in input { flex:1; border:0; background:none; font-family:inherit; font-size:1.02rem; color:var(--fg); min-width:0; }
+      .os-pal-in input:focus { outline:none; }
+      .os-pal kbd, .os-pal-foot kbd {
+        font-family:var(--mono); font-size:.66rem; border:1px solid var(--line); border-bottom-width:2px;
+        border-radius:5px; padding:2px 6px; color:var(--muted); background:var(--bg-2);
+      }
+      .os-pal-list { overflow-y:auto; padding:6px; }
+      .os-pal-row {
+        display:flex; align-items:center; gap:10px; padding:10px 13px; border-radius:11px;
+        cursor:pointer; text-decoration:none; color:var(--fg);
+      }
+      .os-pal-row.on, .os-pal-row:hover { background:var(--accent-soft); }
+      .os-pal-k {
+        font-family:var(--mono); font-size:.6rem; font-weight:700; padding:2px 7px; border-radius:5px;
+        background:var(--bg-2); color:var(--muted); border:1px solid var(--line); white-space:nowrap;
+      }
+      .os-pal-t { font-weight:600; font-size:.94rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .os-pal-d { margin-left:auto; font-size:.75rem; color:var(--muted); white-space:nowrap; }
+      .os-pal-empty { padding:30px 18px; text-align:center; color:var(--muted); font-size:.9rem; }
+      .os-pal-foot {
+        display:flex; gap:16px; padding:9px 18px; border-top:1px solid var(--line);
+        background:var(--bg-2); font-size:.72rem; color:var(--muted); flex-wrap:wrap;
+      }
+      @media (max-width: 680px) {
+        .os-dock { right:14px; bottom:14px; }
+        .os-nudge { left:14px; right:84px; bottom:16px; max-width:none; }
+        .os-nudge-msg { font-size:.82rem; }
+        .os-pal { top:6vh; max-height:84vh; }
+      }
+      @media (prefers-reduced-motion: reduce) { .os-cap, .os-nudge, .os-pal { animation:none; } }
 
       @media (max-width: 820px) {
         .nav-toggle { display:block; }
@@ -247,6 +456,186 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       // 지하 엔진실 — 모든 페이지 열람을 자동 기록하고 window.aramLog를 전역 노출
       import { logEvent } from '../lib/events.js';
       logEvent('page_view', { path: location.pathname, ref: document.referrer || null });
+    </script>
+
+    <script>
+      // ══════════════════════════════════════════════════════════
+      //  전역 OS 레이어 — 퀵캡처 · 커맨드 팔레트 · 먼저 말 거는 루프
+      //  147명 유전자를 "글"이 아니라 "동작"으로. 모든 페이지에서 산다.
+      // ══════════════════════════════════════════════════════════
+      import * as OS from '../lib/os-core.js';
+      window.aramOS = OS; // 콘솔에서도 만질 수 있게 — 내 데이터는 내 것
+
+      const $ = (id) => document.getElementById(id);
+      const idxEl = $('osIndex');
+      const IDX = idxEl ? JSON.parse(idxEl.textContent || '{}') : { idx: [], genes: {} };
+      const GENES = IDX.genes || {};
+
+      /* ── 사용 로그 (정직 유전자 — 안 쓰는 기능이 드러나야 한다) ── */
+      OS.logVisit(location.pathname);
+
+      /* ── ⚡ 퀵캡처 ── */
+      const dock = $('osDock'), fab = $('osFab'), cap = $('osCap');
+      const capIn = $('osCapIn'), capRoute = $('osCapRoute'), capRecent = $('osCapRecent'), fabN = $('osFabN');
+      const KIND = Object.fromEntries(OS.KINDS.map((k) => [k.id, k]));
+
+      function refreshBadge() {
+        const n = OS.getItems({ stage: 'inbox' }).length;
+        if (!fabN) return;
+        fabN.hidden = n === 0;
+        fabN.textContent = String(n);
+      }
+      function refreshRecent() {
+        if (!capRecent) return;
+        const rs = OS.getItems().slice(0, 3);
+        capRecent.innerHTML = rs.length
+          ? rs.map((r) => {
+              const k = KIND[r.kind] || { ic: '·', ko: '' };
+              return '<div class="r"><i>' + k.ic + '</i><span>' + esc(r.text) + '</span></div>';
+            }).join('')
+          : '';
+      }
+      function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+      function openCap(prefill) {
+        if (!cap) return;
+        cap.hidden = false;
+        if (prefill) capIn.value = prefill;
+        capIn.focus();
+        preview();
+        refreshRecent();
+      }
+      function closeCap() { if (cap) cap.hidden = true; }
+
+      // 던지기 전에 "어디로 갈지"를 미리 보여준다 — 라우터를 신뢰하려면 보여야 한다
+      function preview() {
+        if (!capIn || !capRoute) return;
+        const t = capIn.value.trim();
+        if (!t) { capRoute.hidden = true; return; }
+        const c = OS.classify(t);
+        const k = KIND[c.kind] || { ic: '·', ko: c.kind };
+        let h = k.ic + ' <b>' + esc(k.ko) + '</b> 으로 들어가요 — ' + esc(c.why);
+        if (c.due) h += ' · 📅 ' + c.due;
+        if (c.tags.length) h += ' · ' + c.tags.map((x) => '#' + esc(x)).join(' ');
+        if (c.src) h += ' · 🔗 미확인 자료';
+        capRoute.innerHTML = h;
+        capRoute.hidden = false;
+      }
+      function doCapture() {
+        const t = capIn.value.trim();
+        if (!t) return;
+        OS.capture(t);
+        capIn.value = '';
+        preview(); refreshBadge(); refreshRecent();
+        fab.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 320 });
+        window.dispatchEvent(new CustomEvent('aramos:captured'));
+      }
+
+      fab?.addEventListener('click', () => (cap.hidden ? openCap() : closeCap()));
+      $('osCapX')?.addEventListener('click', closeCap);
+      $('osCapSave')?.addEventListener('click', doCapture);
+      capIn?.addEventListener('input', preview);
+      capIn?.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); doCapture(); }
+        if (e.key === 'Escape') { e.stopPropagation(); closeCap(); }
+      });
+      document.addEventListener('click', (e) => {
+        if (cap && !cap.hidden && !dock.contains(e.target)) closeCap();
+      });
+
+      /* ── ⌘K 커맨드 팔레트 ── */
+      const pal = $('osPal'), palScrim = $('osPalScrim'), palQ = $('osPalQ'), palList = $('osPalList');
+      let palRows = [], palAt = 0;
+
+      function palSource() {
+        const mine = OS.getItems().slice(0, 200).map((i) => {
+          const k = KIND[i.kind] || { ic: '·', ko: '' };
+          return { t: i.text, h: '/inbox#' + i.id, k: 'mine', d: k.ic + ' ' + k.ko };
+        });
+        return (IDX.idx || []).concat(mine);
+      }
+      const K_LABEL = { page: '페이지', map: '지도', crew: '크루', mine: '내 것' };
+
+      function palRender(q) {
+        const all = palSource();
+        const s = q.trim().toLowerCase();
+        let rows = s
+          ? all.filter((r) => (r.t + ' ' + (r.d || '') + ' ' + (r.sub || '') + ' ' + (r.from || '')).toLowerCase().includes(s))
+          : all.filter((r) => r.k === 'page').slice(0, 12);
+        rows = rows.slice(0, 40);
+        palRows = rows; palAt = 0;
+        if (!rows.length) { palList.innerHTML = '<p class="os-pal-empty">없어요. 다른 말로 찾아보세요.</p>'; return; }
+        palList.innerHTML = rows.map((r, i) => {
+          const g = r.gene && GENES[r.gene] ? GENES[r.gene].ic + ' ' : '';
+          const d = [g + (r.d || ''), r.from ? '← ' + r.from : ''].filter(Boolean).join(' · ');
+          return '<a class="os-pal-row' + (i === 0 ? ' on' : '') + '" href="' + esc(r.h) + '" data-i="' + i + '">' +
+            '<span class="os-pal-k">' + (K_LABEL[r.k] || r.k) + '</span>' +
+            '<span class="os-pal-t">' + esc(r.t) + '</span>' +
+            (d ? '<span class="os-pal-d">' + esc(d) + '</span>' : '') + '</a>';
+        }).join('');
+      }
+      function palMove(d) {
+        const els = palList.querySelectorAll('.os-pal-row');
+        if (!els.length) return;
+        els[palAt]?.classList.remove('on');
+        palAt = (palAt + d + els.length) % els.length;
+        els[palAt].classList.add('on');
+        els[palAt].scrollIntoView({ block: 'nearest' });
+      }
+      function palOpen() {
+        pal.hidden = false; palScrim.hidden = false;
+        palQ.value = ''; palRender(''); palQ.focus();
+      }
+      function palClose() { pal.hidden = true; palScrim.hidden = true; }
+
+      palQ?.addEventListener('input', () => palRender(palQ.value));
+      palScrim?.addEventListener('click', palClose);
+      palQ?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); palMove(1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); palMove(-1); }
+        else if (e.key === 'Enter') {
+          e.preventDefault();
+          const el = palList.querySelectorAll('.os-pal-row')[palAt];
+          if (el) location.href = el.getAttribute('href');
+        } else if (e.key === 'Escape') { palClose(); }
+      });
+
+      /* ── 전역 단축키 ── */
+      document.addEventListener('keydown', (e) => {
+        const tag = (e.target && e.target.tagName) || '';
+        const typing = /INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable);
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault(); pal.hidden ? palOpen() : palClose(); return;
+        }
+        if (typing) return;
+        if (e.key === 'Escape') { palClose(); closeCap(); return; }
+        if (e.key.toLowerCase() === 'c' && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); openCap(); }
+      });
+
+      /* ── 🔁 먼저 말 거는 루프 ── */
+      const nud = $('osNudge');
+      function showNudge() {
+        if (!nud) return;
+        const n = OS.nudge();
+        if (!n) { nud.hidden = true; return; }
+        nud.className = 'os-nudge ' + n.level;
+        $('osNudgeIc').textContent = n.ic;
+        $('osNudgeMsg').textContent = n.msg;
+        const go = $('osNudgeGo');
+        if (n.to === '#capture') {
+          go.textContent = '한 줄 던지기'; go.href = '#';
+          go.onclick = (e) => { e.preventDefault(); nud.hidden = true; openCap(); };
+        } else { go.textContent = '보기'; go.href = n.to; go.onclick = null; }
+        nud.hidden = false;
+      }
+      $('osNudgeX')?.addEventListener('click', () => { OS.snooze(4); nud.hidden = true; });
+
+      OS.onChange(() => { refreshBadge(); refreshRecent(); });
+      refreshBadge();
+      setTimeout(showNudge, 1400);
+
+      // 해시로 바로 캡처 열기 (/#capture)
+      if (location.hash === '#capture') setTimeout(() => openCap(), 300);
     </script>
   </body>
 </html>

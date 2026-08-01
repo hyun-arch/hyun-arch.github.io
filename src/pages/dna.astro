@@ -1,9 +1,34 @@
 ---
 import Base from '../layouts/Base.astro';
-import { people, genes, geneMap, applied, stats, meta } from '../data/dna.js';
+import { people, genes, geneMap, stats, meta } from '../data/dna.js';
+import { graftStats, partsFrom } from '../data/mirror.js';
 
 const s = stats();
+const gs = graftStats();
 const groups = ['1조', '2조', '3조', '4조', '5조', '6조'];
+
+// ── 사람 → 실제로 이식된 부품 (양방향 연결) ──
+const partsOf = {};
+people.forEach((p) => {
+  if (p.gene === 'empty') return;
+  const ps = partsFrom(p.n);
+  if (ps.length) partsOf[p.n] = ps;
+});
+const linkedPeople = Object.keys(partsOf).length;
+
+// ── 유전자별 이식 현황 ──
+const geneParts = {};
+gs.items.forEach((i) => {
+  if (!i.gene) return;
+  (geneParts[i.gene] = geneParts[i.gene] || []).push({
+    t: i.t, href: i.to || '/m/' + i.slug, status: i.status, from: i.from || null,
+  });
+});
+
+// ── 지금 실제로 작동하는 크루 부품 (이 페이지의 핵심 증거) ──
+const liveParts = gs.items
+  .filter((i) => i.from && i.status === 'live')
+  .map((i) => ({ t: i.t, href: i.to || '/m/' + i.slug, from: i.from, gene: i.gene }));
 const quotes = people
   .filter((p) => p.quote && p.quote.length > 12 && !p.self)
   .map((p) => ({ q: p.quote.replace(/^"|"$/g, ''), n: p.n }));
@@ -12,6 +37,7 @@ const marquee = quotes.slice(0, 26);
 const payload = people.map((p, i) => ({
   i, n: p.n, g: p.g, gen: p.gen, both: !!p.both, self: !!p.self,
   job: p.job, work: p.work, core: p.core, quote: p.quote, apply: p.apply, gene: p.gene,
+  parts: partsOf[p.n] || [],   // 이 사람 코어가 실제로 간 곳
 }));
 const genePayload = genes.map((g) => ({ id: g.id, ko: g.ko, en: g.en, ic: g.ic, c: g.c, desc: g.desc }));
 ---
@@ -31,20 +57,21 @@ const genePayload = genes.map((g) => ({ id: g.id, ko: g.ko, en: g.en, ic: g.ic, 
         </h1>
         <p class="dna-sub" data-reveal="180">
           스폰지클럽 <b>1기 {s.gen1}명</b> · <b>2기 {s.gen2}명</b>의 과제 원문 <b>{meta.raw}</b>를 한 장도 빠뜨리지 않고 읽고,<br />
-          각자의 <b>대표작 · 핵심 코어 · 아람미러 적용점</b>을 뽑아 <b>12개의 유전자</b>로 정리했다.<br />
-          <span class="dna-sub-dim">여기 있는 건 요약이 아니라, 아람미러가 실제로 물려받은 것들이다.</span>
+          각자의 코어를 <b>12개 유전자</b>로 뽑아 아라미러 지도에 <b>{gs.fromCrew}개 부품</b>으로 심었다.
+          그중 <b>{gs.crewLive}개는 지금 이 순간 코드로 돌아간다.</b><br />
+          <span class="dna-sub-dim">감상문이 아니라 이식 기록이다 — 지금 <kbd>C</kbd>를 눌러보시면 그중 하나가 열린다.</span>
         </p>
 
         <div class="dna-counts" data-reveal="260">
-          <div class="dna-count"><b class="cnum" data-to={s.total}>0</b><span>명단 전원</span></div>
-          <div class="dna-count"><b class="cnum" data-to={s.submitted}>0</b><span>실제 제출</span></div>
-          <div class="dna-count"><b class="cnum" data-to={s.both}>0</b><span>1·2기 연속</span></div>
-          <div class="dna-count"><b class="cnum" data-to={s.geneCount}>0</b><span>추출 유전자</span></div>
+          <div class="dna-count"><b class="cnum" data-to={s.total}>0</b><span>정독한 크루</span></div>
+          <div class="dna-count"><b class="cnum" data-to={gs.fromCrew}>0</b><span>이식된 부품</span></div>
+          <div class="dna-count"><b class="cnum" data-to={gs.crewLive}>0</b><span>지금 작동 중</span></div>
+          <div class="dna-count"><b class="cnum" data-to={gs.total}>0</b><span>지도 전체 부품</span></div>
           <div class="dna-count"><b class="cnum" data-to={1468}>0</b><span>정독 문서</span></div>
         </div>
 
         <div class="dna-cta" data-reveal="340">
-          <a class="dna-btn" href="#genes">유전자 12개 보기</a>
+          <a class="dna-btn" href="#live">지금 작동하는 것 {liveParts.length}개</a>
           <a class="dna-btn ghost" href="#roster">{s.total}명 전원 명단</a>
         </div>
       </div>
@@ -90,37 +117,73 @@ const genePayload = genes.map((g) => ({ id: g.id, ko: g.ko, en: g.en, ic: g.ic, 
       </div>
     </section>
 
-    <!-- ═══════════ 아람미러 반영 ═══════════ -->
-    <section class="dna-sec dna-applied">
+    <!-- ═══════════ 지금 작동하는 것 ═══════════ -->
+    <section class="dna-sec dna-live" id="live">
       <div class="wrap">
-        <p class="section-kicker" data-reveal>TRANSPLANTED</p>
-        <h2 data-reveal="60">유전자가 <mark>코드가 된 자리</mark></h2>
+        <p class="section-kicker" data-reveal>NOW RUNNING · {liveParts.length}</p>
+        <h2 data-reveal="60">읽은 게 아니라 <mark>지금 돌아가는 것</mark></h2>
         <p class="lead" data-reveal="120">
-          읽고 감탄하고 끝내면 그건 독후감이다. 12개 유전자가 아람미러의 어느 파일·어느 화면에
-          실제로 심겼는지를 하나씩 밝힌다. 누구에게서 왔는지도 함께 남긴다.
+          아래는 크루의 코어가 아라미러 <b>코드가 되어 지금 이 순간 작동하는</b> 부품이다.
+          누르면 실제로 그 기능이 열린다. 지금 이 화면 오른쪽 아래 <b>⚡</b> 버튼도 그중 하나다 —
+          아무 페이지에서나 <kbd>C</kbd>를 눌러보시면 됩니다.
         </p>
 
-        <div class="ap-list">
-          {applied.map((a, i) => {
-            const g = geneMap[a.gene];
+        <div class="lv-grid">
+          {liveParts.map((p, i) => {
+            const g = p.gene ? geneMap[p.gene] : null;
             return (
-              <article class="ap-item" style={`--gc:${g.c}`} data-reveal={String(30 + i * 18)}>
-                <div class="ap-left">
-                  <span class="ap-no">{String(i + 1).padStart(2, '0')}</span>
-                  <span class="ap-ic">{g.ic}</span>
-                  <span class="ap-gene">{g.ko}</span>
-                </div>
-                <div class="ap-body">
-                  <h3>{a.title}</h3>
-                  <p class="ap-what">{a.what}</p>
-                  <div class="ap-meta">
-                    <span class="ap-where">{a.where}</span>
-                    <span class="ap-from">from · {a.from}</span>
-                  </div>
-                </div>
-              </article>
+              <a class="lv" href={p.href} style={`--gc:${g ? g.c : 'var(--accent)'}`} data-reveal={String(30 + i * 22)}>
+                <span class="lv-dot" aria-hidden="true"></span>
+                <span class="lv-t">{p.t}</span>
+                <span class="lv-from">← {p.from}</span>
+                {g && <span class="lv-gene">{g.ic} {g.ko}</span>}
+                <span class="lv-go">열기 →</span>
+              </a>
             );
           })}
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ 이식 현황판 ═══════════ -->
+    <section class="dna-sec dna-applied">
+      <div class="wrap">
+        <p class="section-kicker" data-reveal>TRANSPLANT BOARD</p>
+        <h2 data-reveal="60">유전자가 <mark>부품이 된 자리</mark></h2>
+        <p class="lead" data-reveal="120">
+          아라미러 전체 지도는 <b>{gs.total}개 부품</b>이고, 그중 <b>{gs.fromCrew}개</b>가 크루에게서 왔다.
+          어느 유전자가 어느 부품이 됐는지, 그게 지금 <b>작동 중</b>인지 <b>만드는 중</b>인지 <b>다음 칸</b>인지를 있는 그대로 편다.
+          부품 이름을 누르면 그 부품 페이지로 간다.
+        </p>
+
+        <div class="tb-sum" data-reveal="150">
+          <span class="tb-chip live"><b>{gs.crewLive}</b> 작동 중</span>
+          <span class="tb-chip building"><b>{gs.crewBuilding}</b> 만드는 중</span>
+          <span class="tb-chip idea"><b>{gs.crewSeedIdea}</b> 다음 칸</span>
+          <span class="tb-chip"><b>{linkedPeople}</b>명의 코어가 부품으로 연결됨</span>
+        </div>
+
+        <div class="tb-list">
+          {genes.filter((g) => g.id !== 'empty' && geneParts[g.id]).map((g, i) => (
+            <article class="tb" style={`--gc:${g.c}`} data-reveal={String(30 + i * 18)}>
+              <div class="tb-head">
+                <span class="tb-ic">{g.ic}</span>
+                <h3>{g.ko}</h3>
+                <span class="tb-en">{g.en}</span>
+                <span class="tb-n">{geneParts[g.id].length}개 부품 · 보유자 {s.byGene[g.id] || 0}명</span>
+              </div>
+              <p class="tb-desc">{g.desc}</p>
+              <div class="tb-parts">
+                {geneParts[g.id].map((p) => (
+                  <a class={`tp ${p.status}`} href={p.href}>
+                    <i class="tp-dot"></i>
+                    <b>{p.t}</b>
+                    {p.from && <span class="tp-from">← {p.from}</span>}
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
@@ -363,25 +426,65 @@ const genePayload = genes.map((g) => ({ id: g.id, ko: g.ko, en: g.en, ic: g.ic, 
     }
     .gene-card:hover .gene-go, .gene-card.on .gene-go { opacity:1; transform:none; }
 
-    /* ── 반영 리스트 ── */
-    .ap-list { display:flex; flex-direction:column; gap:10px; margin-top:44px; }
-    .ap-item {
-      display:grid; grid-template-columns:190px 1fr; gap:26px; align-items:start;
+    /* ── 지금 작동하는 것 ── */
+    .dna-live kbd { font-family:var(--mono); font-size:.8em; border:1px solid var(--line); border-bottom-width:2px;
+      border-radius:5px; padding:1px 6px; background:var(--bg-2); }
+    .lv-grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); margin-top:40px; }
+    .lv {
+      position:relative; display:flex; flex-direction:column; gap:5px;
       background:var(--bg-1); border:1px solid var(--line); border-left:4px solid var(--gc);
-      border-radius:18px; padding:24px 28px;
-      transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+      border-radius:16px; padding:20px 22px 18px; text-decoration:none;
+      transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
     }
-    .ap-item:hover { transform:translateX(6px); box-shadow:var(--shadow-soft); }
-    .ap-left { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-    .ap-no { font-family:var(--mono); font-size:.78rem; color:var(--faint); font-weight:600; }
-    .ap-ic { font-size:1.1rem; }
-    .ap-gene { font-weight:800; font-size:.95rem; color:var(--gc); letter-spacing:-.02em; }
-    .ap-body h3 { margin:0 0 6px; font-size:1.14rem; font-weight:800; letter-spacing:-.025em; }
-    .ap-what { margin:0; color:var(--fg-soft); font-size:.97rem; line-height:1.66; }
-    .ap-meta { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; }
-    .ap-where { font-family:var(--mono); font-size:.76rem; color:var(--accent); background:var(--accent-soft);
-      padding:3px 10px; border-radius:6px; }
-    .ap-from { font-size:.78rem; color:var(--muted); }
+    .lv:hover { transform:translateY(-5px); box-shadow:var(--shadow); border-color:var(--gc); }
+    .lv-dot {
+      position:absolute; right:20px; top:22px; width:9px; height:9px; border-radius:50%;
+      background:#3fbf76; box-shadow:0 0 0 0 rgba(63,191,118,.6); animation:lvPulse 2.2s ease-out infinite;
+    }
+    @keyframes lvPulse { 0%{box-shadow:0 0 0 0 rgba(63,191,118,.55)} 70%{box-shadow:0 0 0 10px rgba(63,191,118,0)} 100%{box-shadow:0 0 0 0 rgba(63,191,118,0)} }
+    .lv-t { font-size:1.06rem; font-weight:800; letter-spacing:-.025em; color:var(--fg); padding-right:22px; line-height:1.35; }
+    .lv-from { font-size:.8rem; color:var(--muted); }
+    .lv-gene { font-size:.74rem; font-weight:700; color:var(--gc); margin-top:2px; }
+    .lv-go { margin-top:8px; font-size:.78rem; font-weight:700; color:var(--gc); opacity:0; transition:.25s var(--ease); }
+    .lv:hover .lv-go { opacity:1; }
+
+    /* ── 이식 현황판 ── */
+    .tb-sum { display:flex; flex-wrap:wrap; gap:8px; margin:30px 0 26px; }
+    .tb-chip {
+      display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--fg-soft);
+      background:var(--bg-1); border:1px solid var(--line); border-radius:999px; padding:7px 15px;
+    }
+    .tb-chip b { font-family:var(--mono); font-weight:700; color:var(--fg); }
+    .tb-chip.live b { color:#2f9e5c; } .tb-chip.building b { color:#c98a1e; } .tb-chip.idea b { color:var(--muted); }
+
+    .tb-list { display:flex; flex-direction:column; gap:12px; }
+    .tb {
+      background:var(--bg-1); border:1px solid var(--line); border-left:4px solid var(--gc);
+      border-radius:18px; padding:22px 26px 20px;
+      transition:box-shadow .3s var(--ease);
+    }
+    .tb:hover { box-shadow:var(--shadow-soft); }
+    .tb-head { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .tb-ic { font-size:1.15rem; }
+    .tb-head h3 { margin:0; font-size:1.14rem; font-weight:800; letter-spacing:-.025em; color:var(--gc); }
+    .tb-en { font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
+    .tb-n { margin-left:auto; font-size:.76rem; color:var(--muted); font-family:var(--mono); }
+    .tb-desc { margin:8px 0 14px; color:var(--fg-soft); font-size:.93rem; line-height:1.6; }
+    .tb-parts { display:flex; flex-wrap:wrap; gap:7px; }
+    .tp {
+      display:inline-flex; align-items:center; gap:7px; text-decoration:none;
+      font-size:.85rem; color:var(--fg); background:var(--bg-2);
+      border:1px solid var(--line); border-radius:11px; padding:8px 13px;
+      transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+    }
+    .tp:hover { border-color:var(--gc); background:color-mix(in srgb, var(--gc) 9%, var(--bg-2)); transform:translateY(-2px); }
+    .tp b { font-weight:600; }
+    .tp-from { font-size:.72rem; color:var(--muted); }
+    .tp-dot { width:7px; height:7px; border-radius:50%; flex:none; background:var(--faint); }
+    .tp.live .tp-dot { background:#3fbf76; box-shadow:0 0 7px rgba(63,191,118,.8); }
+    .tp.building .tp-dot { background:#e0a93a; }
+    .tp.seed .tp-dot { background:#a78bfa; }
+    .tp.live { border-color:rgba(63,191,118,.4); }
 
     /* ── 필터 바 ── */
     .dna-bar {
@@ -501,6 +604,21 @@ const genePayload = genes.map((g) => ({ id: g.id, ko: g.ko, en: g.en, ic: g.ic, 
       font-size:.96rem; line-height:1.68; color:var(--fg-soft);
     }
     .sh-empty { color:var(--muted); font-size:.95rem; line-height:1.7; }
+    .sh-parts { display:flex; flex-direction:column; gap:7px; }
+    .sh-part {
+      display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--fg);
+      background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:11px 14px;
+      transition:border-color .2s var(--ease), transform .2s var(--ease);
+    }
+    .sh-part:hover { border-color:var(--gc); transform:translateX(3px); }
+    .sh-part i { width:8px; height:8px; border-radius:50%; flex:none; background:var(--faint); }
+    .sh-part.live i { background:#3fbf76; box-shadow:0 0 8px rgba(63,191,118,.85); }
+    .sh-part.building i { background:#e0a93a; }
+    .sh-part.seed i { background:#a78bfa; }
+    .sh-part b { font-weight:700; font-size:.92rem; }
+    .sh-part span { margin-left:auto; font-size:.72rem; color:var(--muted); white-space:nowrap; }
+    .sh-nopart { margin:0; padding:14px 16px; border-radius:12px; background:var(--bg-2);
+      border:1px dashed var(--line); color:var(--muted); font-size:.88rem; line-height:1.6; }
     .sheet-nav {
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding:14px 22px; border-top:1px solid var(--line); background:var(--bg-2);
@@ -750,6 +868,18 @@ const genePayload = genes.map((g) => ({ id: g.id, ko: g.ko, en: g.en, ic: g.ic, 
           h += '<span class="sh-lab">핵심 코어 · 이 사람의 장점</span><p class="sh-p">' + esc(p.core) + '</p>';
           if (p.quote) h += '<span class="sh-lab">그가 남긴 문장</span><p class="sh-quote">' + esc(p.quote) + '</p>';
           if (p.apply) h += '<span class="sh-lab">→ 아람미러에 반영</span><p class="sh-apply">' + esc(p.apply) + '</p>';
+          if (p.parts && p.parts.length) {
+            h += '<span class="sh-lab">🧬 이 코어가 실제로 간 곳 — ' + p.parts.length + '개 부품</span><div class="sh-parts">';
+            p.parts.forEach(function (q) {
+              const st = { live: '작동 중', building: '만드는 중', seed: '내용 있음', idea: '다음 칸' }[q.status] || q.status;
+              h += '<a class="sh-part ' + q.status + '" href="' + esc(q.href) + '"><i></i><b>' + esc(q.t) + '</b>' +
+                   '<span>' + esc(q.domain) + ' · ' + st + '</span></a>';
+            });
+            h += '</div>';
+          } else {
+            h += '<p class="sh-nopart">아직 이 사람의 코어가 부품으로 연결되지 않았습니다. ' +
+                 '위 "아람미러에 반영"이 다음에 만들 칸입니다.</p>';
+          }
         }
         body.innerHTML = h;
         sheet.style.setProperty('--gc', g.c);

@@ -361,6 +361,45 @@ export const domains = [
   },
 ];
 
+// ── 크루 이식분 병합 ────────────────────────────────────────
+// 스폰지클럽 1·2기 147명에게서 뽑은 코어를 실제 부품으로 심은 가지들.
+// 여기서 붙이면 홈 지도 · /m/<slug> 상세 · ⌘K 검색에 자동으로 흘러간다.
+import { graft } from './mirror-graft.js';
+for (const d of domains) {
+  if (graft[d.key]) d.branches.push(...graft[d.key]);
+}
+
+// 지도 전체 통계 — "몇 개가 크루에게서 왔는가"를 정직하게 센다.
+export function graftStats() {
+  const all = domains.flatMap((d) => d.branches.flatMap((b) => b.items));
+  const fromCrew = all.filter((i) => i.from);
+  const byGene = {};
+  all.forEach((i) => { if (i.gene) byGene[i.gene] = (byGene[i.gene] || 0) + 1; });
+  return {
+    total: all.length,
+    fromCrew: fromCrew.length,
+    live: all.filter((i) => i.status === 'live').length,
+    crewLive: fromCrew.filter((i) => i.status === 'live').length,
+    crewBuilding: fromCrew.filter((i) => i.status === 'building').length,
+    crewSeedIdea: fromCrew.filter((i) => i.status === 'seed' || i.status === 'idea').length,
+    byGene,
+    items: all,
+  };
+}
+
+/** 특정 크루 이름이 들어간 부품들을 돌려준다 (/dna 사람 ↔ 부품 연결용) */
+export function partsFrom(name) {
+  const key = String(name || '').replace(/\(.*\)/, '').trim();
+  if (!key) return [];
+  return domains.flatMap((d) =>
+    d.branches.flatMap((b) =>
+      b.items
+        .filter((i) => i.from && (i.from.includes(key) || i.from.includes(name)))
+        .map((i) => ({ t: i.t, href: i.to || '/m/' + i.slug, status: i.status, gene: i.gene, domain: d.title }))
+    )
+  );
+}
+
 // /m/[slug] 이 상세 페이지를 만들 항목만 뽑아준다 (to 로 다른 페이지 가는 건 제외).
 export function detailItems() {
   const out = [];
