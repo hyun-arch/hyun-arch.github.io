@@ -1,0 +1,96 @@
+---
+// 페이지 맥락 캡처 — 이 화면에서 떠오른 걸 그 자리에서 던진다.
+// 자동으로 이 페이지 태그가 붙고, 인박스로 들어가 승격 파이프라인을 탄다.
+// (마찰 제거 — 띵크·린디·곽동욱 / 분류는 라우터가 — 세계로)
+import { forPath } from '../data/page-genes.js';
+
+const { path } = Astro.props;
+const p = (path || Astro.url.pathname || '/').replace(/\/+$/, '') || '/';
+const info = forPath(p);
+const tag = info?.cap || '';
+const hint = info?.capHint || '떠오른 것 아무거나';
+---
+{info && tag && (
+  <section class="pgcap" data-tag={tag}>
+    <div class="wrap">
+      <form class="pc-box" autocomplete="off">
+        <span class="pc-ic" aria-hidden="true">⚡</span>
+        <div class="pc-mid">
+          <label class="pc-l">이 화면에서 떠오른 것 던지기 <em>#{tag}</em> 가 자동으로 붙어요</label>
+          <input class="pc-in" type="text" placeholder={hint} aria-label="한 줄 던지기" />
+        </div>
+        <button class="pc-btn" type="submit">던지기</button>
+      </form>
+      <p class="pc-route" hidden></p>
+      <p class="pc-ok" hidden>✅ 인박스에 들어갔어요. <a href="/inbox">한 칸 올리러 가기 →</a></p>
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .pgcap { padding: 34px 0 0; }
+  .pc-box {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-1); border: 1px dashed var(--accent); border-radius: 18px; padding: 14px 16px;
+    transition: box-shadow .25s var(--ease), border-style .2s;
+  }
+  .pc-box:focus-within { border-style: solid; box-shadow: 0 10px 30px var(--accent-glow); }
+  .pc-ic { font-size: 1.2rem; flex: none; }
+  .pc-mid { flex: 1; min-width: 0; }
+  .pc-l { display: block; font-size: .7rem; color: var(--muted); margin-bottom: 3px; }
+  .pc-l em { font-style: normal; font-weight: 700; color: var(--accent); }
+  .pc-in { width: 100%; border: 0; background: none; font-family: inherit; font-size: .98rem; color: var(--fg); padding: 2px 0; }
+  .pc-in:focus { outline: none; }
+  .pc-btn {
+    flex: none; border: 0; cursor: pointer; font-family: inherit; font-weight: 700; font-size: .86rem;
+    border-radius: 999px; padding: 10px 20px; background: var(--fg); color: var(--bg);
+    transition: transform .2s var(--ease), background .2s;
+  }
+  .pc-btn:hover { transform: translateY(-2px); background: var(--accent); color: #fff; }
+  .pc-route { margin: 8px 2px 0; font-size: .78rem; color: var(--fg-soft); }
+  .pc-route b { color: var(--accent-strong); }
+  .pc-ok { margin: 8px 2px 0; font-size: .82rem; color: #2f9e5c; font-weight: 600; }
+  .pc-ok a { color: var(--accent); font-weight: 700; }
+  @media (max-width: 560px) {
+    .pc-box { flex-wrap: wrap; }
+    .pc-mid { flex: 1 1 100%; order: 2; }
+    .pc-btn { order: 3; margin-left: auto; }
+  }
+</style>
+
+<script>
+  import * as OS from '../lib/os-core.js';
+  const KIND = Object.fromEntries(OS.KINDS.map((k) => [k.id, k]));
+  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  document.querySelectorAll('.pgcap').forEach((sec) => {
+    const tag = sec.dataset.tag || '';
+    const form = sec.querySelector('.pc-box');
+    const input = sec.querySelector('.pc-in');
+    const route = sec.querySelector('.pc-route');
+    const ok = sec.querySelector('.pc-ok');
+
+    function preview() {
+      const t = input.value.trim();
+      if (!t) { route.hidden = true; return; }
+      const c = OS.classify(t);
+      const k = KIND[c.kind] || { ic: '·', ko: c.kind };
+      let h = k.ic + ' <b>' + esc(k.ko) + '</b> 으로 들어가요 — ' + esc(c.why) + ' · #' + esc(tag);
+      if (c.due) h += ' · 📅 ' + c.due;
+      route.innerHTML = h; route.hidden = false;
+    }
+    input.addEventListener('input', preview);
+    input.addEventListener('focus', preview);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const t = input.value.trim();
+      if (!t) { input.focus(); return; }
+      const c = OS.classify(t);
+      OS.capture(t, { tags: Array.from(new Set((c.tags || []).concat([tag]))) });
+      input.value = ''; route.hidden = true; ok.hidden = false;
+      window.dispatchEvent(new CustomEvent('aramos:captured'));
+      setTimeout(() => { ok.hidden = true; }, 4200);
+    });
+  });
+</script>

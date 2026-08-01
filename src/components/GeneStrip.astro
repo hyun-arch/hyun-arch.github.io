@@ -1,0 +1,93 @@
+---
+// 유전자 스트립 — 모든 페이지 하단에 붙는다.
+// "이 화면은 누구에게서 무엇을 물려받았고, 여기서 무엇을 할 수 있나."
+// 크루 147명의 코어를 한 군데 몰아넣지 않고 전 페이지에 나눠 심기 위한 공통 부품.
+import { forPath } from '../data/page-genes.js';
+import { geneMap } from '../data/dna.js';
+import { domains } from '../data/mirror.js';
+
+const { path } = Astro.props;
+const p = (path || Astro.url.pathname || '/').replace(/\/+$/, '') || '/';
+const info = forPath(p);
+
+// 이 페이지로 연결된 지도 부품 (to === 이 경로)
+const parts = info
+  ? domains.flatMap((d) =>
+      d.branches.flatMap((b) =>
+        b.items
+          .filter((it) => it.from && (it.gene ? info.genes.includes(it.gene) : false))
+          .map((it) => ({ t: it.t, href: it.to || '/m/' + it.slug, status: it.status, gene: it.gene }))
+      )
+    ).slice(0, 6)
+  : [];
+---
+{info && (
+  <section class="gstrip">
+    <div class="wrap">
+      <div class="gs-head">
+        <span class="gs-kick">🧬 이 화면에 심은 유전자</span>
+        <a class="gs-all" href="/dna">147명 전체 →</a>
+      </div>
+
+      <div class="gs-genes">
+        {info.genes.map((gid) => {
+          const g = geneMap[gid];
+          return g ? (
+            <a class="gs-g" href={`/dna#${gid}`} style={`--gg:${g.c}`}>
+              <b>{g.ic} {g.ko}</b><i>{g.desc}</i>
+            </a>
+          ) : null;
+        })}
+      </div>
+
+      <p class="gs-did"><b>여기에 반영한 것 —</b> {info.did}</p>
+      <p class="gs-from">← {info.from}</p>
+
+      {parts.length > 0 && (
+        <div class="gs-parts">
+          <span class="gs-pl">같은 유전자를 쓰는 부품</span>
+          {parts.map((x) => (
+            <a class={`gs-p ${x.status}`} href={x.href}><i></i>{x.t}</a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style is:global>
+  .gstrip {
+    padding: 46px 0 42px; border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, transparent, rgba(255,180,87,.06));
+  }
+  .gs-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .gs-kick { font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; color: var(--accent); font-weight: 700; }
+  .gs-all { margin-left: auto; font-size: .76rem; font-weight: 700; color: var(--accent); }
+  .gs-genes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .gs-g {
+    display: flex; flex-direction: column; gap: 3px; text-decoration: none;
+    background: var(--bg-1); border: 1px solid var(--line); border-left: 3px solid var(--gg);
+    border-radius: 13px; padding: 10px 14px; max-width: 290px;
+    transition: transform .25s var(--ease), border-color .25s var(--ease);
+  }
+  .gs-g:hover { transform: translateY(-3px); border-color: var(--gg); }
+  .gs-g b { font-size: .84rem; font-weight: 800; color: var(--gg); letter-spacing: -.02em; }
+  .gs-g i { font-style: normal; font-size: .74rem; color: var(--muted); line-height: 1.5; }
+  .gs-did { margin: 0 0 4px; font-size: .92rem; line-height: 1.65; color: var(--fg-soft); max-width: 720px; }
+  .gs-did b { color: var(--fg); }
+  .gs-from { margin: 0; font-size: .78rem; color: var(--muted); }
+  .gs-parts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 16px;
+    padding-top: 14px; border-top: 1px dashed var(--line); }
+  .gs-pl { font-size: .72rem; color: var(--faint); margin-right: 4px; }
+  .gs-p {
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    font-size: .78rem; color: var(--fg-soft); background: var(--bg-1);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; transition: .2s var(--ease);
+  }
+  .gs-p:hover { border-color: var(--accent); color: var(--fg); }
+  .gs-p i { width: 6px; height: 6px; border-radius: 50%; background: var(--faint); flex: none; }
+  .gs-p.live i { background: #3fbf76; box-shadow: 0 0 6px rgba(63,191,118,.8); }
+  .gs-p.building i { background: #e0a93a; }
+  .gs-p.seed i { background: #a78bfa; }
+  @media (max-width: 680px) { .gs-g { max-width: none; flex: 1 1 100%; } }
+</style>
