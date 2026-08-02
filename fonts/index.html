@@ -35,11 +35,11 @@
     line-height:1.6;
     letter-spacing:-0.01em;
   }
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+ .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
 
   /* ===== HERO ===== */
   header.hero{padding:74px 20px 40px;text-align:center}
-  .kicker{
+ .kicker{
     display:inline-block;font-size:12.5px;letter-spacing:.16em;color:var(--gold);
     border:1px solid rgba(231,194,125,.35);border-radius:999px;padding:7px 15px;
     margin-bottom:22px;text-transform:uppercase;
@@ -49,98 +49,98 @@
     font-weight:800;letter-spacing:-0.035em;
   }
   h1 .mute{color:var(--gold)}
-  .lead{max-width:640px;margin:0 auto;color:var(--sub);font-size:clamp(15px,3.6vw,17px)}
-  .credit{margin-top:20px;color:var(--dim);font-size:13.5px}
-  .credit b{color:var(--sub);font-weight:600}
+ .lead{max-width:640px;margin:0 auto;color:var(--sub);font-size:clamp(15px,3.6vw,17px)}
+ .credit{margin-top:20px;color:var(--dim);font-size:13.5px}
+ .credit b{color:var(--sub);font-weight:600}
 
   /* ===== SETTING BAR ===== */
-  .setup{
+ .setup{
     max-width:var(--max);margin:34px auto 0;padding:0 20px;
     display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
   }
-  .stat{
+ .stat{
     background:linear-gradient(180deg,var(--card),#12161b);
     border:1px solid var(--line);border-radius:14px;padding:18px 16px;text-align:center;
   }
-  .stat .n{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
-  .stat .n small{font-size:14px;color:var(--dim);font-weight:600}
-  .stat .l{font-size:12.5px;color:var(--dim);margin-top:4px}
-  .note-line{
+ .stat .n{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+ .stat .n small{font-size:14px;color:var(--dim);font-weight:600}
+ .stat .l{font-size:12.5px;color:var(--dim);margin-top:4px}
+ .note-line{
     max-width:var(--max);margin:14px auto 0;padding:0 22px;color:var(--dim);
     font-size:13px;text-align:center
   }
 
   /* ===== SECTION TITLE ===== */
-  .sec-title{
+ .sec-title{
     max-width:var(--max);margin:64px auto 6px;padding:0 20px;
     font-size:13px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase
   }
-  .sec-sub{max-width:var(--max);margin:0 auto 26px;padding:0 20px;color:var(--sub);font-size:14.5px}
+ .sec-sub{max-width:var(--max);margin:0 auto 26px;padding:0 20px;color:var(--sub);font-size:14.5px}
 
   /* ===== FONT CARDS ===== */
-  .cards{max-width:var(--max);margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:16px}
-  .card{
+ .cards{max-width:var(--max);margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:16px}
+ .card{
     background:linear-gradient(180deg,var(--card),#12161a);
     border:1px solid var(--line);border-radius:var(--radius);
     overflow:hidden;position:relative;transition:border-color .2s, transform .2s;
   }
-  .card:hover{border-color:#38424d;transform:translateY(-2px)}
-  .card.pick{border-color:rgba(231,194,125,.45)}
-  .card.pick::before{
+ .card:hover{border-color:#38424d;transform:translateY(-2px)}
+ .card.pick{border-color:rgba(231,194,125,.45)}
+ .card.pick::before{
     content:"코코 PICK";position:absolute;top:14px;right:14px;z-index:2;
     font-size:10.5px;letter-spacing:.12em;color:#0b0d10;background:var(--gold);
     font-weight:800;padding:5px 9px;border-radius:7px;
   }
-  .card-head{padding:22px 22px 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .idx{color:var(--dim);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
-  .fname{font-size:21px;font-weight:800;letter-spacing:-.02em}
-  .feng{color:var(--dim);font-size:13px;font-weight:500}
+ .card-head{padding:22px 22px 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+ .idx{color:var(--dim);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+ .fname{font-size:21px;font-weight:800;letter-spacing:-.02em}
+ .feng{color:var(--dim);font-size:13px;font-weight:500}
 
-  .preview{
+ .preview{
     padding:6px 22px 20px;font-size:clamp(21px,5.2vw,30px);line-height:1.5;color:#f4f6f8;
   }
-  .preview .small{display:block;font-size:15px;color:var(--sub);margin-top:8px;line-height:1.7}
+ .preview .small{display:block;font-size:15px;color:var(--sub);margin-top:8px;line-height:1.7}
 
-  .meta{
+ .meta{
     display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
     border-top:1px solid var(--line);
   }
-  .meta div{background:var(--card);padding:12px 14px}
-  .meta .k{font-size:11px;color:var(--dim);letter-spacing:.04em}
-  .meta .v{font-size:14px;color:var(--ink);margin-top:3px;font-weight:600}
-  .meta .v.tag{color:var(--sub);font-weight:500;font-size:13px;line-height:1.5}
+ .meta div{background:var(--card);padding:12px 14px}
+ .meta .k{font-size:11px;color:var(--dim);letter-spacing:.04em}
+ .meta .v{font-size:14px;color:var(--ink);margin-top:3px;font-weight:600}
+ .meta .v.tag{color:var(--sub);font-weight:500;font-size:13px;line-height:1.5}
 
-  .card-foot{
+ .card-foot{
     display:flex;justify-content:space-between;align-items:center;gap:12px;
     padding:14px 22px;border-top:1px solid var(--line);flex-wrap:wrap
   }
-  .src{color:var(--dim);font-size:13px}
-  .src b{color:var(--sub);font-weight:600}
-  .dl{
+ .src{color:var(--dim);font-size:13px}
+ .src b{color:var(--sub);font-weight:600}
+ .dl{
     display:inline-flex;align-items:center;gap:7px;text-decoration:none;
     background:#1e242b;border:1px solid #313b45;color:var(--ink);
     font-size:13.5px;font-weight:700;padding:9px 16px;border-radius:10px;transition:.15s
   }
-  .dl:hover{background:var(--gold);border-color:var(--gold);color:#0b0d10}
-  .dl svg{width:14px;height:14px}
+ .dl:hover{background:var(--gold);border-color:var(--gold);color:#0b0d10}
+ .dl svg{width:14px;height:14px}
 
   @media(max-width:560px){
-    .setup{grid-template-columns:1fr;gap:10px}
-    .meta{grid-template-columns:repeat(2,1fr)}
+ .setup{grid-template-columns:1fr;gap:10px}
+ .meta{grid-template-columns:repeat(2,1fr)}
   }
 
   /* ===== KOKO SAYS ===== */
-  .koko{max-width:var(--max);margin:64px auto 0;padding:0 20px}
-  .koko-box{
+ .koko{max-width:var(--max);margin:64px auto 0;padding:0 20px}
+ .koko-box{
     background:linear-gradient(180deg,#181b16,#13160f);
     border:1px solid rgba(231,194,125,.28);border-radius:20px;padding:28px 26px
   }
-  .koko-box h3{margin:0 0 4px;font-size:19px;font-weight:800}
-  .koko-box .cap{color:var(--dim);font-size:13px;margin-bottom:18px}
-  .krow{padding:15px 0;border-top:1px solid rgba(231,194,125,.14);display:flex;gap:14px}
-  .krow:first-of-type{border-top:0}
-  .kname{color:var(--gold);font-weight:800;font-size:15px;min-width:78px;flex-shrink:0}
-  .ktext{color:var(--sub);font-size:14.5px;line-height:1.65}
+ .koko-box h3{margin:0 0 4px;font-size:19px;font-weight:800}
+ .koko-box .cap{color:var(--dim);font-size:13px;margin-bottom:18px}
+ .krow{padding:15px 0;border-top:1px solid rgba(231,194,125,.14);display:flex;gap:14px}
+ .krow:first-of-type{border-top:0}
+ .kname{color:var(--gold);font-weight:800;font-size:15px;min-width:78px;flex-shrink:0}
+ .ktext{color:var(--sub);font-size:14.5px;line-height:1.65}
 
   /* ===== FOOTER ===== */
   footer{max-width:var(--max);margin:56px auto 0;padding:26px 20px 60px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px;text-align:center;line-height:1.8}
@@ -150,16 +150,16 @@
 <body>
 
 <header class="hero">
-  <span class="kicker">SPONGE CLUB · 코코 PICK</span>
-  <h1>가끔은, <span class="mute">폰트</span>가<br>디자인의 전부다</h1>
-  <p class="lead">AI가 컬러는 잘 뽑아줘도, 한글 폰트 선택과 자간은 아직 사람 몫이에요. 17년차 디자이너 코코가 실무에서 진짜 쓰는 <b>상업용 무료 고딕 10종</b>을 골랐습니다.</p>
-  <p class="credit">정리 · <b>코코 (디자인펜슬)</b> — 스폰지클럽 영상 유닛</p>
+ <span class="kicker">SPONGE CLUB · 코코 PICK</span>
+ <h1>가끔은, <span class="mute">폰트</span>가<br>디자인의 전부다</h1>
+ <p class="lead">AI가 컬러는 잘 뽑아줘도, 한글 폰트 선택과 자간은 아직 사람 몫이에요. 17년차 디자이너 코코가 실무에서 진짜 쓰는 <b>상업용 무료 고딕 10종</b>을 골랐습니다.</p>
+ <p class="credit">정리 · <b>코코 (디자인펜슬)</b> — 영상 유닛</p>
 </header>
 
 <section class="setup">
-  <div class="stat"><div class="n">17<small>pt</small></div><div class="l">본문 크기 (기준)</div></div>
-  <div class="stat"><div class="n">27<small>pt</small></div><div class="l">행간 = 크기 × 1.6</div></div>
-  <div class="stat"><div class="n">자간<small></small></div><div class="l">폰트마다 다르게 (아래 표)</div></div>
+ <div class="stat"><div class="n">17<small>pt</small></div><div class="l">본문 크기 (기준)</div></div>
+ <div class="stat"><div class="n">27<small>pt</small></div><div class="l">행간 = 크기 × 1.6</div></div>
+ <div class="stat"><div class="n">자간<small></small></div><div class="l">폰트마다 다르게 (아래 표)</div></div>
 </section>
 <p class="note-line">행간은 본문이면 대체로 비슷해요. 크기 바꾸면 행간도 비례(예: 20pt→32pt). <b style="color:var(--sub)">진짜 달라지는 건 자간</b> — 각 카드에 실제 값과 미리보기를 넣었습니다.</p>
 
@@ -169,21 +169,21 @@
 <div class="cards" id="cards"></div>
 
 <section class="koko">
-  <div class="koko-box">
-    <h3>✍️ 코코 한마디</h3>
-    <p class="cap">특히 추천하는 것만 콕 집어서</p>
+ <div class="koko-box">
+ <h3>✍️ 코코 한마디</h3>
+ <p class="cap">특히 추천하는 것만 콕 집어서</p>
 
-    <div class="krow"><div class="kname">프리텐다드</div><div class="ktext">뭘 쓸지 모르겠으면 이거. 굵기 9단이라 한 폰트로 제목·본문·강조 다 잡혀요. 자간도 이미 잘 짜여 손 안 대도 됨.</div></div>
-    <div class="krow"><div class="kname">본고딕</div><div class="ktext">자간이 넓지도 좁지도 않아 조절 거의 불필요. 다국어 섞인 문서에 안전해요.</div></div>
-    <div class="krow"><div class="kname">수트</div><div class="ktext">버튼·아이콘이랑 글자 정렬이 딱 맞아서 UI 만들 때 편해요.</div></div>
-    <div class="krow"><div class="kname">페이퍼로지</div><div class="ktext">발표 PPT 제목용으로 존재감 최고. 대신 본문에 깔면 좀 무거워요.</div></div>
-    <div class="krow"><div class="kname">에이투지체</div><div class="ktext">본문부터 제목까지 커버. 일반 서체보다 무거운 굵기가 있어 실무 편집 효율이 좋아요.</div></div>
-  </div>
+ <div class="krow"><div class="kname">프리텐다드</div><div class="ktext">뭘 쓸지 모르겠으면 이거. 굵기 9단이라 한 폰트로 제목·본문·강조 다 잡혀요. 자간도 이미 잘 짜여 손 안 대도 됨.</div></div>
+ <div class="krow"><div class="kname">본고딕</div><div class="ktext">자간이 넓지도 좁지도 않아 조절 거의 불필요. 다국어 섞인 문서에 안전해요.</div></div>
+ <div class="krow"><div class="kname">수트</div><div class="ktext">버튼·아이콘이랑 글자 정렬이 딱 맞아서 UI 만들 때 편해요.</div></div>
+ <div class="krow"><div class="kname">페이퍼로지</div><div class="ktext">발표 PPT 제목용으로 존재감 최고. 대신 본문에 깔면 좀 무거워요.</div></div>
+ <div class="krow"><div class="kname">에이투지체</div><div class="ktext">본문부터 제목까지 커버. 일반 서체보다 무거운 굵기가 있어 실무 편집 효율이 좋아요.</div></div>
+ </div>
 </section>
 
 <footer>
   라이선스는 모두 <b>상업용 무료</b>지만, 사용 전 공식 배포처에서 최종 확인을 권장합니다.<br>
-  정리 코코 · 디자인펜슬 / 스폰지클럽 영상 유닛 — <b>Arami × 코코 픽</b>
+  정리 코코 · 디자인펜슬 / 영상 유닛 — <b>Arami × 코코 픽</b>
 </footer>
 
 <script>
@@ -213,27 +213,27 @@ el.innerHTML = fonts.map((f,i)=>{
   const jsLabel = f.js===0 ? "0 (기본)" : f.js;
   const fallbackNote = f.css ? "" : ' <span style="color:var(--dim);font-size:12px">(웹 미리보기 미지원 — 다운로드해 확인)</span>';
   return `
-  <div class="card${f.pick?' pick':''}">
-    <div class="card-head">
-      <span class="idx">${String(i+1).padStart(2,'0')}</span>
-      <span class="fname">${f.n}</span>
-      <span class="feng">${f.e}${fallbackNote}</span>
-    </div>
-    <div class="preview" style="font-family:${ff};letter-spacing:${ls}">
+ <div class="card${f.pick?' pick':''}">
+ <div class="card-head">
+ <span class="idx">${String(i+1).padStart(2,'0')}</span>
+ <span class="fname">${f.n}</span>
+ <span class="feng">${f.e}${fallbackNote}</span>
+ </div>
+ <div class="preview" style="font-family:${ff};letter-spacing:${ls}">
       ${sample}
-      <span class="small" style="font-family:${ff};letter-spacing:${ls}">${sampleSmall}</span>
-    </div>
-    <div class="meta">
-      <div><div class="k">굵기</div><div class="v">${f.w}</div></div>
-      <div><div class="k">자간</div><div class="v">${jsLabel}</div></div>
-      <div><div class="k">무드</div><div class="v tag">${f.mood}</div></div>
-      <div><div class="k">추천 사용처</div><div class="v tag">${f.use}</div></div>
-    </div>
-    <div class="card-foot">
-      <span class="src">배포 · <b>${f.src}</b></span>
-      <a class="dl" href="${f.url}" target="_blank" rel="noopener">${dlIcon} 다운로드</a>
-    </div>
-  </div>`;
+ <span class="small" style="font-family:${ff};letter-spacing:${ls}">${sampleSmall}</span>
+ </div>
+ <div class="meta">
+ <div><div class="k">굵기</div><div class="v">${f.w}</div></div>
+ <div><div class="k">자간</div><div class="v">${jsLabel}</div></div>
+ <div><div class="k">무드</div><div class="v tag">${f.mood}</div></div>
+ <div><div class="k">추천 사용처</div><div class="v tag">${f.use}</div></div>
+ </div>
+ <div class="card-foot">
+ <span class="src">배포 · <b>${f.src}</b></span>
+ <a class="dl" href="${f.url}" target="_blank" rel="noopener">${dlIcon} 다운로드</a>
+ </div>
+ </div>`;
 }).join('');
 </script>
 </body>
