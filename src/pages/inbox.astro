@@ -1,16 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
-import { geneMap } from '../data/dna.js';
 
 // 승격 파이프라인 — 던진 것이 자산이 될 때까지 한 칸씩 올라가는 화면.
-// "기록이 아니라 승격이 핵심이다." (아람) · "세컨브레인의 어려운 부분은 수집이 아니라 출구다." (딜런)
+// "기록이 아니라 승격이 핵심이다." · "세컨브레인의 어려운 부분은 수집이 아니라 출구다."
 const stages = [
-  { id: 'inbox',  ko: '인박스', ic: '📥', desc: '던져진 그대로. 아직 아무 판단도 안 했다.', from: '띵크 · 린디 · 곽동욱' },
-  { id: 'sorted', ko: '정리됨', ic: '🗂', desc: '무엇인지 정해졌다. 종류·태그·기한이 붙었다.', from: '세계로 · 치코 · 지니' },
-  { id: 'wiki',   ko: '지식',   ic: '🧠', desc: '다른 것과 엮였다. 다시 꺼내 쓸 수 있다.', from: '흐민 · 레미 · 그린' },
-  { id: 'asset',  ko: '자산',   ic: '💎', desc: '밖으로 나갈 수 있다. 글·부품·결정이 됐다.', from: '잭 · 하니 · 제인' },
+  { id: 'inbox',  ko: '인박스', ic: '📥', desc: '던져진 그대로. 아직 아무 판단도 안 했다.' },
+  { id: 'sorted', ko: '정리됨', ic: '🗂', desc: '무엇인지 정해졌다. 종류·태그·기한이 붙었다.' },
+  { id: 'wiki',   ko: '지식',   ic: '🧠', desc: '다른 것과 엮였다. 다시 꺼내 쓸 수 있다.' },
+  { id: 'asset',  ko: '자산',   ic: '💎', desc: '밖으로 나갈 수 있다. 글·부품·결정이 됐다.' },
 ];
-const g = (id) => geneMap[id];
 ---
 
 <Base title="인박스 — 승격 파이프라인">
@@ -58,7 +56,6 @@ const g = (id) => geneMap[id];
               <span class="pipe-n" data-n={s.id}>0</span>
             </div>
             <p class="pipe-desc">{s.desc}</p>
-            <p class="pipe-from">← {s.from}</p>
             <div class="pipe-list" data-list={s.id}></div>
             <p class="pipe-empty" data-empty={s.id}>{i === 0 ? '아직 던진 게 없어요. ⚡ 를 눌러보세요.' : '여기로 올라온 게 아직 없어요.'}</p>
           </div>
@@ -67,14 +64,14 @@ const g = (id) => geneMap[id];
     </div>
   </section>
 
-  <!-- 결정 카드 : 답을 주지 않고 결론에 닿게 한다 (르니 · 위버 · 설록 · 콩) -->
+  <!-- 결정 카드 : 답을 주지 않고 결론에 닿게 한다 -->
   <section class="ib-dec">
     <div class="wrap">
       <p class="section-kicker" data-reveal>Decision Cards</p>
       <h2 data-reveal="60">결정은 <mark>카드로 남는다</mark></h2>
       <p class="lead" data-reveal="120">
         고민을 던지면 <b>결정 · 기준 · 리스크 · 첫걸음</b> 네 칸으로 닫는다.
-        쌓인 결정은 다음 결정의 재료가 된다 — 챗창 혼자서는 못 만드는 부분이 바로 이 누적이다. <span class="from">← 르니 · 콩 · 미미</span>
+        쌓인 결정은 다음 결정의 재료가 된다 — 챗창 혼자서는 못 만드는 부분이 바로 이 누적이다.
       </p>
 
       <form class="dec-form" id="decForm">
@@ -92,13 +89,12 @@ const g = (id) => geneMap[id];
     </div>
   </section>
 
-  <!-- 정직 : 안 쓰는 기능이 드러나야 한다 (웃는돌 · 마크 · 최강훈) -->
+  <!-- 정직 : 안 쓰는 기능이 드러나야 한다 -->
   <section class="ib-honest">
     <div class="wrap">
       <p class="section-kicker" data-reveal>Honest Log</p>
       <h2 data-reveal="60">내가 <mark>진짜로 여는 곳</mark></h2>
       <p class="lead" data-reveal="120">
-        "만들어서 배포까지 다 했는데, 정작 내가 안 쓰게 됐다." — 웃는돌.
         기능을 더 붙이기 전에 <b>안 쓰는 게 뭔지</b>부터 드러낸다. 이 기록은 이 브라우저에만 남는다.
       </p>
       <div class="honest-grid" id="honestGrid"></div>
@@ -135,7 +131,6 @@ const g = (id) => geneMap[id];
     .pipe-ko { font-weight: 800; letter-spacing: -.02em; }
     .pipe-n { margin-left: auto; font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 1.05rem; }
     .pipe-desc { margin: 8px 0 2px; font-size: .8rem; color: var(--muted); line-height: 1.5; }
-    .pipe-from { margin: 0 0 12px; font-size: .7rem; color: var(--faint); }
     .pipe-list { display: flex; flex-direction: column; gap: 8px; }
     .pipe-empty { font-size: .8rem; color: var(--faint); text-align: center; padding: 22px 6px; line-height: 1.6; }
 

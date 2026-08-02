@@ -1,7 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { detailItems, statusMeta } from '../../data/mirror.js';
-import { geneMap } from '../../data/dna.js';
 
 export function getStaticPaths() {
   return detailItems().map((it) => ({ params: { slug: it.slug }, props: { it } }));
@@ -26,17 +25,6 @@ const dc = it.domainColor || '#ff7a4d';
       </div>
 
       {it.lead && <p class="pp-lead">{it.lead}</p>}
-
-      {(it.from || it.gene) && (
-        <div class="pp-graft">
-          {it.gene && geneMap[it.gene] && (
-            <a class="pp-gene" href={`/dna#${it.gene}`} style={`--gg:${geneMap[it.gene].c}`}>
-              {geneMap[it.gene].ic} {geneMap[it.gene].ko} 유전자
-            </a>
-          )}
-          {it.from && <a class="pp-credit" href="/dna">💡 스폰지클럽에서 이식 · <b>{it.from}</b> →</a>}
-        </div>
-      )}
 
       {it.points && it.points.length > 0 && (
         <ul class="pp-points">{it.points.map((p) => <li>{p}</li>)}</ul>
@@ -84,12 +72,7 @@ const dc = it.domainColor || '#ff7a4d';
     .pp-badge.seed { color: #a78bfa; border-color: color-mix(in srgb, #a78bfa 34%, transparent); }
     .pp-badge.idea { color: var(--muted); }
     .pp-lead { margin: 18px 0 0; font-size: 1.12rem; line-height: 1.72; color: var(--fg); }
-    .pp-graft { margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .pp-credit { display: inline-block; font-size: .86rem; color: var(--dc); background: color-mix(in srgb, var(--dc) 12%, transparent); border: 1px solid color-mix(in srgb, var(--dc) 26%, transparent); padding: 6px 13px; border-radius: 999px; text-decoration: none; transition: background .2s; }
-    .pp-credit:hover { background: color-mix(in srgb, var(--dc) 22%, transparent); }
-    .pp-credit b { font-weight: 700; }
-    .pp-gene { display: inline-flex; align-items: center; gap: 5px; font-size: .82rem; font-weight: 700; color: var(--gg); background: color-mix(in srgb, var(--gg) 12%, transparent); border: 1px solid color-mix(in srgb, var(--gg) 30%, transparent); padding: 6px 13px; border-radius: 999px; text-decoration: none; transition: background .2s; }
-    .pp-gene:hover { background: color-mix(in srgb, var(--gg) 22%, transparent); }
+
     .pp-points { margin: 28px 0 0; padding: 0; list-style: none; }
     .pp-points li { position: relative; padding: 13px 0 13px 24px; line-height: 1.65; color: var(--fg-soft); border-top: 1px solid var(--line-soft); }
     .pp-points li:last-child { border-bottom: 1px solid var(--line-soft); }

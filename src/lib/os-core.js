@@ -2,16 +2,16 @@
 // 아람미러 OS 커널 (os-core)
 //
 // 아람미러 전체가 공유하는 단 하나의 저장소·데이터 모델.
-// 스폰지클럽 1·2기 147명의 과제에서 뽑은 유전자를 "글"이 아니라 "동작"으로 박아넣은 곳.
 //
-//  ⚡ friction  던지는 순간과 저장되는 순간의 거리를 0으로       (띵크·린디·곽동욱·달빛그린)
-//  🎼 orchest   저장의 병목은 저장이 아니라 분류 → 라우터가 대신  (세계로·치코·지니)
-//  ⬆ promote   기록이 아니라 승격 — 인박스→정리→위키→자산       (흐민·딜런·레미·잭·하니)
-//  🔍 evidence  확인 안 된 건 확인 안 됐다고 데이터에 박아둔다     (모닥·애월·지수·박미수)
-//  ❓ socratic  결정은 카드로 남고 다시 꺼내 쓸 수 있어야 한다     (르니·위버·설록·콩)
-//  🔁 loop      내가 열어야 도는 시스템은 안 돈다 → 먼저 말 건다   (다니·골프청년·잭·쎄이)
-//  🪞 honest    안 쓰는 기능은 드러나야 한다 → 사용 로그          (웃는돌·마크·최강훈)
-//  🔒 boundary  데이터는 이 브라우저에만 산다. 서버로 안 나간다    (Galia·챈·개미·써니)
+// 이 커널이 지키는 여덟 가지:
+//  ⚡ 던지는 순간과 저장되는 순간의 거리를 0으로
+//  🎼 저장의 병목은 저장이 아니라 분류 → 라우터가 대신한다
+//  ⬆ 기록이 아니라 승격 — 인박스 → 정리 → 지식 → 자산
+//  🔍 확인 안 된 건 확인 안 됐다고 데이터에 박아둔다
+//  ❓ 결정은 카드로 남고 다시 꺼내 쓸 수 있어야 한다
+//  🔁 내가 열어야 도는 시스템은 안 돈다 → 먼저 말 건다
+//  🪞 안 쓰는 기능은 드러나야 한다 → 사용 로그
+//  🔒 데이터는 이 브라우저에만 산다. 서버로 안 나간다
 //
 // 저장 위치 : localStorage 단일 키. 서버 전송 없음.
 // ─────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ const isBrowser = typeof window !== 'undefined' && !!window.localStorage;
 
 /* ── 모델 상수 ───────────────────────────────────────────── */
 
-// 승격 4단계 — 기록이 아니라 승격이 핵심 (흐민 · 아람)
+// 승격 4단계 — 기록이 아니라 승격이 핵심
 export const STAGES = [
   { id: 'inbox',  ko: '인박스', ic: '📥', desc: '던져진 그대로. 아직 아무 판단도 안 했다.' },
   { id: 'sorted', ko: '정리됨', ic: '🗂', desc: '무엇인지 정해졌다. 종류·태그·기한이 붙었다.' },
@@ -30,7 +30,7 @@ export const STAGES = [
 ];
 export const STAGE_IDS = STAGES.map((s) => s.id);
 
-// 종류 — 라우터가 자동으로 정한다 (사장님 책장 분류 규칙을 코드로)
+// 종류 — 라우터가 자동으로 정한다
 export const KINDS = [
   { id: 'thought', ko: '생각',   ic: '💭', c: '#f2622f' },
   { id: 'todo',    ko: '할 일',  ic: '✅', c: '#3c8f6b' },
@@ -40,7 +40,7 @@ export const KINDS = [
   { id: 'decision',ko: '결정',   ic: '⚖️', c: '#c49a2e' },
 ];
 
-// 근거 상태 — 그럴듯한 추측이 가장 비싼 버그다 (모닥 · 애월)
+// 근거 상태 — 그럴듯한 추측이 가장 비싼 버그다
 export const VERIFY = [
   { id: 'unknown',  ko: '미확인', ic: '○', c: '#97897c', desc: '아직 확인 안 함' },
   { id: 'verified', ko: '확인됨', ic: '◉', c: '#3c8f6b', desc: '출처를 직접 확인함' },
@@ -86,7 +86,7 @@ function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return t
 
 /* ─────────────────────────────────────────────────────────
    자동 분류 라우터
-   "기록의 병목은 저장이 아니라 분류였다. 분류를 AI에게 넘겼다." — 세계로
+   "기록의 병목은 저장이 아니라 분류였다. 분류를 AI에게 넘겼다."
    여기서는 AI 없이도 도는 규칙 라우터. 틀리면 사람이 한 번 눌러 고치고,
    고친 건 다시 안 묻는다.
    ───────────────────────────────────────────────────────── */
@@ -127,7 +127,7 @@ function parseDue(text) {
 
 /**
  * 한 줄을 받아 무엇인지 판정한다.
- * 컨테이너가 아니라 내용물이 목적지를 정한다. (사장님 책장 규칙)
+ * 컨테이너가 아니라 내용물이 목적지를 정한다.
  */
 export function classify(text) {
   const t = String(text || '').trim();
@@ -160,7 +160,7 @@ export function classify(text) {
   return {
     kind, why, tags, due,
     src: url || null,
-    // 링크는 내가 아직 안 읽었다 → 미확인이 기본값 (모닥의 verified 필드)
+    // 링크는 내가 아직 안 읽었다 → 미확인이 기본값
     verified: url ? 'unknown' : 'verified',
     done: RE_DONE.test(t),
   };
@@ -186,7 +186,7 @@ export function capture(text, patch = {}) {
     src: patch.src !== undefined ? patch.src : c.src,
     done: patch.done !== undefined ? patch.done : c.done,
     note: '',
-    from: patch.from || null,     // 어느 크루 유전자에서 왔나
+    src2: patch.src2 || null,     // 어디서 들어왔나 (텔레그램·웹 등)
     part: patch.part || null,     // 지도의 어느 부품과 연결되나
     ts: Date.now(),
     ups: [],                      // 승격 이력
@@ -242,7 +242,7 @@ export function toggleDone(id) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   결정 카드 — "대신 결정해주지 않고 스스로 결론에 닿게 한다" (르니)
+   결정 카드 — "대신 결정해주지 않고 스스로 결론에 닿게 한다"
    결정·기준·리스크·첫걸음 4칸. 쌓이면 다시 꺼내 쓴다.
    ───────────────────────────────────────────────────────── */
 export function addDecision(d) {
@@ -269,7 +269,7 @@ export function removeDecision(id) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   사용 로그 — "만들어서 배포까지 했는데 정작 내가 안 쓰게 됐다" (웃는돌)
+   사용 로그 — "만들어서 배포까지 했는데 정작 내가 안 쓰게 됐다"
    기능을 더 붙이기 전에, 안 쓰는 게 뭔지부터 드러낸다.
    ───────────────────────────────────────────────────────── */
 export function logVisit(path) {
@@ -296,8 +296,8 @@ export function coldSpots(paths, days = 14) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   먼저 말 거는 루프 — "봇이 한 번만 오는 게 아니라 반응 없으면 다시 온다" (잭)
-   내가 열어야 도는 시스템은 안 돈다. (다니 · 골프청년)
+   먼저 말 거는 루프 — "봇이 한 번만 오는 게 아니라 반응 없으면 다시 온다"
+   내가 열어야 도는 시스템은 안 돈다.
    ───────────────────────────────────────────────────────── */
 export function nudge() {
   const db = load();
@@ -318,7 +318,7 @@ export function nudge() {
   if (unverified.length >= 5) return { level: 'cool', ic: '🔍', msg: `아직 확인 안 한 자료 ${unverified.length}건. 근거부터 붙일까요?`, to: '/inbox?f=unknown', n: unverified.length };
   if (inbox.length >= 8) return { level: 'cool', ic: '📥', msg: `인박스 ${inbox.length}건. 쌓이기만 하면 자산이 안 돼요.`, to: '/inbox', n: inbox.length };
 
-  // 오늘 아무것도 안 던졌으면 먼저 말 건다 (지수의 리버스 저널링)
+  // 오늘 아무것도 안 던졌으면 먼저 말 건다
   const todayCaptured = items.filter((i) => todayStr(new Date(i.ts)) === today);
   if (!todayCaptured.length && new Date().getHours() >= 11) {
     return { level: 'cool', ic: '💭', msg: '오늘은 아직 아무것도 안 던지셨어요. 한 줄이면 충분해요.', to: '#capture', n: 0 };
@@ -377,13 +377,12 @@ export function importAll(json) {
 }
 export function clearAll() { _db = structuredClone(EMPTY); _db.meta.born = Date.now(); save(); }
 
-/* ── 첫 실행 씨앗 — 빈 화면은 아무것도 안 가르쳐준다 (민트·나로) ── */
+/* ── 첫 실행 씨앗 — 빈 화면은 아무것도 안 가르쳐준다 ── */
 export function seedIfEmpty() {
   const db = load();
   if (db.items.length) return false;
   [
-    '아라미러 DNA 페이지에 크루 147명 코어 정리 #아람미러',
-    'https://hyun-arch.github.io/dna/ 이식 현황판 확인',
+    '아람미러 첫 화면에 오늘 할 일 한 줄만 띄우기 #아람미러',
     '내일 오전 10시 경영회의',
     '이번 주까지 흑자전환 OS 지표 정리하기 #경영',
     '기록이 아니라 승격이 핵심이다 — 던진 게 자산이 되려면 계단이 있어야 한다',

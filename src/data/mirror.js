@@ -29,7 +29,7 @@ export const domains = [
         items: [
           { t: '플로우 타이머', to: '/flow', status: 'live' },
           { t: '거장 & 스승 — 몰입의 거장·자문의 스승', to: '/masters', status: 'live' },
-          { t: '리버스 저널링', slug: 'reverse-journal', status: 'building', from: '지수 · 미미',
+          { t: '리버스 저널링', slug: 'reverse-journal', status: 'building',
             lead: '저녁 캡처가 비어 있으면, 봇이 먼저 질문을 던져 한 줄이라도 끌어낸다. 모으는 게 아니라 끌어내 주기.',
             points: ['조용한 날엔 8가지 결 랜덤 질문을 먼저 발송', '“오래 조용하면 먼저 말 걸기” 능동형 체크인', '한 줄이라도 남으면 사색 노트로 연결'],
             links: [{ label: '사색 노트', href: '/m/saek-note' }] },
@@ -68,13 +68,13 @@ export const domains = [
       {
         h: '습관 · 목표',
         items: [
-          { t: '아침 리포트 (결론형)', slug: 'morning-report', status: 'building', from: '헤이 · 웃는돌',
+          { t: '아침 리포트 (결론형)', slug: 'morning-report', status: 'building',
             lead: '정보를 나열하지 않고 결론부터. “제목 한 줄 + 핵심 3점 + So what” 형식으로 아침 7시에.',
             points: ['출처·근거가 엇갈리면 안전한 쪽으로 결론 + 근거 한 줄', '근거 없는 수치는 [확인 필요] 표시', '오늘 할 일·미완료·기한을 한 화면에'] },
-          { t: 'WON’T 리스트 + 재계획', slug: 'wont-list', status: 'seed', from: '김형',
+          { t: 'WON’T 리스트 + 재계획', slug: 'wont-list', status: 'seed',
             lead: '할 일보다 “이번 주 안 할 일”을 먼저 정한다. 큰 프로젝트가 끝나면 24시간 안에 재계획.',
             points: ['오늘/이번 주 WON’T 3개 명시', '큰 일 종료 → 재계획 트리거로 계획 붕괴 방지', '집중을 지키는 건 더하기가 아니라 빼기'] },
-          { t: 'MVP 패턴 인사이트', slug: 'pattern-insight', status: 'idea', from: '딜런',
+          { t: 'MVP 패턴 인사이트', slug: 'pattern-insight', status: 'idea',
             lead: '기록이 5개 이상 쌓이면, 축적 데이터가 스스로 방향을 보여준다.',
             points: ['카테고리별 평균·반복 패턴 자동 표출', '“이번 주 MVP(가장 쓸모 있던 것)” 뽑기', '되돌아보기와 연결'] },
           { t: '데일리 루틴', slug: 'daily-routine', status: 'seed',
@@ -83,7 +83,7 @@ export const domains = [
             links: [{ label: '셸 주고받기', href: '/m/shell-give-take' }] },
           { t: '분기 목표', slug: 'quarter-goals', status: 'seed',
             lead: '3개월 단위로 “이건 반드시”를 3개만. 많으면 아무것도 안 된다.',
-            points: ['개인: 아라미러를 매일 쓰는 도구로', '회사: 아람휴비스 OS 첫 버전', '관계: 스폰지클럽 후기 꾸준히'] },
+            points: ['개인: 아라미러를 매일 쓰는 도구로', '회사: 아람휴비스 OS 첫 버전', '관계: 배운 걸 글로 꾸준히 남기기'] },
           { t: '되돌아보기', slug: 'review', status: 'idea', lead: '주·분기 끝에 “뭘 배웠나 / 뭘 접을까”를 정직하게.',
             points: ['잘된 것 3, 접을 것 1', '다음 구간 한 가지 실험 정하기'] },
         ],
@@ -189,10 +189,10 @@ export const domains = [
       {
         h: '의사결정',
         items: [
-          { t: '결정 카드 로그', slug: 'decision-cards', status: 'seed', from: '르니',
+          { t: '결정 카드 로그', slug: 'decision-cards', status: 'seed',
             lead: '고민을 던지면 유형 파악 → 기준을 묻고 → 📌결정/🎯기준/📅날짜 카드로 닫는다. 판단 기준이 자산이 된다.',
             points: ['선택형/방향형/우선순위형으로 유형 분류', '결정·이유·날짜를 카드로 누적', '나중에 흔들릴 때 과거 기준을 되짚음'] },
-          { t: '미완료 이월 리마인드', slug: 'carryover', status: 'building', from: '베리 · 로밍',
+          { t: '미완료 이월 리마인드', slug: 'carryover', status: 'building',
             lead: '답할 때까지 다음날 아침 리포트에 다시 등장한다. 잊힘 자체를 구조적으로 차단.',
             points: ['“했어/미룰래” 응답으로 처리', '미루면 리스크 한 줄 안내', 'D-3 기한 알림'] },
           { t: '미팅 · 안건', slug: 'meetings', status: 'idea', lead: '회의 전에 안건, 회의 후에 결정만 남긴다. 회의록을 길게 쓰지 않는다.',
@@ -212,25 +212,9 @@ export const domains = [
     tagline: '오고 가는 마음의 기록',
     branches: [
       {
-        h: '스폰지클럽',
-        items: [
-          { t: '스폰지클럽 1주차 기획', to: '/spongeclub', status: 'live' },
-          { t: '로빌(ROBIL) — 3주차 미션', to: '/robil', status: 'live' },
-          { t: '🏆 4주 과제 랭킹 (71명 전수)', to: '/mission-rank', status: 'live' },
-          { t: '이기적인 스킬러스', slug: 'skillers', status: 'seed',
-            lead: '스폰지클럽의 스킬러스 채널. 클로드 코드 스킬을 서로 나누고 후기를 남기는 곳.',
-            points: ['내게 맞는 스킬 추천받고 바로 설치', '쓴 스킬은 채널에 후기 공유', '/스킬등록 초안까지 만들어 올리기'] },
-          { t: '주차 과제', slug: 'weekly-task', status: 'seed',
-            lead: '매주 나오는 과제. 남 것 베끼지 않고 내가 겪은 걸 1인칭으로 쓴다.',
-            points: ['핵심 원칙: 내가 실제로 부딪힌 어려움을 쓴다', '읽는 사람(동료)에 맞춰 눈높이 조절', '발표·과제 모두 이 방식'] },
-          { t: '후기 · 배움', slug: 'club-learnings', status: 'idea', lead: '모임에서 얻은 것. 흘려보내지 말고 한 줄이라도.',
-            points: ['이번 주 가장 쓸모 있던 것 1개'] },
-        ],
-      },
-      {
         h: '셸 · 주고받기',
         items: [
-          { t: '자동 셸 선물 봇', slug: 'shell-gift-bot', status: 'live', from: '직접 제작',
+          { t: '자동 셸 선물 봇', slug: 'shell-gift-bot', status: 'live',
             lead: '매일 사라지는 셸을, 한 사람에게 몰리지 않게 조원에게 공정하게 돌아가며 선물하도록 돕는 봇. 순환 대상 계산 + 알림을 자동화했다.',
             points: [
               '나를 뺀 조원을 매일 한 명씩 순서대로 순환 (5조 11명 = 11일 한 바퀴). 기록이 남아 껐다 켜도 순서가 이어짐',
@@ -272,10 +256,10 @@ export const domains = [
       {
         h: '1층 — 사고',
         items: [
-          { t: 'durable-first 캡처', slug: 'durable-first', status: 'building', from: '쏭',
+          { t: 'durable-first 캡처', slug: 'durable-first', status: 'building',
             lead: '던지는 순간 원문 그대로(raw) 먼저 저장한다. 절대 안 잃는다. 정리·분류는 나중에 뒤에서.',
             points: ['봇이 꺼져 있어도 말이 유실되지 않게 저장 계층 분리', '정리 결과를 “정답 코퍼스”로 쌓기', '저장 먼저 → 정리는 밤에'] },
-          { t: '자동 분류 인풋', slug: 'auto-classify', status: 'seed', from: '스폰지클럽 다수',
+          { t: '자동 분류 인풋', slug: 'auto-classify', status: 'seed',
             lead: '텔레그램 한 줄을 던지면 알아서 카테고리로 분류돼 쌓인다. 71명 중 가장 많이 나온 공통 패턴.',
             points: ['입력 장벽 0 — 형식 없이 그냥 던지기', '아이디어/할일/위임/참고로 자동 태깅', '키워드로 물으면 검색해줌'] },
           { t: 'journal 포착 (마찰 0)', slug: 'journal-capture', status: 'seed',
@@ -360,45 +344,6 @@ export const domains = [
     ],
   },
 ];
-
-// ── 크루 이식분 병합 ────────────────────────────────────────
-// 스폰지클럽 1·2기 147명에게서 뽑은 코어를 실제 부품으로 심은 가지들.
-// 여기서 붙이면 홈 지도 · /m/<slug> 상세 · ⌘K 검색에 자동으로 흘러간다.
-import { graft } from './mirror-graft.js';
-for (const d of domains) {
-  if (graft[d.key]) d.branches.push(...graft[d.key]);
-}
-
-// 지도 전체 통계 — "몇 개가 크루에게서 왔는가"를 정직하게 센다.
-export function graftStats() {
-  const all = domains.flatMap((d) => d.branches.flatMap((b) => b.items));
-  const fromCrew = all.filter((i) => i.from);
-  const byGene = {};
-  all.forEach((i) => { if (i.gene) byGene[i.gene] = (byGene[i.gene] || 0) + 1; });
-  return {
-    total: all.length,
-    fromCrew: fromCrew.length,
-    live: all.filter((i) => i.status === 'live').length,
-    crewLive: fromCrew.filter((i) => i.status === 'live').length,
-    crewBuilding: fromCrew.filter((i) => i.status === 'building').length,
-    crewSeedIdea: fromCrew.filter((i) => i.status === 'seed' || i.status === 'idea').length,
-    byGene,
-    items: all,
-  };
-}
-
-/** 특정 크루 이름이 들어간 부품들을 돌려준다 (/dna 사람 ↔ 부품 연결용) */
-export function partsFrom(name) {
-  const key = String(name || '').replace(/\(.*\)/, '').trim();
-  if (!key) return [];
-  return domains.flatMap((d) =>
-    d.branches.flatMap((b) =>
-      b.items
-        .filter((i) => i.from && (i.from.includes(key) || i.from.includes(name)))
-        .map((i) => ({ t: i.t, href: i.to || '/m/' + i.slug, status: i.status, gene: i.gene, domain: d.title }))
-    )
-  );
-}
 
 // /m/[slug] 이 상세 페이지를 만들 항목만 뽑아준다 (to 로 다른 페이지 가는 건 제외).
 export function detailItems() {

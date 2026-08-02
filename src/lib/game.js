@@ -1,14 +1,12 @@
 // ─────────────────────────────────────────────────────────────
 // 아라미 성장 엔진 (game)
 //
-// 지금까지의 레벨/XP는 "페이지를 몇 번 열었나"였다. 그건 장식이다.
-// 여기서는 XP가 오직 행동에서 나온다 — 던지고, 올리고, 근거를 붙이고, 결정하고, 끝낸 것.
+// XP는 오직 행동에서 나온다. 페이지를 몇 번 열었나가 아니라
+// 던지고, 올리고, 근거를 붙이고, 결정하고, 끝낸 것에서만 오른다.
 //
-// 그리고 업적 18개는 전부 스폰지클럽 크루의 이름을 땄다.
-// 배지를 딴다는 건 그 사람의 코어를 몸으로 한 번 통과했다는 뜻이다.
-// 147명을 읽는 게 아니라, 쓰면서 한 명씩 획득한다. 이게 이 앱의 압축 방식이다.
+// 업적은 "무엇을 해냈나"의 이름이다. 자랑이 아니라 다음에 뭘 하면 되는지를 알려주는 지도다.
 //
-// 저장 : aramirror.game.v1 (상호작용 카운터만. XP·레벨·배지는 os-core 상태에서 매번 계산)
+// 저장 : aramirror.game.v1 (상호작용 카운터만. XP·레벨·업적은 os-core 상태에서 매번 계산)
 // ─────────────────────────────────────────────────────────────
 
 import * as OS from './os-core.js';
@@ -32,73 +30,55 @@ export const LEVELS = [
 
 /* ══════════ XP — 오직 행동에서만 ══════════ */
 export const XP_RULES = [
-  { k: 'capture',  v: 2,  ko: '한 줄 던지기',        gene: 'friction' },
-  { k: 'sorted',   v: 3,  ko: '정리됨으로 승격',      gene: 'promote' },
-  { k: 'wiki',     v: 5,  ko: '지식으로 승격',        gene: 'promote' },
-  { k: 'asset',    v: 10, ko: '자산으로 승격',        gene: 'promote' },
-  { k: 'verified', v: 3,  ko: '근거 확인',            gene: 'evidence' },
-  { k: 'done',     v: 4,  ko: '할 일 완료',           gene: 'loop' },
-  { k: 'decision', v: 8,  ko: '결정 카드 남기기',      gene: 'socratic' },
-  { k: 'streak',   v: 5,  ko: '연속 하루당 보너스',    gene: 'loop' },
+  { k: 'capture',  v: 2,  ko: '한 줄 던지기' },
+  { k: 'sorted',   v: 3,  ko: '정리됨으로 승격' },
+  { k: 'wiki',     v: 5,  ko: '지식으로 승격' },
+  { k: 'asset',    v: 10, ko: '자산으로 승격' },
+  { k: 'verified', v: 3,  ko: '근거 확인' },
+  { k: 'done',     v: 4,  ko: '할 일 완료' },
+  { k: 'decision', v: 8,  ko: '결정 카드 남기기' },
+  { k: 'streak',   v: 5,  ko: '연속 하루당 보너스' },
 ];
 
-/* ══════════ 업적 18 — 전부 크루 이름을 땄다 ══════════ */
+/* ══════════ 업적 18 — 내가 해낸 것의 이름 ══════════ */
 // need(s) : 현재 상태 s 를 받아 [달성수, 목표수] 를 돌려준다.
 export const BADGES = [
-  { id: 'ttink',   ic: '🚪', ko: '띵크의 문',      who: '띵크(이예성)', gene: 'friction',
-    why: '"진짜 마찰은 매번 로그인해서 들어가는 것 자체였다"',
-    how: '아무 화면에서나 10번 던지기', need: (s) => [s.total, 10] },
-  { id: 'kwak',    ic: '⚡', ko: '곽동욱의 순간',   who: '곽동욱', gene: 'friction',
-    why: '"읽다 막힌 것을 즉시 던진다"',
-    how: '하루에 5개 던지기', need: (s) => [s.today, 5] },
-  { id: 'hmin',    ic: '🪜', ko: '흐민의 계단',    who: '흐민(김현민)', gene: 'promote',
-    why: '사고 → 지식 → 자산 3레이어를 처음 설계한 사람',
-    how: '처음으로 자산 단계까지 올리기', need: (s) => [s.assets ? 1 : 0, 1] },
-  { id: 'dylan',   ic: '🚪', ko: '딜런의 출구',    who: '딜런(조종훈)', gene: 'promote',
-    why: '"세컨브레인의 어려운 부분은 수집이 아니라 출구다"',
-    how: '자산 5개 만들기', need: (s) => [s.assets, 5] },
-  { id: 'hani',    ic: '🔥', ko: '하니의 연속',    who: '하니(우동한)', gene: 'promote',
-    why: '2024년부터 하루도 안 거르고 기록한 사람',
-    how: '7일 연속 던지기', need: (s) => [s.streak, 7] },
-  { id: 'geowi',   ic: '📆', ko: '거위의꿈의 반년', who: '거위의꿈(임정선)', gene: 'promote',
-    why: '"6개월 쌓이면 제품 라이브러리 = CMS가 된다"',
-    how: '30일 연속 던지기', need: (s) => [s.streak, 30] },
-  { id: 'modak',   ic: '👁', ko: '모닥의 눈',      who: '모닥(김은영)', gene: 'evidence',
-    why: '"AI의 가장 큰 위험은 그럴듯한 추측"',
-    how: '미확인 자료 5건에 근거 붙이기', need: (s) => [s.verifiedCount, 5] },
-  { id: 'aewol',   ic: '📊', ko: '애월의 커버리지', who: '애월(이연정)', gene: 'evidence',
-    why: '"확인할 수 없는 근거는 근거가 아니다"',
-    how: '근거 확인 20건', need: (s) => [s.verifiedCount, 20] },
-  { id: 'leuni',   ic: '⚖️', ko: '르니의 카드',    who: '르니(유자애)', gene: 'socratic',
-    why: '"대신 결정해주지 않고 스스로 결론에 닿게 한다"',
-    how: '결정 카드 1장 남기기', need: (s) => [s.decisions, 1] },
-  { id: 'kong',    ic: '🚧', ko: '콩의 허들',      who: '콩(공지은)', gene: 'socratic',
-    why: '"믿기 전, 한 번의 허들을"',
-    how: '네 칸을 모두 채운 결정 카드 5장', need: (s) => [s.fullDecisions, 5] },
-  { id: 'jack',    ic: '🔁', ko: '잭의 재호출',    who: '잭(유재현)', gene: 'loop',
-    why: '"봇이 한 번만 오는 게 아니라 반응이 없으면 다시 온다"',
-    how: '시스템이 건 말에 3번 응답하기', need: (s) => [s.nudgeHandled, 3] },
-  { id: 'dani',    ic: '🌅', ko: '다니의 아침',    who: '다니(송다은)', gene: 'loop',
-    why: '"자동화보다 데이터 누적이 더 큰 자산"',
-    how: '오늘의 미션 3개를 3일 동안 완주', need: (s) => [s.missionDays, 3] },
-  { id: 'utneun',  ic: '🪞', ko: '웃는돌의 정직',  who: '웃는돌(장경아)', gene: 'honest',
-    why: '"만들어서 배포까지 했는데 정작 내가 안 쓰게 됐다"',
-    how: '정직 로그를 열어 내가 안 쓰는 곳 확인하기', need: (s) => [s.honestOpened ? 1 : 0, 1] },
-  { id: 'mark',    ic: '🗑', ko: '마크의 폐기',    who: '마크(전준하)', gene: 'honest',
-    why: '공들인 워크플로우를 실사용 0이라 스스로 폐기한 사람',
-    how: '안 쓰는 항목 5개 지우기', need: (s) => [s.deleted, 5] },
-  { id: 'pobi',    ic: '📐', ko: '포비의 틀',      who: '포비(이지선)', gene: 'format',
-    why: '"OS는 결국 고정(틀)과 변수(내용)를 갈라내는 일"',
-    how: '같은 태그를 10번 쓰기', need: (s) => [s.topTag, 10] },
-  { id: 'segye',   ic: '🎼', ko: '세계로의 분류',  who: '세계로(진혜정)', gene: 'orchest',
-    why: '"기록의 병목은 저장이 아니라 분류다"',
-    how: '여섯 종류(생각·할일·일정·자료·질문·결정)를 하나씩 다 만들기', need: (s) => [s.kindsUsed, 6] },
-  { id: 'choi',    ic: '📏', ko: '최강훈의 실측',  who: '최강훈', gene: 'honest',
-    why: '"추정하지 말고 측정할 것"',
-    how: '승격률 50% 넘기기 (자산·지식이 절반 이상)', need: (s) => [Math.min(s.promoteRate, 50), 50] },
-  { id: 'mirror',  ic: '🧬', ko: '147의 거울',     who: '스폰지클럽 1·2기 전원', gene: 'promote',
-    why: '147명의 코어를 전부 통과한 사람에게',
-    how: '레벨 10 · 거울 도달', need: (s) => [s.level, 10] },
+  { id: 'firstdoor', ic: '🚪', ko: '첫 문',        axis: 'friction',
+    why: '입구가 하나면 습관이 된다.',            how: '아무 화면에서나 10번 던지기', need: (s) => [s.total, 10] },
+  { id: 'moment',    ic: '⚡', ko: '그 순간',      axis: 'friction',
+    why: '막힌 그 자리에서 바로 던지는 게 핵심이다.', how: '하루에 5개 던지기', need: (s) => [s.today, 5] },
+  { id: 'firststep', ic: '🪜', ko: '첫 계단',      axis: 'promote',
+    why: '한 칸이라도 올라가야 쌓기가 자산이 된다.', how: '처음으로 자산 단계까지 올리기', need: (s) => [s.assets ? 1 : 0, 1] },
+  { id: 'exit',      ic: '🚪', ko: '출구',          axis: 'promote',
+    why: '어려운 건 모으기가 아니라 꺼내 쓰기다.',  how: '자산 5개 만들기', need: (s) => [s.assets, 5] },
+  { id: 'week',      ic: '🔥', ko: '일주일',        axis: 'promote',
+    why: '끊기지 않는 것 자체가 가장 큰 자산이다.', how: '7일 연속 던지기', need: (s) => [s.streak, 7] },
+  { id: 'month',     ic: '📆', ko: '한 달',         axis: 'promote',
+    why: '한 달 쌓이면 그때부터 데이터가 말을 한다.', how: '30일 연속 던지기', need: (s) => [s.streak, 30] },
+  { id: 'doubt',     ic: '👁', ko: '의심하는 눈',   axis: 'evidence',
+    why: '그럴듯한 추측이 가장 비싼 버그다.',       how: '미확인 자료 5건에 근거 붙이기', need: (s) => [s.verifiedCount, 5] },
+  { id: 'weight',    ic: '📊', ko: '근거의 무게',   axis: 'evidence',
+    why: '확인할 수 없는 근거는 근거가 아니다.',    how: '근거 확인 20건', need: (s) => [s.verifiedCount, 20] },
+  { id: 'firstcall', ic: '⚖️', ko: '첫 결정',       axis: 'socratic',
+    why: '머릿속 고민은 카드가 되기 전엔 안 끝난다.', how: '결정 카드 1장 남기기', need: (s) => [s.decisions, 1] },
+  { id: 'fourbox',   ic: '🚧', ko: '네 칸을 다 채움', axis: 'socratic',
+    why: '결정·기준·리스크·첫걸음이 다 있어야 다시 꺼내 쓴다.', how: '네 칸 모두 채운 결정 카드 5장', need: (s) => [s.fullDecisions, 5] },
+  { id: 'recall',    ic: '🔁', ko: '다시 온 알림',  axis: 'loop',
+    why: '무시하면 다시 온다. 그래서 안 놓친다.',   how: '시스템이 건 말에 3번 응답하기', need: (s) => [s.nudgeHandled, 3] },
+  { id: 'threedawn', ic: '🌅', ko: '사흘의 아침',   axis: 'loop',
+    why: '사흘이면 리듬이고, 리듬이면 시스템이다.', how: '오늘의 미션 3개를 3일 완주', need: (s) => [s.missionDays, 3] },
+  { id: 'mirror0',   ic: '🪞', ko: '거울을 봄',     axis: 'honest',
+    why: '안 쓰는 걸 아는 게 더 만드는 것보다 어렵다.', how: '정직 로그를 열어 안 쓰는 곳 확인하기', need: (s) => [s.honestOpened ? 1 : 0, 1] },
+  { id: 'letgo',     ic: '🗑', ko: '버리는 용기',   axis: 'honest',
+    why: '버리는 것도 정리다. 애착이 제일 비싸다.', how: '안 쓰는 항목 5개 지우기', need: (s) => [s.deleted, 5] },
+  { id: 'sameform',  ic: '📐', ko: '같은 틀',       axis: 'format',
+    why: '고정과 변수를 가르면 늘어나도 안 무겁다.', how: '같은 태그를 10번 쓰기', need: (s) => [s.topTag, 10] },
+  { id: 'sixways',   ic: '🎼', ko: '여섯 갈래',     axis: 'orchest',
+    why: '분류가 되면 찾는 시간이 사라진다.',       how: '여섯 종류를 하나씩 다 만들기', need: (s) => [s.kindsUsed, 6] },
+  { id: 'halfway',   ic: '📏', ko: '절반을 넘김',   axis: 'honest',
+    why: '추정하지 말고 측정할 것.',                how: '승격률 50% 넘기기', need: (s) => [Math.min(s.promoteRate, 50), 50] },
+  { id: 'themirror', ic: '🧬', ko: '거울',          axis: 'promote',
+    why: 'AI가 나를 비추기 시작하는 지점.',         how: '레벨 10 · 거울 도달', need: (s) => [s.level, 10] },
 ];
 
 /* ══════════ 오늘의 미션 풀 ══════════ */
@@ -238,13 +218,6 @@ export function todayMissions() {
   return { day, missions: ms, allDone, cleared: ms.filter((m) => m.done).length };
 }
 
-/* ══════════ 오늘의 유전자 — 147명이 하루 한 명씩 말을 건다 ══════════ */
-export function todayCrew(people) {
-  const list = people.filter((p) => p.gene !== 'empty' && p.core && p.quote);
-  if (!list.length) return null;
-  const day = OS.todayStr();
-  return { ...list[seedOf(day + 'crew') % list.length], day };
-}
 
 /* ══════════ 다음 한 칸 — 지금 무엇을 하면 가장 이득인가 ══════════ */
 export function nextBest() {

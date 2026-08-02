@@ -1,16 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { logs } from '../data/logs.js';
-import { domains, statusMeta, graftStats } from '../data/mirror.js';
-import { people as crew, geneMap } from '../data/dna.js';
-import { LEVELS, BADGES } from '../lib/game.js';
+import { domains, statusMeta } from '../data/mirror.js';
 const latestLogs = logs.slice(0, 3);
-const gsx = graftStats();
-// 오늘의 유전자 후보 — 클라이언트가 날짜 시드로 하나 고른다
-const crewPool = crew
-  .filter((p) => p.gene !== 'empty' && p.core && p.quote)
-  .map((p) => ({ n: p.n, gen: p.gen, g: p.g, job: p.job, core: p.core, quote: p.quote, gene: p.gene, work: p.work }));
-const geneLite2 = Object.fromEntries(Object.entries(geneMap).map(([k, v]) => [k, { ic: v.ic, ko: v.ko, c: v.c }]));
 const hrefOf = (it) => it.to || ('/m/' + it.slug);
 
 function counts(d) {
@@ -44,10 +36,7 @@ const apps = [
 
 const donutC = 2 * Math.PI * 26;
 ---
-<Base title="Home">
-  <script type="application/json" id="deckCrew" set:html={JSON.stringify(crewPool)} />
-  <script type="application/json" id="deckGenes" set:html={JSON.stringify(geneLite2)} />
-  <!-- ═══════════ 아라미 데크 : 한 화면에 다 있다 ═══════════ -->
+<Base title="Home">  <!-- ═══════════ 아라미 데크 : 한 화면에 다 있다 ═══════════ -->
   <header class="deck">
     <span class="gh-orb o1" aria-hidden="true"></span>
     <span class="gh-orb o2" aria-hidden="true"></span>
@@ -130,12 +119,8 @@ const donutC = 2 * Math.PI * 26;
         </section>
       </div>
 
-      <!-- ── 오늘의 유전자 · 업적 ── -->
-      <div class="dk-grid2" data-reveal="220">
-        <section class="dk-card dk-crew" id="dkCrewCard">
-          <p class="dk-h">🧬 오늘의 유전자 <a class="dk-h-go" href="/dna">147명 →</a></p>
-          <div class="cw" id="dkCrew"></div>
-        </section>
+      <!-- ── 업적 ── -->
+      <div class="dk-grid2 one" data-reveal="220">
 
         <section class="dk-card dk-badge">
           <p class="dk-h">🏅 업적 <span class="dk-h-n" id="dkBadgeN">0/18</span>
@@ -590,6 +575,7 @@ const donutC = 2 * Math.PI * 26;
     /* 카드 공통 */
     .dk-grid { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 12px; }
     .dk-grid2 { display: grid; grid-template-columns: 1fr 1.15fr; gap: 12px; }
+    .dk-grid2.one { grid-template-columns: 1fr; }
     .dk-card { background: var(--bg-1); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px 15px; }
     .dk-h { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: .88rem; font-weight: 800; letter-spacing: -.02em; }
     .dk-h-n { font-family: var(--mono); font-size: .74rem; color: var(--accent); font-weight: 700; }
@@ -638,7 +624,7 @@ const donutC = 2 * Math.PI * 26;
     .nx-xp { margin-left: auto; flex: none; font-family: var(--mono); font-size: .72rem; font-weight: 700;
       color: #fff; background: var(--accent); border-radius: 999px; padding: 4px 9px; }
 
-    /* 오늘의 유전자 */
+    /* 업적 카드 */
     .cw { display: flex; flex-direction: column; gap: 8px; }
     .cw-top { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
     .cw-n { font-weight: 800; font-size: 1.02rem; letter-spacing: -.025em; }
@@ -712,7 +698,7 @@ const donutC = 2 * Math.PI * 26;
 
   <script>
     // ══════════════════════════════════════════════════════════
-    //  아라미 데크 엔진 — XP는 오직 행동에서. 배지 18개는 크루의 이름.
+    //  아라미 데크 엔진 — XP는 오직 행동에서 나온다.
     // ══════════════════════════════════════════════════════════
     import * as OS from '../lib/os-core.js';
     import * as G from '../lib/game.js';
@@ -720,8 +706,6 @@ const donutC = 2 * Math.PI * 26;
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const POOL = JSON.parse($('deckCrew').textContent || '[]');
-    const GEN = JSON.parse($('deckGenes').textContent || '{}');
     const KIND = Object.fromEntries(OS.KINDS.map((k) => [k.id, k]));
 
     /* ── 레벨 · XP ── */
@@ -775,23 +759,6 @@ const donutC = 2 * Math.PI * 26;
       const a = $('dkNext');
       a.href = n.to;
       a.onclick = n.to === '#capture' ? (e) => { e.preventDefault(); $('dkIn').focus(); $('dkIn').scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' }); } : null;
-    }
-
-    /* ── 오늘의 유전자 ── */
-    function paintCrew() {
-      const c = G.todayCrew(POOL);
-      if (!c) return;
-      const g = GEN[c.gene] || { ic: '·', ko: '', c: 'var(--accent)' };
-      $('dkCrewCard').style.setProperty('--cwc', g.c);
-      $('dkCrew').innerHTML = `
-        <div class="cw-top">
-          <span class="cw-n">${esc(c.n)}</span>
-          <span class="cw-meta">${c.gen}기 ${esc(c.g)} · ${esc(c.job || '')}</span>
-          <span class="cw-gene">${g.ic} ${esc(g.ko)}</span>
-        </div>
-        <p class="cw-core">${esc(c.core)}</p>
-        ${c.quote ? `<p class="cw-q">${esc(c.quote)}</p>` : ''}
-        <a class="cw-go" href="/dna">이 사람 코어가 아라미러 어디에 갔는지 보기 →</a>`;
     }
 
     /* ── 업적 ── */
@@ -906,7 +873,6 @@ const donutC = 2 * Math.PI * 26;
     }
     OS.onChange(refresh);
     window.addEventListener('aramos:captured', refresh);
-    paintCrew();
     refresh();
     // 첫 방문이면 이미 딴 배지를 축하로 몰지 않게 조용히 등록
     setTimeout(() => { G.claimNew(); }, 50);

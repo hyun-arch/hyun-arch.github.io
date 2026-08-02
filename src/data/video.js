@@ -27,7 +27,7 @@ export const video = {
   format: '9:16 릴스',
   duration: 30,               // 목표 길이(초)
   model: 'claude-code + hyperframes',
-  audience: '비개발자 · AI로 일하고 싶은 사람 (스폰지클럽)',
+  audience: '비개발자 · AI로 일하고 싶은 사람',
   brand: 'Aramirror · 스킬러스',
   handle: '@aramirror',
   hook: 'AI한테 일 시키면 왜 결과가 매번 다를까?',
@@ -147,7 +147,7 @@ export const video = {
 저장하고 오늘 딱 하나만 써보세요.
 💬 댓글 "치트키" → 전체 가이드 DM (팔로우 후 댓글이어야 전달돼요 ⚠️)
 
-#클로드코드 #ClaudeCode #AI활용 #릴스 #숏폼 #생산성 #비개발자 #스폰지클럽`,
+#클로드코드 #ClaudeCode #AI활용 #릴스 #숏폼 #생산성 #비개발자`,
     },
     youtube: {
       label: 'YouTube Shorts',

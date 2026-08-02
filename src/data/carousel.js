@@ -25,7 +25,7 @@ export const carousel = {
   id: 'claude-code-cheatkeys',
   topic: '클로드코드 치트키',
   model: 'claude-code',        // 이 세트를 만든 도구/모델 — 보관함 스냅샷에 기록
-  audience: '비개발자 · AI로 일하고 싶은 사람 (스폰지클럽)',
+  audience: '비개발자 · AI로 일하고 싶은 사람',
   brand: 'Aramirror · 스킬러스',
   handle: '@aramirror',
   hook: '비개발자도 AI를 “잘” 쓰는 5가지 치트키',
@@ -102,7 +102,7 @@ export const carousel = {
 💬 댓글에 “치트키” 남기면 전체 가이드를 DM으로 보내드려요.
 (팔로우 후 댓글이어야 DM 전달돼요 ⚠️)
 
-#클로드코드 #ClaudeCode #AI업무 #AI활용 #생산성 #비개발자 #스폰지클럽 #업무자동화 #AI툴 #워크플로우`,
+#클로드코드 #ClaudeCode #AI업무 #AI활용 #생산성 #비개발자 #업무자동화 #AI툴 #워크플로우`,
     },
     threads: {
       label: 'Threads',

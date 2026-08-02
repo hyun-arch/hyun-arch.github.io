@@ -136,80 +136,80 @@ function genFullPosts(a) {
 const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? genFullPosts(a) : genSummaryPosts(a) }));
 ---
 <Base title="발행 · Publish">
-  <section style="padding-top:72px">
-    <div class="wrap" style="max-width:760px">
-      <p class="section-kicker">발행 · Publish Hub</p>
-      <h2>한 글, 모든 채널로</h2>
-      <p class="lead">글이 올라오면 자동으로 여기 나타나고, 채널별로 <b>그 플랫폼 글자 수에 맞춰</b> 붙여넣을 글이 준비됩니다. 각 버전은 한도 안으로 잘리고 <b>전문 링크</b>가 붙어요. 전체 원문이 필요하면 맨 위 <b>‘전체 글(전문)’</b>을 복사하세요. 스레드·X는 버튼으로 자동 채움.</p>
+ <section style="padding-top:72px">
+ <div class="wrap" style="max-width:760px">
+ <p class="section-kicker">발행 · Publish Hub</p>
+ <h2>한 글, 모든 채널로</h2>
+ <p class="lead">글이 올라오면 자동으로 여기 나타나고, 채널별로 <b>그 플랫폼 글자 수에 맞춰</b> 붙여넣을 글이 준비됩니다. 각 버전은 한도 안으로 잘리고 <b>전문 링크</b>가 붙어요. 전체 원문이 필요하면 맨 위 <b>‘전체 글(전문)’</b>을 복사하세요. 스레드·X는 버튼으로 자동 채움.</p>
 
       {withPosts.map((a, i) => (
-        <details class="pub-article" open={i === 0}>
-          <summary>
-            <span class="pa-title">{a.title}</span>
+ <details class="pub-article" open={i === 0}>
+ <summary>
+ <span class="pa-title">{a.title}</span>
             {a.type === 'writing' && <span class="pa-badge">내 글</span>}
-            <span class="pa-date">{a.date}</span>
-          </summary>
-          <p class="pa-link"><a href={a.url}>{a.url}</a></p>
+ <span class="pa-date">{a.date}</span>
+ </summary>
+ <p class="pa-link"><a href={a.url}>{a.url}</a></p>
           {a.posts.map((p) => (
-            <div class={`pub-card ${p.key === 'full' ? 'is-full' : ''}`}>
-              <div class="pub-head">
-                <span class="pub-name">{p.name}</span>
-                <span class="pub-tone">{p.tone}</span>
-                <span class={`pub-count ${p.limit && p.count > p.limit ? 'over' : 'ok'}`}>
+ <div class={`pub-card ${p.key === 'full' ? 'is-full' : ''}`}>
+ <div class="pub-head">
+ <span class="pub-name">{p.name}</span>
+ <span class="pub-tone">{p.tone}</span>
+ <span class={`pub-count ${p.limit && p.count > p.limit ? 'over' : 'ok'}`}>
                   {p.limit ? `${p.count} / ${p.limit}${p.key === 'x' ? ' (X기준)' : '자'}` : `${p.count}자 · 제한 없음`}
                   {p.limit ? (p.count <= p.limit ? ' ✓' : ' ⚠') : ''}
-                </span>
-              </div>
-              <textarea class="pub-text" readonly rows={Math.min(16, p.text.split('\n').length + 1)}>{p.text}</textarea>
-              <div class="pub-actions">
-                <button class="pub-btn copy" type="button">복사</button>
+ </span>
+ </div>
+ <textarea class="pub-text" readonly rows={Math.min(16, p.text.split('\n').length + 1)}>{p.text}</textarea>
+ <div class="pub-actions">
+ <button class="pub-btn copy" type="button">복사</button>
                 {p.share && <a class="pub-btn share" href={p.share} target="_blank" rel="noopener">{p.shareLabel} ↗</a>}
-              </div>
+ </div>
               {p.note && <p class="pub-note">ⓘ {p.note}</p>}
-            </div>
+ </div>
           ))}
-        </details>
+ </details>
       ))}
 
-      <p style="color:var(--muted);font-size:0.88rem;margin-top:28px">
+ <p style="color:var(--muted);font-size:0.88rem;margin-top:28px">
         완전 자동 게시(무터치)를 켜려면 → Meta(인스타·페북·스레드) 1회 인증부터. 준비되면 텔레그램으로 승인 창을 띄워드립니다.
-      </p>
-    </div>
-  </section>
+ </p>
+ </div>
+ </section>
 
-  <style is:global>
-    .pub-article { border-top:1px solid var(--line); padding:18px 0; }
-    .pub-article > summary { cursor:pointer; list-style:none; display:flex; align-items:baseline; gap:12px; padding:6px 0; }
-    .pub-article > summary::-webkit-details-marker { display:none; }
-    .pub-article > summary::before { content:'▸'; color:var(--muted); transition:transform .15s ease; }
-    .pub-article[open] > summary::before { transform:rotate(90deg); }
-    .pa-title { font-weight:700; font-size:1.15rem; letter-spacing:-0.02em; }
-    .pa-badge { font-size:0.68rem; font-weight:700; letter-spacing:0.03em; background:var(--accent); color:#17140f; padding:2px 8px; border-radius:999px; }
-    .pa-date { color:var(--muted); font-size:0.85rem; margin-left:auto; }
-    .pa-link { margin:4px 0 8px 22px; }
-    .pa-link a { color:var(--muted); font-size:0.85rem; text-decoration:underline; text-underline-offset:2px; }
-    .pub-card { border:1px solid var(--line); border-radius:16px; padding:20px; margin:14px 0 0 22px; background:var(--bg-card); }
-    .pub-card.is-full { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
-    .pub-head { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
-    .pub-name { font-weight:700; font-size:1.05rem; letter-spacing:-0.02em; }
-    .pub-tone { color:var(--muted); font-size:0.82rem; }
-    .pub-count { margin-left:auto; font-family:var(--mono); font-size:0.78rem; font-weight:600; padding:2px 9px; border-radius:999px; border:1px solid var(--line); color:var(--fg-soft); }
-    .pub-count.ok { color:#7fd39b; border-color:rgba(127,211,155,0.4); }
-    .pub-count.over { color:#ff8a8a; border-color:rgba(255,138,138,0.5); }
-    .pub-text { width:100%; border:1px solid var(--line); border-radius:10px; padding:14px; font-family:inherit; font-size:0.95rem; line-height:1.6; color:var(--fg); resize:vertical; background:var(--bg-soft); outline:none; }
-    .pub-text:focus { border-color:var(--accent); }
-    .pub-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+ <style is:global>
+ .pub-article { border-top:1px solid var(--line); padding:18px 0; }
+ .pub-article > summary { cursor:pointer; list-style:none; display:flex; align-items:baseline; gap:12px; padding:6px 0; }
+ .pub-article > summary::-webkit-details-marker { display:none; }
+ .pub-article > summary::before { content:'▸'; color:var(--muted); transition:transform .15s ease; }
+ .pub-article[open] > summary::before { transform:rotate(90deg); }
+ .pa-title { font-weight:700; font-size:1.15rem; letter-spacing:-0.02em; }
+ .pa-badge { font-size:0.68rem; font-weight:700; letter-spacing:0.03em; background:var(--accent); color:#17140f; padding:2px 8px; border-radius:999px; }
+ .pa-date { color:var(--muted); font-size:0.85rem; margin-left:auto; }
+ .pa-link { margin:4px 0 8px 22px; }
+ .pa-link a { color:var(--muted); font-size:0.85rem; text-decoration:underline; text-underline-offset:2px; }
+ .pub-card { border:1px solid var(--line); border-radius:16px; padding:20px; margin:14px 0 0 22px; background:var(--bg-card); }
+ .pub-card.is-full { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+ .pub-head { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+ .pub-name { font-weight:700; font-size:1.05rem; letter-spacing:-0.02em; }
+ .pub-tone { color:var(--muted); font-size:0.82rem; }
+ .pub-count { margin-left:auto; font-family:var(--mono); font-size:0.78rem; font-weight:600; padding:2px 9px; border-radius:999px; border:1px solid var(--line); color:var(--fg-soft); }
+ .pub-count.ok { color:#7fd39b; border-color:rgba(127,211,155,0.4); }
+ .pub-count.over { color:#ff8a8a; border-color:rgba(255,138,138,0.5); }
+ .pub-text { width:100%; border:1px solid var(--line); border-radius:10px; padding:14px; font-family:inherit; font-size:0.95rem; line-height:1.6; color:var(--fg); resize:vertical; background:var(--bg-soft); outline:none; }
+ .pub-text:focus { border-color:var(--accent); }
+ .pub-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
     /* 버튼 — 다크 테마에서 확실히 보이게. 기본은 어두운 카드+밝은 글씨, 강조는 액센트+어두운 글씨. */
-    .pub-btn { border:1px solid var(--line); border-radius:999px; padding:9px 20px; font-size:0.9rem; font-weight:700; cursor:pointer; background:var(--bg-1); color:var(--fg); font-family:inherit; transition:all .15s ease; }
-    .pub-btn.copy:hover { background:var(--fg); color:var(--bg-1); border-color:var(--fg); }
-    .pub-btn.copy.done { background:#2fa15a; color:#fff; border-color:#2fa15a; }
-    .pub-btn.share { background:var(--accent); color:#17140f; border-color:var(--accent); text-decoration:none; }
-    .pub-btn.share:hover { filter:brightness(1.1); }
-    .pub-note { color:var(--muted); font-size:0.82rem; margin:10px 0 0; }
+ .pub-btn { border:1px solid var(--line); border-radius:999px; padding:9px 20px; font-size:0.9rem; font-weight:700; cursor:pointer; background:var(--bg-1); color:var(--fg); font-family:inherit; transition:all .15s ease; }
+ .pub-btn.copy:hover { background:var(--fg); color:var(--bg-1); border-color:var(--fg); }
+ .pub-btn.copy.done { background:#2fa15a; color:#fff; border-color:#2fa15a; }
+ .pub-btn.share { background:var(--accent); color:#17140f; border-color:var(--accent); text-decoration:none; }
+ .pub-btn.share:hover { filter:brightness(1.1); }
+ .pub-note { color:var(--muted); font-size:0.82rem; margin:10px 0 0; }
     @media(max-width:680px){ .pub-card{ margin-left:0; } }
-  </style>
+ </style>
 
-  <script is:inline>
+ <script is:inline>
     document.querySelectorAll('.pub-btn.copy').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var ta = btn.closest('.pub-card').querySelector('.pub-text');
@@ -218,5 +218,5 @@ const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? gen
         else { ta.select(); document.execCommand('copy'); ok(); }
       });
     });
-  </script>
+ </script>
 </Base>
