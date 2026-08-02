@@ -93,6 +93,9 @@ const MISSION_POOL = [
   { id: 'm-tag',   ic: '#',  ko: '태그 붙여서 던지기',        hint: '#경영 처럼 앞에 # 을', done: (s) => s.tagged >= 1 },
   { id: 'm-asset', ic: '💎', ko: '자산 하나 만들기',          hint: '끝까지 네 칸 올리기', done: (s) => s.assets >= 1 },
   { id: 'm-clean', ic: '🗑', ko: '안 쓸 것 하나 지우기',      hint: '버리는 것도 정리예요', done: (s) => s.deleted >= 1 },
+  // 코어 — 하루에 하나만 묻는다. 이게 안 돌면 나머지는 다 도구일 뿐이다.
+  { id: 'm-core',  ic: '🪨', ko: '오늘의 한 질문에 답하기',   hint: '코어에서 한 줄이면 됩니다', done: (s) => s.coreAnswered },
+  { id: 'm-deep',  ic: '🕳', ko: '한 가지만 파고들기',        hint: '코어에서 [들어가기] — 20분이면 충분', done: (s) => s.divesToday >= 1 },
 ];
 
 /* ══════════ 저장 (상호작용 카운터) ══════════ */
@@ -154,7 +157,13 @@ export function snapshot() {
 
   const upsToday = (g.ups || []).filter((t) => OS.todayStr(new Date(t)) === today).length;
 
+  // 코어 — 오늘 나에게 한 번 물었나, 한 가지를 팠나
+  const core = OS.coreStats();
+  const coreAnswered = OS.getAnswers().some((a) => a.date === today);
+  const divesToday = OS.getDives().filter((d) => OS.todayStr(new Date(d.start)) === today).length;
+
   return {
+    coreAnswered, divesToday, core,
     xp, level: level.lv, levelInfo: level, next, frac, isMax,
     total: items.length, today: os.today, streak: os.streak,
     assets: os.byStage.asset || 0,
@@ -208,7 +217,10 @@ function pick(arr, n, seed) {
 export function todayMissions() {
   const s = snapshot();
   const day = OS.todayStr();
-  const ms = pick(MISSION_POOL, 3, seedOf(day)).map((m) => ({ ...m, done: m.done(s) }));
+  // 코어는 랜덤에서 빼고 매일 고정한다. 하루에 하나 묻는 게 이 시스템의 앵커다.
+  const anchor = MISSION_POOL.find((m) => m.id === 'm-core');
+  const rest = MISSION_POOL.filter((m) => m.id !== 'm-core');
+  const ms = [anchor, ...pick(rest, 2, seedOf(day))].map((m) => ({ ...m, done: m.done(s) }));
   const allDone = ms.every((m) => m.done);
   // 3개 다 끝낸 날을 기록 (다니의 아침 배지)
   if (allDone && isBrowser) {

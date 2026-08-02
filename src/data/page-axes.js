@@ -5,6 +5,7 @@
 
 export const pageCapture = {
   '/': { tag: '생각', hint: '지금 떠오른 것 아무거나' },
+  '/core': { tag: '코어', hint: '지금 걸린 것 한 줄 — 답이 아니라 질문이 나를 깊게 만든다' },
   '/inbox': { tag: '인박스', hint: '분류는 알아서 됩니다' },
   '/wall': { tag: '생각', hint: '내 것으로 남길 생각' },
   '/shelf': { tag: '책장', hint: '어디에 넣을지 고민하지 마세요' },

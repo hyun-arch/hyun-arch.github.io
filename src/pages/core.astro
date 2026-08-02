@@ -1,0 +1,397 @@
+---
+import Base from '../layouts/Base.astro';
+
+// 코어 — 되묻는 자리.
+// 여기는 무언가를 더 넣는 곳이 아니다. 하루에 딱 하나를 묻는 곳이다.
+// 1주차에 설계해놓고 끝내 안 만든 '되묻기 5원칙'을 여기서 완성한다.
+const rules = [
+  { n: '①', t: '한 번에 하나만 묻는다', d: '셋을 물으면 셋 다 얕아진다' },
+  { n: '②', t: '사실이 아니라 판단을 묻는다', d: '"몇 시간?"이 아니라 "왜 하필 오늘이었나"' },
+  { n: '③', t: "'왜 지금'을 묻는다", d: '지금 걸린 것에만 답할 값어치가 있다' },
+  { n: '④', t: '읽은 것과 잇는다', d: '새 생각은 늘 옛 생각 옆에서 나온다' },
+  { n: '⑤', t: '들은 것을 되비춘다', d: '내가 한 말을 내가 다시 본다' },
+];
+---
+
+<Base title="코어 — 되묻는 자리">
+  <section class="co-wrap">
+    <div class="wrap">
+
+      <p class="section-kicker" data-reveal>The Core</p>
+      <h1 data-reveal="60">깊어지는 건 <mark>답이 아니라 질문</mark>이다</h1>
+      <p class="lead" data-reveal="120">
+        기능을 더 넣는 자리가 아니다. <b>하루에 딱 하나</b>를 묻는 자리다.
+        답은 한 줄이면 되고, 답하는 즉시 <b>정리됨</b> 칸으로 올라간다.
+      </p>
+
+      <!-- ── 오늘의 한 질문 ── -->
+      <div class="co-ask" id="coAsk" data-reveal="160">
+        <div class="co-ask-top">
+          <span class="co-axis" id="coAxis">·</span>
+          <span class="co-day" id="coDay"></span>
+        </div>
+        <p class="co-q" id="coQ">불러오는 중…</p>
+        <div class="co-answer" id="coAnswerBox">
+          <textarea id="coA" rows="2" placeholder="한 줄이면 충분합니다. 정직하게."></textarea>
+          <button class="co-send" id="coSend" type="button">답하기 <b>+6 XP</b></button>
+        </div>
+        <div class="co-done" id="coDone" hidden>
+          <p class="co-done-a" id="coDoneA"></p>
+          <button class="co-again" id="coAgain" type="button">고쳐 쓰기</button>
+        </div>
+      </div>
+
+      <!-- ── 세 개의 계기판 ── -->
+      <div class="co-grid" data-reveal="200">
+
+        <!-- 몰입 -->
+        <section class="co-card">
+          <p class="co-h">🕳 깊이 <span class="co-h-n" id="coDepthN">0</span></p>
+          <p class="co-h-d">깊이는 시간이 아니라 <b>같은 것에 몇 번 다시 들어갔나</b>다.</p>
+          <div class="co-dive" id="coDiveIdle">
+            <input id="coTopic" type="text" placeholder="무엇을 팔 건가? (한 단어)" autocomplete="off" />
+            <button class="co-btn" id="coDiveGo" type="button">들어가기</button>
+          </div>
+          <div class="co-dive-on" id="coDiveOn" hidden>
+            <p class="co-dive-t"><b id="coDiveTopic"></b> 파는 중 · <span id="coDiveMin">0</span>분</p>
+            <input id="coFound" type="text" placeholder="무엇을 알아냈나? 한 줄" autocomplete="off" />
+            <button class="co-btn" id="coDiveEnd" type="button">나오기</button>
+          </div>
+          <ul class="co-list" id="coDiveList"></ul>
+        </section>
+
+        <!-- 사람 -->
+        <section class="co-card">
+          <p class="co-h">🤝 사람 <span class="co-h-n" id="coPeopleN">0</span></p>
+          <p class="co-h-d">관계의 깊이는 <b>그 사람에 대해 내가 새로 알게 된 것</b>의 누적이다.</p>
+          <div class="co-meet">
+            <input id="coWho" type="text" placeholder="누구를 만나나" autocomplete="off" />
+            <input id="coAskWhat" type="text" placeholder="진짜 묻고 싶은 것 하나" autocomplete="off" />
+            <button class="co-btn" id="coMeetGo" type="button">예약</button>
+          </div>
+          <ul class="co-list" id="coMeetList"></ul>
+        </section>
+
+        <!-- 균형 -->
+        <section class="co-card">
+          <p class="co-h">⚖️ 균형 <span class="co-h-n" id="coBalN">0/7</span></p>
+          <p class="co-h-d">오늘은 어느 쪽이 나를 <b>채웠나</b>. 하루 한 번만 찍는다.</p>
+          <div class="co-bal-btn">
+            <button class="co-bal" data-m="alone" type="button">🕳 혼자가 채웠다</button>
+            <button class="co-bal" data-m="with" type="button">🤝 사람이 채웠다</button>
+          </div>
+          <div class="co-week" id="coWeek"></div>
+          <p class="co-bal-msg" id="coBalMsg"></p>
+        </section>
+      </div>
+
+      <!-- ── 내 원칙 ── -->
+      <section class="co-prin" data-reveal="240">
+        <div class="co-prin-head">
+          <div>
+            <p class="co-h">🪨 내 원칙 <span class="co-h-n" id="coPrinN">0 확정</span></p>
+            <p class="co-h-d">
+              아래는 <b>내가 5주 동안 실제로 쓴 문장</b>들이다. 남이 준 격언이 아니다.
+              <b>확정</b>하면 내 원칙이 되고, <b>버리면</b> 사라진다. 버리는 것도 결정이다.
+            </p>
+          </div>
+        </div>
+        <div class="co-prin-add">
+          <input id="coPrinT" type="text" placeholder="내 원칙을 직접 한 줄 더하기" autocomplete="off" />
+          <button class="co-btn" id="coPrinGo" type="button">더하기</button>
+        </div>
+        <ul class="co-prin-list" id="coPrinList"></ul>
+      </section>
+
+      <!-- ── 되묻기 5원칙 ── -->
+      <section class="co-rules" data-reveal="280">
+        <p class="co-h">되묻는 방식 — 1주차에 정하고 이제야 만든 것</p>
+        <ul>
+          {rules.map((r) => (
+            <li><b>{r.n} {r.t}</b><span>{r.d}</span></li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ── 지난 답 ── -->
+      <section class="co-log" data-reveal="320">
+        <p class="co-h">지난 답 <span class="co-h-n" id="coLogN">0</span></p>
+        <ul id="coLog"></ul>
+      </section>
+
+    </div>
+  </section>
+
+  <style is:global>
+    /* display:flex가 [hidden]을 덮어써서 숨겨진 게 클릭을 먹던 문제 — 예전에 한 번 당했다 */
+    .co-answer[hidden], .co-done[hidden], .co-dive[hidden], .co-dive-on[hidden] { display: none !important; }
+    .co-wrap { padding: 96px 0 88px; }
+    .co-wrap .wrap { max-width: 1080px; margin: 0 auto; padding: 0 18px; }
+
+    /* 오늘의 질문 */
+    .co-ask {
+      margin: 30px 0 0; padding: 30px clamp(20px, 4vw, 38px);
+      border-radius: 24px; border: 1px solid var(--line);
+      background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 60%), var(--bg-1);
+      position: relative; overflow: hidden;
+    }
+    .co-ask::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(180deg, var(--brand), transparent); }
+    .co-ask-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .co-axis { font-size: .76rem; font-weight: 800; padding: 5px 12px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); }
+    .co-day { font-size: .76rem; color: var(--muted); font-family: var(--mono, monospace); }
+    .co-q { margin: 0 0 20px; font-size: clamp(1.25rem, 3.2vw, 1.75rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.5; text-wrap: balance; }
+    .co-answer { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    .co-answer textarea {
+      flex: 1 1 320px; min-width: 0; resize: vertical; padding: 13px 16px; border-radius: 14px;
+      border: 1px solid var(--line); background: var(--bg-2); color: var(--fg);
+      font: inherit; line-height: 1.6;
+    }
+    .co-answer textarea:focus { outline: none; border-color: var(--brand); }
+    .co-send {
+      padding: 13px 22px; border-radius: 999px; border: 0; cursor: pointer; white-space: nowrap;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2, #ffb03a)); color: #fff; font-weight: 800;
+    }
+    .co-send b { font-weight: 800; opacity: .85; font-size: .85em; }
+    .co-done-a { margin: 0 0 12px; padding: 16px 18px; border-radius: 14px; background: var(--bg-2); border: 1px solid var(--line); line-height: 1.7; white-space: pre-wrap; }
+    .co-again { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 7px 15px; font-size: .84rem; cursor: pointer; }
+    .co-again:hover { color: var(--fg); border-color: var(--brand); }
+
+    /* 계기판 */
+    .co-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 22px 0 0; }
+    @media (max-width: 900px) { .co-grid { grid-template-columns: 1fr; } }
+    .co-card, .co-prin, .co-rules, .co-log {
+      padding: 22px; border-radius: 20px; border: 1px solid var(--line); background: var(--bg-1);
+    }
+    .co-h { margin: 0 0 6px; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 9px; }
+    .co-h-n { font-size: .78rem; font-weight: 700; color: var(--brand); background: color-mix(in srgb, var(--brand) 12%, transparent); padding: 3px 10px; border-radius: 999px; }
+    .co-h-d { margin: 0 0 16px; font-size: .86rem; color: var(--muted); line-height: 1.6; }
+    .co-h-d b { color: var(--fg-soft); }
+    .co-dive, .co-meet, .co-prin-add, .co-dive-on { display: flex; gap: 8px; flex-wrap: wrap; }
+    .co-meet { flex-direction: column; }
+    .co-dive input, .co-meet input, .co-prin-add input, .co-dive-on input {
+      flex: 1 1 140px; min-width: 0; padding: 10px 13px; border-radius: 11px;
+      border: 1px solid var(--line); background: var(--bg-2); color: var(--fg); font: inherit; font-size: .9rem;
+    }
+    .co-dive input:focus, .co-meet input:focus, .co-prin-add input:focus, .co-dive-on input:focus { outline: none; border-color: var(--brand); }
+    .co-btn { padding: 10px 16px; border-radius: 11px; border: 1px solid var(--line); background: var(--bg-2); color: var(--fg); font-weight: 700; font-size: .88rem; cursor: pointer; white-space: nowrap; }
+    .co-btn:hover { border-color: var(--brand); color: var(--brand); }
+    .co-dive-t { margin: 0 0 8px; font-size: .9rem; color: var(--fg-soft); }
+    .co-list { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .co-list li { font-size: .85rem; line-height: 1.55; padding: 9px 12px; border-radius: 11px; background: var(--bg-2); border: 1px solid var(--line-soft); }
+    .co-list li b { color: var(--brand); }
+    .co-list .co-open { border-color: color-mix(in srgb, var(--brand) 32%, transparent); }
+    .co-mini { display: block; margin-top: 6px; color: var(--muted); font-size: .8rem; }
+    .co-close { margin-top: 8px; display: flex; gap: 6px; }
+    .co-close input { flex: 1; padding: 7px 10px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg-1); color: var(--fg); font: inherit; font-size: .82rem; }
+    .co-close button { padding: 7px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg-1); color: var(--fg-soft); font-size: .8rem; cursor: pointer; }
+
+    /* 균형 */
+    .co-bal-btn { display: flex; gap: 8px; flex-wrap: wrap; }
+    .co-bal { flex: 1 1 130px; padding: 11px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-2); color: var(--fg-soft); font-weight: 700; font-size: .86rem; cursor: pointer; }
+    .co-bal:hover { border-color: var(--brand); }
+    .co-bal.on { background: color-mix(in srgb, var(--brand) 16%, transparent); border-color: var(--brand); color: var(--brand); }
+    .co-week { display: flex; gap: 5px; margin: 14px 0 10px; }
+    .co-week i { flex: 1; height: 30px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--line-soft); display: grid; place-items: center; font-style: normal; font-size: .82rem; }
+    .co-week i.alone { background: color-mix(in srgb, #f2622f 20%, transparent); border-color: color-mix(in srgb, #f2622f 40%, transparent); }
+    .co-week i.with  { background: color-mix(in srgb, #4a6fb0 20%, transparent); border-color: color-mix(in srgb, #4a6fb0 40%, transparent); }
+    .co-bal-msg { margin: 0; font-size: .84rem; color: var(--muted); line-height: 1.6; min-height: 1.4em; }
+
+    /* 원칙 */
+    .co-prin { margin: 16px 0 0; }
+    .co-prin-add { margin: 0 0 16px; }
+    .co-prin-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (max-width: 780px) { .co-prin-list { grid-template-columns: 1fr; } }
+    .co-prin-list li {
+      display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 14px;
+      background: var(--bg-2); border: 1px solid var(--line-soft); line-height: 1.6; font-size: .92rem;
+    }
+    .co-prin-list li.kept { background: color-mix(in srgb, var(--brand) 9%, var(--bg-2)); border-color: color-mix(in srgb, var(--brand) 34%, transparent); }
+    .co-prin-list li p { margin: 0; flex: 1; }
+    .co-prin-list li.kept p { font-weight: 700; }
+    .co-pa { display: flex; gap: 5px; flex-shrink: 0; }
+    .co-pa button { border: 1px solid var(--line); background: var(--bg-1); color: var(--muted); border-radius: 9px; padding: 5px 9px; font-size: .76rem; cursor: pointer; white-space: nowrap; }
+    .co-pa button:hover { color: var(--fg); border-color: var(--brand); }
+    .co-pa .on { color: var(--brand); border-color: var(--brand); }
+
+    /* 5원칙 · 지난 답 */
+    .co-rules { margin: 16px 0 0; }
+    .co-rules ul { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .co-rules li { padding: 13px 15px; border-radius: 13px; background: var(--bg-2); border: 1px solid var(--line-soft); }
+    .co-rules li b { display: block; font-size: .9rem; margin-bottom: 4px; }
+    .co-rules li span { font-size: .82rem; color: var(--muted); line-height: 1.55; }
+    .co-log { margin: 16px 0 0; }
+    .co-log ul { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .co-log li { padding: 14px 16px; border-radius: 13px; background: var(--bg-2); border: 1px solid var(--line-soft); }
+    .co-log .lq { margin: 0 0 6px; font-size: .8rem; color: var(--muted); line-height: 1.5; }
+    .co-log .la { margin: 0; line-height: 1.65; white-space: pre-wrap; }
+    .co-log .ld { float: right; font-size: .74rem; color: var(--faint); font-family: var(--mono, monospace); }
+    .co-empty { color: var(--muted); font-size: .86rem; padding: 6px 2px; }
+  </style>
+
+  <script>
+    import * as OS from '../lib/os-core.js';
+    import * as GM from '../lib/game.js';
+
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    OS.seedPrinciplesIfEmpty();
+
+    /* ── 오늘의 한 질문 ─────────────────────────────── */
+    let ask = null;
+    function renderAsk() {
+      ask = OS.askToday();
+      const ax = OS.AXES.find((a) => a.id === ask.axis) || OS.AXES[0];
+      $('coAxis').textContent = ax.ic + ' ' + ax.ko;
+      $('coDay').textContent = ask.date;
+      $('coQ').textContent = ask.q;
+      const done = !!ask.answered;
+      $('coAnswerBox').hidden = done;
+      $('coDone').hidden = !done;
+      if (done) $('coDoneA').textContent = ask.a;
+    }
+    $('coSend').addEventListener('click', () => {
+      const v = $('coA').value.trim();
+      if (!v) { $('coA').focus(); return; }
+      OS.answerToday(v, ask);
+      GM.bump('up');                // 답하는 순간 한 칸 올라간 것으로 센다
+      $('coA').value = '';
+      renderAsk(); renderLog();
+    });
+    $('coAgain').addEventListener('click', () => {
+      $('coAnswerBox').hidden = false;
+      $('coDone').hidden = true;
+      $('coA').value = ask.a || '';
+      $('coA').focus();
+    });
+    // 폰에서도 빨리 — Ctrl/⌘+Enter
+    $('coA').addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') $('coSend').click();
+    });
+
+    /* ── 몰입 ───────────────────────────────────────── */
+    let timer = null;
+    function openDive() { return OS.getDives().find((d) => !d.end) || null; }
+    function renderDive() {
+      const d = OS.depth();
+      $('coDepthN').textContent = d.best ? `${d.best.topic} ×${d.best.n}` : '아직 없음';
+      const on = openDive();
+      $('coDiveIdle').hidden = !!on;
+      $('coDiveOn').hidden = !on;
+      if (on) {
+        $('coDiveTopic').textContent = on.topic;
+        const tick = () => { $('coDiveMin').textContent = Math.floor((Date.now() - on.start) / 6e4); };
+        tick(); clearInterval(timer); timer = setInterval(tick, 20000);
+      } else clearInterval(timer);
+
+      const by = {};
+      OS.getDives().filter((x) => x.end).forEach((x) => { by[x.topic] = (by[x.topic] || 0) + 1; });
+      const rows = Object.entries(by).sort((a, b) => b[1] - a[1]).slice(0, 4);
+      $('coDiveList').innerHTML = rows.length
+        ? rows.map(([t, n]) => `<li>${esc(t)} <b>×${n}</b>${n >= 3 ? ' — 깊어지는 중' : ''}</li>`).join('')
+        : '<li class="co-empty">얕게 열 개보다 깊게 세 번.</li>';
+    }
+    $('coDiveGo').addEventListener('click', () => {
+      const t = $('coTopic').value.trim();
+      if (!t) { $('coTopic').focus(); return; }
+      OS.startDive(t); $('coTopic').value = ''; renderDive();
+    });
+    $('coDiveEnd').addEventListener('click', () => {
+      const on = openDive(); if (!on) return;
+      OS.endDive(on.id, $('coFound').value.trim());
+      if ($('coFound').value.trim()) GM.bump('up');
+      $('coFound').value = ''; renderDive();
+    });
+
+    /* ── 사람 ───────────────────────────────────────── */
+    function renderMeet() {
+      const ms = OS.getMeets();
+      $('coPeopleN').textContent = ms.filter((m) => m.done && m.learned).length + ' 알게 됨';
+      $('coMeetList').innerHTML = ms.slice(0, 5).map((m) => m.done
+        ? `<li><b>${esc(m.who)}</b> — ${esc(m.learned || '(기록 없음)')}</li>`
+        : `<li class="co-open"><b>${esc(m.who)}</b>${m.ask ? `<span class="co-mini">묻고 싶은 것 — ${esc(m.ask)}</span>` : ''}
+             <div class="co-close"><input data-cl="${m.id}" placeholder="몰랐던 것 하나" />
+             <button data-cb="${m.id}" type="button">닫기</button></div></li>`
+      ).join('') || '<li class="co-empty">만나기 전에 「진짜 묻고 싶은 것」 하나를 정해두면 대화가 달라진다.</li>';
+
+      $('coMeetList').querySelectorAll('[data-cb]').forEach((b) => b.addEventListener('click', () => {
+        const id = b.dataset.cb;
+        const inp = $('coMeetList').querySelector(`[data-cl="${id}"]`);
+        OS.closeMeet(id, inp ? inp.value.trim() : '');
+        if (inp && inp.value.trim()) GM.bump('up');
+        renderMeet();
+      }));
+    }
+    $('coMeetGo').addEventListener('click', () => {
+      const w = $('coWho').value.trim();
+      if (!w) { $('coWho').focus(); return; }
+      OS.addMeet(w, $('coAskWhat').value.trim());
+      $('coWho').value = ''; $('coAskWhat').value = ''; renderMeet();
+    });
+
+    /* ── 균형 ───────────────────────────────────────── */
+    function renderBal() {
+      const b = OS.balanceWeek();
+      $('coBalN').textContent = b.marked + '/7';
+      $('coWeek').innerHTML = b.rows.map((r) =>
+        `<i class="${r.mode || ''}" title="${r.date}">${r.mode === 'alone' ? '🕳' : r.mode === 'with' ? '🤝' : '·'}</i>`
+      ).join('');
+      const today = OS.todayStr();
+      const mine = b.rows.find((r) => r.date === today);
+      document.querySelectorAll('.co-bal').forEach((btn) => btn.classList.toggle('on', mine && mine.mode === btn.dataset.m));
+      // 판단하지 않는다. 비율만 보여준다 — 정답이 없기 때문이다.
+      $('coBalMsg').textContent = b.marked < 3
+        ? '사흘은 찍어야 무늬가 보인다.'
+        : b.alone === b.with ? `혼자 ${b.alone} · 사람 ${b.with} — 반반이다.`
+        : b.alone > b.with ? `혼자 ${b.alone} · 사람 ${b.with} — 이번 주는 안으로 들어갔다.`
+        : `혼자 ${b.alone} · 사람 ${b.with} — 이번 주는 밖으로 나갔다.`;
+    }
+    document.querySelectorAll('.co-bal').forEach((btn) => btn.addEventListener('click', () => {
+      OS.markBalance(btn.dataset.m); renderBal();
+    }));
+
+    /* ── 원칙 ───────────────────────────────────────── */
+    function renderPrin() {
+      const ps = OS.getPrinciples();
+      const kept = ps.filter((p) => p.status === 'kept').length;
+      $('coPrinN').textContent = kept + ' 확정';
+      $('coPrinList').innerHTML = ps.map((p) => `
+        <li class="${p.status === 'kept' ? 'kept' : ''}">
+          <p>${esc(p.t)}</p>
+          <span class="co-pa">
+            <button data-k="${p.id}" class="${p.status === 'kept' ? 'on' : ''}" type="button">${p.status === 'kept' ? '내 원칙' : '확정'}</button>
+            <button data-d="${p.id}" type="button">버림</button>
+          </span>
+        </li>`).join('') || '<li class="co-empty">원칙이 하나도 없다. 한 줄 적어보자.</li>';
+
+      $('coPrinList').querySelectorAll('[data-k]').forEach((b) => b.addEventListener('click', () => {
+        const p = OS.getPrinciples().find((x) => x.id === b.dataset.k);
+        OS.setPrinciple(b.dataset.k, p && p.status === 'kept' ? 'draft' : 'kept');
+        renderPrin();
+      }));
+      $('coPrinList').querySelectorAll('[data-d]').forEach((b) => b.addEventListener('click', () => {
+        OS.setPrinciple(b.dataset.d, 'drop');
+        GM.bump('deleted');           // 버리는 용기
+        renderPrin();
+      }));
+    }
+    $('coPrinGo').addEventListener('click', () => {
+      const t = $('coPrinT').value.trim();
+      if (!t) { $('coPrinT').focus(); return; }
+      OS.addPrinciple(t, 'kept'); $('coPrinT').value = ''; renderPrin();
+    });
+
+    /* ── 지난 답 ────────────────────────────────────── */
+    function renderLog() {
+      const as = OS.getAnswers();
+      $('coLogN').textContent = as.length + '개';
+      $('coLog').innerHTML = as.slice(0, 12).map((a) => `
+        <li><span class="ld">${a.date}</span>
+          <p class="lq">${esc(a.q)}</p>
+          <p class="la">${esc(a.a)}</p></li>`).join('')
+        || '<li class="co-empty">아직 답한 게 없다. 위에 한 줄만.</li>';
+    }
+
+    renderAsk(); renderDive(); renderMeet(); renderBal(); renderPrin(); renderLog();
+  </script>
+</Base>
