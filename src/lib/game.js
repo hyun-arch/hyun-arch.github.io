@@ -77,7 +77,7 @@ export const BADGES = [
     why: '분류가 되면 찾는 시간이 사라진다.',       how: '여섯 종류를 하나씩 다 만들기', need: (s) => [s.kindsUsed, 6] },
   { id: 'halfway',   ic: '📏', ko: '절반을 넘김',   axis: 'honest',
     why: '추정하지 말고 측정할 것.',                how: '승격률 50% 넘기기', need: (s) => [Math.min(s.promoteRate, 50), 50] },
-  { id: 'themirror', ic: '🧬', ko: '거울',          axis: 'promote',
+  { id: 'themirror', ic: '👑', ko: '거울',          axis: 'promote',
     why: 'AI가 나를 비추기 시작하는 지점.',         how: '레벨 10 · 거울 도달', need: (s) => [s.level, 10] },
 ];
 
