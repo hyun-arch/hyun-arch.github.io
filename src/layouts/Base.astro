@@ -33,6 +33,7 @@ const navIndex = [
   { t: '달력', h: '/calendar', k: 'page' },
   { t: 'Build Logs', h: '/build-logs', k: 'page' },
   { t: '작동 방식', h: '/how', k: 'page' },
+  { t: '경영 철학 · 선언문', h: '/philosophy', k: 'page' },
 ];
 const mapIndex = domains.flatMap((d) =>
   d.branches.flatMap((b) =>
@@ -147,6 +148,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
           <div class="nav-group">
             <button class="nav-top" type="button">기록 · 안내</button>
             <div class="nav-menu">
+              <a href="/philosophy">🪞 경영 철학 · 선언문</a>
               <a href="/build-logs">Build Logs</a>
               <a href="/how">작동 방식</a>
             </div>
@@ -214,6 +216,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
     <footer>
       <div class="wrap">
         <div class="foot-links">
+          <a href="/philosophy">경영 철학</a>
           <a href="/hq/index.html">총괄실</a>
           <a href="/how">작동 방식</a>
           <a href="/gtb">농구클럽 · GTB</a>

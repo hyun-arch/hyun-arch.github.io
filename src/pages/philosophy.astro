@@ -1,0 +1,143 @@
+---
+import Base from '../layouts/Base.astro';
+
+// 경영 철학 / 선언문 — 사장님이 텔레그램으로 못박은 아람휴비스의 바른 길.
+// (2026-09-22) 말이 아니라 페이지로 굳혀 아라미러·포트폴리오·SNS 공유 링크로 산다.
+
+const creed = [
+  {
+    n: '01',
+    ic: '🤝',
+    title: '나를 구하는 길은, 남을 구하는 것',
+    lead: '사람을 이롭게·아름답게 하는 것이 아람휴비스의 바른 길이다.',
+    body: '우리가 잘 되는 유일한 방법은 우리 앞의 사람을 잘 되게 하는 것이다. 고객의 피부와 마음을 이롭게 하고, 더 아름답게 하는 데서 회사의 존재 이유가 나온다. 나를 먼저 구하려 들면 길을 잃고, 남을 구하는 데 집중하면 그 안에 내 길이 있다.',
+  },
+  {
+    n: '02',
+    ic: '⚖️',
+    title: '합당한 가치엔, 합당한 가격',
+    lead: '과하지도 헐값도 아니게 — 가치에 정직한 값을 매긴다.',
+    body: '우리가 만든 가치가 100이면 값도 100이어야 한다. 부풀려 받으면 신뢰를 잃고, 헐값에 넘기면 가치를 스스로 부정하는 것이다. 견적과 제안은 언제나 우리가 실제로 준 가치의 크기에 정직하게 맞춘다. 정당한 값을 당당히 부르는 것도 바른 길의 일부다.',
+  },
+  {
+    n: '03',
+    ic: '🎯',
+    title: '첫 단추는, 정확한 진단',
+    lead: '가장 강점인 진단으로 문제를 정확히 → 정확한 솔루션 → 바른 길인지 중간 체크.',
+    body: '아람휴비스가 세상에서 가장 잘하는 것은 정확한 진단이다. 문제를 정확히 파악해야 정확한 솔루션이 나온다. 그리고 솔루션을 밀고 가는 중간중간, "이게 정말 바른 길인가"를 멈춰 서서 다시 본다. 진단 → 솔루션 → 재점검. 이 순서를 건너뛰지 않는다.',
+  },
+  {
+    n: '04',
+    ic: '🪞',
+    title: '회사도, 같은 원리로 진단한다',
+    lead: '숫자(성과) + 마음·태도(근무·사람 대하는·협업 태도)를 함께 본다.',
+    body: '고객을 진단하는 그 눈으로 회사 안을 본다. 성과의 숫자만으로 사람을 재지 않는다. 어떻게 일하는지, 사람을 어떻게 대하는지, 함께 일할 때의 태도까지 — 숫자와 마음을 같이 진단한다. 그래야 성과도 사람도 오래 간다.',
+  },
+];
+---
+<Base title="경영 철학" description="아람휴비스가 걷는 바른 길 — 사람을 이롭게·아름답게. 정확한 진단에서 시작해 숫자와 마음을 함께 본다.">
+  <section class="phil-hero">
+    <span class="ph-orb a" aria-hidden="true"></span>
+    <span class="ph-orb b" aria-hidden="true"></span>
+    <div class="wrap">
+      <p class="section-kicker">Our Way · 경영 철학 · 선언문</p>
+      <h1 class="ph-title">
+        아람휴비스가 걷는 <mark>바른 길</mark>
+      </h1>
+      <p class="ph-lead">
+        아람은 <b>아름다운 사람</b>. 우리는 사람을 이롭게 하고 더 아름답게 만든다.
+        그 길 위에서 회사가 산다. 아래 네 가지가 우리가 흔들릴 때마다 돌아오는 자리다.
+      </p>
+      <div class="ph-oneliner">
+        나를 구하는 길은 남을 구하는 것 — 정확히 진단하고, 정직하게 값을 매기고, 숫자와 마음을 함께 본다.
+      </div>
+    </div>
+  </section>
+
+  <section class="phil-body">
+    <div class="wrap">
+      <div class="creed-grid">
+        {creed.map((c, i) => (
+          <article class="creed" data-reveal={String(i * 80)}>
+            <div class="creed-head">
+              <span class="creed-n">{c.n}</span>
+              <span class="creed-ic">{c.ic}</span>
+            </div>
+            <h2 class="creed-title">{c.title}</h2>
+            <p class="creed-lead">{c.lead}</p>
+            <p class="creed-text">{c.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="phil-foot" data-reveal>
+        <p class="pf-sig">— 대표이사 박상현 · 아람휴비스</p>
+        <div class="pf-links">
+          <a href="/">← 아라미러 홈</a>
+          <a href="/os">🔥 흑자전환 OS</a>
+          <a href="/how">작동 방식</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .phil-hero {
+      position: relative; overflow: hidden;
+      padding: 120px 0 60px;
+      background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+    }
+    .ph-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .5; z-index: 0; }
+    .ph-orb.a { width: 340px; height: 340px; background: var(--accent-glow); top: -80px; right: -60px; }
+    .ph-orb.b { width: 260px; height: 260px; background: rgba(122,162,255,.22); bottom: -120px; left: -40px; }
+    .phil-hero .wrap { position: relative; z-index: 1; max-width: 780px; }
+    .ph-title {
+      font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.15; letter-spacing: -0.03em;
+      margin: 8px 0 20px; font-weight: 800;
+    }
+    .ph-title mark { background: none; color: var(--accent); }
+    .ph-lead { font-size: 1.15rem; line-height: 1.7; color: var(--fg-soft); max-width: 640px; margin: 0 0 26px; }
+    .ph-lead b { color: var(--fg); }
+    .ph-oneliner {
+      font-size: 1.02rem; line-height: 1.6; font-weight: 600; color: var(--fg);
+      padding: 16px 20px; border-left: 4px solid var(--accent);
+      background: var(--bg-1); border-radius: 0 14px 14px 0;
+      box-shadow: 0 12px 32px rgba(120,70,30,.10);
+    }
+
+    .phil-body { padding: 20px 0 90px; }
+    .phil-body .wrap { max-width: 940px; }
+    .creed-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px;
+    }
+    .creed {
+      background: var(--bg-1); border: 1px solid var(--line); border-radius: 20px;
+      padding: 28px 26px; position: relative;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .creed:hover { transform: translateY(-4px); box-shadow: 0 22px 50px rgba(120,70,30,.14); }
+    .creed-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .creed-n {
+      font-family: var(--mono); font-size: .95rem; font-weight: 700; letter-spacing: .08em;
+      color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px;
+    }
+    .creed-ic { font-size: 1.9rem; line-height: 1; }
+    .creed-title { font-size: 1.32rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 10px; line-height: 1.3; }
+    .creed-lead { font-size: .98rem; font-weight: 600; color: var(--accent-strong); line-height: 1.55; margin: 0 0 12px; }
+    .creed-text { font-size: .95rem; line-height: 1.72; color: var(--fg-soft); margin: 0; }
+
+    .phil-foot {
+      margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .pf-sig { font-size: 1rem; font-weight: 700; color: var(--fg); margin: 0; }
+    .pf-links { display: flex; gap: 18px; flex-wrap: wrap; }
+    .pf-links a { font-size: .92rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+    .pf-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    @media (max-width: 720px) {
+      .creed-grid { grid-template-columns: 1fr; }
+      .phil-hero { padding: 96px 0 44px; }
+    }
+  </style>
+</Base>
