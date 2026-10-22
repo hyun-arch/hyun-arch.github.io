@@ -24,6 +24,20 @@ export default {
 
   async post({ text, media = [], link, dry, title, category, serial, draft = false, blocks = null }) {
     const e = env();
+
+    // 마크다운 안전장치 — 부르는 쪽이 blocks 를 안 주면 여기서 변환한다.
+    // publish/post.mjs 는 blocks 없이 raw text 만 보낸다. 그대로 치면 글에
+    // ## 과 ** 와 [이름](주소) 가 그대로 박힌다. 2026-10-22 에 글 3편이 그렇게 올라갔다.
+    // 부르는 쪽마다 조심하라고 하는 대신 **채널 입구에서 한 번** 막는다. (2026-10-23)
+    if (!blocks && /^#{1,6}\s|\*\*|^[-*]\s|\]\(https?:|^\s*\|.*\|\s*$/m.test(text || '')) {
+      const { toNaver } = await import('../../../naver-blog/lib/tonaver.mjs');
+      // 변환하면 「# 제목」이 사라진다. 제목을 안 받았으면 그 전에 챙긴다.
+      if (!title) title = (text.match(/^#\s+(.+)$/m) || [, ''])[1].trim() || title;
+      const 변환 = toNaver(text);
+      blocks = 변환.blocks;
+      text = 변환.text;
+      console.warn('  네이버: 마크다운이 보여 변환했습니다 (blocks 를 안 받았습니다)');
+    }
     const blogId = e.NAVER_BLOG_ID;
     // 사진은 클립보드로 붙인다. 그런데 헤드리스 브라우저는 OS 클립보드를 못 읽는다.
     //   headless=true  → 붙은 이미지 0개
