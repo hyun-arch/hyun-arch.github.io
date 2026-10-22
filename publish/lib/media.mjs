@@ -38,6 +38,21 @@ const git = (args, opts = {}) => execFileSync('git', args, { cwd: REPO, encoding
  * 파일을 gh-pages 의 /sns/ 로 올리고 공개 주소를 돌려준다.
  * dry 면 올리지 않고 주소만 계산한다.
  */
+// gh-pages 는 push 직후 바로 안 뜬다. 30~60초 걸린다.
+// 기다리지 않고 인스타에 넘기면 인스타가 404 HTML 을 받아
+// 「Only photo or video can be accepted as media type.」를 돌려준다. (2026-10-23 당함)
+export async function waitUntilLive(url, { 최대 = 120000 } = {}) {
+  const 끝 = Date.now() + 최대;
+  while (Date.now() < 끝) {
+    try {
+      const r = await fetch(url, { method: 'HEAD' });
+      if (r.ok && /^(image|video)\//.test(r.headers.get('content-type') || '')) return true;
+    } catch { /* 아직 안 떴다 */ }
+    await new Promise((r) => setTimeout(r, 5000));
+  }
+  return false;
+}
+
 export function hostPublicly(file, { dry = false } = {}) {
   const m = inspect(file);
   const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);

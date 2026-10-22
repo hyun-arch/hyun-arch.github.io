@@ -32,27 +32,42 @@ const isMain = (() => {
   catch { return false; }
 })();
 
+// 한 번에 로그인할 네 곳 (탭 순서대로)
+export const LOGIN_SITES = [
+  { name: '네이버',     url: 'https://nid.naver.com/nidlogin.login' },
+  { name: '스레드',     url: 'https://www.threads.net/login' },
+  { name: '인스타그램', url: 'https://www.instagram.com/accounts/login/' },
+  { name: '링크드인',   url: 'https://www.linkedin.com/login' },
+];
+
 if (isMain) {
   const ctx = await openSns();
-  const ig = ctx.pages()[0] || (await ctx.newPage());
-  await ig.goto('https://www.instagram.com/accounts/login/', { waitUntil: 'domcontentloaded' });
-  const li = await ctx.newPage();
-  await li.goto('https://www.linkedin.com/login', { waitUntil: 'domcontentloaded' });
+  let first = ctx.pages()[0] || (await ctx.newPage());
+  for (let i = 0; i < LOGIN_SITES.length; i++) {
+    const page = i === 0 ? first : await ctx.newPage();
+    try { await page.goto(LOGIN_SITES[i].url, { waitUntil: 'domcontentloaded', timeout: 60000 }); }
+    catch { /* 느린 로그인 페이지는 그냥 둔다 */ }
+  }
 
   console.log(`
   ────────────────────────────────────────────────
-   전용 브라우저를 띄웠습니다. 탭 두 개가 있습니다.
+   발행 전용 브라우저를 띄웠습니다. 탭 네 개가 있습니다.
 
-     1번 탭  인스타그램 로그인
-     2번 탭  링크드인 로그인
+     1번 탭  네이버 로그인
+     2번 탭  스레드 로그인
+     3번 탭  인스타그램 로그인
+     4번 탭  링크드인 로그인
 
-   두 곳에 로그인만 해 주세요. 한 번만 하면 됩니다.
-   로그인 끝나면 이 창은 그대로 두세요 — 제가 이어서 올립니다.
+   네 곳에 로그인만 해 주세요. 딱 한 번만 하면 됩니다.
+   (스레드는 인스타 계정으로 로그인됩니다.)
 
-   (이 브라우저는 평소 쓰시는 크롬과 별개입니다.
-    비밀번호는 저장도 열람도 하지 않습니다.)
+   한 번 로그인하면 이 프로필에 세션이 저장돼 몇 달 갑니다.
+   끝나면 창은 그냥 닫으셔도 되고, 그대로 두셔도 됩니다.
+
+   이 브라우저는 평소 쓰시는 크롬과 완전히 별개이고,
+   비밀번호는 저장도 열람도 하지 않습니다 (크롬이 자기 폴더에 보관).
   ────────────────────────────────────────────────
 `);
   await new Promise((resolve) => { ctx.on('close', resolve); });
-  console.log('  창이 닫혔습니다.');
+  console.log('  창이 닫혔습니다 — 로그인 세션은 저장되었습니다.');
 }

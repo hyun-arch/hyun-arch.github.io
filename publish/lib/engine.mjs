@@ -1,5 +1,5 @@
 // 발행 엔진 — 한 번 쓴 글과 파일을 채널마다 맞춰서 내보낸다.
-import { inspect, hostPublicly, checkAgainst } from './media.mjs';
+import { inspect, hostPublicly, checkAgainst, waitUntilLive } from './media.mjs';
 import { fit, weigherFor, tags as mkTags } from './caption.mjs';
 import { record, say, ok, bad, warn, dim, info } from './log.mjs';
 
@@ -80,6 +80,13 @@ export async function publish({ text = '', files = [], to = 'all', link = '', ta
   if (needsUrl) {
     say(dim('  사진·영상을 공개 주소로 올리는 중…'));
     for (const m of media) { if (!m.url) Object.assign(m, hostPublicly(m.path, { dry })); }
+    if (!dry) {
+      for (const m of media) {
+        if (!m.url) continue;
+        const 떴나 = await waitUntilLive(m.url);
+        if (!떴나) say(warn(`  ${m.url} 가 아직 안 뜹니다 — 그대로 보냅니다`));
+      }
+    }
   }
 
   const results = [];

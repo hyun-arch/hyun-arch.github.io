@@ -101,11 +101,14 @@ if (dry) { console.log('  미리보기만 했습니다. 올리려면 --dry 를 �
 const { publish } = await import('./lib/engine.mjs');
 for (const ch of to) {
   const t = 본문들[ch] || 본문들.threads;
-  const media = ch === 'instagram' ? 사진.slice(0, 1) : [];
+  // 엔진 인자 이름은 files 다. media 로 주면 조용히 사라진다. (2026-10-23 고침)
+  const files = ch === 'instagram' ? 사진.slice(0, 1) : [];
   console.log(`  ${ch} 올리는 중…`);
   try {
-    await publish({ text: t, media, to: [ch] });
-    console.log(`    ✓ ${ch}`);
+    const r = await publish({ text: t, files, to: [ch] });
+    const 건너뜀 = (r || []).find((x) => x.skipped);
+    if (건너뜀) console.log(`    ✗ ${ch} — ${[].concat(건너뜀.skipped || 건너뜀.error)[0]}`);
+    else console.log(`    ✓ ${ch}`);
   } catch (e) {
     console.log(`    ✗ ${ch} — ${e.message.split('\n')[0].slice(0, 60)}`);
   }
