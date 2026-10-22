@@ -268,29 +268,16 @@ export default {
         return { draft: `https://blog.naver.com/${blogId}/postwrite`, saved: true, count };
       }
 
-      // 발행 — 오른쪽 위 버튼 → 설정 레이어의 확인 버튼
-      // 네이버 UI 변경(2026-10-23): has-text("발행") 가 숨은 '예약(reserve/schedule)' 버튼도
-      // 잡아 .first() 가 안 보이는 버튼을 눌러 멈췄다. 보이는 '발행'만, 예약 버튼은 제외한다.
-      const clickPublish = async (timeout = 20000) => {
-        const deadline = Date.now() + timeout;
-        while (Date.now() < deadline) {
-          const cands = f.locator('button:has-text("발행")');
-          const n = await cands.count().catch(() => 0);
-          for (let i = 0; i < n; i++) {
-            const b = cands.nth(i);
-            const meta = ((await b.getAttribute('class').catch(() => '')) || '') + ' ' +
-                         ((await b.getAttribute('data-click-area').catch(() => '')) || '');
-            if (/reserve|schedule/i.test(meta)) continue;          // 예약 버튼 제외
-            if (!(await b.isVisible().catch(() => false))) continue; // 보이는 것만
-            if (!(await b.isEnabled().catch(() => false))) continue;
-            await b.click({ timeout: 5000 });
-            return true;
-          }
-          await pg.waitForTimeout(400);
-        }
-        throw new Error('보이는 발행 버튼을 못 찾았습니다(네이버 UI 변경 가능)');
+      // 발행 — 2단계다 (2026-10-23 DOM 확인):
+      //   1단계: 오른쪽 위 '발행' data-click-area="tpb.publish" → 설정 레이어가 열린다
+      //   2단계: 레이어 안 '발행' data-click-area="tpb*i.publish" (confirm_btn) → 실제 발행
+      // class 해시(publish_btn__…, confirm_btn__…)는 배포마다 바뀌므로 data-click-area 로 고른다.
+      const clickArea = async (area, timeout = 20000) => {
+        const b = f.locator(`button[data-click-area="${area}"]`).first();
+        await b.waitFor({ state: 'visible', timeout });
+        await b.click({ timeout: 8000 });
       };
-      await clickPublish(20000);
+      await clickArea('tpb.publish');        // 1단계: 설정 레이어 열기
       await pg.waitForTimeout(1500);
 
       // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
@@ -316,21 +303,10 @@ export default {
         } catch { /* 태그 실패는 무시 */ }
       }
 
-      // [디버그] 발행 레이어 상태 캡처 — 정확한 버튼 구조 파악용
-      if (process.env.NAVER_DEBUG) {
-        try {
-          await pg.screenshot({ path: '/tmp/naver-publish-layer.png', fullPage: false });
-          const btns = await f.evaluate(() => [...document.querySelectorAll('button')]
-            .filter(b => /발행|확인|예약/.test(b.innerText || ''))
-            .map(b => ({ t: (b.innerText||'').trim().slice(0,12), c: b.className, a: b.getAttribute('data-click-area'),
-                         vis: !!(b.offsetParent) })));
-          console.log('[디버그] 발행/확인 버튼들:', JSON.stringify(btns, null, 2));
-        } catch (e) { console.log('[디버그] 캡처 실패:', e.message); }
-      }
-
-      // 설정 레이어의 '확인(발행)' 버튼 — 같은 규칙(예약 제외·보이는 것만)으로 누른다
+      // 2단계: 레이어 안 확인 '발행'(tpb*i.publish). 클래스 바뀌면 레이어 안 '발행'으로 폴백.
       await pg.waitForTimeout(600);
-      await clickPublish(20000);
+      try { await clickArea('tpb*i.publish', 20000); }
+      catch { await f.locator('.layer_popup__VVWW8 button:has-text("발행"), button.confirm_btn__byZZW').last().click({ timeout: 8000 }); }
       await pg.waitForTimeout(5000);
 
       const url = pg.url();

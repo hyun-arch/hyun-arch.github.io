@@ -39,7 +39,7 @@
 
 유형부터 가늠하고 싶다면 [두피유형 4가지](https://blog.naver.com/ianlove80)를 함께 보세요.
 
-릴라이 공식몰 → [atolian.cafe24.com](https://atolian.cafe24.com)
+릴라이 공식몰 → [lilai.ai](https://lilai.ai)
 
 ## 정리
 

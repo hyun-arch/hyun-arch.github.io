@@ -8,6 +8,6 @@
 
 방법론과 제품 구성을 전문 글에 정리했습니다.
 블로그: https://blog.naver.com/ianlove80
-공식몰: https://atolian.cafe24.com
+공식몰: https://lilai.ai
 
 #뷰티테크 #두피케어 #맞춤화장품 #측정기반 #릴라이 #아람휴비스

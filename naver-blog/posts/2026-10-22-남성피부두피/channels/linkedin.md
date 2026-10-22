@@ -7,6 +7,6 @@
 유분형인지 속건조인지는 측정으로 구분되며, 이는 제품 선택의 방향을 좌우합니다. 아람휴비스는 이 관점에서 엘라피엘(피부)·릴라이(두피) 라인을 설계했습니다.
 
 전문: https://blog.naver.com/ianlove80
-피부: https://ellapiel.co.kr / 두피: https://atolian.cafe24.com
+피부: https://ellapiel.co.kr / 두피: https://lilai.ai
 
 #남성그루밍 #스킨케어 #뷰티테크 #측정기반 #엘라피엘 #릴라이 #아람휴비스

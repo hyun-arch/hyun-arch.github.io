@@ -33,7 +33,7 @@
 
 눈으로는 헷갈립니다. 지성인데 건조하다고 느끼는 경우가 많습니다. 릴라이는 전용 카메라·센서로 두피의 수분·유분·상태를 수치로 확인합니다([두피진단기 원리](https://blog.naver.com/ianlove80)). 재 보면 가려움이 건조 쪽인지 지성 쪽인지 갈려, 관리 방향이 정해집니다. 유형이 궁금하면 [두피유형 4가지](https://blog.naver.com/ianlove80)를 함께 보세요.
 
-릴라이 공식몰 → [atolian.cafe24.com](https://atolian.cafe24.com)
+릴라이 공식몰 → [lilai.ai](https://lilai.ai)
 
 ## 정리
 

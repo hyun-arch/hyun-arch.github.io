@@ -35,7 +35,7 @@ tags: ["두피각질", "비듬", "건조성각질", "두피건조", "두피케�
 
 눈으로는 헷갈립니다. 릴라이는 전용 카메라·센서로 두피의 유분·수분·각질 상태를 수치와 확대 이미지로 확인합니다([두피진단기 원리](/writings/06-scalp-device)). 재 보면 기름진 쪽인지 건조한 쪽인지 갈려 관리 방향이 정해집니다. 유형은 [두피유형 4가지](/writings/07-scalp-types), 비듬은 [비듬 샴푸 고르기](/writings/09-dandruff-shampoo)에 정리해 두었습니다.
 
-릴라이 공식몰 → [atolian.cafe24.com](https://atolian.cafe24.com)
+릴라이 공식몰 → [lilai.ai](https://lilai.ai)
 
 ## 정리
 

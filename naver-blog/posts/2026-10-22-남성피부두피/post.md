@@ -26,7 +26,7 @@
 
 유분형이라도 속건조일 수 있고, 두피 유분이 정말 많은 건지 건조의 보상인지 느낌으론 안 갈립니다. 재 보면 내게 필요한 게 정해집니다. 큰 틀은 [맞춤 화장품 고르는 순서](https://blog.naver.com/ianlove80)에 있습니다.
 
-피부는 [ellapiel.co.kr](https://ellapiel.co.kr), 두피는 [atolian.cafe24.com](https://atolian.cafe24.com)
+피부는 [ellapiel.co.kr](https://ellapiel.co.kr), 두피는 [lilai.ai](https://lilai.ai)
 
 ## 정리
 
