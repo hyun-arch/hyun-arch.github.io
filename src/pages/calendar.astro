@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 // 달력 — 그냥 보는 게 아니라 "말로 던지면 잡히는" 일정 도구.
 // 정적 사이트라 서버 없이: 자연어 → 날짜·시간 파싱 → 구글 캘린더 저장 링크(한 번 탭).
 import Base from '../layouts/Base.astro';
@@ -6,14 +7,14 @@ import Base from '../layouts/Base.astro';
 <Base title="달력">
   <section style="padding-top:84px">
     <div class="wrap">
-      <p class="section-kicker">📅 달력 · 말하면 잡힌다</p>
+      <p class="section-kicker">달력</p>
       <h1 class="cal-h1">일정, <mark>한 줄로 던지면</mark> 끝</h1>
       <p class="cal-lead">
         “내일 오후 3시 김대표 미팅”처럼 <b>그냥 편하게 한 줄</b> 치세요.
         날짜·시간을 알아서 잡아, <b>구글 캘린더에 한 번 눌러 저장</b>합니다.
       </p>
 
-      <!-- ⚡ 빠른 일정 추가 -->
+      <!-- <span class="eic" set:html={ic('bolt')} /> 빠른 일정 추가 -->
       <div class="qa">
         <div class="qa-inbox">
           <input id="qaInput" type="text" autocomplete="off"
@@ -36,13 +37,13 @@ import Base from '../layouts/Base.astro';
             <p class="qa-title" id="qaTitle">—</p>
           </div>
           <div class="qa-actions">
-            <a id="qaSave" class="qa-save" target="_blank" rel="noopener">📅 구글 캘린더에 저장</a>
+            <a id="qaSave" class="qa-save" target="_blank" rel="noopener"><span class="eic" set:html={ic('calendar')} /> 구글 캘린더에 저장</a>
             <p class="qa-hint">버튼을 누르면 구글 캘린더가 <b>미리 채워진 채</b> 열립니다. “저장”만 누르면 끝.</p>
           </div>
         </div>
         <p id="qaErr" class="qa-err" hidden></p>
 
-        <p class="qa-tel">💬 아니면 <b>텔레그램에 그냥 던지세요</b> — 날짜·시간 있는 약속이면 제가 바로 캘린더에 넣어드립니다.</p>
+        <p class="qa-tel"><span class="eic" set:html={ic('ask')} /> 아니면 <b>텔레그램에 그냥 던지세요</b> — 날짜·시간 있는 약속이면 제가 바로 캘린더에 넣어드립니다.</p>
       </div>
 
       <!-- 내 일정 보기 (구글 캘린더 통합) -->
@@ -57,7 +58,7 @@ import Base from '../layouts/Base.astro';
             src="https://calendar.google.com/calendar/embed?ctz=Asia%2FSeoul&mode=WEEK&wkst=2&showTitle=0&showPrint=0&showTz=0&src=hyun%40aramhuvis.com&src=c_7896bcef6802c9f6262d15f5f14ecec437e192103854ce304586b1bc176ebea5%40group.calendar.google.com&src=c_186292f4af3265ed4e4f541283b1cc30f4aac8dad74559d443f62ae1664a4a27%40group.calendar.google.com&src=c_e81ab5f59597cd678049eccef9bee70e4a43c7376d031d70e44964da42fadc8c%40group.calendar.google.com&src=c_322c21398b32c9aee8950b73ec82be7529569d71bb8d479150cdd2b8491de70c%40group.calendar.google.com&src=c_d3af50d1aa283259bb698c80f6f8b6153f21934795aa3bbd50c51a73d80568a4%40group.calendar.google.com&color=%23039BE5&color=%237CB342&color=%23F09300&color=%238E24AA&color=%23E67C73&color=%230B8043"
             loading="lazy" style="border:0"></iframe>
         </div>
-        <p class="cal-note">🔑 일정이 안 보이면 이 브라우저에 <b>hyun@aramhuvis.com</b> 구글 계정으로 로그인만 하면 됩니다.</p>
+        <p class="cal-note"><span class="eic" set:html={ic('key')} /> 일정이 안 보이면 이 브라우저에 <b>hyun@aramhuvis.com</b> 구글 계정으로 로그인만 하면 됩니다.</p>
       </div>
 
       <details class="cal-more">

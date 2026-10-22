@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 
 // 승격 파이프라인 — 던진 것이 자산이 될 때까지 한 칸씩 올라가는 화면.
@@ -14,11 +15,11 @@ const stages = [
 <Base title="인박스 — 승격 파이프라인">
   <section class="ib-head">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>The Promotion Pipeline</p>
+      <p class="section-kicker" data-reveal>승격 파이프라인</p>
       <h1 data-reveal="60">던진 게 <mark>자산이 될 때까지</mark></h1>
       <p class="lead" data-reveal="120">
         메모앱은 쌓기만 한다. 여기는 <b>한 칸씩 올린다</b> — 인박스 → 정리됨 → 지식 → 자산.
-        오른쪽 아래 <b>⚡ 버튼</b>(또는 아무 페이지에서 <kbd>C</kbd>)으로 던지면 알아서 분류돼 여기 들어온다.
+        오른쪽 아래 <b><span class="eic" set:html={ic('bolt')} /> 버튼</b>(또는 아무 페이지에서 <kbd>C</kbd>)으로 던지면 알아서 분류돼 여기 들어온다.
       </p>
 
       <div class="ib-stats" id="ibStats" data-reveal="160"></div>
@@ -26,12 +27,12 @@ const stages = [
       <div class="ib-bar">
         <div class="ib-fl" role="group" aria-label="종류">
           <button class="ibf on" data-k="all" type="button">전체</button>
-          <button class="ibf" data-k="thought" type="button">💭 생각</button>
-          <button class="ibf" data-k="todo" type="button">✅ 할 일</button>
-          <button class="ibf" data-k="event" type="button">📅 일정</button>
-          <button class="ibf" data-k="ref" type="button">🔗 자료</button>
-          <button class="ibf" data-k="question" type="button">❓ 질문</button>
-          <button class="ibf" data-k="decision" type="button">⚖️ 결정</button>
+          <button class="ibf" data-k="thought" type="button"><span class="eic" set:html={ic('ask')} /> 생각</button>
+          <button class="ibf" data-k="todo" type="button"><span class="eic" set:html={ic('check')} /> 할 일</button>
+          <button class="ibf" data-k="event" type="button"><span class="eic" set:html={ic('calendar')} /> 일정</button>
+          <button class="ibf" data-k="ref" type="button"><span class="eic" set:html={ic('link')} /> 자료</button>
+          <button class="ibf" data-k="question" type="button"><span class="eic" set:html={ic('question')} /> 질문</button>
+          <button class="ibf" data-k="decision" type="button"><span class="eic" set:html={ic('scale')} /> 결정</button>
         </div>
         <div class="ib-fl" role="group" aria-label="근거">
           <button class="ibf" data-v="unknown" type="button">○ 미확인만</button>
@@ -51,13 +52,13 @@ const stages = [
         {stages.map((s, i) => (
           <div class="pipe-col" data-stage={s.id}>
             <div class="pipe-top">
-              <span class="pipe-ic">{s.ic}</span>
+              <span class="pipe-ic"><span class="eic" set:html={ic(iconOf(s.ic))} /></span>
               <span class="pipe-ko">{s.ko}</span>
               <span class="pipe-n" data-n={s.id}>0</span>
             </div>
             <p class="pipe-desc">{s.desc}</p>
             <div class="pipe-list" data-list={s.id}></div>
-            <p class="pipe-empty" data-empty={s.id}>{i === 0 ? '아직 던진 게 없어요. ⚡ 를 눌러보세요.' : '여기로 올라온 게 아직 없어요.'}</p>
+            <p class="pipe-empty" data-empty={s.id}>{i === 0 ? '아직 던진 게 없어요. 오른쪽 아래 버튼으로 한 줄 던져보세요.' : '여기로 올라온 게 아직 없어요.'}</p>
           </div>
         ))}
       </div>
@@ -67,7 +68,7 @@ const stages = [
   <!-- 결정 카드 : 답을 주지 않고 결론에 닿게 한다 -->
   <section class="ib-dec">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>Decision Cards</p>
+      <p class="section-kicker" data-reveal>결정 카드</p>
       <h2 data-reveal="60">결정은 <mark>카드로 남는다</mark></h2>
       <p class="lead" data-reveal="120">
         고민을 던지면 <b>결정 · 기준 · 리스크 · 첫걸음</b> 네 칸으로 닫는다.
@@ -77,10 +78,10 @@ const stages = [
       <form class="dec-form" id="decForm">
         <input id="decQ" placeholder="무엇을 정해야 하나요? (예: 아라미러를 서버로 올릴까 로컬로 둘까)" required />
         <div class="dec-4">
-          <label>📌 결정<textarea id="decD" rows="2" placeholder="무엇으로 정했나"></textarea></label>
-          <label>🎯 기준<textarea id="decC" rows="2" placeholder="왜 그렇게 정했나 — 판단 기준"></textarea></label>
-          <label>⚠️ 리스크<textarea id="decR" rows="2" placeholder="이 선택이 틀렸다면 무엇 때문일까"></textarea></label>
-          <label>👣 첫걸음<textarea id="decF" rows="2" placeholder="내일 당장 할 한 가지"></textarea></label>
+          <label><span class="eic" set:html={ic('pin')} /> 결정<textarea id="decD" rows="2" placeholder="무엇으로 정했나"></textarea></label>
+          <label><span class="eic" set:html={ic('target')} /> 기준<textarea id="decC" rows="2" placeholder="왜 그렇게 정했나 — 판단 기준"></textarea></label>
+          <label><span class="eic" set:html={ic('warn')} /> 리스크<textarea id="decR" rows="2" placeholder="이 선택이 틀렸다면 무엇 때문일까"></textarea></label>
+          <label><span class="eic" set:html={ic('steps')} /> 첫걸음<textarea id="decF" rows="2" placeholder="내일 당장 할 한 가지"></textarea></label>
         </div>
         <button type="submit" class="dec-save">결정 카드 남기기</button>
       </form>
@@ -92,7 +93,7 @@ const stages = [
   <!-- 정직 : 안 쓰는 기능이 드러나야 한다 -->
   <section class="ib-honest">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>Honest Log</p>
+      <p class="section-kicker" data-reveal>솔직한 기록</p>
       <h2 data-reveal="60">내가 <mark>진짜로 여는 곳</mark></h2>
       <p class="lead" data-reveal="120">
         기능을 더 붙이기 전에 <b>안 쓰는 게 뭔지</b>부터 드러낸다. 이 기록은 이 브라우저에만 남는다.
@@ -109,7 +110,7 @@ const stages = [
     .ib-st { border: 1px solid var(--line); border-radius: 14px; padding: 15px 16px; background: var(--bg-1); }
     .ib-st b { display: block; font-family: var(--mono); font-size: 1.7rem; font-weight: 700; letter-spacing: -.03em; color: var(--accent); }
     .ib-st span { display: block; font-size: .78rem; color: var(--muted); margin-top: 2px; }
-    .ib-st.good b { color: #3c8f6b; }
+    .ib-st.good b { color: #1f7a6b; }
 
     .ib-bar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 14px 0 0; border-top: 1px solid var(--line-soft); }
     .ib-fl { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -199,6 +200,7 @@ const stages = [
   </style>
 
   <script>
+    import { ic, iconOf } from '../lib/icons.js';
     import * as OS from '../lib/os-core.js';
     import * as GM from '../lib/game.js';
 
@@ -233,16 +235,16 @@ const stages = [
       const at = OS.STAGE_IDS.indexOf(i.stage);
       return `<div class="ic" style="--kc:${k.c}" id="${i.id}">
         <div class="ic-top">
-          <span class="ic-kind">${k.ic} ${esc(k.ko)}</span>
-          ${i.due ? `<span class="ic-due ${over ? 'over' : ''}">📅 ${esc(i.due)}${over ? ' 지남' : ''}</span>` : ''}
-          <button class="ic-v" data-v="${i.id}" title="${esc(v.desc)} — 눌러서 바꾸기" style="color:${v.c}">${v.ic} ${esc(v.ko)}</button>
+          <span class="ic-kind"><span class="eic">${ic(iconOf(k.ic))}</span> ${esc(k.ko)}</span>
+          ${i.due ? `<span class="ic-due ${over ? 'over' : ''}"> ${esc(i.due)}${over ? ' 지남' : ''}</span>` : ''}
+          <button class="ic-v" data-v="${i.id}" title="${esc(v.desc)} — 눌러서 바꾸기" style="color:${v.c}">${esc(v.ko)}</button>
         </div>
         <div class="ic-txt ${i.done ? 'done' : ''}">${esc(i.text)}</div>
-        ${i.routeWhy ? `<p class="ic-why">🎼 ${esc(i.routeWhy)}</p>` : ''}
+        ${i.routeWhy ? `<p class="ic-why"> ${esc(i.routeWhy)}</p>` : ''}
         ${(i.tags || []).length ? `<div class="ic-tags">${i.tags.map((t) => `<span class="ic-tag">#${esc(t)}</span>`).join('')}</div>` : ''}
         <div class="ic-act">
           ${at > 0 ? `<button class="ic-b" data-dn="${i.id}" title="한 칸 내리기">←</button>` : ''}
-          ${at < 3 ? `<button class="ic-b up" data-up="${i.id}">승격 →</button>` : '<span class="ic-tag">💎 자산</span>'}
+          ${at < 3 ? `<button class="ic-b up" data-up="${i.id}">승격 →</button>` : '<span class="ic-tag">자산</span>'}
           ${i.kind === 'todo' ? `<button class="ic-b" data-done="${i.id}">${i.done ? '되돌리기' : '완료'}</button>` : ''}
           ${i.kind === 'question' || i.kind === 'decision' ? `<button class="ic-b" data-dec="${i.id}">결정카드</button>` : ''}
           <button class="ic-b del" data-del="${i.id}">삭제</button>
@@ -271,10 +273,10 @@ const stages = [
       el.innerHTML = ds.map((d) => `<article class="dc">
         <h4>${esc(d.q)}</h4>
         <dl>
-          ${d.decision ? `<dt>📌 결정</dt><dd>${esc(d.decision)}</dd>` : ''}
-          ${d.criteria ? `<dt>🎯 기준</dt><dd>${esc(d.criteria)}</dd>` : ''}
-          ${d.risk ? `<dt>⚠️ 리스크</dt><dd>${esc(d.risk)}</dd>` : ''}
-          ${d.firstStep ? `<dt>👣 첫걸음</dt><dd>${esc(d.firstStep)}</dd>` : ''}
+          ${d.decision ? `<dt> 결정</dt><dd>${esc(d.decision)}</dd>` : ''}
+          ${d.criteria ? `<dt> 기준</dt><dd>${esc(d.criteria)}</dd>` : ''}
+          ${d.risk ? `<dt> 리스크</dt><dd>${esc(d.risk)}</dd>` : ''}
+          ${d.firstStep ? `<dt> 첫걸음</dt><dd>${esc(d.firstStep)}</dd>` : ''}
         </dl>
         <div class="dc-bot"><span class="dc-ts">${new Date(d.ts).toLocaleString('ko-KR')}</span>
         <button class="dc-del" data-dd="${d.id}">삭제</button></div>

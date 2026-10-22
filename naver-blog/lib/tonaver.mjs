@@ -65,9 +65,10 @@ export function toNaver(md, dir) {
     // 마크다운 표 — 에디터는 모른다. 글자로 그대로 들어가면 「| --- | --- |」가 보인다.
     // 줄글로 풀어 쓴다. 표가 필요하면 도표 이미지로 만드는 게 낫다. (2026-10-22 실측)
     if (/^\s*\|.*\|\s*$/.test(line)) {
-      const cells = line.split('|').slice(1, -1).map((c) => c.trim());
+      // 셀도 inline() 을 거쳐야 한다 — 안 거치면 ** 가 글자로 남는다. (2026-10-22 실측)
+      const cells = line.split('|').slice(1, -1).map((c) => inline(c.trim(), 링크모음));
       if (cells.every((c) => /^:?-{2,}:?$/.test(c))) continue;        // 구분줄은 버린다
-      if (표머리.length === 0) { 표머리 = cells; continue; }           // 첫 줄은 머리글
+      if (표머리.length === 0) { 표머리 = cells; continue; }           // 첫 줄은 머리글 (이미 inline 거침)
       // 첫 칸은 그 줄의 제목으로 쓴다 (머리글이 비어 있는 흔한 표 모양)
       const 제목 = cells[0] || '';
       const parts = cells.slice(1).map((c, i) => {

@@ -60,7 +60,7 @@ export const modes = [
 // 선물봇이 셸을 '쓰는' 쪽이면, 수집봇은 셸을 '버는' 쪽. 실제 코드: collector.py · sns_verify.py
 export const collector = {
   intro: '선물봇이 셸을 쓰는 쪽이라면, 수집봇은 셸을 버는 쪽입니다. 매일 사라지는 셸을 벌 기회를 놓치지 않게 도와줍니다.',
-  tips: '💡 가장 큰 기회는 공유회 개최입니다. 매일 받는 셸 1개보다, 개최 1회(7월 한정 20개)가 훨씬 큽니다.',
+  tips: '가장 큰 기회는 공유회 개최입니다. 매일 받는 셸 1개보다, 개최 1회(7월 한정 20개)가 훨씬 큽니다.',
   tools: [
     {
       key: '①', name: '셸 기회 감지 알림', file: 'collector.py',
@@ -83,7 +83,7 @@ export const collector = {
         { c: 'python sns_verify.py https://www.instagram.com/p/XX␣/', d: 'SNS 링크로 인증 제출' },
       ],
       sched: null,
-      guard: '⚠️ 게시물 없이 자동으로 인증을 쏘는 기능은 일부러 넣지 않았습니다 (실제 활동만 인증).',
+      guard: '게시물 없이 자동으로 인증을 쏘는 기능은 일부러 넣지 않았습니다 (실제 활동만 인증).',
     },
   ],
 };

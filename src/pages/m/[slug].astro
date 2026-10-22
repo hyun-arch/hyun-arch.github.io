@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../../lib/icons.js';
 import Base from '../../layouts/Base.astro';
 import { detailItems, statusMeta } from '../../data/mirror.js';
 
@@ -7,7 +8,7 @@ export function getStaticPaths() {
 }
 const { it } = Astro.props;
 const m = statusMeta(it.status);
-const dc = it.domainColor || '#ff7a4d';
+const dc = it.domainColor || '#b4562f';
 ---
 <Base title={it.t + ' · 거울'}>
   <article class="place-pg" style={`--dc:${dc}`}>
@@ -40,7 +41,7 @@ const dc = it.domainColor || '#ff7a4d';
       )}
 
       <div class="pp-capture">
-        <span class="pp-cap-ic">🌱</span>
+        <span class="pp-cap-ic"><span class="eic" set:html={ic('lv1')} /></span>
         <div>
           <p class="pp-cap-t">이 칸에 생각 던지기</p>
           <p class="pp-cap-d">텔레그램에 <b>{it.t}</b> 관련해서 한 줄 던지면, 밤마다 알아서 이 칸에 쌓여요. 지금은 씨앗 내용이고, 던질수록 자라납니다.</p>
@@ -67,9 +68,9 @@ const dc = it.domainColor || '#ff7a4d';
     .pp-head h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.1rem); letter-spacing: -.03em; text-wrap: balance; }
     .pp-badge { display: inline-flex; align-items: center; gap: 7px; font-size: .76rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg-soft); white-space: nowrap; }
     .pp-badge .dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
-    .pp-badge.live { color: #6fe08a; border-color: color-mix(in srgb, #6fe08a 34%, transparent); }
-    .pp-badge.building { color: #ffc061; border-color: color-mix(in srgb, #ffc061 34%, transparent); }
-    .pp-badge.seed { color: #a78bfa; border-color: color-mix(in srgb, #a78bfa 34%, transparent); }
+    .pp-badge.live { color: #3f7f55; border-color: color-mix(in srgb, #3f7f55 34%, transparent); }
+    .pp-badge.building { color: #a8781c; border-color: color-mix(in srgb, #a8781c 34%, transparent); }
+    .pp-badge.seed { color: #6b4e9e; border-color: color-mix(in srgb, #6b4e9e 34%, transparent); }
     .pp-badge.idea { color: var(--muted); }
     .pp-lead { margin: 18px 0 0; font-size: 1.12rem; line-height: 1.72; color: var(--fg); }
 

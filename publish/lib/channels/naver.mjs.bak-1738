@@ -1,0 +1,223 @@
+// 네이버 블로그 — 공개된 글쓰기 API 가 없다.
+// 그래서 사람이 하는 일을 그대로 대신한다: 브라우저로 글쓰기 창을 열고, 쓰고, 발행을 누른다.
+//
+// 로그인은 publish/.browser 프로필이 평소 크롬처럼 들고 있는다(우리가 쿠키를 읽지 않는다).
+// 처음 한 번만:  node publish/naver-open.mjs  → 평소처럼 로그인
+//
+// 주의: 네이버 화면이 바뀌면 버튼 위치가 달라질 수 있다. 그럴 땐 NAVER_HEADLESS=0 으로
+//      브라우저를 눈으로 보면서 돌리면 어디서 막혔는지 바로 보인다.
+import { env, missing } from '../env.mjs';
+import { openBrowser } from '../../naver-open.mjs';
+
+const T = (s) => new RegExp(s);
+
+export default {
+  key: 'naver',
+  name: '네이버 블로그',
+  caps: { text: true, image: true, video: false, link: true, maxText: 0, maxMedia: 20 },
+  needs: ['NAVER_BLOG_ID'],
+  note: '공개 API 가 없어 브라우저로 대신 씁니다. 처음 한 번 node publish/naver-open.mjs 로 로그인하세요.',
+  free: true,
+  browser: true,
+
+  ready() { return missing(this.needs); },
+
+  async post({ text, media = [], link, dry, title, category, serial, draft = false, blocks = null }) {
+    const e = env();
+    const blogId = e.NAVER_BLOG_ID;
+    const headless = e.NAVER_HEADLESS !== '0';
+    const subject = (title || text.split('\n').find((l) => l.trim()) || '오늘의 기록').slice(0, 100);
+    if (dry) return { dry: true, would: `“${subject}” 글쓰기 + 사진 ${media.length}장 → ${draft ? '임시저장' : '발행'}` };
+
+    const ctx = await openBrowser({ headless });
+    try {
+      const pg = ctx.pages()[0] || (await ctx.newPage());
+      await pg.goto(`https://blog.naver.com/${blogId}/postwrite`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await pg.waitForTimeout(2500);
+
+      if (/nid\.naver\.com/.test(pg.url())) {
+        throw new Error('로그인이 풀렸어요. `node publish/naver-open.mjs` 로 한 번 로그인해 주세요.');
+      }
+
+      // 에디터는 iframe 안에 있다
+      const f = pg.frames().find((fr) => /PostWriteForm|postwrite/i.test(fr.url())) || pg.mainFrame();
+
+      // 고정 대기(2.5초)로는 에디터가 아직 안 그려진 때가 있었다. 요소가 생길 때까지 기다린다.
+      // 이게 없으면 팝업 처리도 제목 클릭도 빈 화면에 대고 하게 된다. (2026-10-20 실측)
+      await f.locator('.se-section-documentTitle').first()
+             .waitFor({ state: 'attached', timeout: 30000 })
+             .catch(() => { throw new Error('에디터가 뜨지 않았습니다. 로그인이 풀렸는지 확인해 주세요.'); });
+      await pg.waitForTimeout(1200);
+
+      // "작성 중인 글이 있습니다" 안내 — 떠도 안 떠도 지나가야 한다.
+      // 예전엔 즉시 isVisible() 로 봤는데, 팝업은 로드 몇 초 뒤에 뜬다.
+      // 그래서 못 보고 지나간 뒤 제목 클릭이 팝업 딤에 막혀 20초 타임아웃이 났다. (2026-10-20 실측)
+      // 이어쓰기(확인)를 누르면 직전 글에 덧붙으므로 반드시 「취소」다.
+      const dismissPopup = async (ms = 12000) => {
+        // 팝업은 페이지 로드 몇 초 뒤에 뜬다. 「아직 안 떴다」와 「안 뜬다」는 다르므로
+        // 창 전체를 끝까지 지켜본다. 예전엔 딤이 아직 없으면 바로 빠져나가서
+        // 정작 뒤늦게 뜬 팝업이 사진 버튼을 막았다. (2026-10-20 실측)
+        const until = Date.now() + ms;
+        while (Date.now() < until) {
+          const cancel = f.locator('.se-popup-button-cancel').first();
+          if (await cancel.isVisible({ timeout: 400 }).catch(() => false)) {
+            await cancel.click({ force: true }).catch(() => {});
+            await pg.waitForTimeout(700);
+            return true;
+          }
+          for (const label of ['취소', '새로 작성']) {
+            const b = f.locator(`.se-popup button:has-text("${label}")`).first();
+            if (await b.isVisible({ timeout: 300 }).catch(() => false)) {
+              await b.click({ force: true }).catch(() => {});
+              await pg.waitForTimeout(700);
+              return true;
+            }
+          }
+          await pg.waitForTimeout(400);
+        }
+        return false;
+      };
+      await dismissPopup();
+
+      // 제목 — 클릭 직전에 딤이 남아 있으면 한 번 더 걷어 낸다
+      if (await f.locator('.se-popup-dim').first().isVisible({ timeout: 800 }).catch(() => false)) await dismissPopup(4000);
+
+      // 에디터는 글자(<p>)를 컨테이너가 덮고 있어 평범한 click 이 가로막힐 때가 있다.
+      // (2026-10-20 실측: `.se-container intercepts pointer events` 로 20초 타임아웃)
+      // 그래서 여러 방법을 차례로 시도한다. 하나라도 커서가 들어가면 된다.
+      const focusInto = async (sels) => {
+        for (const sel of sels) {
+          const el = f.locator(sel).first();
+          if (!(await el.count().catch(() => 0))) continue;
+          // 순서가 중요하다. force 는 가려진 것을 무시하고 좌표를 눌러서,
+          // 위에 겹친 툴바(취소선 등)를 대신 눌러 버린다. 그래서 맨 뒤로 둔다. (2026-10-20 실측)
+          for (const how of ['normal', 'js', 'force']) {
+            try {
+              if (how === 'js') await el.evaluate((n) => { n.focus?.(); n.click?.(); });
+              else await el.click({ timeout: 4000, force: how === 'force' });
+              await pg.waitForTimeout(400);
+              return true;
+            } catch { /* 다음 방법 */ }
+          }
+        }
+        return false;
+      };
+
+      // 토글 서식(굵게·기울임·밑줄·취소선)이 켜진 채면 본문 전체가 그 서식으로 들어간다.
+      // 켜져 있으면 한 번 눌러 끈다.
+      const clearFormats = async () => {
+        for (const kind of ['bold', 'italic', 'underline', 'strikethrough']) {
+          const b = f.locator(`button.se-${kind}-toolbar-button`).first();
+          if (!(await b.count().catch(() => 0))) continue;
+          const on = await b.evaluate((e) =>
+            /\b(se-is-on|is-on|active|selected|on)\b/.test(e.className) || e.getAttribute('aria-pressed') === 'true'
+          ).catch(() => false);
+          if (on) { await b.click({ timeout: 3000 }).catch(() => {}); await pg.waitForTimeout(200); }
+        }
+      };
+
+      const titled = await focusInto([
+        '.se-section-documentTitle .se-text-paragraph',
+        '.se-documentTitle .se-text-paragraph',
+        '.se-section-documentTitle',
+        '.se-placeholder',
+      ]);
+      if (!titled) throw new Error('제목 칸에 커서를 넣지 못했습니다. NAVER_HEADLESS=0 으로 보면서 돌려 보세요.');
+      await pg.keyboard.type(subject, { delay: 12 });
+
+      // 본문
+      const bodied = await focusInto([
+        '.se-component.se-text .se-text-paragraph:nth-of-type(1)',
+        '.se-section-text .se-text-paragraph',
+        '.se-main-container .se-text-paragraph',
+        '[contenteditable="true"]',
+      ]);
+      if (!bodied) throw new Error('본문 칸에 커서를 넣지 못했습니다.');
+      await clearFormats();
+      const addPhoto = async (filePath) => {
+        // 사진 버튼은 딤 한 장에도 막힌다. 누르기 전에 확인한다.
+        if (await f.locator('.se-popup-dim').first().isVisible({ timeout: 500 }).catch(() => false)) await dismissPopup(5000);
+        const chooser = pg.waitForEvent('filechooser', { timeout: 20000 });
+        await f.locator('button:has-text("사진"), .se-image-toolbar-button, [data-name="image"]').first().click();
+        (await chooser).setFiles(filePath);
+        await pg.waitForTimeout(3000);
+        // 사진을 넣으면 커서가 사진 블록에 머문다. 다음 글이 캡션으로 들어가지 않게 한 줄 내린다.
+        await f.locator('.se-main-container, [contenteditable="true"]').last().click().catch(() => {});
+        await pg.keyboard.press('End').catch(() => {});
+        await pg.keyboard.press('Enter').catch(() => {});
+      };
+
+      if (blocks && blocks.length) {
+        // 글 순서 그대로 — 글자는 치고, 이미지는 그 자리에서 올린다.
+        // 예전에는 본문을 다 친 뒤 사진을 전부 뒤에 붙여서 위치가 어긋났다.
+        for (const b of blocks) {
+          if (b.type === 'image') { await addPhoto(b.path); continue; }
+          for (const line of String(b.text || '').split('\n')) {
+            await pg.keyboard.type(line, { delay: 6 });
+            await pg.keyboard.press('Enter');
+          }
+        }
+        if (link) { await pg.keyboard.type(`\n원문 → ${link}`, { delay: 6 }); }
+      } else {
+        const body = text + (link ? `\n\n원문 → ${link}` : '');
+        for (const line of body.split('\n')) {
+          await pg.keyboard.type(line, { delay: 6 });
+          await pg.keyboard.press('Enter');
+        }
+        for (const m of media.filter((x) => x.kind === 'image')) await addPhoto(m.path);
+      }
+
+      // 임시저장 — 발행 레이어를 열지 않고 「저장」만 누른다.
+      // 왜 분리했나: 발행은 되돌리기 어렵다. 글을 넣어 두고 사람이 눈으로 본 뒤 발행하려면
+      // 저장 단계에서 멈출 수 있어야 한다. 카테고리·태그는 발행 레이어에 있으므로 여기서는 건너뛴다.
+      if (draft) {
+        const saveBtn = f.locator('button:has-text("저장")').first();
+        await saveBtn.click({ timeout: 20000 });
+        await pg.waitForTimeout(3000);
+        // 저장 개수 뱃지가 올라가면 저장된 것. 못 읽어도 실패로 보지 않는다.
+        let count = '';
+        try {
+          count = (await f.locator('.text__tWz5F, button:has-text("저장") + span').first().innerText({ timeout: 3000 })).trim();
+        } catch { /* 뱃지를 못 읽는 건 저장 실패가 아니다 */ }
+        return { draft: `https://blog.naver.com/${blogId}/postwrite`, saved: true, count };
+      }
+
+      // 발행 — 오른쪽 위 버튼 → 설정 레이어의 확인 버튼
+      await f.locator('button:has-text("발행")').first().click({ timeout: 20000 });
+      await pg.waitForTimeout(1500);
+
+      // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
+      if (category) {
+        try {
+          const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
+          if (await opener.isVisible().catch(() => false)) { await opener.click(); await pg.waitForTimeout(500); }
+          const want = category.replace(/\s+/g, '');
+          const item = f.locator('label, li, button, span').filter({ hasText: category.split(' ').pop() }).first();
+          if (await item.isVisible().catch(() => false)) { await item.click(); await pg.waitForTimeout(400); }
+          else console.warn('  카테고리를 못 찾아 기본값으로 둡니다: ' + want);
+        } catch { /* 카테고리 선택 실패해도 발행은 계속한다 */ }
+      }
+
+      // 일련번호를 태그로 남긴다 — 제목은 건드리지 않는다
+      if (serial) {
+        try {
+          const tag = f.locator('input[placeholder*="태그"], #tag-input').first();
+          if (await tag.isVisible().catch(() => false)) {
+            await tag.click(); await pg.keyboard.type(serial, { delay: 10 }); await pg.keyboard.press('Enter');
+            await pg.waitForTimeout(300);
+          }
+        } catch { /* 태그 실패는 무시 */ }
+      }
+
+      const confirm = f.locator('.btn_area button:has-text("발행"), button.confirm_btn__WEaBq, button:has-text("발행")').last();
+      await confirm.click({ timeout: 20000 });
+      await pg.waitForTimeout(5000);
+
+      const url = pg.url();
+      if (/postwrite/i.test(url)) throw new Error('발행 버튼까지 갔지만 확인이 안 됩니다. NAVER_HEADLESS=0 으로 한 번 보면서 돌려 보세요.');
+      return { url, id: url.split('/').pop() };
+    } finally {
+      await ctx.close().catch(() => {});
+    }
+  },
+};

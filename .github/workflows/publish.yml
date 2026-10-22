@@ -1,0 +1,89 @@
+# 맥이 꺼져 있어도 발행이 돈다 — 깃허브가 대신 돌려준다.
+# 공개 저장소라 실행 시간이 무료다(Actions 무료 한도 없음, public repo).
+#
+# 쓰는 법
+#  1) 저장소 Settings → Secrets and variables → Actions 에 토큰을 넣는다
+#  2) publish/queue/ 에 파일을 커밋해서 올린다 → 바로 발행된다
+#  3) 또는 10분마다 큐를 확인해서 쌓인 걸 올린다
+name: 발행
+
+on:
+  push:
+    paths: ['publish/queue/**']
+  schedule:
+    - cron: '*/10 * * * *'      # 10분마다 큐 확인
+  workflow_dispatch:
+    inputs:
+      text:
+        description: '올릴 글 (비워두면 큐만 처리)'
+        required: false
+      to:
+        description: '채널 (all 또는 telegram,bluesky …)'
+        default: 'all'
+
+permissions:
+  contents: write               # 큐 정리 커밋 + gh-pages 이미지 호스팅
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: 토큰 준비
+        run: |
+          cat > publish/.env <<'ENV'
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          BSKY_HANDLE=${{ secrets.BSKY_HANDLE }}
+          BSKY_APP_PASSWORD=${{ secrets.BSKY_APP_PASSWORD }}
+          DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}
+          MASTODON_HOST=${{ secrets.MASTODON_HOST }}
+          MASTODON_ACCESS_TOKEN=${{ secrets.MASTODON_ACCESS_TOKEN }}
+          THREADS_USER_ID=${{ secrets.THREADS_USER_ID }}
+          THREADS_ACCESS_TOKEN=${{ secrets.THREADS_ACCESS_TOKEN }}
+          IG_USER_ID=${{ secrets.IG_USER_ID }}
+          META_ACCESS_TOKEN=${{ secrets.META_ACCESS_TOKEN }}
+          FB_PAGE_ID=${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN=${{ secrets.FB_PAGE_TOKEN }}
+          YT_CLIENT_ID=${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET=${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN=${{ secrets.YT_REFRESH_TOKEN }}
+          LI_ACCESS_TOKEN=${{ secrets.LI_ACCESS_TOKEN }}
+          LI_PERSON_URN=${{ secrets.LI_PERSON_URN }}
+          TIKTOK_ACCESS_TOKEN=${{ secrets.TIKTOK_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN=${{ secrets.X_ACCESS_TOKEN }}
+          ENV
+
+      - name: 준비된 채널 확인
+        run: node publish/post.mjs --status
+
+      - name: 글 한 줄 (손으로 실행했을 때만)
+        if: github.event_name == 'workflow_dispatch' && inputs.text != ''
+        run: node publish/post.mjs --text "${{ inputs.text }}" --to "${{ inputs.to }}"
+
+      - name: 큐에 쌓인 것 발행
+        run: |
+          git config user.name  'arami-bot'
+          git config user.email 'info@aramhuvis.com'
+          node publish/watch.mjs --once
+
+      - name: 올린 것 정리해서 되돌려 놓기
+        run: |
+          git add -A publish/queue publish/sent || true
+          git diff --cached --quiet || git commit -m 'sns: 발행 완료분 정리 [skip ci]'
+          git push || true
+
+      - name: 발행 기록 남기기
+        if: always()
+        run: |
+          echo '### 발행 결과' >> $GITHUB_STEP_SUMMARY
+          node publish/post.mjs --status >> $GITHUB_STEP_SUMMARY 2>&1 || true

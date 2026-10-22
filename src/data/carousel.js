@@ -6,7 +6,7 @@
 // ── 캐러셀 OS 기획 6가지 (참고: @zemma.selfishclub 케이스) ──
 // 매번 같은 결의 캐러셀이 나오게 하는 뼈대. 안 잡으면 매번 다른 느낌 → 피그마 후작업.
 export const osPillars = [
-  { n: 1, name: '브랜드 디자인 시스템', detail: '색상·폰트·레이아웃', have: '다크 배경 + 포인트 노랑 #e9ed12, Pretendard + Spline Sans Mono', done: true,
+  { n: 1, name: '브랜드 디자인 시스템', detail: '색상·폰트·레이아웃', have: '다크 배경 + 포인트 노랑 #a8781c, Pretendard + Spline Sans Mono', done: true,
     miss: '매번 다른 느낌의 캐러셀' },
   { n: 2, name: '슬라이드 구조', detail: '콘텐츠 유형별 슬라이드 틀', have: '표지 → 치트키 N장 → 요약 → CTA', done: true,
     miss: 'AI가 매번 다른 구조로 만듦' },

@@ -1,0 +1,11 @@
+{
+  "_설명": "폴더 감시(watch.mjs)가 쓰는 기본값. 파일마다 다르게 하고 싶으면 같은 이름의 .txt 를 옆에 두세요.",
+  "to": "all",
+  "tags": ["아람미러"],
+  "link": "",
+  "rules": [
+    { "when": "video", "to": "youtube,instagram,tiktok,telegram,facebook", "note": "영상은 영상 받는 곳으로" },
+    { "when": "image", "to": "instagram,threads,facebook,x,linkedin,telegram", "note": "사진은 사진 받는 곳으로" },
+    { "when": "text",  "to": "threads,x,linkedin,facebook,telegram", "note": "글만이면 글 받는 곳으로" }
+  ]
+}

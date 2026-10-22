@@ -1,45 +1,69 @@
 ---
 import '../styles/global.css';
 import { domains } from '../data/mirror.js';
+import { ic, iconOf, P, EMOJI_MAP } from '../lib/icons.js';
+
+// ── 메뉴 한 곳에서 관리 ────────────────────────────────────────────────
+// 아람미러의 뼈대는 루프다 — 던지기 → 엮기 → 내놓기.
+// 메뉴가 그 루프를 그대로 보여준다. 나머지 셋(운영·하루·아람미러)은 루프 밖의 자리.
+// 여기만 고치면 상단 메뉴 · 모바일 메뉴 · ⌘K 검색이 함께 바뀐다.
+const NAV = [
+  { g: '던지기', loop: true, note: '일단 넣는다', items: [
+    { t: '인박스',        d: '던진 것이 자산까지 오르는 길', h: '/inbox',        i: 'inbox' },
+    { t: '받아쓰기',      d: '말한 것을 글자로',             h: '/stt',          i: 'mic' },
+    { t: '회의록',        d: '녹음해서 받아쓰고 할 일까지',   h: '/meet',         i: 'board' },
+    { t: '코어',          d: '하루 한 질문에 답한다',        h: '/core',         i: 'core' },
+    { t: '되묻기',        d: '멘토가 다시 되묻는다',         h: '/ask',          i: 'ask' },
+    { t: '아람봇',        d: '무엇이든 물어보는 상담',       h: '/arambot',      i: 'bot' },
+  ]},
+  { g: '엮기', loop: true, note: '쌓인 것을 잇는다', items: [
+    { t: '생각의 벽',     d: '내가 던진 원본이 붙는 자리',   h: '/wall',         i: 'wall' },
+    { t: '책장',          d: '던지면 알아서 꽂힌다',         h: '/shelf',        i: 'shelf' },
+    { t: '자료실',        d: '밖에서 들여온 자료',           h: '/archive',      i: 'archive' },
+    { t: '독서',          d: '읽은 것과 배운 것',            h: '/reading',      i: 'book' },
+  ]},
+  { g: '내놓기', loop: true, note: '밖으로 내보낸다', items: [
+    { t: '글',            d: '정리를 마친 글',               h: '/writings',     i: 'pen' },
+    { t: '발행',          d: '채널로 내보내기',              h: '/publish',      i: 'send' },
+    { t: '게시판',        d: '주고받는 자리',                h: '/board',        i: 'board' },
+    { sec: '스튜디오' },
+    { t: '스튜디오팀',    d: '지금 어떻게 일하나',           h: '/studio-team',  i: 'team' },
+    { t: '캐러셀',        d: '카드로 만든다',                h: '/studio',       i: 'cards' },
+    { t: '릴스',          d: '영상으로 만든다',              h: '/reels',        i: 'play' },
+    { t: '셸',            d: '선물하고 모은다',              h: '/shell-studio', i: 'shell' },
+  ]},
+  { g: '운영', items: [
+    { t: '흑자전환 150일', d: '아람휴비스가 흑자까지',       h: '/os',           i: 'target' },
+    { t: '대시보드',      d: '총괄실 숫자판',                h: '/hq/index.html', i: 'gauge' },
+    { t: '금고',          d: '매출과 재무',                  h: '/vault',        i: 'lock' },
+    { t: '새벽 농구',     d: 'GTB 운영',                     h: '/gtb',          i: 'ball' },
+    { t: '관리자',        d: '설정과 점검',                  h: '/admin',        i: 'sliders' },
+  ]},
+  { g: '하루', items: [
+    { t: '달력',          d: '말하면 일정이 잡힌다',         h: '/calendar',     i: 'calendar' },
+    { t: '몰입',          d: '깊게 들어가는 시간',           h: '/flow',         i: 'flow' },
+    { t: '스폰지 시계',   d: '집중을 재는 타이머',           h: '/sponge',       i: 'timer' },
+    { t: '세계 시계',     d: '도시마다 지금 몇 시',          h: '/world',        i: 'globe' },
+    { t: '거장과 스승',   d: '몰입의 거장, 자문의 스승',     h: '/masters',      i: 'mentor' },
+  ]},
+  { g: '아람미러', items: [
+    { t: '작동 방식',     d: '이 시스템이 도는 원리',        h: '/how',          i: 'gear' },
+    { t: '경영 철학',     d: '바른 길에 대한 선언',          h: '/philosophy',   i: 'mirror' },
+    { t: '빌드 로그',     d: '만들어 온 기록',               h: '/build-logs',   i: 'log' },
+  ]},
+];
 
 // ── 전역 검색 색인 (⌘K 커맨드 팔레트용) ──
-// 아람미러의 모든 것을 한 곳에서 찾아 열 수 있어야 한다. 마찰 0.
+// 메뉴에서 그대로 만든다 — 메뉴와 검색이 어긋날 수 없다.
 const navIndex = [
-  { t: '홈', h: '/', k: 'page' },
-  { t: '흑자전환 OS (150일)', h: '/os', k: 'page' },
-  { t: '총괄실 대시보드', h: '/hq/index.html', k: 'page' },
-  { t: '금고 — 매출·재무', h: '/vault', k: 'page' },
-  { t: '관리자', h: '/admin', k: 'page' },
-  { t: '인박스 — 승격 파이프라인', h: '/inbox', k: 'page' },
-  { t: '아람봇 — FAQ 상담', h: '/arambot', k: 'page' },
-  { t: '받아쓰기 (음성→글자)', h: '/stt', k: 'page' },
-  { t: '되묻기 · 멘토', h: '/ask', k: 'page' },
-  { t: '책장 (분류함)', h: '/shelf', k: 'page' },
-  { t: '자료실', h: '/archive', k: 'page' },
-  { t: '생각의 벽', h: '/wall', k: 'page' },
-  { t: '글', h: '/writings', k: 'page' },
-  { t: '독서 · 학습', h: '/reading', k: 'page' },
-  { t: '게시판', h: '/board', k: 'page' },
-  { t: '발행', h: '/publish', k: 'page' },
-  { t: '몰입 · Flow', h: '/flow', k: 'page' },
-  { t: '거장 & 스승', h: '/masters', k: 'page' },
-  { t: '스폰지 시계', h: '/sponge', k: 'page' },
-  { t: '세계 시계', h: '/world', k: 'page' },
-  { t: '농구클럽 · GTB', h: '/gtb', k: 'page' },
-  { t: '스튜디오팀 구조', h: '/studio-team', k: 'page' },
-  { t: '캐러셀 스튜디오', h: '/studio', k: 'page' },
-  { t: '릴스 스튜디오', h: '/reels', k: 'page' },
-  { t: '셸 스튜디오', h: '/shell-studio', k: 'page' },
-  { t: '달력', h: '/calendar', k: 'page' },
-  { t: 'Build Logs', h: '/build-logs', k: 'page' },
-  { t: '작동 방식', h: '/how', k: 'page' },
-  { t: '경영 철학 · 선언문', h: '/philosophy', k: 'page' },
+  { t: '홈', h: '/', k: 'page', d: '아람미러 입구' },
+  ...NAV.flatMap((g) => g.items.filter((it) => it.h).map((it) => ({ t: it.t, h: it.h, k: 'page', d: it.d }))),
 ];
 const mapIndex = domains.flatMap((d) =>
   d.branches.flatMap((b) =>
     b.items.map((it) => ({
       t: it.t, h: it.to || '/m/' + it.slug, k: 'map',
-      d: d.title, s: it.status,  
+      d: d.title, s: it.status,
     }))
   )
 );
@@ -97,62 +121,31 @@ const pageUrl = new URL(path || '/', Astro.site).href;
     <nav class="nav">
       <div class="wrap">
         <a class="brand" href="/">Aramirror<span class="dot">.</span></a>
-        <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+        <button class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">
+          <span class="nav-toggle-i" set:html={ic('menu')} />
+        </button>
         <div class="links" id="navLinks">
-          <div class="nav-group">
-            <button class="nav-top nav-top--hq" type="button">총괄실</button>
-            <div class="nav-menu">
-              <a href="/os">🔥 흑자전환 OS (150일)</a>
-              <a href="/hq/index.html">대시보드</a>
-              <a href="/vault">🔴 금고 (매출·재무)</a>
-              <a href="/admin">관리자</a>
+          {NAV.map((g) => (
+            <div class={'nav-group' + (g.loop ? ' is-loop' : ' is-side')}>
+              <button class="nav-top" type="button" aria-expanded="false">{g.g}</button>
+              <div class="nav-menu">
+                {g.note && <p class="nav-note">{g.note}</p>}
+                {g.items.map((it) =>
+                  it.sec ? (
+                    <p class="nav-sec">{it.sec}</p>
+                  ) : (
+                    <a href={it.h}>
+                      <span class="nav-ic" set:html={ic(it.i)} />
+                      <span class="nav-tx">
+                        <b>{it.t}</b>
+                        <i>{it.d}</i>
+                      </span>
+                    </a>
+                  )
+                )}
+              </div>
             </div>
-          </div>
-          <div class="nav-group">
-            <button class="nav-top" type="button">세컨드브레인</button>
-            <div class="nav-menu">
-              <a href="/core">🪨 코어 (하루 한 질문)</a>
-              <a href="/inbox">📥 인박스 (던진 것 → 자산)</a>
-              <a href="/arambot">🤖 아람봇 (FAQ 상담)</a>
-              <a href="/stt">🎙️ 받아쓰기 (음성→글자)</a>
-              <a href="/ask">되묻기 · 멘토</a>
-              <a href="/shelf">📚 책장 (분류함)</a>
-              <a href="/archive">📥 자료실</a>
-              <a href="/wall">생각의 벽</a>
-              <a href="/writings">글</a>
-              <a href="/reading">독서 · 학습</a>
-              <a href="/board">게시판</a>
-              <a href="/publish">발행</a>
-            </div>
-          </div>
-          <div class="nav-group">
-            <button class="nav-top" type="button">시간 · 몰입</button>
-            <div class="nav-menu">
-              <a href="/flow">몰입 · Flow</a>
-              <a href="/masters">거장 &amp; 스승</a>
-              <a href="/sponge">스폰지 시계</a>
-              <a href="/world">세계 시계</a>
-            </div>
-          </div>
-          <div class="nav-group">
-            <button class="nav-top" type="button">프로젝트</button>
-            <div class="nav-menu">
-              <a href="/gtb">농구클럽 · GTB</a>
-              <a href="/studio-team">🎬 스튜디오팀 구조</a>
-              <a href="/studio">└ 캐러셀 스튜디오</a>
-              <a href="/reels">└ 릴스 스튜디오</a>
-              <a href="/shell-studio">└ 셸 스튜디오</a>
-              <a href="/calendar">달력 (Luxe Calendar)</a>
-            </div>
-          </div>
-          <div class="nav-group">
-            <button class="nav-top" type="button">기록 · 안내</button>
-            <div class="nav-menu">
-              <a href="/philosophy">🪞 경영 철학 · 선언문</a>
-              <a href="/build-logs">Build Logs</a>
-              <a href="/how">작동 방식</a>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </nav>
@@ -167,17 +160,17 @@ const pageUrl = new URL(path || '/', Astro.site).href;
          전역 OS 레이어 — 아람미러 어느 페이지에서든 살아있다.
          ══════════════════════════════════════════════════════════ -->
 
-    <!-- ⚡ 퀵캡처 독 : 던지는 순간과 저장되는 순간의 거리를 0으로 -->
+    <!-- <span class="eic" set:html={ic('bolt')} /> 퀵캡처 독 : 던지는 순간과 저장되는 순간의 거리를 0으로 -->
     <div class="os-dock" id="osDock">
       <button class="os-fab" id="osFab" type="button" aria-label="한 줄 던지기 (C)" title="한 줄 던지기 · C">
-        <span class="os-fab-ic">⚡</span>
+        <span class="os-fab-ic"><span class="eic" set:html={ic('bolt')} /></span>
         <span class="os-fab-n" id="osFabN" hidden>0</span>
       </button>
       <div class="os-cap" id="osCap" hidden>
         <div class="os-cap-top">
-          <span class="os-cap-t">⚡ 한 줄 던지기</span>
+          <span class="os-cap-t"><span class="eic" set:html={ic('bolt')} /> 한 줄 던지기</span>
           <a class="os-cap-go" href="/inbox">인박스 →</a>
-          <button class="os-cap-x" id="osCapX" type="button" aria-label="닫기">✕</button>
+          <button class="os-cap-x" id="osCapX" type="button" aria-label="닫기"><span class="eic" set:html={ic('close')} /></button>
         </div>
         <textarea id="osCapIn" rows="2" placeholder="아무거나. 알아서 분류돼요 —  예) 내일 10시 경영회의 / 이번 주까지 지표 정리 #경영 / https://..."></textarea>
         <div class="os-cap-route" id="osCapRoute" hidden></div>
@@ -189,9 +182,9 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       </div>
     </div>
 
-    <!-- 🔁 먼저 말 거는 루프 : 내가 열어야 도는 시스템은 안 돈다 -->
+    <!-- <span class="eic" set:html={ic('loop')} /> 먼저 말 거는 루프 : 내가 열어야 도는 시스템은 안 돈다 -->
     <div class="os-nudge" id="osNudge" hidden>
-      <span class="os-nudge-ic" id="osNudgeIc">📌</span>
+      <span class="os-nudge-ic" id="osNudgeIc" set:html={ic('bolt')} />
       <span class="os-nudge-msg" id="osNudgeMsg"></span>
       <a class="os-nudge-go" id="osNudgeGo" href="/inbox">보기</a>
       <button class="os-nudge-x" id="osNudgeX" type="button" aria-label="나중에">나중에</button>
@@ -211,15 +204,18 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       </div>
     </div>
 
+    <!-- 아이콘을 전역에 한 번 깔아 둔다 — is:inline 스크립트도 같은 한 벌을 쓴다 -->
+    <script is:inline set:html={`window.__aramIcons=${JSON.stringify(P)};window.__aramEmoji=${JSON.stringify(EMOJI_MAP)};window.aramIc=function(n){var p=window.__aramIcons[n]||window.__aramIcons.core;return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';};window.aramIconOf=function(x){return window.__aramEmoji[x]||(window.__aramIcons[x]?x:'core');};`} />
+
     <script type="application/json" id="osIndex" set:html={JSON.stringify({ idx: searchIndex })} />
 
     <footer>
       <div class="wrap">
         <div class="foot-links">
           <a href="/philosophy">경영 철학</a>
-          <a href="/hq/index.html">총괄실</a>
+          <a href="/hq/index.html">대시보드</a>
           <a href="/how">작동 방식</a>
-          <a href="/gtb">농구클럽 · GTB</a>
+          <a href="/gtb">새벽 농구</a>
         </div>
         Aramirror — 아람, 아름다운 사람. AI는 거울이 된다.<br />
         © 2026 Aram Huvis · built with Claude Code
@@ -229,37 +225,78 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       footer .foot-links { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin-bottom:14px; }
       footer .foot-links a { color:inherit; text-decoration:underline; text-underline-offset:2px; font-size:0.9rem; }
 
-      /* ===== 5층 그룹 네비게이션 ===== */
-      .nav-solo {
-        font-size:0.88rem; font-weight:700; color:var(--fg); text-decoration:none;
-        padding:6px 12px; border-radius:999px; border:1px solid var(--accent);
-        background:var(--accent-soft); transition:background .15s, transform .15s; white-space:nowrap;
+      /* ═══ 메뉴 ═══════════════════════════════════════════════
+         이 사이트의 뼈대는 루프다 — 던지기 → 엮기 → 내놓기.
+         메뉴가 그 순서를 그대로 보여준다(세 칸은 화살표로 이어지고,
+         나머지 셋은 세로선 뒤에 따로 선다). 아이콘은 전부 직접 그린 SVG.
+         ═══════════════════════════════════════════════════════ */
+      .nav .links { align-items:center; gap:0; }
+      .nav-toggle {
+        display:none; background:none; border:0; color:var(--fg); cursor:pointer;
+        margin-left:auto; padding:8px; line-height:0; border-radius:10px;
       }
-      .nav-solo:hover { background:color-mix(in srgb, var(--accent) 22%, transparent); transform:translateY(-1px); }
-      .nav-solo::after { display:none; }
-      .nav-toggle { display:none; background:none; border:0; color:var(--fg); font-size:1.4rem; cursor:pointer; margin-left:auto; line-height:1; padding:6px; }
-      .nav .links { align-items:center; }
+      .nav-toggle-i svg, .nav-ic svg { width:100%; height:100%; display:block; }
+      .nav-toggle-i { display:block; width:22px; height:22px; }
+
       .nav-group { position:relative; }
       .nav-top {
         background:none; border:0; color:var(--muted); font:inherit; font-size:0.88rem;
-        cursor:pointer; padding:6px 2px; display:inline-flex; align-items:center; gap:5px; letter-spacing:-0.01em;
+        font-weight:600; letter-spacing:-0.02em; cursor:pointer; padding:7px 11px; border-radius:9px;
+        transition:color .15s;
       }
-      .nav-top::after { content:"▾"; font-size:0.7em; opacity:0.6; transition:transform .2s; }
       .nav-group:hover .nav-top, .nav-group.open .nav-top { color:var(--fg); }
-      .nav-group.open .nav-top::after { transform:rotate(180deg); }
-      .nav-top--hq { color:var(--accent); font-weight:700; }
-      .nav-top--hq::before { content:"●"; font-size:0.6em; vertical-align:middle; margin-right:2px; }
-      .nav-menu {
-        position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%) translateY(6px);
-        min-width:172px; padding:8px; display:flex; flex-direction:column; gap:2px;
-        background:var(--bg-1); border:1px solid var(--line); border-radius:14px;
-        box-shadow:0 20px 44px rgba(196,110,54,0.20); opacity:0; visibility:hidden; transition:opacity .18s, transform .18s;
-        z-index:60;
+      .nav-group.open .nav-top { background:var(--bg-2); }
+
+      /* 루프 세 칸을 잇는 화살표 — 순서가 곧 이 시스템의 설명이다 */
+      .nav-group.is-loop + .nav-group.is-loop::before {
+        content:""; position:absolute; left:-7px; top:50%; width:5px; height:5px;
+        border-top:1.4px solid var(--line); border-right:1.4px solid var(--line);
+        transform:translateY(-50%) rotate(45deg);
       }
-      .nav-group:hover .nav-menu, .nav-group.open .nav-menu { opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
-      .nav-menu a { padding:9px 12px; border-radius:9px; font-size:0.9rem; color:var(--fg-soft); white-space:nowrap; }
-      .nav-menu a:hover { background:var(--bg-2); color:var(--fg); }
+      /* 루프 밖(운영·하루·아람미러)은 세로선 뒤로 */
+      .nav-group.is-loop + .nav-group.is-side { margin-left:18px; }
+      .nav-group.is-loop + .nav-group.is-side::before {
+        content:""; position:absolute; left:-10px; top:50%; transform:translateY(-50%);
+        width:1px; height:15px; background:var(--line);
+      }
+
+      .nav-menu {
+        position:absolute; top:calc(100% + 12px); left:50%; transform:translateX(-50%) translateY(6px);
+        width:284px; padding:8px; display:flex; flex-direction:column; gap:1px;
+        background:var(--bg-1); border:1px solid var(--line); border-radius:16px;
+        box-shadow:0 22px 50px rgba(120,70,30,0.16); opacity:0; visibility:hidden;
+        transition:opacity .16s, transform .16s; z-index:60;
+      }
+      .nav-group:hover .nav-menu, .nav-group.open .nav-menu {
+        opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+      }
+      /* 마지막 그룹은 오른쪽 끝에 맞춘다 — 좁은 데스크톱에서 화면 밖으로 안 나가게 */
+      .nav-group:last-child .nav-menu { left:auto; right:-4px; transform:translateY(6px); }
+      .nav-group:last-child:hover .nav-menu,
+      .nav-group:last-child.open .nav-menu { transform:translateY(0); }
+
+      .nav-note {
+        margin:2px 10px 7px; padding-bottom:7px; border-bottom:1px solid var(--line-soft);
+        font-size:0.72rem; color:var(--faint); letter-spacing:0.02em;
+      }
+      .nav-sec {
+        margin:9px 10px 4px; font-size:0.68rem; font-weight:700; color:var(--faint);
+        letter-spacing:0.08em;
+      }
+      .nav-menu a {
+        display:flex; align-items:flex-start; gap:10px; padding:8px 10px; border-radius:11px;
+        color:var(--fg); white-space:normal;
+      }
+      .nav-menu a:hover { background:var(--bg-2); }
       .nav-menu a::after { display:none; }
+      .nav-ic {
+        flex:none; width:30px; height:30px; display:grid; place-items:center; border-radius:9px;
+        background:var(--bg-2); color:var(--fg-soft); padding:6px; margin-top:1px;
+      }
+      .nav-menu a:hover .nav-ic { background:var(--accent-soft); color:var(--accent-strong); }
+      .nav-tx { display:flex; flex-direction:column; min-width:0; }
+      .nav-tx b { font-size:0.88rem; font-weight:700; letter-spacing:-0.02em; line-height:1.45; }
+      .nav-tx i { font-style:normal; font-size:0.74rem; color:var(--faint); line-height:1.45; margin-top:1px; }
 
       /* ══════ 전역 OS 레이어 ══════ */
       .os-dock { position:fixed; right:20px; bottom:20px; z-index:70; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
@@ -318,8 +355,9 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         border-radius:14px; box-shadow:0 18px 44px rgba(120,70,30,.18); animation:osUp .3s var(--ease);
       }
       .os-nudge.hot { border-left-color:#d94b3a; }
-      .os-nudge.cool { border-left-color:#4a6fb0; }
-      .os-nudge-ic { font-size:1.05rem; }
+      .os-nudge.cool { border-left-color:#2e5aa6; }
+      .os-nudge-ic { width:18px; height:18px; flex:none; color:var(--accent-strong); }
+      .os-nudge-ic svg { width:100%; height:100%; display:block; }
       .os-nudge-msg { font-size:.88rem; color:var(--fg); line-height:1.45; }
       .os-nudge-go { font-size:.8rem; font-weight:700; color:var(--accent); white-space:nowrap; margin-left:auto; }
       .os-nudge-x { background:none; border:0; cursor:pointer; color:var(--faint); font-size:.76rem; white-space:nowrap; }
@@ -360,7 +398,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       }
       @media (max-width: 680px) {
         .os-dock { right:14px; bottom:14px; }
-        /* 모바일에선 ⚡ 옆이 아니라 위로 — 겹치면 둘 다 못 누른다 */
+        /* 모바일에선  옆이 아니라 위로 — 겹치면 둘 다 못 누른다 */
         .os-nudge { left:14px; right:14px; bottom:82px; max-width:none; }
         .os-nudge-msg { font-size:.82rem; }
         .os-pal { top:6vh; max-height:84vh; }
@@ -371,18 +409,36 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         .nav-toggle { display:block; }
         .nav .wrap { flex-wrap:wrap; }
         .nav .links {
-          flex-basis:100%; flex-direction:column; align-items:stretch; gap:2px;
-          margin-left:0; max-height:0; overflow:hidden; transition:max-height .28s ease;
+          flex-basis:100%; flex-direction:column; align-items:stretch; gap:0;
+          margin-left:0; max-height:0; overflow:hidden; transition:max-height .3s var(--ease);
         }
-        .nav .links.open { max-height:78vh; overflow-y:auto; padding-bottom:14px; }
+        .nav .links.open { max-height:80vh; overflow-y:auto; padding-bottom:16px; }
         .nav-group { border-top:1px solid var(--line-soft); }
-        .nav-top { width:100%; justify-content:space-between; padding:14px 4px; font-size:1rem; }
+        .nav-group.is-loop + .nav-group::before { display:none; }
+        .nav-group.is-loop + .nav-group.is-side { margin-left:0; }
+        .nav-top {
+          width:100%; text-align:left; padding:15px 4px; font-size:1rem; border-radius:0;
+          display:flex; align-items:center; justify-content:space-between;
+        }
+        .nav-top::after {
+          content:""; width:7px; height:7px; border-right:1.6px solid var(--muted);
+          border-bottom:1.6px solid var(--muted); transform:rotate(45deg) translate(-2px,-2px);
+          transition:transform .2s;
+        }
+        .nav-group.open .nav-top { background:none; }
+        .nav-group.open .nav-top::after { transform:rotate(225deg) translate(-2px,-2px); }
         .nav-menu {
           position:static; transform:none; opacity:1; visibility:visible; box-shadow:none;
-          border:0; background:none; padding:0 0 8px 12px; min-width:0; display:none;
+          border:0; background:none; padding:0 0 10px; width:auto; display:none;
         }
-        .nav-group.open .nav-menu { display:flex; transform:none; }
-        .nav-group:hover .nav-menu { opacity:1; }
+        /* 데스크톱 드롭다운 규칙(.open/:hover)이 더 세서, 같은 세기로 되돌려 준다 */
+        .nav-group.open .nav-menu,
+        .nav-group:hover .nav-menu {
+          position:static; transform:none; width:auto; opacity:1; visibility:visible;
+        }
+        .nav-group.open .nav-menu { display:flex; }
+        .nav-group:not(.open) .nav-menu { display:none; }
+        .nav-note { margin-left:2px; margin-right:2px; }
       }
     </style>
 
@@ -414,32 +470,46 @@ const pageUrl = new URL(path || '/', Astro.site).href;
     </script>
 
     <script>
-      // 5층 그룹 네비 — 모바일 햄버거 + 그룹 펼치기
+      // 메뉴 — 모바일 햄버거 + 그룹 펼치기
       const navToggle = document.querySelector('.nav-toggle');
       const navLinks = document.getElementById('navLinks');
       const groups = Array.from(document.querySelectorAll('.nav-group'));
-      const isMobile = () => window.matchMedia('(max-width: 820px)').matches;
+
+      const setOpen = (g, on) => {
+        g.classList.toggle('open', on);
+        g.querySelector('.nav-top')?.setAttribute('aria-expanded', on ? 'true' : 'false');
+      };
+      const closeAll = () => groups.forEach((g) => setOpen(g, false));
 
       navToggle?.addEventListener('click', () => {
         const open = navLinks?.classList.toggle('open');
         navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        navToggle.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+        if (!open) closeAll();
       });
 
       groups.forEach((g) => {
-        const top = g.querySelector('.nav-top');
-        top?.addEventListener('click', (e) => {
+        g.querySelector('.nav-top')?.addEventListener('click', (e) => {
           e.stopPropagation();
           const wasOpen = g.classList.contains('open');
-          groups.forEach((o) => o.classList.remove('open'));
-          if (!wasOpen) g.classList.add('open');
+          closeAll();
+          if (!wasOpen) setOpen(g, true);
         });
+        // 링크를 고르면 모바일 메뉴는 닫고 간다
+        g.querySelectorAll('.nav-menu a').forEach((a) =>
+          a.addEventListener('click', () => {
+            navLinks?.classList.remove('open');
+            navToggle?.setAttribute('aria-expanded', 'false');
+            closeAll();
+          })
+        );
       });
 
-      // 바깥 클릭 시 닫기 (데스크톱 드롭다운)
       document.addEventListener('click', (e) => {
-        if (!(e.target as HTMLElement).closest('.nav-group')) {
-          groups.forEach((o) => o.classList.remove('open'));
-        }
+        if (!(e.target as HTMLElement).closest('.nav-group')) closeAll();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAll();
       });
     </script>
 
@@ -450,6 +520,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
     </script>
 
     <script>
+    import { ic, iconOf } from '../lib/icons.js';
       // ══════════════════════════════════════════════════════════
       //  전역 OS 레이어 — 퀵캡처 · 커맨드 팔레트 · 먼저 말 거는 루프
       //  원칙을 "글"이 아니라 "동작"으로. 모든 페이지에서 산다.
@@ -467,7 +538,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       /* ── 사용 로그 : 안 쓰는 기능이 드러나야 버릴 수 있다 ── */
       OS.logVisit(location.pathname);
 
-      /* ── ⚡ 퀵캡처 ── */
+      /* ──  퀵캡처 ── */
       const dock = $('osDock'), fab = $('osFab'), cap = $('osCap');
       const capIn = $('osCapIn'), capRoute = $('osCapRoute'), capRecent = $('osCapRecent'), fabN = $('osFabN');
       const KIND = Object.fromEntries(OS.KINDS.map((k) => [k.id, k]));
@@ -484,7 +555,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         capRecent.innerHTML = rs.length
           ? rs.map((r) => {
               const k = KIND[r.kind] || { ic: '·', ko: '' };
-              return '<div class="r"><i>' + k.ic + '</i><span>' + esc(r.text) + '</span></div>';
+              return '<div class="r"><i class="eic">' + ic(iconOf(k.ic)) + '</i><span>' + esc(r.text) + '</span></div>';
             }).join('')
           : '';
       }
@@ -507,10 +578,10 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         if (!t) { capRoute.hidden = true; return; }
         const c = OS.classify(t);
         const k = KIND[c.kind] || { ic: '·', ko: c.kind };
-        let h = k.ic + ' <b>' + esc(k.ko) + '</b> 으로 들어가요 — ' + esc(c.why);
-        if (c.due) h += ' · 📅 ' + c.due;
+        let h = '<span class="eic">' + ic(iconOf(k.ic)) + '</span> <b>' + esc(k.ko) + '</b> 으로 들어가요 — ' + esc(c.why);
+        if (c.due) h += ' · 마감 ' + c.due;
         if (c.tags.length) h += ' · ' + c.tags.map((x) => '#' + esc(x)).join(' ');
-        if (c.src) h += ' · 🔗 미확인 자료';
+        if (c.src) h += ' · 미확인 자료';
         capRoute.innerHTML = h;
         capRoute.hidden = false;
       }
@@ -543,7 +614,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       function palSource() {
         const mine = OS.getItems().slice(0, 200).map((i) => {
           const k = KIND[i.kind] || { ic: '·', ko: '' };
-          return { t: i.text, h: '/inbox#' + i.id, k: 'mine', d: k.ic + ' ' + k.ko };
+          return { t: i.text, h: '/inbox#' + i.id, k: 'mine', d: k.ko };
         });
         return (IDX.idx || []).concat(mine);
       }
@@ -559,7 +630,7 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         palRows = rows; palAt = 0;
         if (!rows.length) { palList.innerHTML = '<p class="os-pal-empty">없어요. 다른 말로 찾아보세요.</p>'; return; }
         palList.innerHTML = rows.map((r, i) => {
-          const g = r.axis && AXES[r.axis] ? AXES[r.axis].ic + ' ' : '';
+          const g = '';
           const d = [g + (r.d || ''), r.from ? '← ' + r.from : ''].filter(Boolean).join(' · ');
           return '<a class="os-pal-row' + (i === 0 ? ' on' : '') + '" href="' + esc(r.h) + '" data-i="' + i + '">' +
             '<span class="os-pal-k">' + (K_LABEL[r.k] || r.k) + '</span>' +
@@ -605,14 +676,14 @@ const pageUrl = new URL(path || '/', Astro.site).href;
         if (e.key.toLowerCase() === 'c' && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); openCap(); }
       });
 
-      /* ── 🔁 먼저 말 거는 루프 ── */
+      /* ──  먼저 말 거는 루프 ── */
       const nud = $('osNudge');
       function showNudge() {
         if (!nud) return;
         const n = OS.nudge();
         if (!n) { nud.hidden = true; return; }
         nud.className = 'os-nudge ' + n.level;
-        $('osNudgeIc').textContent = n.ic;
+        $('osNudgeIc').innerHTML = ic(iconOf(n.ic));
         $('osNudgeMsg').textContent = n.msg;
         const go = $('osNudgeGo');
         if (n.to === '#capture') {

@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 ---
 <Base title="GTB — 새벽 농구 운영 OS">
@@ -20,7 +21,7 @@ import Base from '../layouts/Base.astro';
   <!-- 문제 -->
   <section>
     <div class="wrap">
-      <p class="section-kicker" data-reveal>The Problem</p>
+      <p class="section-kicker" data-reveal>지금 무엇이 문제인가</p>
       <h2 data-reveal="60">새벽 운영은 왜 늘 번거로울까</h2>
       <p class="lead" data-reveal="120">정원 24명, 우선순위, 노쇼 벌금, 게스트비… 규칙은 명확한데 전부 사람 손으로 센다.</p>
       <div class="cards">
@@ -46,7 +47,7 @@ import Base from '../layouts/Base.astro';
   <!-- 해결 -->
   <section class="dark-section" id="how">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>The Fix</p>
+      <p class="section-kicker" data-reveal>그래서 이렇게 한다</p>
       <h2 data-reveal="60">세 가지를 자동으로 <mark>돌린다</mark></h2>
       <p class="lead" data-reveal="120">복잡한 규칙은 시스템 안에. 회원은 버튼만 누른다.</p>
       <div class="num-grid">
@@ -77,7 +78,7 @@ import Base from '../layouts/Base.astro';
   <!-- 정산 계산기 (실제 동작) -->
   <section id="calc">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>Live Demo</p>
+      <p class="section-kicker" data-reveal>직접 해보기</p>
       <h2 data-reveal="60">정산 계산기 — <mark>지금 바로</mark></h2>
       <p class="lead" data-reveal="120">이번 달 내가 낼 돈, 넣으면 바로 나온다. (GTB 공식 요금 기준)</p>
 
@@ -153,7 +154,7 @@ import Base from '../layouts/Base.astro';
   <!-- 치트시트 -->
   <section class="dark-section">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>Cheat Sheet</p>
+      <p class="section-kicker" data-reveal>한 장 요약</p>
       <h2 data-reveal="60">새벽에 필요한 건 한 화면에</h2>
       <div class="cards" data-reveal="120">
         <div class="card">
@@ -249,6 +250,7 @@ import Base from '../layouts/Base.astro';
   </style>
 
   <script>
+    import { ic, iconOf } from '../lib/icons.js';
     const won = (n) => n.toLocaleString('ko-KR') + '원';
     const $ = (id) => document.getElementById(id);
 
@@ -292,7 +294,7 @@ import Base from '../layouts/Base.astro';
     if (copyBtn) copyBtn.addEventListener('click', async () => {
       const txt = $('o-name').textContent || '';
       try { await navigator.clipboard.writeText(txt); } catch (e) {}
-      copyBtn.textContent = '복사됨 ✓'; copyBtn.classList.add('ok');
+      copyBtn.textContent = '복사됨'; copyBtn.classList.add('ok');
       setTimeout(() => { copyBtn.textContent = '복사'; copyBtn.classList.remove('ok'); }, 1400);
     });
 

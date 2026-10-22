@@ -1,9 +1,10 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 import { carousel, osPillars, references } from '../data/carousel.js';
 
 // 캐러셀 스튜디오 — 기획부터 발행까지 한 화면.
-// 사이트 chrome 은 아라미러 다크 테마, 슬라이드 미리보기는 브랜드 노랑 #e9ed12(iframe 실제 렌더).
+// 사이트 chrome 은 아라미러 다크 테마, 슬라이드 미리보기는 브랜드 노랑 #a8781c(iframe 실제 렌더).
 const stages = [
   { id: 'plan', n: '01', t: '기획' },
   { id: 'slides', n: '02', t: '슬라이드' },
@@ -18,7 +19,7 @@ const caps = carousel.captions;
 <Base title="캐러셀 스튜디오">
   <section style="padding-top:80px">
     <div class="wrap">
-      <p class="section-kicker">Carousel Studio · 캐러셀 OS</p>
+      <p class="section-kicker">캐러셀 스튜디오</p>
       <h2>기획부터 발행까지, <mark>한 화면</mark>에서</h2>
       <p class="lead">
         주제 하나로 슬라이드 8장 + 플랫폼별 캡션 + 마니챗까지. 매번 같은 결로 나오게 만든 캐러셀 OS.
@@ -50,7 +51,7 @@ const caps = carousel.captions;
         <div class="pillars">
           {osPillars.map((p) => (
             <div class="pillar">
-              <div class="pil-top"><span class="pil-n">{p.n}</span><h4>{p.name}</h4>{p.done && <span class="chk">✓</span>}</div>
+              <div class="pil-top"><span class="pil-n">{p.n}</span><h4>{p.name}</h4>{p.done && <span class="chk"></span>}</div>
               <p class="pil-detail">{p.detail}</p>
               <p class="pil-have">{p.have}</p>
               <p class="pil-miss">안 하면 · {p.miss}</p>
@@ -59,7 +60,7 @@ const caps = carousel.captions;
         </div>
         <div class="stic">
           <p class="stic-h">입력 포맷 · STIC</p>
-          <p><b>S</b>ituation — 어떤 채널에 무슨 주제로 / <b>T</b>ask — 몇 장, 어떤 구조로 / <b>I</b>ntent — 왜(일관된 톤·스타일) / <b>C</b>oncern — 컬러 #e9ed12 고정 등 지킬 것</p>
+          <p><b>S</b>ituation — 어떤 채널에 무슨 주제로 / <b>T</b>ask — 몇 장, 어떤 구조로 / <b>I</b>ntent — 왜(일관된 톤·스타일) / <b>C</b>oncern — 컬러 #a8781c 고정 등 지킬 것</p>
         </div>
       </div>
 
@@ -305,7 +306,7 @@ const caps = carousel.captions;
       // 복사
       function copyText(txt, btn) {
         navigator.clipboard.writeText(txt).then(function () {
-          var old = btn.textContent; btn.textContent = '복사됨 ✓'; btn.classList.add('done');
+          var old = btn.textContent; btn.textContent = '복사됨'; btn.classList.add('done');
           setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1400);
         });
       }
@@ -322,6 +323,7 @@ const caps = carousel.captions;
   <!-- 보관함 — 이중 모드: Supabase 키 있으면 클라우드, 없으면 localStorage. -->
   <!-- 클라우드로 승격되면 이 기기에만 있던 로컬 저장분을 자동으로 올려준다. -->
   <script>
+    import { ic, iconOf } from '../lib/icons.js';
     import { hasSupabase } from '../lib/config.js';
     import { sbCarouselList, sbCarouselInsert, sbCarouselDelete } from '../lib/backend.js';
 
@@ -477,7 +479,7 @@ const caps = carousel.captions;
           arr.unshift({ id: 'c' + Date.now(), topic, slides, date: nowLocal(), hash, data: snapshot });
           writeLocal(arr);
         }
-        statusEl.textContent = '보관함에 저장됨 ✓';
+        statusEl.textContent = '보관함에 저장됨';
         setTimeout(() => { statusEl.textContent = ''; }, 1800);
         refresh();
       };

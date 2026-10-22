@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 
 // 경영 철학 / 선언문 — 사장님이 텔레그램으로 못박은 아람휴비스의 바른 길.
@@ -40,7 +41,7 @@ const creed = [
     <span class="ph-orb a" aria-hidden="true"></span>
     <span class="ph-orb b" aria-hidden="true"></span>
     <div class="wrap">
-      <p class="section-kicker">Our Way · 경영 철학 · 선언문</p>
+      <p class="section-kicker">경영 철학</p>
       <h1 class="ph-title">
         아람휴비스가 걷는 <mark>바른 길</mark>
       </h1>
@@ -61,7 +62,7 @@ const creed = [
           <article class="creed" data-reveal={String(i * 80)}>
             <div class="creed-head">
               <span class="creed-n">{c.n}</span>
-              <span class="creed-ic">{c.ic}</span>
+              <span class="creed-ic"><span class="eic" set:html={ic(iconOf(c.ic))} /></span>
             </div>
             <h2 class="creed-title">{c.title}</h2>
             <p class="creed-lead">{c.lead}</p>
@@ -74,7 +75,7 @@ const creed = [
         <p class="pf-sig">— 대표이사 박상현 · 아람휴비스</p>
         <div class="pf-links">
           <a href="/">← 아라미러 홈</a>
-          <a href="/os">🔥 흑자전환 OS</a>
+          <a href="/os"><span class="eic" set:html={ic('flame')} /> 흑자전환 OS</a>
           <a href="/how">작동 방식</a>
         </div>
       </div>

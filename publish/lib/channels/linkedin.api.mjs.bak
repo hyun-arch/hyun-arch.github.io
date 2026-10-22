@@ -1,0 +1,79 @@
+// 링크드인 — 내 프로필에 글·사진. 무료이고 심사도 없다.
+// 앱에 'Share on LinkedIn' 제품을 붙이면 w_member_social 이 바로 생긴다.
+// (승인 대기가 필요한 건 '회사 페이지'와 '남 대신 올리기'뿐이다.)
+//
+// 2023년에 /v2/ugcPosts 가 폐기돼서, 지금은 버전이 붙은 /rest/posts 를 쓴다.
+// LinkedIn-Version 헤더(YYYYMM)가 없으면 거절당한다.
+import fs from 'node:fs';
+import { env, missing } from '../env.mjs';
+
+const API = 'https://api.linkedin.com';
+// 링크드인은 버전을 1년 남짓 지나면 닫는다 — 연 1회쯤 올려주면 된다.
+const VERSION = '202609';
+
+const H = (tok) => ({
+  Authorization: `Bearer ${tok}`,
+  'X-Restli-Protocol-Version': '2.0.0',
+  'LinkedIn-Version': VERSION,
+});
+
+export default {
+  key: 'linkedin',
+  name: '링크드인',
+  caps: { text: true, image: true, video: false, link: true, maxText: 3000, maxMedia: 9 },
+  needs: ['LI_ACCESS_TOKEN', 'LI_PERSON_URN'],
+  note: '내 프로필 게시는 무료·즉시. node publish/linkedin-connect.mjs 로 2분이면 연결됩니다.',
+  free: true,
+
+  ready() { return missing(this.needs); },
+
+  async post({ text, media = [], link, dry }) {
+    const e = env();
+    const tok = e.LI_ACCESS_TOKEN, urn = e.LI_PERSON_URN;
+    const images = media.filter((m) => m.kind === 'image').slice(0, 9);
+    if (dry) return { dry: true, would: images.length ? `사진 ${images.length}장 + 글` : (link ? '링크 + 글' : '글만') };
+
+    const uploaded = [];
+    for (const m of images) uploaded.push(await uploadImage(m, tok, urn));
+
+    const body = {
+      author: urn,
+      commentary: text,
+      visibility: 'PUBLIC',
+      distribution: { feedDistribution: 'MAIN_FEED', targetEntities: [], thirdPartyDistributionChannels: [] },
+      lifecycleState: 'PUBLISHED',
+      isReshareDisabledByAuthor: false,
+    };
+    if (uploaded.length === 1) body.content = { media: { id: uploaded[0] } };
+    else if (uploaded.length > 1) body.content = { multiImage: { images: uploaded.map((id) => ({ id })) } };
+    else if (link) body.content = { article: { source: link, title: text.split('\n')[0].slice(0, 100) } };
+
+    const r = await fetch(`${API}/rest/posts`, {
+      method: 'POST', headers: { ...H(tok), 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    if (!r.ok) {
+      const d = await r.text();
+      throw new Error(`HTTP ${r.status} ${d.slice(0, 200)}`);
+    }
+    const id = r.headers.get('x-restli-id') || r.headers.get('x-linkedin-id') || '';
+    return { id, url: id ? `https://www.linkedin.com/feed/update/${id}` : undefined };
+  },
+};
+
+// 사진 올리기 — 자리를 먼저 받아두고(initializeUpload) 그 주소로 파일을 올린다
+async function uploadImage(m, tok, urn) {
+  const r = await fetch(`${API}/rest/images?action=initializeUpload`, {
+    method: 'POST', headers: { ...H(tok), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ initializeUploadRequest: { owner: urn } }),
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('사진 자리 받기 실패: ' + JSON.stringify(d).slice(0, 160));
+  const { uploadUrl, image } = d.value || {};
+  if (!uploadUrl) throw new Error('업로드 주소를 못 받았어요');
+
+  const put = await fetch(uploadUrl, {
+    method: 'PUT', headers: { Authorization: `Bearer ${tok}` }, body: fs.readFileSync(m.path),
+  });
+  if (!put.ok) throw new Error('사진 업로드 실패: HTTP ' + put.status);
+  return image;
+}

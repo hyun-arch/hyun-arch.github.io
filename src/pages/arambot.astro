@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 // 아람봇 — 오톡 같은 FAQ·상담 챗봇을 아라미러 안에 완성한 버전.
 // FAQ(아람휴비스·릴라이 공개 정보)를 "학습"한 지식베이스 + 키워드 매칭 엔진으로
@@ -11,10 +12,10 @@ import Base from '../layouts/Base.astro';
       <div class="ab-head" data-reveal>
         <span class="ab-ava big" aria-hidden="true">
           <span class="ab-face"><span class="ab-eye l"></span><span class="ab-eye r"></span><span class="ab-cheek l"></span><span class="ab-cheek r"></span><span class="ab-mouth"></span></span>
-          <span class="ab-spark s1">✦</span><span class="ab-spark s2">✧</span>
+          <span class="ab-spark s1"><span class="eic" set:html={ic('star')} /></span><span class="ab-spark s2"><span class="eic" set:html={ic('star')} /></span>
         </span>
         <div>
-          <p class="section-kicker">Aram Bot · FAQ 챗봇</p>
+          <p class="section-kicker">아람봇</p>
           <h1>무엇이든 물어보세요, <mark>아람봇</mark>이 답해요</h1>
         </div>
       </div>
@@ -55,7 +56,7 @@ import Base from '../layouts/Base.astro';
       </div>
 
       <p class="ab-note" data-reveal="120">
-        💡 이 챗봇은 <b>오톡 같은 FAQ 상담봇</b>을 아라미러 안에 직접 만든 거예요.
+        <span class="eic" set:html={ic('idea')} /> 이 챗봇은 <b>오톡 같은 FAQ 상담봇</b>을 아라미러 안에 직접 만든 거예요.
         지식은 공개 정보 기준이라, 매출·내부 자료 같은 건 답하지 않고 사장님께 바로 연결해요.
       </p>
     </div>
@@ -202,20 +203,20 @@ import Base from '../layouts/Base.astro';
 
         { id:'buy', kw:['구매','도입','문의','견적','가격','얼마','사고','계약','상담','연락','도입하고','팔','판매'],
           a:['제품 <b>도입·구매·견적</b>은 담당자와 바로 상담하시는 게 제일 빨라요. 아래 톡으로 남겨주시면 사장님(담당)이 직접 확인하고 답드려요.',
-             '<a href="https://t.me/Arami_claude_bot" target="_blank" rel="noopener">👉 톡으로 상담 남기기</a> · 또는 <a href="https://lilai.ai" target="_blank" rel="noopener">lilai.ai</a>'],
+             '<a href="https://t.me/Arami_claude_bot" target="_blank" rel="noopener"> 톡으로 상담 남기기</a> · 또는 <a href="https://lilai.ai" target="_blank" rel="noopener">lilai.ai</a>'],
           chips:['무슨 제품을 만들어요?','릴라이가 뭐예요?'] },
 
         { id:'about-bot', kw:['아람봇','너 누구','넌 뭐','봇','챗봇','이 사이트','아라미러','뭐야 너','누구야','너는'],
-          a:['저는 <b>아람봇</b>이에요! 🤖 아람휴비스·릴라이 정보를 학습해서, 궁금한 걸 물어보면 바로 답해드리는 상담 챗봇이에요.',
+          a:['저는 <b>아람봇</b>이에요!  아람휴비스·릴라이 정보를 학습해서, 궁금한 걸 물어보면 바로 답해드리는 상담 챗봇이에요.',
              '제가 모르는 건(내부 자료·매출 같은 건) 답하지 않고, <b>담당자에게 바로 연결</b>해 드려요. 편하게 물어보세요!'],
           chips:['아람휴비스는 어떤 회사?','무슨 제품을 만들어요?','릴라이가 뭐예요?'] },
 
         { id:'hi', kw:['안녕','하이','반가','ㅎㅇ','hello','hi','안뇽','좋은 아침','수고'],
-          a:['안녕하세요! 😊 저는 <b>아람봇</b>이에요. 아람휴비스·릴라이에 대해 뭐든 물어보세요.'],
+          a:['안녕하세요!  저는 <b>아람봇</b>이에요. 아람휴비스·릴라이에 대해 뭐든 물어보세요.'],
           chips:['아람휴비스는 어떤 회사?','릴라이가 뭐예요?','무슨 제품을 만들어요?'] },
 
         { id:'thanks', kw:['고마','감사','ㄱㅅ','thank','땡큐','굿','좋아','최고'],
-          a:['도움이 됐다니 기뻐요! 😊 더 궁금한 게 있으면 언제든 물어보세요.'],
+          a:['도움이 됐다니 기뻐요!  더 궁금한 게 있으면 언제든 물어보세요.'],
           chips:['릴라이가 뭐예요?','구매·도입 문의'] }
       ];
 
@@ -277,7 +278,7 @@ import Base from '../layouts/Base.astro';
             renderChips(hit.chips);
           } else {
             addRow('bot', [
-              '음, 그건 제가 정확히 답하기 어려운 내용이에요. 🙏 아람휴비스·릴라이의 <b>제품·회사·두피진단</b>에 대해선 잘 답할 수 있어요.',
+              '음, 그건 제가 정확히 답하기 어려운 내용이에요.  아람휴비스·릴라이의 <b>제품·회사·두피진단</b>에 대해선 잘 답할 수 있어요.',
               '더 자세하거나 내부적인 건 <b>담당자(사장님)</b>가 직접 답하는 게 정확해요 → <a href="https://t.me/Arami_claude_bot" target="_blank" rel="noopener">톡으로 물어보기</a>'
             ]);
             renderChips(STARTERS);
@@ -299,7 +300,7 @@ import Base from '../layouts/Base.astro';
 
       function greet(){
         addRow('bot', [
-          '안녕하세요 사장님 👋 저는 <b>아람봇</b>이에요.',
+          '안녕하세요 사장님  저는 <b>아람봇</b>이에요.',
           '아람휴비스·릴라이에 대해 궁금한 걸 물어보세요. 아래 버튼을 눌러도 되고, 직접 입력해도 돼요.'
         ]);
         renderChips(STARTERS);

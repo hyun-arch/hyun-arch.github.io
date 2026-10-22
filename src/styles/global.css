@@ -1,49 +1,61 @@
 /* ─────────────────────────────────────────────────────────────
-   Aramirror — "Warm Daylight" design system  v3
-   Sunlit cream canvas · warm ink type · coral→amber sunrise accent ·
-   soft paper cards · gentle warm shadows · cheerful & cozy
-   목표: 들어오면 기분 좋아지고, 자꾸 오고 싶은 따뜻한 공간.
+   Aramirror — "맑은 면(Clear Surface)" design system  v4
+   거울은 따뜻하게 감싸지 않는다. 있는 그대로를 정확히 비춘다.
+   조용한 바탕 · 정확한 실선 · 또렷한 활자 · 절제된 한 가지 색.
+   색은 장식이 아니라 데이터가 있는 자리에만 쓴다.
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* canvas — sunlit warm paper */
-  --bg:        #fdf6ee;   /* warm cream */
-  --bg-1:      #ffffff;   /* raised white panel */
-  --bg-2:      #fffaf3;   /* card, warm white */
-  --bg-glass:  rgba(255, 252, 247, 0.62);
+  /* 바탕 — 크림이 아니라 중성 종이 */
+  --bg:        #f3f3f1;
+  --bg-1:      #ffffff;
+  --bg-2:      #fafaf8;
+  --bg-glass:  rgba(255, 255, 255, 0.72);
 
-  /* type — warm ink (not pure black) */
-  --fg:        #2c2320;   /* warm near-black */
-  --fg-soft:   #5e5349;   /* body */
-  --muted:     #97897c;   /* secondary */
-  --faint:     #cabbac;   /* hairline text */
+  /* 활자 — 먹 */
+  --fg:        #15171a;
+  --fg-soft:   #474c53;
+  --muted:     #787e86;
+  --faint:     #a5abb3;
 
-  /* lines — warm hairlines */
-  --line:      rgba(70, 45, 25, 0.12);
-  --line-soft: rgba(70, 45, 25, 0.07);
+  /* 선 — 얇고 정확하게 */
+  --line:      rgba(21, 23, 26, 0.11);
+  --line-soft: rgba(21, 23, 26, 0.06);
 
-  /* accent — sunrise (밝고 따뜻) */
-  --a1:        #ff6a3d;   /* coral */
-  --a2:        #ffb457;   /* amber */
-  --a3:        #ff4d6d;   /* rose */
-  --accent:    #f2622f;   /* 살짝 진하게 — 밝은 배경 대비 가독 */
-  --accent-glow: rgba(255, 106, 61, 0.30);
-  --grad: linear-gradient(105deg, var(--a3) 0%, var(--a1) 45%, var(--a2) 100%);
+  /* 색 — 쪽빛 하나. 그라데이션 없음 */
+  --a1:        #22457a;
+  --a2:        #2e5aa6;
+  --a3:        #1a3560;
+  --accent:    #22457a;
+  --accent-glow: rgba(34, 69, 122, 0.18);
+  /* 예전 페이지들이 background-clip:text 로 쓰던 변수 — 단색으로 유지 */
+  --grad: linear-gradient(90deg, var(--accent) 0%, var(--accent) 100%);
+
+  /* 데이터 색 — 밝기·채도를 맞춘 여섯 가지. 그래프·대륙·태그에만 쓴다 */
+  --d1: #2e5aa6;  /* 쪽 */
+  --d2: #1f7a6b;  /* 청록 */
+  --d3: #6b4e9e;  /* 자초 */
+  --d4: #b4562f;  /* 적갈 */
+  --d5: #a8781c;  /* 치자 */
+  --d6: #4a6b3a;  /* 쑥 */
+  --ok:   #1f7a6b;
+  --warn: #a8781c;
+  --stop: #b4432f;
 
   --mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, "Segoe UI Mono", monospace;
-  --radius: 22px;
+  --radius: 14px;
   --maxw: 1120px;
   --readw: 720px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* soft warm shadow presets */
-  --shadow:      0 18px 44px rgba(196, 110, 54, 0.14);
-  --shadow-soft: 0 10px 30px rgba(196, 110, 54, 0.10);
+  /* 그림자 — 거의 쓰지 않는다. 층은 선으로 나눈다 */
+  --shadow:      0 1px 2px rgba(21, 23, 26, 0.04), 0 8px 24px rgba(21, 23, 26, 0.06);
+  --shadow-soft: 0 1px 2px rgba(21, 23, 26, 0.03);
 
-  /* ── backward-compat aliases (기존 페이지 변수명 유지) ── */
-  --bg-soft:      #fdeee1;   /* 따뜻한 피치 틴트 (은은한 채움) */
+  /* ── 기존 페이지 변수명 유지 ── */
+  --bg-soft:      #ecedea;
   --bg-card:      #ffffff;
   --accent-strong: var(--a1);
-  --accent-soft:  rgba(242, 98, 47, 0.12);
+  --accent-soft:  rgba(34, 69, 122, 0.09);
   --dark:         var(--bg-1);
   --dark-soft:    var(--bg-2);
 }
@@ -67,20 +79,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   position: relative;
-  background:
-    radial-gradient(58rem 52rem at 82% -12%, rgba(255, 180, 87, 0.28), transparent 62%),
-    radial-gradient(46rem 46rem at 4% 4%, rgba(255, 122, 150, 0.16), transparent 58%),
-    radial-gradient(40rem 40rem at 50% 108%, rgba(255, 138, 92, 0.12), transparent 60%),
-    var(--bg);
-  background-attachment: fixed;
-}
-
-/* subtle paper grain for warmth */
-body::after {
-  content: "";
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  opacity: 0.025; mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background: var(--bg);
 }
 
 p, h1, h2, h3, h4, li, a, blockquote, .item, .card { overflow-wrap: anywhere; }
@@ -91,7 +90,7 @@ a { color: inherit; text-decoration: none; transition: color 0.2s var(--ease); }
 /* ── nav ─────────────────────────────────────────────────── */
 .nav {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255, 249, 242, 0.78);
+  background: rgba(243, 243, 241, 0.82);
   backdrop-filter: saturate(150%) blur(22px);
   -webkit-backdrop-filter: saturate(150%) blur(22px);
   border-bottom: 1px solid var(--line);
@@ -114,15 +113,7 @@ a { color: inherit; text-decoration: none; transition: color 0.2s var(--ease); }
 .hero {
   padding: 168px 0 128px; text-align: center; position: relative;
 }
-/* aurora orb behind hero */
-.hero::before {
-  content: ""; position: absolute; z-index: 0;
-  top: -6%; left: 50%; transform: translateX(-50%);
-  width: min(760px, 92vw); height: 520px;
-  background: radial-gradient(closest-side, rgba(255,106,61,0.22), rgba(255,77,109,0.08) 55%, transparent 72%);
-  filter: blur(24px);
-  animation: drift 14s var(--ease) infinite alternate;
-}
+/* 히어로 뒤 오로라 덩어리는 걷어냈다 — 바탕은 조용해야 활자가 선다 */
 @keyframes drift {
   from { transform: translateX(-52%) translateY(0) scale(1); }
   to   { transform: translateX(-48%) translateY(26px) scale(1.06); }
@@ -177,8 +168,9 @@ a { color: inherit; text-decoration: none; transition: color 0.2s var(--ease); }
 /* ── sections ────────────────────────────────────────────── */
 section { padding: 108px 0; border-top: 1px solid var(--line-soft); position: relative; }
 .section-kicker {
-  font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
-  letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 16px;
+  /* 한글 제목표 — 모노·대문자·넓은 자간은 한글에서 글자가 흩어져 보인다 */
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.01em; text-transform: none; margin: 0 0 14px;
   background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 h2 {
@@ -214,8 +206,8 @@ h2 mark, .accent-word, mark {
 
 /* ── result box ──────────────────────────────────────────── */
 .result {
-  background: rgba(255,106,61,0.08); border-radius: 14px; padding: 16px 18px;
-  margin: 16px 0; border: 1px solid rgba(255,106,61,0.2);
+  background: rgba(34, 69, 122,0.08); border-radius: 14px; padding: 16px 18px;
+  margin: 16px 0; border: 1px solid rgba(34, 69, 122,0.2);
 }
 .result .rk { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
   text-transform: uppercase; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 600; }
@@ -223,10 +215,8 @@ h2 mark, .accent-word, mark {
 
 /* ── dark numbered section → now a glass feature slab ────── */
 section.dark-section {
-  background:
-    radial-gradient(40rem 30rem at 85% 20%, rgba(255,180,87,0.16), transparent 60%),
-    var(--bg-soft);
-  border-top: 1px solid var(--line-soft);
+  background: var(--bg-soft);
+  border-top: 1px solid var(--line);
 }
 .dark-section .section-kicker { }
 .dark-section h2 { color: var(--fg); }
@@ -338,3 +328,10 @@ footer a:hover { color: var(--fg); }
   .wall .divider { height: 1px; margin: 36px 0; }
   .wall .side { padding: 0; }
 }
+
+
+/* ── 인라인 아이콘 ────────────────────────────────────────────
+   이모지를 대신해 글줄 안에 들어가는 선 아이콘. 글자 크기를 따라간다. */
+.eic { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -0.16em; flex: none; }
+.eic svg { width: 100%; height: 100%; display: block; }
+.eic-lg { width: 1.35em; height: 1.35em; vertical-align: -0.28em; }

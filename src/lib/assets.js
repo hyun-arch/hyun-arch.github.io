@@ -10,12 +10,12 @@ const MAX_LOCAL = 1000;
 
 // ── 공간(Spaces) ──────────────────────────────────────────
 export const SPACES = [
-  { key: 'inbox',   name: '미분류',        icon: '🗂', color: '#8b8f98', desc: '방금 던진 것 · 자동 분류 대기' },
-  { key: 'idea',    name: '영감',          icon: '💡', color: '#ffb457', desc: '아이디어 · 레퍼런스 · 무드' },
-  { key: 'biz',     name: '비즈니스 · 전략', icon: '📈', color: '#ff7a4d', desc: '시장 · 경쟁사 · 트렌드' },
-  { key: 'learn',   name: '학습 · 지식',    icon: '📚', color: '#a78bfa', desc: '강의 · 아티클 · 문서' },
-  { key: 'project', name: '프로젝트 소재',  icon: '🛠', color: '#34d3c0', desc: '진행 중 프로젝트에 쓸 재료' },
-  { key: 'later',   name: '나중에 볼 것',   icon: '⏳', color: '#7fd67a', desc: 'read / watch later' },
+  { key: 'inbox',   name: '미분류',        icon: '🗂', color: '#787e86', desc: '방금 던진 것 · 자동 분류 대기' },
+  { key: 'idea',    name: '영감',          icon: '💡', color: '#a8781c', desc: '아이디어 · 레퍼런스 · 무드' },
+  { key: 'biz',     name: '비즈니스 · 전략', icon: '📈', color: '#b4562f', desc: '시장 · 경쟁사 · 트렌드' },
+  { key: 'learn',   name: '학습 · 지식',    icon: '📚', color: '#6b4e9e', desc: '강의 · 아티클 · 문서' },
+  { key: 'project', name: '프로젝트 소재',  icon: '🛠', color: '#1f7a6b', desc: '진행 중 프로젝트에 쓸 재료' },
+  { key: 'later',   name: '나중에 볼 것',   icon: '⏳', color: '#4a6b3a', desc: 'read / watch later' },
 ];
 export const spaceOf = (key) => SPACES.find((s) => s.key === key) || SPACES[0];
 

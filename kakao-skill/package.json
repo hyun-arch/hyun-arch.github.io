@@ -1,0 +1,10 @@
+{
+  "name": "aramhuvis-kakao-skill",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "아람휴비스 카카오톡 채널 상담봇 — 오픈빌더 스킬 서버",
+  "scripts": { "test": "node test.mjs" },
+  "dependencies": { "@vercel/functions": "^1.5.0" },
+  "engines": { "node": ">=20" }
+}

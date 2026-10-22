@@ -1,0 +1,11 @@
+import { openBrowser } from '../../publish/naver-open.mjs';
+const ctx = await openBrowser({ headless: false });
+const pg = ctx.pages()[0] || (await ctx.newPage());
+console.log('창 주소:', pg.url());
+const ck = await ctx.cookies('https://www.naver.com');
+const key = ck.filter(c => /^(NID_AUT|NID_SES)$/.test(c.name)).map(c => c.name);
+console.log('로그인 쿠키:', key.length ? key.join(',') : '없음', '(전체 ' + ck.length + '개)');
+await pg.goto('https://admin.blog.naver.com/ianlove80', { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(()=>{});
+await pg.waitForTimeout(2500);
+console.log('관리자 진입 결과:', pg.url());
+await pg.screenshot({ path: '/tmp/now.png' }).catch(()=>{});

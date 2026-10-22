@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 
 // 작동 방식 = 아라미러가 "어떻게 굴러가는지" 설명을 한 곳에 모은 페이지.
@@ -46,14 +47,14 @@ const S = { live: '작동 중', building: '만드는 중', seed: '설계' };
 <Base title="작동 방식">
   <section style="padding-top:80px">
     <div class="wrap" style="max-width:820px">
-      <p class="section-kicker">How it works · 작동 방식</p>
+      <p class="section-kicker">작동 방식</p>
       <h2>어떻게 굴러가는가</h2>
       <p class="lead">
         전체 지도가 <b>무엇이 있나</b>라면, 여기는 <b>어떻게 작동하나</b>.
         생각이 자산이 되는 3층 흐름과, 그 흐름을 맡은 AI 역할들. 카드를 누르면 펼쳐진다.
       </p>
 
-      <h3 class="grp">🏗️ 흐름 — 생각 → 지식 → 자산</h3>
+      <h3 class="grp"><span class="eic" set:html={ic('building')} /> 흐름 — 생각 → 지식 → 자산</h3>
       <div class="stack">
         {layers.map((l) => (
           <details class="row">
@@ -72,7 +73,7 @@ const S = { live: '작동 중', building: '만드는 중', seed: '설계' };
         ))}
       </div>
 
-      <h3 class="grp">🤖 일꾼 — 역할은 나뉘고, 결정은 내가</h3>
+      <h3 class="grp"><span class="eic" set:html={ic('bot')} /> 일꾼 — 역할은 나뉘고, 결정은 내가</h3>
       <p class="mini">손은 AI가, 생각·발행은 사람이.</p>
       <div class="stack">
         {agents.map((a) => (

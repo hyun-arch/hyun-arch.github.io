@@ -1,0 +1,66 @@
+// 마크다운 → 네이버 스마트에디터.
+//
+// 왜 필요한가: 에디터는 마크다운을 모른다. 글을 그대로 치면 ## 과 ** 가 글자로 남고,
+// ![](...) 는 이미지가 아니라 문자열이 된다. (2026-10-20 임시저장에서 실측)
+// 그래서 여기서 기호를 걷어 내고, 이미지는 「그 자리」블록으로 뽑아낸다.
+import fs from 'node:fs';
+import path from 'node:path';
+
+const IMG = /^!\[([^\]]*)\]\(([^)]+)\)\s*$/;
+
+/** 인라인 서식을 네이버가 읽을 수 있는 평문으로 */
+export function inline(t) {
+  return String(t)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$1 ($2)')  // 링크는 주소를 살려 둔다
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/(^|[^*])\*([^*]+)\*/g, '$1$2')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/~~([^~]+)~~/g, '$1');
+}
+
+/**
+ * @param {string} md  post.md 본문 (제목 줄 제외)
+ * @param {string} dir 글 폴더 — 이미지 상대경로를 푸는 기준
+ * @returns {{blocks:Array, text:string, images:string[], missing:string[]}}
+ */
+export function toNaver(md, dir) {
+  const blocks = [];
+  const images = [], missing = [];
+  let buf = [];
+
+  const flush = () => {
+    const t = buf.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    if (t) blocks.push({ type: 'text', text: t });
+    buf = [];
+  };
+
+  for (const raw of String(md).split('\n')) {
+    const line = raw.replace(/\s+$/, '');
+
+    const m = line.match(IMG);
+    if (m) {
+      const rel = m[2].trim();
+      const abs = /^https?:\/\//.test(rel) ? rel : path.resolve(dir || '.', rel);
+      if (/^https?:\/\//.test(rel)) { missing.push(rel); continue; }  // 외부 주소는 못 올린다
+      if (!fs.existsSync(abs)) { missing.push(rel); continue; }
+      flush();
+      blocks.push({ type: 'image', path: abs, alt: m[1] });
+      images.push(abs);
+      continue;
+    }
+
+    if (/^---+\s*$/.test(line)) { flush(); continue; }               // 구분선은 버린다
+    const h = line.match(/^(#{2,4})\s+(.+)$/);
+    if (h) { flush(); blocks.push({ type: 'text', text: inline(h[2]) }); continue; }
+    if (/^#\s+/.test(line)) continue;                                 // 제목은 제목칸에 따로 들어간다
+
+    buf.push(inline(line.replace(/^>\s?/, '').replace(/^[-*]\s+/, '· ')));
+  }
+  flush();
+
+  return {
+    blocks,
+    text: blocks.filter((b) => b.type === 'text').map((b) => b.text).join('\n\n'),
+    images, missing,
+  };
+}

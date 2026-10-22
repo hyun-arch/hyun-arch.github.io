@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 // 🔴 금고(Vault) — 로컬 전용 비밀 데이터 뷰어.
 // loadSecret()은 프로덕션 빌드에서 항상 {} 라, 배포된 이 페이지에는 재무·매출이
 // 물리적으로 들어가지 않는다. 오직 로컬 `npm run dev` 에서만 실제 값이 보인다.
@@ -13,14 +14,14 @@ const pct = (a, t) => (t ? Math.round((a / t) * 1000) / 10 + '%' : '—');
 <Base title="금고">
   <section style="padding-top:80px">
     <div class="wrap">
-      <p class="section-kicker">🔴 Vault · 로컬 전용 금고</p>
+      <p class="section-kicker">금고</p>
       <h2>비밀 데이터 (재무 · 매출)</h2>
 
       {isDev ? (
         <p class="lead">지금은 <b>로컬(내 PC)</b>이라 실제 값이 보입니다. 이 페이지는 배포 산출물에는 데이터 없이 나갑니다.</p>
       ) : (
         <div class="v-locked">
-          <p class="v-lock-emoji">🔒</p>
+          <p class="v-lock-emoji"><span class="eic" set:html={ic('lock')} /></p>
           <p class="lead">이 페이지의 비밀 데이터는 <b>로컬(내 PC)에서만</b> 열립니다.</p>
           <p class="ad-hint">재무·매출은 배포 사이트에 <b>물리적으로 존재하지 않습니다</b> — 유출 경로가 빌드 단계에서 차단됩니다.</p>
         </div>

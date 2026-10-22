@@ -1,0 +1,112 @@
+// 네이버 블로그 — 공개된 글쓰기 API 가 없다.
+// 그래서 사람이 하는 일을 그대로 대신한다: 브라우저로 글쓰기 창을 열고, 쓰고, 발행을 누른다.
+//
+// 로그인은 publish/.browser 프로필이 평소 크롬처럼 들고 있는다(우리가 쿠키를 읽지 않는다).
+// 처음 한 번만:  node publish/naver-open.mjs  → 평소처럼 로그인
+//
+// 주의: 네이버 화면이 바뀌면 버튼 위치가 달라질 수 있다. 그럴 땐 NAVER_HEADLESS=0 으로
+//      브라우저를 눈으로 보면서 돌리면 어디서 막혔는지 바로 보인다.
+import { env, missing } from '../env.mjs';
+import { openBrowser } from '../../naver-open.mjs';
+
+const T = (s) => new RegExp(s);
+
+export default {
+  key: 'naver',
+  name: '네이버 블로그',
+  caps: { text: true, image: true, video: false, link: true, maxText: 0, maxMedia: 20 },
+  needs: ['NAVER_BLOG_ID'],
+  note: '공개 API 가 없어 브라우저로 대신 씁니다. 처음 한 번 node publish/naver-open.mjs 로 로그인하세요.',
+  free: true,
+  browser: true,
+
+  ready() { return missing(this.needs); },
+
+  async post({ text, media = [], link, dry, title, category, serial }) {
+    const e = env();
+    const blogId = e.NAVER_BLOG_ID;
+    const headless = e.NAVER_HEADLESS !== '0';
+    const subject = (title || text.split('\n').find((l) => l.trim()) || '오늘의 기록').slice(0, 100);
+    if (dry) return { dry: true, would: `“${subject}” 글쓰기 + 사진 ${media.length}장 → 발행` };
+
+    const ctx = await openBrowser({ headless });
+    try {
+      const pg = ctx.pages()[0] || (await ctx.newPage());
+      await pg.goto(`https://blog.naver.com/${blogId}/postwrite`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await pg.waitForTimeout(2500);
+
+      if (/nid\.naver\.com/.test(pg.url())) {
+        throw new Error('로그인이 풀렸어요. `node publish/naver-open.mjs` 로 한 번 로그인해 주세요.');
+      }
+
+      // 에디터는 iframe 안에 있다
+      const f = pg.frames().find((fr) => /PostWriteForm|postwrite/i.test(fr.url())) || pg.mainFrame();
+
+      // "작성 중인 글이 있습니다" 안내가 뜨면 새로 쓰기
+      for (const label of ['취소', '새로 작성']) {
+        const b = f.locator(`button:has-text("${label}")`).first();
+        if (await b.isVisible().catch(() => false)) { await b.click().catch(() => {}); await pg.waitForTimeout(600); break; }
+      }
+
+      // 제목
+      const titleBox = f.locator('.se-section-documentTitle .se-text-paragraph, .se-documentTitle .se-text-paragraph').first();
+      await titleBox.click({ timeout: 20000 });
+      await pg.keyboard.type(subject, { delay: 12 });
+
+      // 본문
+      const bodyBox = f.locator('.se-component.se-text .se-text-paragraph').nth(1)
+        .or(f.locator('.se-section-text .se-text-paragraph').last());
+      await bodyBox.click({ timeout: 20000 });
+      const body = text + (link ? `\n\n원문 → ${link}` : '');
+      for (const line of body.split('\n')) {
+        await pg.keyboard.type(line, { delay: 6 });
+        await pg.keyboard.press('Enter');
+      }
+
+      // 사진
+      for (const m of media.filter((x) => x.kind === 'image')) {
+        const chooser = pg.waitForEvent('filechooser', { timeout: 15000 });
+        await f.locator('button:has-text("사진"), .se-image-toolbar-button, [data-name="image"]').first().click();
+        (await chooser).setFiles(m.path);
+        await pg.waitForTimeout(3000);
+      }
+
+      // 발행 — 오른쪽 위 버튼 → 설정 레이어의 확인 버튼
+      await f.locator('button:has-text("발행")').first().click({ timeout: 20000 });
+      await pg.waitForTimeout(1500);
+
+      // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
+      if (category) {
+        try {
+          const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
+          if (await opener.isVisible().catch(() => false)) { await opener.click(); await pg.waitForTimeout(500); }
+          const want = category.replace(/\s+/g, '');
+          const item = f.locator('label, li, button, span').filter({ hasText: category.split(' ').pop() }).first();
+          if (await item.isVisible().catch(() => false)) { await item.click(); await pg.waitForTimeout(400); }
+          else console.warn('  카테고리를 못 찾아 기본값으로 둡니다: ' + want);
+        } catch { /* 카테고리 선택 실패해도 발행은 계속한다 */ }
+      }
+
+      // 일련번호를 태그로 남긴다 — 제목은 건드리지 않는다
+      if (serial) {
+        try {
+          const tag = f.locator('input[placeholder*="태그"], #tag-input').first();
+          if (await tag.isVisible().catch(() => false)) {
+            await tag.click(); await pg.keyboard.type(serial, { delay: 10 }); await pg.keyboard.press('Enter');
+            await pg.waitForTimeout(300);
+          }
+        } catch { /* 태그 실패는 무시 */ }
+      }
+
+      const confirm = f.locator('.btn_area button:has-text("발행"), button.confirm_btn__WEaBq, button:has-text("발행")').last();
+      await confirm.click({ timeout: 20000 });
+      await pg.waitForTimeout(5000);
+
+      const url = pg.url();
+      if (/postwrite/i.test(url)) throw new Error('발행 버튼까지 갔지만 확인이 안 됩니다. NAVER_HEADLESS=0 으로 한 번 보면서 돌려 보세요.');
+      return { url, id: url.split('/').pop() };
+    } finally {
+      await ctx.close().catch(() => {});
+    }
+  },
+};

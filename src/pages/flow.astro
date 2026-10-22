@@ -1,10 +1,11 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 ---
 <Base title="몰입 · Flow">
   <section style="padding-top:72px">
     <div class="wrap" style="max-width:720px">
-      <p class="section-kicker">몰입 · Flow</p>
+      <p class="section-kicker">몰입</p>
       <h2>시간을 흘려보내지 않고, 한 방울씩</h2>
       <p class="lead">삶·생각·호흡이 하나로 모이는 시간. 그 한 방울들이 쌓여 나만의 힘이 된다.</p>
 
@@ -194,7 +195,7 @@ import Base from '../layouts/Base.astro';
         goalBar.style.display='block'; goalFill.style.width=pct+'%';
         if(left<=0){
           goalBar.classList.add('reached'); goalStatus.classList.add('reached');
-          goalStatus.textContent='🌱 목표 '+goalMin+'분 달성! 마쳐도 좋고, 더 흘러가도 좋아요.';
+          goalStatus.innerHTML='<span class="eic">'+aramIc('lv1')+'</span> 목표 '+goalMin+'분 달성! 마쳐도 좋고, 더 흘러가도 좋아요.';
         } else {
           goalBar.classList.remove('reached'); goalStatus.classList.remove('reached');
           var lm=Math.floor(left/60), lsx=left%60;

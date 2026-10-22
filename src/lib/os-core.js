@@ -32,19 +32,19 @@ export const STAGE_IDS = STAGES.map((s) => s.id);
 
 // 종류 — 라우터가 자동으로 정한다
 export const KINDS = [
-  { id: 'thought', ko: '생각',   ic: '💭', c: '#f2622f' },
-  { id: 'todo',    ko: '할 일',  ic: '✅', c: '#3c8f6b' },
-  { id: 'event',   ko: '일정',   ic: '📅', c: '#4a6fb0' },
-  { id: 'ref',     ko: '자료',   ic: '🔗', c: '#8a5cc4' },
+  { id: 'thought', ko: '생각',   ic: '💭', c: '#b4562f' },
+  { id: 'todo',    ko: '할 일',  ic: '✅', c: '#1f7a6b' },
+  { id: 'event',   ko: '일정',   ic: '📅', c: '#2e5aa6' },
+  { id: 'ref',     ko: '자료',   ic: '🔗', c: '#6b4e9e' },
   { id: 'question',ko: '질문',   ic: '❓', c: '#b0504a' },
-  { id: 'decision',ko: '결정',   ic: '⚖️', c: '#c49a2e' },
+  { id: 'decision',ko: '결정',   ic: '⚖️', c: '#a8781c' },
 ];
 
 // 근거 상태 — 그럴듯한 추측이 가장 비싼 버그다
 export const VERIFY = [
   { id: 'unknown',  ko: '미확인', ic: '○', c: '#97897c', desc: '아직 확인 안 함' },
-  { id: 'verified', ko: '확인됨', ic: '◉', c: '#3c8f6b', desc: '출처를 직접 확인함' },
-  { id: 'inferred', ko: '추론',   ic: '◐', c: '#c49a2e', desc: 'AI/내 추측 — 확인 필요' },
+  { id: 'verified', ko: '확인됨', ic: '◉', c: '#1f7a6b', desc: '출처를 직접 확인함' },
+  { id: 'inferred', ko: '추론',   ic: '◐', c: '#a8781c', desc: 'AI/내 추측 — 확인 필요' },
 ];
 
 const EMPTY = {
@@ -396,9 +396,9 @@ function streak(items) {
 
 // 세 축 — 5주를 지나며 내가 직접 고른 방향
 export const AXES = [
-  { id: 'self',    ko: '나에게 깊어지기', ic: '🕳', c: '#f2622f' },
+  { id: 'self',    ko: '나에게 깊어지기', ic: '🕳', c: '#b4562f' },
   { id: 'people',  ko: '사람과 깊어지기', ic: '🤝', c: '#c4547f' },
-  { id: 'balance', ko: '시간의 균형',     ic: '⚖️', c: '#4a6fb0' },
+  { id: 'balance', ko: '시간의 균형',     ic: '⚖️', c: '#2e5aa6' },
 ];
 
 const QUESTIONS = {

@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 ---
 <Base title="자료실">
@@ -13,7 +14,7 @@ import Base from '../layouts/Base.astro';
     <div class="drop" id="drop">
       <textarea id="dropInput" rows="2" placeholder="여기에 링크를 붙이거나 메모를 쓰세요.  이미지는 파일 선택 또는 이 영역에 드래그&드롭."></textarea>
       <div class="drop-row">
-        <label class="filebtn">📎 이미지<input type="file" id="dropFile" accept="image/*" hidden /></label>
+        <label class="filebtn"><span class="eic" set:html={ic('clip')} /> 이미지<input type="file" id="dropFile" accept="image/*" hidden /></label>
         <span class="drop-hint" id="dropHint">자동으로 종류·공간·태그가 붙어요</span>
         <button class="throw" id="dropBtn" type="button">던지기 →</button>
       </div>
@@ -89,11 +90,12 @@ import Base from '../layouts/Base.astro';
   </style>
 
   <script>
+    import { ic, iconOf } from '../lib/icons.js';
     import { SPACES, spaceOf, classify, listAssets, addAsset, updateAsset, removeAsset, cluster } from '../lib/assets.js';
 
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const KIND_ICON = { link: '🔗', video: '🎬', image: '🖼', note: '📝' };
+    const KIND_ICON = { link: '', video: '', image: '', note: '' };
 
     let items = [];
     let active = 'all';
@@ -104,7 +106,7 @@ import Base from '../layouts/Base.astro';
       items.forEach((a) => { counts[a.space] = (counts[a.space] || 0) + 1; });
       const chips = [`<button class="chip ${active === 'all' ? 'on' : ''}" data-s="all">전체 <span class="ct">${items.length}</span></button>`];
       SPACES.forEach((s) => {
-        chips.push(`<button class="chip ${active === s.key ? 'on' : ''}" data-s="${s.key}" style="--sc:${s.color}">${s.icon} ${esc(s.name)} <span class="ct">${counts[s.key] || 0}</span></button>`);
+        chips.push(`<button class="chip ${active === s.key ? 'on' : ''}" data-s="${s.key}" style="--sc:${s.color}"><span class="eic">${ic(iconOf(s.icon))}</span> ${esc(s.name)} <span class="ct">${counts[s.key] || 0}</span></button>`);
       });
       $('chips').innerHTML = chips.join('');
 
@@ -123,7 +125,7 @@ import Base from '../layouts/Base.astro';
         if (!list.length) return;
         shown += list.length;
         const s = spaceOf(sk);
-        html += `<section class="space-sec"><div class="space-sec-h"><span class="ic">${s.icon}</span><h2>${esc(s.name)}</h2><span class="d">${esc(s.desc)}</span></div>`;
+        html += `<section class="space-sec"><div class="space-sec-h"><span class="ic eic eic-lg">${ic(iconOf(s.icon))}</span><h2>${esc(s.name)}</h2><span class="d">${esc(s.desc)}</span></div>`;
         const clusters = cluster(list);
         clusters.forEach((cl) => {
           if (clusters.length > 1 && cl.list.length > 1) html += `<p class="cluster-tag">▸ ${esc(cl.key)} · ${cl.list.length}건</p>`;
@@ -137,17 +139,17 @@ import Base from '../layouts/Base.astro';
     function cardHTML(a) {
       const thumb = a.thumb
         ? `<a class="thumb" style="background-image:url('${esc(a.thumb)}')" href="${esc(a.url || '#')}" target="_blank" rel="noopener" aria-label="열기"></a>`
-        : `<div class="thumb ph">${KIND_ICON[a.kind] || '📄'}</div>`;
+        : `<div class="thumb ph">${KIND_ICON[a.kind] || ''}</div>`;
       const titleInner = a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.title || a.url)}</a>` : esc(a.title || a.note || '메모');
       const ess = (a.essence || a.summary)
         ? `<p class="ess">${esc(a.essence || a.summary)}</p>`
         : (a.note ? `<p class="waiting">${esc(a.note).slice(0, 120)}</p>` : `<p class="waiting">요약 대기 — 정제 패스에서 핵심을 뽑아드려요</p>`);
       const tags = (a.tags || []).slice(0, 4).map((t) => `<i>${esc(t)}</i>`).join('');
       return `<article class="acard" data-id="${esc(a.id)}">
-        <div class="acts"><button data-act="move" title="공간 이동">↔</button><button data-act="del" title="삭제">✕</button></div>
+        <div class="acts"><button data-act="move" title="공간 이동">↔</button><button data-act="del" title="삭제"></button></div>
         ${thumb}
         <div class="body">
-          <span class="kbadge">${KIND_ICON[a.kind] || '📄'} ${esc(a.kind)}</span>
+          <span class="kbadge">${KIND_ICON[a.kind] || ''} ${esc(a.kind)}</span>
           <div class="t">${titleInner}</div>
           ${ess}
           <div class="tags">${tags}</div>
@@ -214,7 +216,7 @@ import Base from '../layouts/Base.astro';
     $('distillBtn').addEventListener('click', async () => {
       const pend = items.filter((a) => a.status === 'pending' || (!a.essence && !a.summary))
         .map((a) => ({ id: a.id, kind: a.kind, url: a.url, title: a.title, note: a.note }));
-      try { await navigator.clipboard.writeText(JSON.stringify(pend, null, 2)); $('distillBtn').textContent = '복사됨 ✓ — 클로드에게 붙여넣기'; }
+      try { await navigator.clipboard.writeText(JSON.stringify(pend, null, 2)); $('distillBtn').textContent = '복사됨— 클로드에게 붙여넣기'; }
       catch (_) { $('distillBtn').textContent = '복사 실패 — 콘솔 확인'; console.log(JSON.stringify(pend, null, 2)); }
       setTimeout(() => { $('distillBtn').textContent = '정제 요청 (복사) ⧉'; }, 2600);
     });

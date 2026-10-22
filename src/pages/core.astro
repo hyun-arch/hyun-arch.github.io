@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 
 // 코어 — 되묻는 자리.
@@ -17,7 +18,7 @@ const rules = [
   <section class="co-wrap">
     <div class="wrap">
 
-      <p class="section-kicker" data-reveal>The Core</p>
+      <p class="section-kicker" data-reveal>코어</p>
       <h1 data-reveal="60">깊어지는 건 <mark>답이 아니라 질문</mark>이다</h1>
       <p class="lead" data-reveal="120">
         기능을 더 넣는 자리가 아니다. <b>하루에 딱 하나</b>를 묻는 자리다.
@@ -46,7 +47,7 @@ const rules = [
 
         <!-- 몰입 -->
         <section class="co-card">
-          <p class="co-h">🕳 깊이 <span class="co-h-n" id="coDepthN">0</span></p>
+          <p class="co-h"><span class="eic" set:html={ic('flow')} /> 깊이 <span class="co-h-n" id="coDepthN">0</span></p>
           <p class="co-h-d">깊이는 시간이 아니라 <b>같은 것에 몇 번 다시 들어갔나</b>다.</p>
           <div class="co-dive" id="coDiveIdle">
             <input id="coTopic" type="text" placeholder="무엇을 팔 건가? (한 단어)" autocomplete="off" />
@@ -62,7 +63,7 @@ const rules = [
 
         <!-- 사람 -->
         <section class="co-card">
-          <p class="co-h">🤝 사람 <span class="co-h-n" id="coPeopleN">0</span></p>
+          <p class="co-h"><span class="eic" set:html={ic('team')} /> 사람 <span class="co-h-n" id="coPeopleN">0</span></p>
           <p class="co-h-d">관계의 깊이는 <b>그 사람에 대해 내가 새로 알게 된 것</b>의 누적이다.</p>
           <div class="co-meet">
             <input id="coWho" type="text" placeholder="누구를 만나나" autocomplete="off" />
@@ -74,11 +75,11 @@ const rules = [
 
         <!-- 균형 -->
         <section class="co-card">
-          <p class="co-h">⚖️ 균형 <span class="co-h-n" id="coBalN">0/7</span></p>
+          <p class="co-h"><span class="eic" set:html={ic('scale')} /> 균형 <span class="co-h-n" id="coBalN">0/7</span></p>
           <p class="co-h-d">오늘은 어느 쪽이 나를 <b>채웠나</b>. 하루 한 번만 찍는다.</p>
           <div class="co-bal-btn">
-            <button class="co-bal" data-m="alone" type="button">🕳 혼자가 채웠다</button>
-            <button class="co-bal" data-m="with" type="button">🤝 사람이 채웠다</button>
+            <button class="co-bal" data-m="alone" type="button"><span class="eic" set:html={ic('flow')} /> 혼자가 채웠다</button>
+            <button class="co-bal" data-m="with" type="button"><span class="eic" set:html={ic('team')} /> 사람이 채웠다</button>
           </div>
           <div class="co-week" id="coWeek"></div>
           <p class="co-bal-msg" id="coBalMsg"></p>
@@ -89,7 +90,7 @@ const rules = [
       <section class="co-prin" data-reveal="240">
         <div class="co-prin-head">
           <div>
-            <p class="co-h">🪨 내 원칙 <span class="co-h-n" id="coPrinN">0 확정</span></p>
+            <p class="co-h"><span class="eic" set:html={ic('core')} /> 내 원칙 <span class="co-h-n" id="coPrinN">0 확정</span></p>
             <p class="co-h-d">
               아래는 <b>내가 5주 동안 실제로 쓴 문장</b>들이다. 남이 준 격언이 아니다.
               <b>확정</b>하면 내 원칙이 되고, <b>버리면</b> 사라진다. 버리는 것도 결정이다.
@@ -192,8 +193,8 @@ const rules = [
     .co-bal.on { background: color-mix(in srgb, var(--brand) 16%, transparent); border-color: var(--brand); color: var(--brand); }
     .co-week { display: flex; gap: 5px; margin: 14px 0 10px; }
     .co-week i { flex: 1; height: 30px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--line-soft); display: grid; place-items: center; font-style: normal; font-size: .82rem; }
-    .co-week i.alone { background: color-mix(in srgb, #f2622f 20%, transparent); border-color: color-mix(in srgb, #f2622f 40%, transparent); }
-    .co-week i.with  { background: color-mix(in srgb, #4a6fb0 20%, transparent); border-color: color-mix(in srgb, #4a6fb0 40%, transparent); }
+    .co-week i.alone { background: color-mix(in srgb, #b4562f 20%, transparent); border-color: color-mix(in srgb, #b4562f 40%, transparent); }
+    .co-week i.with  { background: color-mix(in srgb, #2e5aa6 20%, transparent); border-color: color-mix(in srgb, #2e5aa6 40%, transparent); }
     .co-bal-msg { margin: 0; font-size: .84rem; color: var(--muted); line-height: 1.6; min-height: 1.4em; }
 
     /* 원칙 */
@@ -229,6 +230,7 @@ const rules = [
   </style>
 
   <script>
+    import { ic, iconOf } from '../lib/icons.js';
     import * as OS from '../lib/os-core.js';
     import * as GM from '../lib/game.js';
 
@@ -242,7 +244,7 @@ const rules = [
     function renderAsk() {
       ask = OS.askToday();
       const ax = OS.AXES.find((a) => a.id === ask.axis) || OS.AXES[0];
-      $('coAxis').textContent = ax.ic + ' ' + ax.ko;
+      $('coAxis').innerHTML = '<span class="eic">' + ic(iconOf(ax.ic)) + '</span> ' + ax.ko;
       $('coDay').textContent = ask.date;
       $('coQ').textContent = ask.q;
       const done = !!ask.answered;
@@ -334,7 +336,7 @@ const rules = [
       const b = OS.balanceWeek();
       $('coBalN').textContent = b.marked + '/7';
       $('coWeek').innerHTML = b.rows.map((r) =>
-        `<i class="${r.mode || ''}" title="${r.date}">${r.mode === 'alone' ? '🕳' : r.mode === 'with' ? '🤝' : '·'}</i>`
+        `<i class="${r.mode || ''}" title="${r.date}">${r.mode === 'alone' ? '' : r.mode === 'with' ? '' : '·'}</i>`
       ).join('');
       const today = OS.todayStr();
       const mine = b.rows.find((r) => r.date === today);

@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 // 페이지 맥락 캡처 — 이 화면에서 떠오른 걸 그 자리에서 던진다.
 // 자동으로 이 페이지 태그가 붙고, 인박스로 들어가 승격 파이프라인을 탄다.
 // (마찰 제거 — 띵크·린디·곽동욱 / 분류는 라우터가 — 세계로)
@@ -14,7 +15,7 @@ const hint = info?.capHint || '떠오른 것 아무거나';
   <section class="pgcap" data-tag={tag}>
     <div class="wrap">
       <form class="pc-box" autocomplete="off">
-        <span class="pc-ic" aria-hidden="true">⚡</span>
+        <span class="pc-ic" aria-hidden="true"><span class="eic" set:html={ic('bolt')} /></span>
         <div class="pc-mid">
           <label class="pc-l">이 화면에서 떠오른 것 던지기 <em>#{tag}</em> 가 자동으로 붙어요</label>
           <input class="pc-in" type="text" placeholder={hint} aria-label="한 줄 던지기" />
@@ -22,7 +23,7 @@ const hint = info?.capHint || '떠오른 것 아무거나';
         <button class="pc-btn" type="submit">던지기</button>
       </form>
       <p class="pc-route" hidden></p>
-      <p class="pc-ok" hidden>✅ 인박스에 들어갔어요. <a href="/inbox">한 칸 올리러 가기 →</a></p>
+      <p class="pc-ok" hidden><span class="eic" set:html={ic('check')} /> 인박스에 들어갔어요. <a href="/inbox">한 칸 올리러 가기 →</a></p>
     </div>
   </section>
 )}
@@ -59,6 +60,7 @@ const hint = info?.capHint || '떠오른 것 아무거나';
 </style>
 
 <script>
+    import { ic, iconOf } from '../lib/icons.js';
   import * as OS from '../lib/os-core.js';
   const KIND = Object.fromEntries(OS.KINDS.map((k) => [k.id, k]));
   const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -75,8 +77,8 @@ const hint = info?.capHint || '떠오른 것 아무거나';
       if (!t) { route.hidden = true; return; }
       const c = OS.classify(t);
       const k = KIND[c.kind] || { ic: '·', ko: c.kind };
-      let h = k.ic + ' <b>' + esc(k.ko) + '</b> 으로 들어가요 — ' + esc(c.why) + ' · #' + esc(tag);
-      if (c.due) h += ' · 📅 ' + c.due;
+      let h = '<span class="eic">' + ic(iconOf(k.ic)) + '</span> <b>' + esc(k.ko) + '</b> 으로 들어가요 — ' + esc(c.why) + ' · #' + esc(tag);
+      if (c.due) h += ' ·  ' + c.due;
       route.innerHTML = h; route.hidden = false;
     }
     input.addEventListener('input', preview);

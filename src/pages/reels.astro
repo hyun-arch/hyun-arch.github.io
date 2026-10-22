@@ -1,9 +1,10 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 import { video, osPillars, references } from '../data/video.js';
 
 // 릴스 스튜디오 — 레퍼런스 하나로 기획→생산→제작→검수까지 한 화면.
-// 사이트 chrome 은 아라미러 다크 테마, 씬 프레임 미리보기는 브랜드 노랑 #e9ed12(iframe 실제 렌더).
+// 사이트 chrome 은 아라미러 다크 테마, 씬 프레임 미리보기는 브랜드 노랑 #a8781c(iframe 실제 렌더).
 const stages = [
   { id: 'ref', n: '01', t: '레퍼런스' },
   { id: 'plan', n: '02', t: '기획' },
@@ -20,7 +21,7 @@ const a = video.reference.anatomy;
 <Base title="릴스 스튜디오">
   <section style="padding-top:80px">
     <div class="wrap">
-      <p class="section-kicker">Reels Studio · 영상 OS</p>
+      <p class="section-kicker">릴스 스튜디오</p>
       <h2>레퍼런스 하나로, <mark>기획→제작→검수</mark>까지</h2>
       <p class="lead">
         인터넷·SNS에서 괜찮았던 영상 링크를 넣으면 → 같은 결로 스토리보드·스크립트·검수까지. HTML로 렌더하는 영상 OS.
@@ -76,7 +77,7 @@ const a = video.reference.anatomy;
         <div class="pillars">
           {osPillars.map((p) => (
             <div class="pillar">
-              <div class="pil-top"><span class="pil-n">{p.n}</span><h4>{p.name}</h4>{p.done ? <span class="chk">✓</span> : <span class="wip">…</span>}</div>
+              <div class="pil-top"><span class="pil-n">{p.n}</span><h4>{p.name}</h4>{p.done ? <span class="chk"></span> : <span class="wip">…</span>}</div>
               <p class="pil-detail">{p.detail}</p>
               <p class="pil-have">{p.have}</p>
               <p class="pil-miss">안 하면 · {p.miss}</p>
@@ -124,7 +125,7 @@ const a = video.reference.anatomy;
       <div class="block" id="script">
         <h3 class="blk-h"><span class="blk-n">04</span> 스크립트 · 자막 — 플랫폼별</h3>
         <p class="blk-d">보이스오버 전체 스크립트와, 플랫폼별 캡션. 복사해서 바로 붙여넣기.</p>
-        <div class="cap-head"><span class="cap-note">🎙 보이스오버 스크립트 (나레이션)</span><button class="copy" id="copy-script">복사</button></div>
+        <div class="cap-head"><span class="cap-note"> 보이스오버 스크립트 (나레이션)</span><button class="copy" id="copy-script">복사</button></div>
         <pre class="cap-body" id="script-body">{video.script}</pre>
         <div class="tabs" style="margin-top:22px">
           <button class="tab on" data-p="instagram">Instagram</button>
@@ -143,7 +144,7 @@ const a = video.reference.anatomy;
       <div class="block" id="produce">
         <h3 class="blk-h"><span class="blk-n">05</span> 프로덕션 — 이 레퍼런스로 만들어줘</h3>
         <p class="blk-d">위 레퍼런스 해부 + 스토리보드 + 브랜드를 하나의 지시문으로 조립합니다. <b>복사</b>해서 텔레그램/클로드코드에 붙이면 HyperFrames가 9:16 영상을 렌더해요.</p>
-        <div class="cap-head"><span class="cap-note">🎬 제작 지시문 (자동 조립 · 편집 반영됨)</span><button class="copy" id="copy-brief">복사</button></div>
+        <div class="cap-head"><span class="cap-note"> 제작 지시문 (자동 조립 · 편집 반영됨)</span><button class="copy" id="copy-brief">복사</button></div>
         <pre class="cap-body" id="brief-body">조립 중…</pre>
       </div>
 
@@ -369,7 +370,7 @@ const a = video.reference.anatomy;
       // 복사
       window.__copyText = function (txt, btn) {
         navigator.clipboard.writeText(txt).then(function () {
-          var old = btn.textContent; btn.textContent = '복사됨 ✓'; btn.classList.add('done');
+          var old = btn.textContent; btn.textContent = '복사됨'; btn.classList.add('done');
           setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1400);
         });
       };
@@ -383,6 +384,7 @@ const a = video.reference.anatomy;
 
   <!-- 상태 · 편집 · 프롬프트 조립 · 보관함 (모듈: localStorage / Supabase 이중 모드) -->
   <script>
+    import { ic, iconOf } from '../lib/icons.js';
     import { hasSupabase } from '../lib/config.js';
     import { sbVideoList, sbVideoInsert, sbVideoDelete } from '../lib/backend.js';
     import { detectPlatform } from '../data/video.js';
@@ -437,7 +439,7 @@ const a = video.reference.anatomy;
     }
     function saveScenes() {
       writeJSON(K_SC, readScenes());
-      boardSaved.textContent = '수정 저장됨 ✓';
+      boardSaved.textContent = '수정 저장됨';
       setTimeout(() => { boardSaved.textContent = ''; }, 1200);
       buildBrief();
     }
@@ -471,7 +473,7 @@ const a = video.reference.anatomy;
       lines.push('  CTA: ' + (a.cta || ''));
       lines.push('  스펙: ' + (a.spec || ''));
       lines.push('');
-      lines.push('[브랜드] 다크 배경 + 포인트 노랑 #e9ed12, Pretendard, 컷 사이 0.3s 크로스페이드. 핸들 ' + (snapshot.prompt?.handle || '@aramirror'));
+      lines.push('[브랜드] 다크 배경 + 포인트 노랑 #a8781c, Pretendard, 컷 사이 0.3s 크로스페이드. 핸들 ' + (snapshot.prompt?.handle || '@aramirror'));
       lines.push('[사운드] ' + (snapshot.prompt?.bgm || ''));
       lines.push('[대상] ' + (snapshot.prompt?.audience || ''));
       lines.push('');
@@ -617,7 +619,7 @@ const a = video.reference.anatomy;
           arr.unshift({ id: 'v' + Date.now(), topic, scenes, date: nowLocal(), hash, reference: snap.reference?.url || '', data: snap });
           writeLocal(arr);
         }
-        statusEl.textContent = '보관함에 저장됨 ✓';
+        statusEl.textContent = '보관함에 저장됨';
         setTimeout(() => { statusEl.textContent = ''; }, 1800); refresh();
       };
     }

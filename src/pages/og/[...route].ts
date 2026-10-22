@@ -2,11 +2,17 @@ import { OGImageRoute } from 'astro-og-canvas';
 
 // ── 아라미러 OG 이미지 자동생성 (무기: 제목 → 공유카드 PNG, 빌드타임) ──
 // 빌드 시 각 글의 프론트매터(title/description)로 /og/<slug>.png 를 자동 생성한다.
-// 폰트는 저장소에 넣지 않고, 이 PC의 맑은 고딕을 빌드 때만 참조한다(로컬빌드 배포 전제).
-// ⚠️ 클라우드 빌드로 옮기면 이 폰트 경로만 저장소 내 TTF로 교체하면 된다.
-
-const FONT_BOLD = 'C:/Windows/Fonts/malgunbd.ttf';
-const FONT_REG = 'C:/Windows/Fonts/malgun.ttf';
+//
+// 폰트는 저장소에 넣지 않고 웹에서 받아 쓴다(astro-og-canvas가 URL을 지원한다).
+// 전엔 이 PC의 맑은 고딕 경로가 박혀 있어서 윈도우에서만 빌드가 됐다.
+// 이제 어느 컴퓨터에서 빌드하든 — 맥·윈도우·클라우드 — 같은 글자로 나온다.
+// 처음 한 번만 받아오고 node_modules/.astro-og-canvas 에 캐시된다.
+const FS = 'https://api.fontsource.org/v1/fonts/noto-sans-kr';
+const FONT_BOLD = `${FS}/korean-700-normal.ttf`;
+const FONT_REG = `${FS}/korean-400-normal.ttf`;
+// 한글 부분집합엔 로마자가 얇게 들어 있어, 라틴 파일도 같이 올려 'Aramirror' 같은 글자를 챙긴다.
+const FONT_BOLD_LATIN = `${FS}/latin-700-normal.ttf`;
+const FONT_REG_LATIN = `${FS}/latin-400-normal.ttf`;
 
 type Meta = { title: string; description?: string };
 
@@ -41,20 +47,20 @@ export const { getStaticPaths, GET } = OGImageRoute({
     ],
     border: { color: [194, 96, 59], width: 12, side: 'inline-start' },
     padding: 80,
-    fonts: [FONT_BOLD, FONT_REG],
+    fonts: [FONT_BOLD, FONT_REG, FONT_BOLD_LATIN, FONT_REG_LATIN],
     font: {
       title: {
         color: [243, 237, 227],
         size: 64,
         weight: 'Bold',
         lineHeight: 1.25,
-        families: ['Malgun Gothic'],
+        families: ['Noto Sans KR'],
       },
       description: {
         color: [168, 158, 144],
         size: 32,
         lineHeight: 1.4,
-        families: ['Malgun Gothic'],
+        families: ['Noto Sans KR'],
       },
     },
   }),

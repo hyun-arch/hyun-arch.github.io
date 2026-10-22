@@ -1,4 +1,5 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 // 되묻기 멘토 — 던지면 ①따뜻한 한마디 ②이득 관점 분석 ③날카로운 되묻기 를 돌려준다.
 // 정적 페이지라 즉석 분석은 의도 감지 + 템플릿. 더 깊은 분석은 텔레그램(봇=나)으로 이어진다.
@@ -6,7 +7,7 @@ import Base from '../layouts/Base.astro';
 <Base title="되묻기 · 멘토">
   <section class="ask-hero">
     <div class="wrap">
-      <p class="section-kicker" data-reveal>되묻기 멘토 · Your Mentor</p>
+      <p class="section-kicker" data-reveal>되묻기</p>
       <h1 data-reveal="60">던지면, <mark>이득이 되는 답</mark>을 돌려드려요</h1>
       <p class="ask-sub" data-reveal="120">
         고민·아이디어·감정, 뭐든 편하게 던지세요. 사장님한테 <b>정말 도움이 되는 관점</b>으로
@@ -20,7 +21,7 @@ import Base from '../layouts/Base.astro';
       <!-- 오늘의 좋은 말 -->
       <div class="word" data-reveal>
         <div class="word-top">
-          <span class="word-badge">☀️ 오늘의 한 마디</span>
+          <span class="word-badge"><span class="eic" set:html={ic('sun')} /> 오늘의 한 마디</span>
           <button id="wordNew" class="word-refresh" type="button">다른 말 →</button>
         </div>
         <p id="wordText" class="word-text">—</p>
@@ -42,12 +43,12 @@ import Base from '../layouts/Base.astro';
         <p id="affirm" class="affirm"></p>
         <div class="gain-grid" id="gainGrid"></div>
         <div class="reask" id="reask">
-          <span class="reask-badge">🔎 스스로에게</span>
+          <span class="reask-badge"><span class="eic" set:html={ic('search')} /> 스스로에게</span>
           <p id="reaskQ"></p>
         </div>
         <div class="answer-actions">
-          <button id="saveBtn" class="btn-outline">💾 생각DB에 저장</button>
-          <a id="deepBtn" class="btn-ghost" href="#" >🚀 더 깊이 분석받기 (텔레그램)</a>
+          <button id="saveBtn" class="btn-outline"><span class="eic" set:html={ic('save')} /> 생각DB에 저장</button>
+          <a id="deepBtn" class="btn-ghost" href="#" ><span class="eic" set:html={ic('rocket')} /> 더 깊이 분석받기 (텔레그램)</a>
           <button id="reThrow" class="btn-ghost">다른 각도로 다시</button>
         </div>
         <p class="deep-note">더 깊은 분석은 <b>텔레그램에 그대로 던지면</b> 제가 직접 읽고, 사장님 이득 중심으로 답해드려요.</p>
@@ -66,7 +67,7 @@ import Base from '../layouts/Base.astro';
         <button id="clearDb" class="btn-ghost" hidden>전체 비우기</button>
       </div>
       <div id="dbList" class="db-list"></div>
-      <p id="dbEmpty" class="db-empty">아직 던진 생각이 없어요. 위에서 첫 생각을 던져보세요. 🌱</p>
+      <p id="dbEmpty" class="db-empty">아직 던진 생각이 없어요. 위에서 첫 생각을 던져보세요. <span class="eic" set:html={ic('lv1')} /></p>
     </div>
   </section>
 
@@ -194,50 +195,50 @@ import Base from '../layouts/Base.astro';
           decision: {
             affirm: '두 길이 보인다는 건 이미 답의 절반을 안다는 뜻이에요. 남은 절반은 <b>“내가 무엇을 원하나”</b>에 있습니다.',
             gains: [
-              ['💡 기회', '각 선택지가 사장님에게 “무엇을 주는지”를 적어보면, 숫자보다 마음이 먼저 답을 알려줍니다.'],
-              ['⚠️ 조심', '되돌릴 수 있는 결정은 빠르게, 되돌릴 수 없는 것만 신중히. 지금 이건 어느 쪽인가요?'],
-              ['🎯 본질', '진짜 질문은 “A냐 B냐”가 아니라 “나는 왜 이걸 하려는가”일 때가 많습니다.'],
-              ['👣 다음 한 걸음', '크게 걸기 전에, 작게 시험해볼 방법 하나를 오늘 정하세요.']
+              [' 기회', '각 선택지가 사장님에게 “무엇을 주는지”를 적어보면, 숫자보다 마음이 먼저 답을 알려줍니다.'],
+              [' 조심', '되돌릴 수 있는 결정은 빠르게, 되돌릴 수 없는 것만 신중히. 지금 이건 어느 쪽인가요?'],
+              [' 본질', '진짜 질문은 “A냐 B냐”가 아니라 “나는 왜 이걸 하려는가”일 때가 많습니다.'],
+              [' 다음 한 걸음', '크게 걸기 전에, 작게 시험해볼 방법 하나를 오늘 정하세요.']
             ],
             reask: '두 선택지 각각에서, 사장님이 진짜로 얻고 싶은 것 딱 한 가지는 무엇인가요?'
           },
           plan: {
             affirm: '실행으로 옮기는 순간 이미 대부분을 이깁니다. <b>방향만 맞으면 속도는 사장님의 자산</b>이에요.',
             gains: [
-              ['💡 기회', '완성이 아니라 “이번 주에 눈에 보이는 조각” 하나면 됩니다. 그게 다음을 끌어옵니다.'],
-              ['⚠️ 조심', '한 번에 다 하려다 아무것도 안 되기 쉬워요. 범위를 잔인하게 좁히세요.'],
-              ['🎯 본질', '이 일이 사장님·회사에 남기는 “자산”이 곧 이득의 크기입니다. 그게 뭔가요?'],
-              ['👣 다음 한 걸음', '이번 주 안에 만들 첫 조각 하나를 지금 정하세요.']
+              [' 기회', '완성이 아니라 “이번 주에 눈에 보이는 조각” 하나면 됩니다. 그게 다음을 끌어옵니다.'],
+              [' 조심', '한 번에 다 하려다 아무것도 안 되기 쉬워요. 범위를 잔인하게 좁히세요.'],
+              [' 본질', '이 일이 사장님·회사에 남기는 “자산”이 곧 이득의 크기입니다. 그게 뭔가요?'],
+              [' 다음 한 걸음', '이번 주 안에 만들 첫 조각 하나를 지금 정하세요.']
             ],
             reask: '이걸 아예 안 하면 무슨 일이 생기나요? 그게 정말 문제라면, 지금이 적기입니다.'
           },
           feeling: {
             affirm: '그 무게는 사장님이 크게 걸었다는 증거예요. <b>몰입한 사람만 느끼는 피로</b>입니다.',
             gains: [
-              ['🌿 기회', '감정은 신호예요 — 무엇이 채워지지 않았는지 알려주는. 그걸 읽으면 방향이 보입니다.'],
-              ['⚠️ 조심', '지금은 큰 결정을 미루기 좋은 때. 몸부터 회복하고, 판단은 내일로.'],
-              ['🎯 본질', '지금 진짜 필요한 건 해결일까요, 아니면 잠깐의 쉼일까요?'],
-              ['👣 다음 한 걸음', '이 순간을 1도만 낫게 할 아주 작은 행동 하나. 물 한 잔, 5분 산책도 좋아요.']
+              [' 기회', '감정은 신호예요 — 무엇이 채워지지 않았는지 알려주는. 그걸 읽으면 방향이 보입니다.'],
+              [' 조심', '지금은 큰 결정을 미루기 좋은 때. 몸부터 회복하고, 판단은 내일로.'],
+              [' 본질', '지금 진짜 필요한 건 해결일까요, 아니면 잠깐의 쉼일까요?'],
+              [' 다음 한 걸음', '이 순간을 1도만 낫게 할 아주 작은 행동 하나. 물 한 잔, 5분 산책도 좋아요.']
             ],
             reask: '지금 사실이라고 믿고 있는 것 중, 아직 확인 안 된 건 무엇인가요?'
           },
           idea: {
             affirm: '아이디어를 꺼내놓은 것만으로 이미 반은 실현된 겁니다. <b>이제 이득으로 바꿀 차례</b>예요.',
             gains: [
-              ['💡 기회', '이 아이디어가 “누구의 어떤 문제”를 풀어주나요? 거기에 이득의 크기가 있습니다.'],
-              ['⚠️ 조심', '멋있는 아이디어보다 “작게 검증 가능한” 아이디어가 이깁니다. 가장 싸게 테스트할 방법은?'],
-              ['🎯 본질', '이걸 한 문장으로 말하면? 한 문장이 안 되면 아직 덜 익은 거예요.'],
-              ['👣 다음 한 걸음', '이번 주에 “진짜인지” 확인할 가장 작은 실험 하나를 설계하세요.']
+              [' 기회', '이 아이디어가 “누구의 어떤 문제”를 풀어주나요? 거기에 이득의 크기가 있습니다.'],
+              [' 조심', '멋있는 아이디어보다 “작게 검증 가능한” 아이디어가 이깁니다. 가장 싸게 테스트할 방법은?'],
+              [' 본질', '이걸 한 문장으로 말하면? 한 문장이 안 되면 아직 덜 익은 거예요.'],
+              [' 다음 한 걸음', '이번 주에 “진짜인지” 확인할 가장 작은 실험 하나를 설계하세요.']
             ],
             reask: '이 아이디어로 가장 크게 이득 볼 사람은 누구이고, 그 사람은 왜 지금 이걸 원할까요?'
           },
           belief: {
             affirm: '생각을 밖으로 꺼내는 순간, 그건 사장님의 자산이 됩니다. <b>여기 그대로 쌓아두세요.</b>',
             gains: [
-              ['💡 기회', '이 생각이 사장님에게 왜 중요한지 한 줄로 적어보면, 다음 행동이 선명해집니다.'],
-              ['⚠️ 조심', '“당연히 그렇다”고 깔고 있는 전제는 무엇인가요? 그게 흔들리면 결론도 바뀝니다.'],
-              ['🎯 본질', '이 말의 핵심을 한 문장으로 줄이면 무엇이 남나요?'],
-              ['👣 다음 한 걸음', '이 생각을 이득으로 잇는 가장 작은 행동 하나는?']
+              [' 기회', '이 생각이 사장님에게 왜 중요한지 한 줄로 적어보면, 다음 행동이 선명해집니다.'],
+              [' 조심', '“당연히 그렇다”고 깔고 있는 전제는 무엇인가요? 그게 흔들리면 결론도 바뀝니다.'],
+              [' 본질', '이 말의 핵심을 한 문장으로 줄이면 무엇이 남나요?'],
+              [' 다음 한 걸음', '이 생각을 이득으로 잇는 가장 작은 행동 하나는?']
             ],
             reask: '한 달 뒤·1년 뒤의 사장님이 이 생각을 본다면, 뭐라고 말해줄까요?'
           }
@@ -262,7 +263,7 @@ import Base from '../layouts/Base.astro';
         $('reaskQ').textContent = a.reask;
         $('deepBtn').href = 'https://t.me/Arami_claude_bot';
         $('answer').hidden = false;
-        $('saveBtn').textContent = '💾 생각DB에 저장';
+        $('saveBtn').textContent = '생각DB에 저장';
         $('saveBtn').disabled = false;
       }
 
@@ -305,7 +306,7 @@ import Base from '../layouts/Base.astro';
         var list = db();
         list.unshift({ id: 'th_'+Date.now()+'_'+Math.floor(Math.random()*1e4), text: current, ts: Date.now() });
         saveDb(list); renderDb();
-        $('saveBtn').textContent = '저장됨 ✓'; $('saveBtn').disabled = true; $('thought').value = '';
+        $('saveBtn').textContent = '저장됨'; $('saveBtn').disabled = true; $('thought').value = '';
       });
       $('clearDb').addEventListener('click', function () {
         if (db().length && confirm('생각 서랍을 전부 비울까요? 되돌릴 수 없어요.')) { saveDb([]); renderDb(); }

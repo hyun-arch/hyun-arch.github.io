@@ -213,8 +213,13 @@ export default {
       if (blocks && blocks.length) {
         // 글 순서 그대로 — 글자는 치고, 이미지는 그 자리에서 올린다.
         // 예전에는 본문을 다 친 뒤 사진을 전부 뒤에 붙여서 위치가 어긋났다.
-        for (const b of blocks) {
+        // 블록 사이에 빈 줄을 하나 둔다. 안 그러면 소제목이 앞 문단에 붙어 보인다.
+        // (2026-10-22 실측: 「정리」가 링크 바로 밑에 붙었다)
+        for (const [i, b] of blocks.entries()) {
           if (b.type === 'image') { await addPhoto(b.path); continue; }
+          if (i > 0 && blocks[i - 1].type === 'text') {
+            await pg.keyboard.press('Enter');          // 앞 글 블록과 한 줄 띄운다
+          }
           for (const line of String(b.text || '').split('\n')) {
             await pg.keyboard.type(line, { delay: 6 });
             await pg.keyboard.press('Enter');
@@ -234,8 +239,26 @@ export default {
       // 왜 분리했나: 발행은 되돌리기 어렵다. 글을 넣어 두고 사람이 눈으로 본 뒤 발행하려면
       // 저장 단계에서 멈출 수 있어야 한다. 카테고리·태그는 발행 레이어에 있으므로 여기서는 건너뛴다.
       if (draft) {
-        const saveBtn = f.locator('button:has-text("저장")').first();
-        await saveBtn.click({ timeout: 20000 });
+        // 「저장」 버튼만 정확히 고른다. has-text 는 「임시저장」·「저장 글」도 잡고,
+        // .first() 가 엉뚱한 걸 눌러 발행까지 가는 사고가 났다. (2026-10-22 실측)
+        // 글자가 정확히 「저장」 또는 「저장 3」 인 것만 누른다.
+        const 눌림 = await f.evaluate(() => {
+          const b = [...document.querySelectorAll('button')]
+            .find((e) => /^저장(\s*\d+)?$/.test((e.innerText || '').trim()));
+          if (!b) return false;
+          b.click();
+          return true;
+        });
+        if (!눌림) throw new Error('저장 버튼을 못 찾았습니다 — 발행하지 않고 멈춥니다');
+        await pg.waitForTimeout(3000);
+
+        // 발행 레이어가 열렸으면 사고다. 바로 닫는다.
+        const 발행창 = await f.evaluate(() =>
+          /발행 설정|공개 설정|카테고리/.test(document.body.innerText || '')).catch(() => false);
+        if (발행창) {
+          await pg.keyboard.press('Escape').catch(() => {});
+          throw new Error('발행 레이어가 열렸습니다 — 저장만 하려다 발행으로 갈 뻔해 멈췄습니다');
+        }
         await pg.waitForTimeout(3000);
         // 저장 개수 뱃지가 올라가면 저장된 것. 못 읽어도 실패로 보지 않는다.
         let count = '';

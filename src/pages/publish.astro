@@ -1,4 +1,22 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
+
+// 자동 발행 채널 — publish/ 엔진이 실제로 다루는 목록과 같다.
+// (토큰 값은 여기 절대 들어오지 않는다. 이름과 성질만.)
+const AUTO = [
+  { i: 'send',     n: '텔레그램',        take: '글·사진·영상', lim: '4096자', need: '봇 토큰 · 2분', tier: 'free' },
+  { i: 'wave',     n: '블루스카이',      take: '글·사진·영상', lim: '300자',  need: '앱 비밀번호 · 1분', tier: 'free' },
+  { i: 'ask',      n: '디스코드',        take: '글·사진·영상', lim: '2000자', need: '웹훅 주소 · 1분', tier: 'free' },
+  { i: 'globe',    n: '마스토돈',        take: '글·사진·영상', lim: '500자',  need: '토큰 · 2분', tier: 'free' },
+  { i: 'loop',     n: '스레드',          take: '글·사진·영상', lim: '500자',  need: 'Meta 앱 승인', tier: 'approval' },
+  { i: 'image',    n: '인스타그램',      take: '사진·릴스',    lim: '2200자', need: '비즈니스 계정', tier: 'approval' },
+  { i: 'team',     n: '페이스북 페이지', take: '글·사진·영상', lim: '5000자', need: '페이지 토큰', tier: 'approval' },
+  { i: 'play',     n: '유튜브',          take: '영상·쇼츠',    lim: '5000자', need: '구글 OAuth', tier: 'approval' },
+  { i: 'timer',    n: '틱톡',            take: '영상',         lim: '2200자', need: '초안함 · 심사 불필요', tier: 'free' },
+  { i: 'case',     n: '링크드인',        take: '글·사진',      lim: '3000자', need: '자가등록 · 2분', tier: 'free' },
+  { i: 'pen',      n: '네이버 블로그',   take: '글·사진',      lim: '제한 없음', need: '한 번 로그인 · 2분', tier: 'free' },
+  { i: 'bolt',     n: 'X',               take: '글·사진·영상', lim: '280자',  need: '건당 과금 · 기본 제외', tier: 'paid' },
+];
 import Base from '../layouts/Base.astro';
 
 const ORIGIN = 'https://hyun-arch.github.io';
@@ -138,9 +156,33 @@ const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? gen
 <Base title="발행 · Publish">
  <section style="padding-top:72px">
  <div class="wrap" style="max-width:760px">
- <p class="section-kicker">발행 · Publish Hub</p>
+ <p class="section-kicker">발행</p>
  <h2>한 글, 모든 채널로</h2>
- <p class="lead">글이 올라오면 자동으로 여기 나타나고, 채널별로 <b>그 플랫폼 글자 수에 맞춰</b> 붙여넣을 글이 준비됩니다. 각 버전은 한도 안으로 잘리고 <b>전문 링크</b>가 붙어요. 전체 원문이 필요하면 맨 위 <b>‘전체 글(전문)’</b>을 복사하세요. 스레드·X는 버튼으로 자동 채움.</p>
+ <p class="lead">한 번 쓰면 채널마다 알맞게 고쳐서 나갑니다. 글자 수·해시태그·링크 규칙이 채널마다 달라서 그 처리를 도구가 대신합니다.</p>
+
+      <div class="auto">
+        <div class="auto-h">
+          <span class="eic" set:html={ic('loop')} />
+          <b>자동 발행</b>
+          <span class="auto-cmd">queue/ 에 넣으면 깃허브가 10분 안에 올립니다</span>
+        </div>
+        <div class="auto-grid">
+          {AUTO.map((c) => (
+            <div class={'auto-ch tier-' + c.tier}>
+              <span class="auto-ic" set:html={ic(c.i)} />
+              <b>{c.n}</b>
+              <i>{c.take} · {c.lim}</i>
+              <em>{c.need}</em>
+            </div>
+          ))}
+        </div>
+        <p class="auto-note">
+          <b>초록 넷은 심사도 비용도 없습니다</b> — 다 합쳐 10분이면 오늘부터 자동 발행이 돕니다.
+          사진·영상은 <code>gh-pages</code> 의 <code>/sns/</code> 로 자동 호스팅한 뒤 각 API 로 넘깁니다.
+          맥이 꺼져 있어도 <code>.github/workflows/publish.yml</code> 이 대신 돌립니다(공개 저장소라 무료).
+          자세한 건 <code>publish/README.md</code>. 아래는 손으로 붙여넣을 때 쓰는 채널별 원고입니다.
+        </p>
+      </div>
 
       {withPosts.map((a, i) => (
  <details class="pub-article" open={i === 0}>
@@ -157,7 +199,7 @@ const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? gen
  <span class="pub-tone">{p.tone}</span>
  <span class={`pub-count ${p.limit && p.count > p.limit ? 'over' : 'ok'}`}>
                   {p.limit ? `${p.count} / ${p.limit}${p.key === 'x' ? ' (X기준)' : '자'}` : `${p.count}자 · 제한 없음`}
-                  {p.limit ? (p.count <= p.limit ? ' ✓' : ' ⚠') : ''}
+                  {p.limit ? (p.count <= p.limit ? <span class="eic" set:html={ic('check')} /> : <span class="eic" set:html={ic('warn')} />) : ''}
  </span>
  </div>
  <textarea class="pub-text" readonly rows={Math.min(16, p.text.split('\n').length + 1)}>{p.text}</textarea>
@@ -178,6 +220,26 @@ const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? gen
  </section>
 
  <style is:global>
+  /* ── 자동 발행 판 ── */
+  .auto { margin: 26px 0 34px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-1); overflow: hidden; }
+  .auto-h { display: flex; align-items: center; gap: 8px; padding: 13px 16px; border-bottom: 1px solid var(--line-soft); font-size: .95rem; }
+  .auto-h .eic { width: 16px; height: 16px; color: var(--accent); }
+  .auto-cmd { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--faint); }
+  .auto-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 1px; background: var(--line-soft); }
+  .auto-ch { background: var(--bg-1); padding: 13px 15px; display: flex; flex-direction: column; gap: 1px; }
+  .auto-ic { width: 18px; height: 18px; color: var(--muted); margin-bottom: 6px; }
+  .auto-ic svg { width: 100%; height: 100%; display: block; }
+  .auto-ch b { font-size: .88rem; font-weight: 700; letter-spacing: -.02em; }
+  .auto-ch i { font-style: normal; font-size: .73rem; color: var(--muted); }
+  .auto-ch em { font-style: normal; font-size: .7rem; color: var(--faint); margin-top: 3px; }
+  .auto-ch.tier-free .auto-ic, .auto-ch.tier-free em { color: var(--ok); }
+  .auto-ch.tier-free b::after { content: "무료"; margin-left: 6px; font-size: .62rem; font-weight: 700;
+    color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); border-radius: 4px; padding: 1px 5px; vertical-align: 1px; }
+  .auto-ch.tier-paid .auto-ic, .auto-ch.tier-paid em { color: var(--stop); }
+  .auto-ch.tier-manual { opacity: .6; }
+  .auto-note { margin: 0; padding: 12px 16px; border-top: 1px solid var(--line-soft); font-size: .78rem; color: var(--muted); line-height: 1.6; }
+  .auto-note code { font-family: var(--mono); font-size: .92em; background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 5px; padding: 1px 5px; }
+
  .pub-article { border-top:1px solid var(--line); padding:18px 0; }
  .pub-article > summary { cursor:pointer; list-style:none; display:flex; align-items:baseline; gap:12px; padding:6px 0; }
  .pub-article > summary::-webkit-details-marker { display:none; }
@@ -213,7 +275,7 @@ const withPosts = articles.map((a) => ({ ...a, posts: a.type === 'writing' ? gen
     document.querySelectorAll('.pub-btn.copy').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var ta = btn.closest('.pub-card').querySelector('.pub-text');
-        function ok(){ btn.textContent = '복사됨 ✓'; btn.classList.add('done'); setTimeout(function(){ btn.textContent='복사'; btn.classList.remove('done'); }, 1600); }
+        function ok(){ btn.innerHTML = '복사됨 <span class="eic">'+aramIc('check')+'</span>'; btn.classList.add('done'); setTimeout(function(){ btn.textContent='복사'; btn.classList.remove('done'); }, 1600); }
         if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(ta.value).then(ok, function(){ ta.select(); document.execCommand('copy'); ok(); }); }
         else { ta.select(); document.execCommand('copy'); ok(); }
       });

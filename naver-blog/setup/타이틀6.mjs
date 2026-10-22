@@ -1,0 +1,23 @@
+// 타이틀 영역 높이를 배너 높이(300)에 맞춘다.
+import { openBrowser } from '../../publish/naver-open.mjs';
+const P = (...a) => console.log('  ' + a.join(' '));
+const ctx = await openBrowser({ headless: true });
+const pg = ctx.pages()[0] || (await ctx.newPage());
+pg.on('dialog', async (d) => { P('알림: ' + d.message().replace(/\s+/g, ' ').slice(0, 70)); await d.accept().catch(() => {}); });
+pg.on('response', (r) => { if (/RemoconUpdate|UserSkinSave/.test(r.url())) P('저장 ' + r.status() + ' ' + r.url().split('/').pop().split('?')[0]); });
+await pg.goto('https://admin.blog.naver.com/Remocon.naver?blogId=ianlove80&loadType=admin&Redirect=Remocon&SelectedMenu=title', { waitUntil: 'domcontentloaded', timeout: 60000 });
+await pg.waitForTimeout(9000);
+const F = pg.mainFrame();
+const box = F.locator('#title_height');
+await box.click({ timeout: 10000 }).catch(() => {});
+await box.press('Meta+A').catch(() => {});
+await box.type('300', { delay: 60 });
+await box.press('Enter').catch(() => {});
+await pg.waitForTimeout(1500);
+P('높이 값: ' + await F.evaluate(() => document.getElementById('title_height').value));
+await F.locator('.btn_submit._showConfirmLayer').first().click({ timeout: 10000 }).catch(() => {});
+await pg.waitForTimeout(2500);
+await F.locator('.button_next._submit').first().click({ timeout: 10000 }).catch((e) => P('확인 실패 ' + e.message.slice(0, 40)));
+await pg.waitForTimeout(10000);
+P('끝');
+await ctx.close().catch(() => {});

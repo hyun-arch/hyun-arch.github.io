@@ -6,7 +6,7 @@
 // ── 영상 OS 기획 6가지 ──
 // 매번 같은 결의 릴스가 나오게 하는 뼈대. 캐러셀 OS의 "움직이는" 버전.
 export const osPillars = [
-  { n: 1, name: '브랜드 모션 시스템', detail: '색·폰트·전환', have: '다크 + 포인트 노랑 #e9ed12, Pretendard, 컷 사이 0.3s 크로스페이드', done: true,
+  { n: 1, name: '브랜드 모션 시스템', detail: '색·폰트·전환', have: '다크 + 포인트 노랑 #a8781c, Pretendard, 컷 사이 0.3s 크로스페이드', done: true,
     miss: '매번 다른 느낌의 영상' },
   { n: 2, name: '씬 구조 · 3막', detail: '훅 → 본문 → CTA', have: '0–3초 훅 → 치트키 N컷 → 요약 → 저장·팔로우 CTA', done: true,
     miss: 'AI가 매번 다른 구성으로 만듦' },
@@ -177,7 +177,7 @@ export const video = {
     { k: 'hook', label: '훅이 3초 안에 걸리나 (첫 자막이 궁금증을 만드나)' },
     { k: 'silent', label: '무음으로 봐도 이해되나 (자막만으로 전달)' },
     { k: 'caption', label: '자막 가독성 — 글자 크기·대비·안전영역(상하 15%) 벗어남 없음' },
-    { k: 'brand', label: '브랜드 컬러 #e9ed12 · 폰트 고정, 매 컷 톤 일관' },
+    { k: 'brand', label: '브랜드 컬러 #a8781c · 폰트 고정, 매 컷 톤 일관' },
     { k: 'pacing', label: '컷당 2.5–4초, 늘어지는 구간 없음' },
     { k: 'length', label: '전체 길이 30초 이하, 릴스 9:16 비율' },
     { k: 'sound', label: 'BGM 저작권 안전 + 컷이 비트에 맞음' },

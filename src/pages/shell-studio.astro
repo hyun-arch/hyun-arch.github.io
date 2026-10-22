@@ -1,11 +1,12 @@
 ---
+import { ic, iconOf } from '../lib/icons.js';
 import Base from '../layouts/Base.astro';
 import { shell, stages, modes, manual, rotationRule, collector } from '../data/shell.js';
 ---
 <Base title="셸 스튜디오">
   <section style="padding-top:80px">
     <div class="wrap">
-      <p class="section-kicker">Shell Studio · 셸 선물 &amp; 수집 OS</p>
+      <p class="section-kicker">셸 스튜디오</p>
       <h2>셸을 <mark>쓰고 벌기</mark>, 한 화면에서</h2>
       <p class="lead">
         <b>{shell.team}</b>의 셸 봇 전체를 한 곳에. <b>선물봇(쓰는 쪽)</b>은 매일 사라지는 셸을
@@ -21,9 +22,9 @@ import { shell, stages, modes, manual, rotationRule, collector } from '../data/s
       <div class="block" id="today">
         <h3 class="blk-h"><span class="blk-n">01</span> 오늘 대상</h3>
         <p class="blk-d">아래는 접속한 날짜로 자동 계산한 <b>미리보기</b>입니다.</p>
-        <p class="rule-note">📌 {rotationRule}</p>
+        <p class="rule-note"><span class="eic" set:html={ic('pin')} /> {rotationRule}</p>
         <div class="today-card">
-          <div class="today-em">🐚</div>
+          <div class="today-em"><span class="eic" set:html={ic('shell')} /></div>
           <div>
             <div class="today-label">오늘은</div>
             <div class="today-name" id="todayName">—</div>
@@ -43,7 +44,7 @@ import { shell, stages, modes, manual, rotationRule, collector } from '../data/s
             <div class="rchip" data-name={m}><span class="ri">{String(i + 1).padStart(2, '0')}</span>{m}</div>
           ))}
         </div>
-        <p class="fav-note">⭐ favorites 모드: <b>{shell.favorites.join(' · ')}</b> 안에서만 순환하게 바꿀 수도 있어요.</p>
+        <p class="fav-note"><span class="eic" set:html={ic('star')} /> favorites 모드: <b>{shell.favorites.join(' · ')}</b> 안에서만 순환하게 바꿀 수도 있어요.</p>
       </div>
 
       <!-- 03 전송 문구 -->
@@ -199,7 +200,7 @@ import { shell, stages, modes, manual, rotationRule, collector } from '../data/s
     $('copyMsg').addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(msg);
-        $('copied').textContent = '복사됐어요 ✓';
+        $('copied').textContent = '복사됐어요';
         setTimeout(() => { $('copied').textContent = ''; }, 2000);
       } catch {
         const r = document.createRange(); r.selectNode($('msgBody'));
