@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+// 네이버 블로그 저장 글 — 자동화가 임시저장한 글을 여기서 바로 연다.
+//
+// 네이버에는 「저장 글 목록」을 여는 주소가 따로 없다. 에디터를 열고
+// 오른쪽 위 「저장 N」을 눌러야 목록이 뜬다. (2026-10-22 실측)
+// 그래서 목록은 TempPostList API 로 가져오고, 누르면 에디터로 보낸다.
+const BLOG = 'ianlove80';
+---
+<Base title="블로그 저장 글" desc="네이버 블로그 임시저장 글을 바로 연다">
+  <section class="wrap">
+    <h1>블로그 저장 글</h1>
+    <p class="lead">자동화가 임시저장한 글입니다. 눌러서 확인하고 직접 발행하세요.</p>
+
+    <div id="list" class="list">
+      <div class="loading">불러오는 중…</div>
+    </div>
+
+    <div class="foot">
+      <a class="btn" href={`https://blog.naver.com/${BLOG}/postwrite`} target="_blank" rel="noopener">
+        글쓰기 화면 열기
+      </a>
+      <span class="hint">목록이 안 보이면 네이버에 로그인한 뒤 새로고침하세요.</span>
+    </div>
+  </section>
+
+  <script define:vars={{ BLOG }}>
+    // 네이버 API 는 다른 도메인에서 부르면 CORS 로 막힌다. (2026-10-22 실측)
+    // 그래서 목록은 미리 만들어 둔 파일에서 읽는다 —
+    // publish/draft-list.mjs 가 네이버에서 받아 /drafts.json 으로 떨궈 둔다.
+    const box = document.getElementById('list');
+    const when = (ms) => {
+      const d = new Date(ms);
+      const p = (n) => String(n).padStart(2, '0');
+      return `${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    };
+
+    fetch('/drafts.json', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        const rows = d.글 || [];
+        const 잰때 = d.잰때 ? when(d.잰때) : '';
+        if (!rows.length) {
+          box.innerHTML = '<div class="empty">저장된 글이 없습니다.</div>';
+          return;
+        }
+        box.innerHTML = rows.map((x) => `
+          <a class="row" target="_blank" rel="noopener"
+             href="https://blog.naver.com/${BLOG}/postwrite">
+            <span class="t">${(x.title || '(제목 없음)').replace(/</g, '&lt;')}</span>
+            <span class="d">${when(x.modiDate)}</span>
+          </a>`).join('')
+          + (잰때 ? `<div class="when">목록 기준 ${잰때}</div>` : '');
+      })
+      .catch(() => {
+        box.innerHTML =
+          '<div class="empty">목록 파일이 없습니다.<br>' +
+          '<code>node publish/draft-list.mjs</code> 를 돌리면 갱신됩니다.</div>';
+      });
+  </script>
+
+  <style>
+    .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+    h1 { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
+    .lead { color: #5b6472; margin-bottom: 28px; }
+    .list { display: flex; flex-direction: column; gap: 10px; }
+    .row {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 18px 20px; border: 1px solid #e5e9f0; border-radius: 12px;
+      background: #fff; text-decoration: none; color: inherit; transition: .15s;
+    }
+    .row:hover { border-color: #1f7a6b; transform: translateY(-1px); }
+    .row .t { font-weight: 600; }
+    .row .d { color: #8a94a6; font-size: 13px; white-space: nowrap; }
+    .loading, .empty { padding: 28px; color: #8a94a6; text-align: center;
+      border: 1px dashed #e5e9f0; border-radius: 12px; }
+    .foot { margin-top: 28px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .btn { padding: 11px 18px; border-radius: 10px; background: #1f7a6b; color: #fff;
+      text-decoration: none; font-weight: 600; font-size: 14px; }
+    .hint { color: #8a94a6; font-size: 13px; }
+    .when { margin-top: 10px; color: #8a94a6; font-size: 12px; text-align: right; }
+    code { background: #f0f3f7; padding: 2px 6px; border-radius: 5px; font-size: 12px; }
+    @media (prefers-color-scheme: dark) {
+      .row { background: #1a1d22; border-color: #2b313b; }
+      .loading, .empty { border-color: #2b313b; }
+    }
+  </style>
+</Base>
