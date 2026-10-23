@@ -36,6 +36,17 @@ const 제목 = (raw.match(/^#\s+(.+)$/m) || [, ''])[1].trim();
 // 소제목과 그 바로 밑 첫 문단을 짝지어 모은다
 const 줄 = raw.split('\n');
 const 카드 = [];
+// 「정리」의 요점을 모은 카드 — 소제목이 적은 글은 이게 없으면 5장을 못 채운다.
+// 채우려고 넣는 게 아니라, 요점만 모은 장이 한 장 있는 편이 읽는 사람에게 낫다.
+const 정리줄 = [];
+let 정리중 = false;
+for (const l of 줄) {
+  if (/^##\s+정리/.test(l)) { 정리중 = true; continue; }
+  if (정리중 && /^##\s/.test(l)) break;
+  if (정리중 && /^[-*·]\s+/.test(l.trim())) {
+    정리줄.push(l.trim().replace(/^[-*·]\s+/, '').replace(/\*\*/g, ''));
+  }
+}
 for (let i = 0; i < 줄.length; i += 1) {
   const h = 줄[i].match(/^##\s+(.+)$/);
   if (!h) continue;
@@ -116,6 +127,31 @@ const 저장 = async (이름, html) => {
 만든것.push(await 저장('cover.png', 표지));
 for (const [i, c] of 카드.entries()) {
   만든것.push(await 저장(`fig-${String(i + 1).padStart(2, '0')}.png`, 그리기(i + 1, c.소제목, c.답)));
+}
+// 요점 카드 — 「정리」 불릿을 한 장에 모은다
+if (정리줄.length >= 2) {
+  const 요점 = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<style>
+  * { margin:0; box-sizing:border-box; }
+  html,body { width:1080px; height:1080px; }
+  body { font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    background:linear-gradient(135deg,${BR.bg} 0%,${BR.bg2} 100%); color:${BR.ink};
+    padding:92px 88px; display:flex; flex-direction:column; justify-content:space-between; }
+  .kicker { font-size:28px; letter-spacing:4px; font-weight:700; color:${BR.chip}; }
+  .h { font-size:62px; font-weight:800; letter-spacing:-1px; margin-top:18px; }
+  ul { list-style:none; margin-top:44px; }
+  li { font-size:36px; line-height:1.5; font-weight:500; margin-bottom:26px;
+       padding-left:34px; position:relative; }
+  li:before { content:""; position:absolute; left:0; top:20px; width:18px; height:6px;
+              background:${BR.chip}; border-radius:3px; }
+  .foot { display:flex; justify-content:space-between; align-items:flex-end; font-size:28px; }
+  .brand { font-weight:800; } .tag { opacity:.8; font-weight:600; }
+</style></head><body>
+  <div><div class="kicker">측정 기반 · 아람휴비스</div><div class="h">정리</div></div>
+  <ul>${정리줄.slice(0, 5).map((x) => `<li>${esc(짧게(x, 62))}</li>`).join('')}</ul>
+  <div class="foot"><div class="brand">${BR.name}</div><div class="tag">#측정으로_갈린다</div></div>
+</body></html>`;
+  만든것.push(await 저장(`fig-${String(카드.length + 1).padStart(2, '0')}.png`, 요점));
 }
 await browser.close();
 

@@ -300,35 +300,46 @@ export default {
         await b.waitFor({ state: 'visible', timeout });
         await b.click({ timeout: 8000 });
       };
-      // 주소를 치면 「글감」 패널이 저절로 열려 발행 버튼을 가린다. 먼저 닫는다. (2026-10-23 당함)
-      const 글감닫기 = async () => {
-        await f.evaluate(() => {
-          const 닫기 = [...document.querySelectorAll('button')]
-            .find((e) => /팝업 닫기|글감 닫기/.test((e.innerText || e.getAttribute('aria-label') || '')));
-          if (닫기) 닫기.click();
-          document.querySelectorAll('[class*="attach"], [class*="glgam"], [class*="material"]')
-            .forEach((e) => { if (e.getBoundingClientRect().height > 200) e.style.display = 'none'; });
-        }).catch(() => {});
-        await pg.keyboard.press('Escape').catch(() => {});
-        await pg.waitForTimeout(600);
-      };
-      await 글감닫기();
-
+      // 「글감」 패널은 건드리지 않는다.
+      // 패널이 떠 있어도 발행 레이어는 정상으로 열리고 버튼도 가려지지 않는다(실측).
+      // 닫겠다고 Escape 를 누르면 오히려 레이어가 안 열리거나 닫힌다. (2026-10-23)
       await clickArea('tpb.publish');        // 1단계: 설정 레이어 열기
       await pg.waitForTimeout(2000);
       // ⚠ 여기서 글감닫기()를 부르면 안 된다. 그 안의 Escape 가 **발행 레이어까지 닫는다**.
       // 발행 버튼을 눌렀는데 아무 일도 안 일어나던 진짜 이유였다. (2026-10-23 실측)
 
       // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
+      // ⚠ 못 찾았을 때 드롭다운을 **열어 둔 채로 두면 발행 버튼이 가려진다.**
+      // 「카테고리를 못 찾아 기본값으로 둡니다」를 찍고도 발행이 안 되던 이유였다. (2026-10-23)
       if (category) {
+        const 끝말 = category.split(' ').pop();
+        let 열었나 = false;
         try {
-          const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
-          if (await opener.isVisible().catch(() => false)) { await opener.click(); await pg.waitForTimeout(500); }
-          const want = category.replace(/\s+/g, '');
-          const item = f.locator('label, li, button, span').filter({ hasText: category.split(' ').pop() }).first();
-          if (await item.isVisible().catch(() => false)) { await item.click(); await pg.waitForTimeout(400); }
-          else console.warn('  카테고리를 못 찾아 기본값으로 둡니다: ' + want);
+          // 진짜 <select> 면 그냥 고른다
+          const sel = f.locator('select').filter({ hasText: 끝말 }).first();
+          if (await sel.isVisible({ timeout: 1500 }).catch(() => false)) {
+            await sel.selectOption({ label: 끝말 }).catch(async () => {
+              await sel.selectOption({ index: 0 }).catch(() => {});
+            });
+          } else {
+            const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
+            if (await opener.isVisible().catch(() => false)) {
+              await opener.click(); 열었나 = true; await pg.waitForTimeout(700);
+            }
+            const item = f.locator('label, li, button, span').filter({ hasText: 끝말 }).first();
+            if (await item.isVisible().catch(() => false)) {
+              await item.click(); 열었나 = false; await pg.waitForTimeout(400);
+            } else {
+              console.warn('  카테고리를 못 찾아 기본값으로 둡니다: ' + category.replace(/\s+/g, ''));
+            }
+          }
         } catch { /* 카테고리 선택 실패해도 발행은 계속한다 */ }
+        // 열어 둔 드롭다운은 반드시 닫는다 — Escape 는 레이어까지 닫으므로 토글로 닫는다
+        if (열었나) {
+          const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
+          await opener.click({ timeout: 4000 }).catch(() => {});
+          await pg.waitForTimeout(600);
+        }
       }
 
       // 일련번호를 태그로 남긴다 — 제목은 건드리지 않는다
