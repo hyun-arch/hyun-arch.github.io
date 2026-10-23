@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-23T03:21:50.832Z",
+  "분류": {
+    "대분류": "아람비즈니스",
+    "중분류": "릴라이",
+    "no": "12",
+    "확신": 0.1111111111111111,
+    "근거": [
+      "릴라이",
+      "샴푸"
+    ],
+    "후보": [
+      {
+        "대분류": "아람비즈니스",
+        "중분류": "진단 이야기",
+        "no": "11",
+        "점수": 8
+      }
+    ],
+    "번호": "12-001"
+  },
+  "임시저장": false,
+  "결과": [
+    {
+      "key": "naver",
+      "ok": true,
+      "url": "https://blog.naver.com/PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451146616&categoryNo=21&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=37935",
+      "id": "PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451146616&categoryNo=21&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=37935"
+    }
+  ]
+}

@@ -309,37 +309,38 @@ export default {
       // 발행 버튼을 눌렀는데 아무 일도 안 일어나던 진짜 이유였다. (2026-10-23 실측)
 
       // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
-      // ⚠ 못 찾았을 때 드롭다운을 **열어 둔 채로 두면 발행 버튼이 가려진다.**
-      // 「카테고리를 못 찾아 기본값으로 둡니다」를 찍고도 발행이 안 되던 이유였다. (2026-10-23)
+      //
+      // ⚠ 선택자를 레이어 안으로 **가둬야 한다**. 전에는
+      //   f.locator('label, li, button, span').filter({ hasText: 끝말 })
+      // 였는데, 이게 **본문에 있는 같은 낱말**을 집어 눌렀다. 본문을 클릭하면
+      // 발행 레이어가 닫히고, 그래서 「레이어가 안 열렸다」가 됐다. (2026-10-23 실측)
       if (category) {
         const 끝말 = category.split(' ').pop();
-        let 열었나 = false;
         try {
-          // 진짜 <select> 면 그냥 고른다
-          const sel = f.locator('select').filter({ hasText: 끝말 }).first();
-          if (await sel.isVisible({ timeout: 1500 }).catch(() => false)) {
-            await sel.selectOption({ label: 끝말 }).catch(async () => {
-              await sel.selectOption({ index: 0 }).catch(() => {});
-            });
-          } else {
-            const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
-            if (await opener.isVisible().catch(() => false)) {
-              await opener.click(); 열었나 = true; await pg.waitForTimeout(700);
-            }
-            const item = f.locator('label, li, button, span').filter({ hasText: 끝말 }).first();
-            if (await item.isVisible().catch(() => false)) {
-              await item.click(); 열었나 = false; await pg.waitForTimeout(400);
+          const 레이어 = f.locator('div, section, form')
+            .filter({ hasText: '공개 설정' }).filter({ hasText: '발행 시간' }).last();
+          if (await 레이어.isVisible({ timeout: 3000 }).catch(() => false)) {
+            const sel = 레이어.locator('select').first();
+            if (await sel.isVisible({ timeout: 1000 }).catch(() => false)) {
+              await sel.selectOption({ label: 끝말 }).catch(() => {});
             } else {
-              console.warn('  카테고리를 못 찾아 기본값으로 둡니다: ' + category.replace(/\s+/g, ''));
+              const opener = 레이어.locator('button, [role="combobox"]')
+                .filter({ hasText: /카테고리|아람|선택/ }).first();
+              if (await opener.isVisible({ timeout: 1000 }).catch(() => false)) {
+                await opener.click();
+                await pg.waitForTimeout(700);
+                const item = 레이어.locator('li, label, button').filter({ hasText: 끝말 }).first();
+                if (await item.isVisible({ timeout: 1500 }).catch(() => false)) {
+                  await item.click();
+                } else {
+                  await opener.click().catch(() => {});   // 못 찾으면 드롭다운을 되닫는다
+                  console.warn('  카테고리를 못 찾아 기본값으로 둡니다: ' + category.replace(/\s+/g, ''));
+                }
+                await pg.waitForTimeout(500);
+              }
             }
           }
         } catch { /* 카테고리 선택 실패해도 발행은 계속한다 */ }
-        // 열어 둔 드롭다운은 반드시 닫는다 — Escape 는 레이어까지 닫으므로 토글로 닫는다
-        if (열었나) {
-          const opener = f.locator('button:has-text("카테고리"), .selectbox_button__jb1Dt').first();
-          await opener.click({ timeout: 4000 }).catch(() => {});
-          await pg.waitForTimeout(600);
-        }
       }
 
       // 일련번호를 태그로 남긴다 — 제목은 건드리지 않는다

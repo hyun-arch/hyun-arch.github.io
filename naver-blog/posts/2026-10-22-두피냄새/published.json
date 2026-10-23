@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-23T02:58:28.241Z",
+  "at": "2026-10-23T03:15:07.810Z",
   "분류": {
     "대분류": "아람비즈니스",
     "중분류": "진단 이야기",
@@ -18,14 +18,15 @@
         "점수": 4
       }
     ],
-    "번호": "11-039"
+    "번호": "11-041"
   },
   "임시저장": false,
   "결과": [
     {
       "key": "naver",
-      "ok": false,
-      "error": "발행 레이어가 안 열렸습니다 — 1단계부터 다시 보세요"
+      "ok": true,
+      "url": "https://blog.naver.com/PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451140062&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=46013",
+      "id": "PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451140062&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=46013"
     }
   ]
 }
