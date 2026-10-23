@@ -50,6 +50,15 @@ export default {
     const ctx = await openBrowser({ headless });
     try {
       const pg = ctx.pages()[0] || (await ctx.newPage());
+
+      // ⚠ 플레이라이트는 확인창이 뜨면 **아무 말 없이 「취소」를 누른다**(기본값).
+      // 그래서 발행 확인창이 매번 취소돼 「버튼은 눌렀는데 발행이 안 되는」 일이 났다.
+      // 핸들러가 없는 게 문제였다 — 선택자 문제가 아니었다. (2026-10-23)
+      pg.on('dialog', async (d) => {
+        console.log('  네이버 알림:', d.message().replace(/\s+/g, ' ').slice(0, 70));
+        await d.accept().catch(() => {});
+      });
+
       await pg.goto(`https://blog.naver.com/${blogId}/postwrite`, { waitUntil: 'domcontentloaded', timeout: 60000 });
       await pg.waitForTimeout(2500);
 
@@ -291,8 +300,23 @@ export default {
         await b.waitFor({ state: 'visible', timeout });
         await b.click({ timeout: 8000 });
       };
+      // 주소를 치면 「글감」 패널이 저절로 열려 발행 버튼을 가린다. 먼저 닫는다. (2026-10-23 당함)
+      const 글감닫기 = async () => {
+        await f.evaluate(() => {
+          const 닫기 = [...document.querySelectorAll('button')]
+            .find((e) => /팝업 닫기|글감 닫기/.test((e.innerText || e.getAttribute('aria-label') || '')));
+          if (닫기) 닫기.click();
+          document.querySelectorAll('[class*="attach"], [class*="glgam"], [class*="material"]')
+            .forEach((e) => { if (e.getBoundingClientRect().height > 200) e.style.display = 'none'; });
+        }).catch(() => {});
+        await pg.keyboard.press('Escape').catch(() => {});
+        await pg.waitForTimeout(600);
+      };
+      await 글감닫기();
+
       await clickArea('tpb.publish');        // 1단계: 설정 레이어 열기
       await pg.waitForTimeout(1500);
+      await 글감닫기();
 
       // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
       if (category) {
@@ -319,12 +343,73 @@ export default {
 
       // 2단계: 레이어 안 확인 '발행'(tpb*i.publish). 클래스 바뀌면 레이어 안 '발행'으로 폴백.
       await pg.waitForTimeout(600);
-      try { await clickArea('tpb*i.publish', 20000); }
-      catch { await f.locator('.layer_popup__VVWW8 button:has-text("발행"), button.confirm_btn__byZZW').last().click({ timeout: 8000 }); }
-      await pg.waitForTimeout(5000);
+      // 레이어 안 확인 버튼. data-click-area 가 바뀌면 **화면에 보이는 「발행」 버튼 중
+      // 맨 마지막 것**을 누른다. 클래스 해시(confirm_btn__…)는 배포마다 바뀌어 못 믿는다.
+      // 레이어 안 「✓ 발행」을 누른다.
+      // JS 로 .click() 하면 안 먹는다(스마트에디터가 진짜 마우스 이벤트를 본다).
+      // 그래서 **버튼 좌표를 읽어 마우스로 누른다**. (2026-10-23 실측)
+      // 레이어는 본문 프레임이 아니라 **다른 프레임**에 그려질 수 있다.
+      // f 에서만 찾다가 「버튼이 없다」고 했다. 프레임을 전부 뒤진다. (2026-10-23 당함)
+      const 레이어발행 = async () => {
+        for (const fr of pg.frames()) {
+          const r = await 레이어발행하나(fr);
+          if (r) return { ...r, fr };
+        }
+        return null;
+      };
+      const 레이어발행하나 = async (fr) => fr.evaluate(() => {
+        const 보이나 = (e) => {
+          const r = e.getBoundingClientRect();
+          return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden';
+        };
+        // 설정 레이어 = 「공개 설정」과 「발행 시간」을 함께 품은 가장 작은 상자
+        const 레이어 = [...document.querySelectorAll('div, section, form')]
+          .filter((e) => /공개 설정/.test(e.innerText || '') && /발행 시간/.test(e.innerText || ''))
+          .sort((a, b) => a.innerText.length - b.innerText.length)[0];
+        if (!레이어) return null;
+        const 후보 = [...레이어.querySelectorAll('button, a[role="button"]')]
+          .filter((e) => /^발행(\s|$)/.test((e.innerText || '').trim()) && 보이나(e));
+        if (!후보.length) return null;
+        const r = 후보[후보.length - 1].getBoundingClientRect();
+        후보[후보.length - 1].scrollIntoView({ block: 'center' });
+        return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+      }).catch(() => null);
+
+      let 자리 = await 레이어발행();
+      if (!자리) {
+        await clickArea('tpb*i.publish', 8000).catch(() => {});
+      } else {
+        // 프레임 좌표 → 페이지 좌표로 옮긴다
+        let 밀림 = { x: 0, y: 0 };
+        const el = await 자리.fr.frameElement().catch(() => null);
+        if (el) { const b = await el.boundingBox().catch(() => null); if (b) 밀림 = { x: b.x, y: b.y }; }
+        await pg.mouse.click(자리.x + 밀림.x, 자리.y + 밀림.y);
+      }
+
+      // 발행은 바로 안 끝난다. 사진이 붙은 글은 더 걸린다. 주소가 바뀔 때까지 기다린다.
+      for (let i = 0; i < 30; i += 1) {
+        await pg.waitForTimeout(2000);
+        if (!/postwrite|PostWriteForm/i.test(pg.url())) break;
+      }
 
       const url = pg.url();
-      if (/postwrite/i.test(url)) throw new Error('발행 버튼까지 갔지만 확인이 안 됩니다. NAVER_HEADLESS=0 으로 한 번 보면서 돌려 보세요.');
+      if (/postwrite/i.test(url)) {
+        await pg.screenshot({ path: '/tmp/naver-publish.png' }).catch(() => {});
+        const 보이는것 = await f.evaluate(() => [...document.querySelectorAll('button, a[role="button"]')]
+          .filter((e) => e.getBoundingClientRect().height > 0)
+          .map((e) => (e.innerText || '').trim()).filter(Boolean)).catch(() => []);
+        const 발행버튼들 = await f.evaluate(() => [...document.querySelectorAll('button, a')]
+          .filter((e) => /발행/.test(e.innerText || ''))
+          .map((e) => {
+            const r = e.getBoundingClientRect();
+            return `「${(e.innerText || '').trim().slice(0, 12)}」 area=${e.getAttribute('data-click-area')} class=${String(e.className).slice(0, 40)} ${Math.round(r.x)},${Math.round(r.y)} ${Math.round(r.width)}x${Math.round(r.height)} disabled=${e.disabled}`;
+          })).catch(() => []);
+        const 글자 = await f.evaluate(() => (document.body.innerText || '')
+          .split('\n').map((x) => x.trim()).filter(Boolean).slice(-30).join(' | ')).catch(() => '');
+        throw new Error('발행 버튼까지 갔지만 확인이 안 됩니다. 화면: /tmp/naver-publish.png'
+          + '\n  발행 버튼들:\n    ' + 발행버튼들.join('\n    ')
+          + '\n  화면 끝 글자: ' + 글자.slice(0, 400));
+      }
       return { url, id: url.split('/').pop() };
     } finally {
       await ctx.close().catch(() => {});
