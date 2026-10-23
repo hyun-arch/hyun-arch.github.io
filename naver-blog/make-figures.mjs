@@ -77,8 +77,8 @@ const 그리기 = (번호, 소제목, 답) => `<!doctype html><html lang="ko"><h
     padding:92px 88px; display:flex; flex-direction:column; justify-content:space-between; }
   .kicker { font-size:28px; letter-spacing:4px; font-weight:700; color:${BR.chip}; }
   .num { font-size:160px; font-weight:800; line-height:1; color:${BR.chip}; opacity:.35; }
-  .q { font-size:66px; line-height:1.22; font-weight:800; letter-spacing:-1.2px; text-wrap:balance; }
-  .a { font-size:36px; line-height:1.55; font-weight:500; opacity:.93; margin-top:30px; }
+  .q { font-size:62px; line-height:1.26; font-weight:800; letter-spacing:-1.2px; word-break:keep-all; }
+  .a { font-size:35px; line-height:1.58; font-weight:500; opacity:.93; margin-top:28px; word-break:keep-all; }
   .rule { width:110px; height:8px; background:${BR.chip}; border-radius:4px; margin:34px 0 0; }
   .foot { display:flex; justify-content:space-between; align-items:flex-end; font-size:28px; }
   .brand { font-weight:800; }
@@ -93,21 +93,40 @@ const 그리기 = (번호, 소제목, 답) => `<!doctype html><html lang="ko"><h
   <div class="foot"><div class="brand">${BR.name}</div><div class="tag">#측정으로_갈린다</div></div>
 </body></html>`;
 
+// 표지 — 앨범형 목록에서 **작게 줄여 봐도 읽히게** 만든다.
+// 전에 못났던 이유 세 가지 (2026-10-23 부사장 지적):
+//   ① 한글이 단어 중간에서 잘렸다 (「모공이 넓어 보 / 이는」) → word-break:keep-all
+//   ② 글자가 아래로 쏠려 가운데가 텅 비었다 → 세로 가운데 정렬
+//   ③ 제목이 길면 넘쳤다 → 길이에 따라 글자 크기를 바꾼다
+const 글자크기 = (n) => (n <= 16 ? 92 : n <= 24 ? 78 : n <= 32 ? 66 : n <= 40 ? 58 : 50);
+const 표지제목 = 제목.replace(/^[^,]*,\s*/, (m) => m);   // 제목은 그대로 쓴다
 const 표지 = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <style>
   * { margin:0; box-sizing:border-box; }
   html,body { width:1080px; height:1080px; }
   body { font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
-    background:linear-gradient(135deg,${BR.bg} 0%,${BR.bg2} 100%); color:${BR.ink};
-    padding:96px 92px; display:flex; flex-direction:column; justify-content:space-between; }
-  .kicker { font-size:30px; letter-spacing:4px; font-weight:700; color:${BR.chip}; }
-  .title { font-size:84px; line-height:1.18; font-weight:800; letter-spacing:-1.5px; text-wrap:balance; }
-  .rule { width:120px; height:8px; background:${BR.chip}; border-radius:4px; margin:40px 0 0; }
-  .foot { display:flex; justify-content:space-between; align-items:flex-end; font-size:30px; }
-  .brand { font-weight:800; } .tag { opacity:.8; font-weight:600; }
+    background:${BR.bg}; color:${BR.ink}; position:relative; overflow:hidden;
+    padding:88px 84px; display:flex; flex-direction:column; justify-content:center; }
+  /* 단색이면 심심하다. 큰 원 하나로 깊이를 준다 */
+  .blob { position:absolute; width:900px; height:900px; border-radius:50%;
+    right:-280px; top:-300px; background:${BR.bg2}; opacity:.85; }
+  .blob2 { position:absolute; width:520px; height:520px; border-radius:50%;
+    left:-200px; bottom:-220px; background:${BR.bg2}; opacity:.5; }
+  .inner { position:relative; z-index:1; }
+  .kicker { font-size:30px; letter-spacing:3px; font-weight:700; color:${BR.chip}; }
+  .rule { width:92px; height:9px; background:${BR.chip}; border-radius:5px; margin:26px 0 34px; }
+  .title { font-size:${글자크기([...표지제목].length)}px; line-height:1.3; font-weight:800;
+    letter-spacing:-1.5px; word-break:keep-all; overflow-wrap:break-word; }
+  .foot { position:absolute; left:84px; right:84px; bottom:76px; z-index:1;
+    display:flex; justify-content:space-between; align-items:flex-end; font-size:29px; }
+  .brand { font-weight:800; } .tag { opacity:.82; font-weight:600; }
 </style></head><body>
-  <div><div class="kicker">측정 기반 · 아람휴비스</div><div class="rule"></div></div>
-  <div class="title">${esc(제목)}</div>
+  <div class="blob"></div><div class="blob2"></div>
+  <div class="inner">
+    <div class="kicker">측정 기반 · 아람휴비스</div>
+    <div class="rule"></div>
+    <div class="title">${esc(표지제목)}</div>
+  </div>
   <div class="foot"><div class="brand">${BR.name}</div><div class="tag">#측정으로_갈린다</div></div>
 </body></html>`;
 

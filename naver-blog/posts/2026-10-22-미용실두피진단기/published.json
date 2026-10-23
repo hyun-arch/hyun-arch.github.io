@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-23T04:23:29.897Z",
+  "at": "2026-10-23T09:57:43.669Z",
   "분류": {
     "대분류": "아람비즈니스",
     "중분류": "진단 이야기",
@@ -26,14 +26,15 @@
         "점수": 1
       }
     ],
-    "번호": "11-045"
+    "번호": "11-049"
   },
   "임시저장": false,
   "결과": [
     {
       "key": "naver",
-      "ok": false,
-      "error": "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('button[data-click-area=\"tpb.publish\"]').first()\n    - locator resolved to <button type=\"button\" class=\"publish_btn__v_kS9\" data-click-area=\"tpb.publish\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"se-popup-dim se-popup-dim-white\"></div> from <div class=\"container__O3PGu\">…</div> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"se-popup-dim se-popup-dim-white\"></div> from <div class=\"container__O3PGu\">…</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    15 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"se-popup-dim se-popup-dim-white\"></div> from <div class=\"container__O3PGu\">…</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+      "ok": true,
+      "url": "https://blog.naver.com/PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451567747&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=35812",
+      "id": "PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451567747&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=35812"
     }
   ]
 }

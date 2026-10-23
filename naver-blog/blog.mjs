@@ -127,7 +127,17 @@ switch (cmd) {
     if (conv.missing.length)
       console.log(dim(`  이미지 ${conv.missing.length}개를 못 올립니다: ${conv.missing.join(', ')}`));
     console.log(dim(`  본문 ${conv.blocks.filter(b => b.type === 'text').length}덩이 · 사진 ${conv.images.length}장`));
-    const res = await publish({ text: conv.text, blocks: conv.blocks, title: post.title, to: 'naver', files: [],
+    // 2026-10-23부터 **예약 발행**이 기본이다 (오전 6:30 · 오후 4:30).
+    // 하루에 몰아 올리면 앞 글이 묻힌다. 자리를 나누면 같은 글 수로 노출이 두 번 생긴다.
+    // 「지금 올리기」가 필요하면 `--지금` 을 붙인다.
+    const 지금올리기 = args.includes('--지금') || process.argv.includes('--지금');
+    let 예약 = null;
+    if (!isDraft && !지금올리기) {
+      const { 다음자리, 보기 } = await import('./lib/slot.mjs');
+      예약 = 다음자리();
+      console.log(dim(`  예약 발행: ${보기(예약)}`));
+    }
+    const res = await publish({ text: conv.text, blocks: conv.blocks, title: post.title, to: 'naver', files: [], 예약,
                     category: cat.중분류 ? `${cat.no} ${cat.중분류}` : `${cat.no} ${cat.대분류}`,
                     serial: cat.번호, draft: isDraft });
     fs.writeFileSync(path.join(dir, isDraft ? 'drafted.json' : 'published.json'),

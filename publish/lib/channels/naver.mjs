@@ -22,7 +22,7 @@ export default {
 
   ready() { return missing(this.needs); },
 
-  async post({ text, media = [], link, dry, title, category, serial, draft = false, blocks = null }) {
+  async post({ text, media = [], link, dry, title, category, serial, draft = false, blocks = null, 예약 = null }) {
     const e = env();
 
     // 마크다운 안전장치 — 부르는 쪽이 blocks 를 안 주면 여기서 변환한다.
@@ -361,6 +361,68 @@ export default {
       // 레이어 안 「✓ 발행」을 누른다.
       // JS 로 .click() 하면 안 먹는다(스마트에디터가 진짜 마우스 이벤트를 본다).
       // 그래서 **버튼 좌표를 읽어 마우스로 누른다**. (2026-10-23 실측)
+      // ── 예약 발행 ────────────────────────────────────────────
+      // 「발행 시간」을 「예약」으로 바꾸고 날짜·시·분을 맞춘다.
+      // 알아낸 구조 (2026-10-23 실측):
+      //   라디오  #radio_time1(현재) · #radio_time2(예약)   ← **글자로 찾으면 안 눌린다. id 로 누른다**
+      //   날짜    input.input_date__UwKAB  (readonly, "2026. 10. 23" 꼴) → 달력에서 고른다
+      //   시·분   select 두 개 (00~23 / 00,10,20,30,40,50)
+      if (예약) {
+        const d = 예약 instanceof Date ? 예약 : new Date(예약);
+        const 년 = d.getFullYear(); const 월 = d.getMonth() + 1; const 일 = d.getDate();
+        const 시 = String(d.getHours()).padStart(2, '0');
+        const 분 = String(Math.floor(d.getMinutes() / 10) * 10).padStart(2, '0');
+
+        await f.locator('#radio_time2').click({ force: true, timeout: 10000 }).catch(async () => {
+          await f.evaluate(() => {
+            const r = document.querySelector('#radio_time2');
+            if (r) { r.click(); r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
+          });
+        });
+        await pg.waitForTimeout(2000);
+
+        // 날짜 — 오늘이 아니면 달력을 열어 그 날을 누른다
+        const 오늘인가 = await f.evaluate(({ 년, 월, 일 }) => {
+          const i = document.querySelector('.input_date__UwKAB, [class*="input_date__"]');
+          if (!i) return null;
+          const 지금 = i.value.replace(/\s/g, '');
+          return 지금 === `${년}.${월}.${일}`;
+        }, { 년, 월, 일 }).catch(() => null);
+
+        if (오늘인가 === false) {
+          await f.locator('.input_date__UwKAB, [class*="input_date__"]').first().click({ timeout: 8000 }).catch(() => {});
+          await pg.waitForTimeout(1200);
+          const 골랐나 = await f.evaluate((일) => {
+            const 후보 = [...document.querySelectorAll('td, button, a, span')]
+              .filter((e) => e.offsetParent && (e.innerText || '').trim() === String(일)
+                && !/disabled|prev|next/i.test(String(e.className)));
+            if (!후보.length) return false;
+            후보[0].click(); return true;
+          }, 일).catch(() => false);
+          await pg.waitForTimeout(1200);
+          if (!골랐나) console.warn(`  예약 날짜(${년}.${월}.${일})를 달력에서 못 골랐습니다 — 오늘로 둡니다`);
+        }
+
+        // 시·분
+        const 맞춤 = await f.evaluate(({ 시, 분 }) => {
+          const 레이어 = [...document.querySelectorAll('div, section, form')]
+            .filter((e) => /발행 시간/.test(e.innerText || ''))
+            .sort((a, b) => a.innerText.length - b.innerText.length)[0];
+          if (!레이어) return '레이어 없음';
+          const ss = [...레이어.querySelectorAll('select')].filter((e) => e.offsetParent);
+          if (ss.length < 2) return `select ${ss.length}개`;
+          const 놓기 = (sel, v) => {
+            sel.value = v;
+            sel.dispatchEvent(new Event('input', { bubbles: true }));
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+            return sel.value;
+          };
+          return { 시: 놓기(ss[0], 시), 분: 놓기(ss[1], 분) };
+        }, { 시, 분 }).catch((e) => '✗ ' + String(e.message).slice(0, 60));
+        console.log(`  예약 발행: ${년}.${월}.${일} ${시}:${분} → ${JSON.stringify(맞춤)}`);
+        await pg.waitForTimeout(1200);
+      }
+
       // 2단계: 레이어 안 확인 「발행」.
       // data-click-area="tpb*i.publish" (class confirm_btn__…) 로 확인됐다. (2026-10-23 실측)
       // 그래도 클래스 해시는 배포마다 바뀌므로, 못 찾으면 좌표로 눌러 본다.
