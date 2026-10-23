@@ -30,7 +30,12 @@ export async function openSiteBrowser({ headless = true } = {}) {
   });
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// ⚠ `import.meta.url === \`file://${process.argv[1]}\`` 로 비교하면 안 된다.
+// 이 폴더 경로에는 공백과 괄호가 있어서 import.meta.url 은 %20 · %28 로 인코딩돼 온다.
+// 그래서 늘 거짓이 되고, **아무 일도 안 하고 조용히 끝났다.** (2026-10-23 당함)
+const 직접실행 = process.argv[1]
+  && decodeURIComponent(new URL(import.meta.url).pathname) === path.resolve(process.argv[1]);
+if (직접실행) {
   const ctx = await openSiteBrowser({ headless: false });
   const 열곳 = [
     ['카페24 (릴라이·엘라피엘·메디커스텀 한 곳)', 'https://eclogin.cafe24.com/Shop/'],

@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-23T04:30:02.851Z",
+  "분류": {
+    "대분류": "아람비즈니스",
+    "중분류": "진단 이야기",
+    "no": "11",
+    "확신": 0.9,
+    "근거": [
+      "피부",
+      "측정"
+    ],
+    "후보": [
+      {
+        "대분류": "읽고 생각한 것",
+        "중분류": "서재",
+        "no": "31",
+        "점수": 1
+      }
+    ],
+    "번호": "11-046"
+  },
+  "임시저장": false,
+  "결과": [
+    {
+      "key": "naver",
+      "ok": true,
+      "url": "https://blog.naver.com/PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451211798&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=36025",
+      "id": "PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451211798&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=36025"
+    }
+  ]
+}

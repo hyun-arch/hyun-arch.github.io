@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-23T04:23:29.897Z",
+  "분류": {
+    "대분류": "아람비즈니스",
+    "중분류": "진단 이야기",
+    "no": "11",
+    "확신": 0.9565217391304348,
+    "근거": [
+      "진단",
+      "두피",
+      "측정",
+      "기기",
+      "아람휴비스"
+    ],
+    "후보": [
+      {
+        "대분류": "아람비즈니스",
+        "중분류": "릴라이",
+        "no": "12",
+        "점수": 1
+      },
+      {
+        "대분류": "읽고 생각한 것",
+        "중분류": "생각 조각",
+        "no": "32",
+        "점수": 1
+      }
+    ],
+    "번호": "11-045"
+  },
+  "임시저장": false,
+  "결과": [
+    {
+      "key": "naver",
+      "ok": false,
+      "error": "locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('button[data-click-area=\"tpb.publish\"]').first()\n    - locator resolved to <button type=\"button\" class=\"publish_btn__v_kS9\" data-click-area=\"tpb.publish\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"se-popup-dim se-popup-dim-white\"></div> from <div class=\"container__O3PGu\">…</div> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"se-popup-dim se-popup-dim-white\"></div> from <div class=\"container__O3PGu\">…</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    15 × waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"se-popup-dim se-popup-dim-white\"></div> from <div class=\"container__O3PGu\">…</div> subtree intercepts pointer events\n     - retrying click action\n       - waiting 500ms\n"
+    }
+  ]
+}

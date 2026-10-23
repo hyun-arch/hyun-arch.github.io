@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-23T03:43:54.704Z",
+  "분류": {
+    "대분류": "아람비즈니스",
+    "중분류": "진단 이야기",
+    "no": "11",
+    "확신": 0.5,
+    "근거": [
+      "진단",
+      "두피",
+      "피부"
+    ],
+    "후보": [
+      {
+        "대분류": "아람비즈니스",
+        "중분류": "릴라이",
+        "no": "12",
+        "점수": 5
+      }
+    ],
+    "번호": "11-044"
+  },
+  "임시저장": false,
+  "결과": [
+    {
+      "key": "naver",
+      "ok": true,
+      "url": "https://blog.naver.com/PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451167741&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=40014",
+      "id": "PostView.naver?blogId=ianlove80&Redirect=View&logNo=224451167741&categoryNo=20&isAfterWrite=true&isMrblogPost=false&isHappyBeanLeverage=true&contentLength=40014"
+    }
+  ]
+}
