@@ -315,8 +315,9 @@ export default {
       await 글감닫기();
 
       await clickArea('tpb.publish');        // 1단계: 설정 레이어 열기
-      await pg.waitForTimeout(1500);
-      await 글감닫기();
+      await pg.waitForTimeout(2000);
+      // ⚠ 여기서 글감닫기()를 부르면 안 된다. 그 안의 Escape 가 **발행 레이어까지 닫는다**.
+      // 발행 버튼을 눌렀는데 아무 일도 안 일어나던 진짜 이유였다. (2026-10-23 실측)
 
       // 설정 레이어에서 카테고리를 고른다 (자동 분류가 정해 준 값)
       if (category) {
@@ -348,42 +349,22 @@ export default {
       // 레이어 안 「✓ 발행」을 누른다.
       // JS 로 .click() 하면 안 먹는다(스마트에디터가 진짜 마우스 이벤트를 본다).
       // 그래서 **버튼 좌표를 읽어 마우스로 누른다**. (2026-10-23 실측)
-      // 레이어는 본문 프레임이 아니라 **다른 프레임**에 그려질 수 있다.
-      // f 에서만 찾다가 「버튼이 없다」고 했다. 프레임을 전부 뒤진다. (2026-10-23 당함)
-      const 레이어발행 = async () => {
-        for (const fr of pg.frames()) {
-          const r = await 레이어발행하나(fr);
-          if (r) return { ...r, fr };
-        }
-        return null;
-      };
-      const 레이어발행하나 = async (fr) => fr.evaluate(() => {
-        const 보이나 = (e) => {
-          const r = e.getBoundingClientRect();
-          return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden';
-        };
-        // 설정 레이어 = 「공개 설정」과 「발행 시간」을 함께 품은 가장 작은 상자
-        const 레이어 = [...document.querySelectorAll('div, section, form')]
-          .filter((e) => /공개 설정/.test(e.innerText || '') && /발행 시간/.test(e.innerText || ''))
-          .sort((a, b) => a.innerText.length - b.innerText.length)[0];
-        if (!레이어) return null;
-        const 후보 = [...레이어.querySelectorAll('button, a[role="button"]')]
-          .filter((e) => /^발행(\s|$)/.test((e.innerText || '').trim()) && 보이나(e));
-        if (!후보.length) return null;
-        const r = 후보[후보.length - 1].getBoundingClientRect();
-        후보[후보.length - 1].scrollIntoView({ block: 'center' });
-        return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
-      }).catch(() => null);
-
-      let 자리 = await 레이어발행();
-      if (!자리) {
-        await clickArea('tpb*i.publish', 8000).catch(() => {});
-      } else {
-        // 프레임 좌표 → 페이지 좌표로 옮긴다
-        let 밀림 = { x: 0, y: 0 };
-        const el = await 자리.fr.frameElement().catch(() => null);
-        if (el) { const b = await el.boundingBox().catch(() => null); if (b) 밀림 = { x: b.x, y: b.y }; }
-        await pg.mouse.click(자리.x + 밀림.x, 자리.y + 밀림.y);
+      // 2단계: 레이어 안 확인 「발행」.
+      // data-click-area="tpb*i.publish" (class confirm_btn__…) 로 확인됐다. (2026-10-23 실측)
+      // 그래도 클래스 해시는 배포마다 바뀌므로, 못 찾으면 좌표로 눌러 본다.
+      try {
+        await clickArea('tpb*i.publish', 15000);
+      } catch {
+        const 자리 = await f.evaluate(() => {
+          const 보이나 = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+          const 후보 = [...document.querySelectorAll('button, a[role="button"]')]
+            .filter((e) => /^발행(\s|$)/.test((e.innerText || '').trim()) && 보이나(e));
+          if (후보.length < 2) return null;          // 레이어가 안 열렸다
+          const r = 후보[후보.length - 1].getBoundingClientRect();
+          return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+        }).catch(() => null);
+        if (!자리) throw new Error('발행 레이어가 안 열렸습니다 — 1단계부터 다시 보세요');
+        await pg.mouse.click(자리.x, 자리.y);
       }
 
       // 발행은 바로 안 끝난다. 사진이 붙은 글은 더 걸린다. 주소가 바뀔 때까지 기다린다.
