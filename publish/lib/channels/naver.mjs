@@ -22,7 +22,7 @@ export default {
 
   ready() { return missing(this.needs); },
 
-  async post({ text, media = [], link, dry, title, category, serial, draft = false, blocks = null, 예약 = null }) {
+  async post({ text, media = [], link, dry, title, category, serial, draft = false, blocks = null, 예약 = null, blogId: 블로그받음 = null }) {
     const e = env();
 
     // 마크다운 안전장치 — 부르는 쪽이 blocks 를 안 주면 여기서 변환한다.
@@ -38,7 +38,9 @@ export default {
       text = 변환.text;
       console.warn('  네이버: 마크다운이 보여 변환했습니다 (blocks 를 안 받았습니다)');
     }
-    const blogId = e.NAVER_BLOG_ID;
+    // 블로그를 골라 올릴 수 있다. 안 주면 .env 의 기본 블로그.
+    // 아람휴비스 글은 이안사랑뿐 아니라 아람휴비스 블로그에도 올린다. (2026-10-24)
+    const blogId = 블로그받음 || e.NAVER_BLOG_ID;
     // 사진은 클립보드로 붙인다. 그런데 헤드리스 브라우저는 OS 클립보드를 못 읽는다.
     //   headless=true  → 붙은 이미지 0개
     //   headless=false → 붙은 이미지 1개   (2026-10-22 실측)

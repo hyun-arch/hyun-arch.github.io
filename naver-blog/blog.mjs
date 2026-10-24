@@ -137,7 +137,10 @@ switch (cmd) {
       예약 = 다음자리();
       console.log(dim(`  예약 발행: ${보기(예약)}`));
     }
-    const res = await publish({ text: conv.text, blocks: conv.blocks, title: post.title, to: 'naver', files: [], 예약,
+    // --블로그 <아이디> 로 올릴 블로그를 고를 수 있다
+    const blogId = args.includes('--블로그') ? args[args.indexOf('--블로그') + 1] : null;
+    if (blogId) console.log(dim(`  블로그: ${blogId}`));
+    const res = await publish({ text: conv.text, blocks: conv.blocks, title: post.title, to: 'naver', files: [], 예약, blogId,
                     category: cat.중분류 ? `${cat.no} ${cat.중분류}` : `${cat.no} ${cat.대분류}`,
                     serial: cat.번호, draft: isDraft });
     fs.writeFileSync(path.join(dir, isDraft ? 'drafted.json' : 'published.json'),

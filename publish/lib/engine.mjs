@@ -63,7 +63,7 @@ export function preview({ text = '', files = [], link = '', tags = [], to = 'all
  *  title  유튜브·네이버 제목
  *  dry    실제로 안 보내고 시험만
  */
-export async function publish({ text = '', files = [], to = 'all', link = '', tags = [], title = '', dry = false, category, serial, draft = false, blocks = null, 예약 = null }) {
+export async function publish({ text = '', files = [], to = 'all', link = '', tags = [], title = '', dry = false, category, serial, draft = false, blocks = null, 예약 = null, blogId = null }) {
   const media = files.map(inspect);
   // 'all' 은 '준비된 무료 채널 전부'. 돈 드는 곳(X)은 이름을 직접 적어야만 나간다.
   const wanted = to === 'all' || (Array.isArray(to) && to.includes('all'))
@@ -104,7 +104,7 @@ export async function publish({ text = '', files = [], to = 'all', link = '', ta
     const body = ch.caps.maxText ? fit(text, ch.caps.maxText, tail, weigherFor(ch.key)).text : text + tail;
 
     try {
-      const r = await ch.post({ text: body, media: usable, link, dry, title, category, serial, draft, blocks, 예약 });
+      const r = await ch.post({ text: body, media: usable, link, dry, title, category, serial, draft, blocks, 예약, blogId });
       const where = r.url || r.draft || r.id || '';
       say(line + (dry ? info('시험 — ' + (r.would || '')) : ok('완료 ') + dim(String(where))));
       record({ channel: ch.key, dry, ok: true, chars: [...body].length, media: usable.length, ...r });
