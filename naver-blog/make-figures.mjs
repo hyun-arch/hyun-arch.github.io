@@ -93,41 +93,52 @@ const 그리기 = (번호, 소제목, 답) => `<!doctype html><html lang="ko"><h
   <div class="foot"><div class="brand">${BR.name}</div><div class="tag">#측정으로_갈린다</div></div>
 </body></html>`;
 
-// 표지 — 앨범형 목록에서 **작게 줄여 봐도 읽히게** 만든다.
-// 전에 못났던 이유 세 가지 (2026-10-23 부사장 지적):
-//   ① 한글이 단어 중간에서 잘렸다 (「모공이 넓어 보 / 이는」) → word-break:keep-all
-//   ② 글자가 아래로 쏠려 가운데가 텅 비었다 → 세로 가운데 정렬
-//   ③ 제목이 길면 넘쳤다 → 길이에 따라 글자 크기를 바꾼다
-const 글자크기 = (n) => (n <= 16 ? 92 : n <= 24 ? 78 : n <= 32 ? 66 : n <= 40 ? 58 : 50);
-const 표지제목 = 제목.replace(/^[^,]*,\s*/, (m) => m);   // 제목은 그대로 쓴다
+// 표지 — **앨범형에서 240px 안팎으로 줄어든다.** 거기서 읽히는 것이 전부다.
+// 제목 전체(30~40자)를 넣으면 글자가 10px 남짓이 되어 안 보인다. (2026-10-24 부사장 지적)
+// 그래서 **짧은 후킹 문구**(윗줄=주제 · 아랫줄=질문)를 큼직하게 넣는다.
+// 문구는 naver-blog/data/hooks.json 에서 가져오고, 없으면 제목에서 만든다.
+const 후킹 = (() => {
+  try {
+    const 표 = JSON.parse(fs.readFileSync(path.resolve('naver-blog/data/hooks.json'), 'utf8'));
+    const k = path.basename(path.resolve(글폴더));
+    if (표[k]) return 표[k];
+  } catch { /* 표가 없으면 아래로 */ }
+  const 앞 = 제목.split(',')[0].trim();
+  const m = 제목.match(/,\s*(.{2,14}?)(까|나요|할까|일까)/);
+  return [앞.slice(0, 12), m ? (m[1] + m[2]).slice(0, 14) : ''];
+})();
+const [윗줄, 아랫줄] = 후킹;
+// 긴 쪽에 맞춰 크기를 정한다. 240px 로 줄여도 읽히려면 130px 아래로 내려가면 안 된다.
+const 긴쪽 = Math.max([...윗줄].length, [...(아랫줄 || '')].length);
+const 크기 = 긴쪽 <= 6 ? 190 : 긴쪽 <= 8 ? 168 : 긴쪽 <= 10 ? 146 : 긴쪽 <= 12 ? 128 : 112;
 const 표지 = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
 <style>
   * { margin:0; box-sizing:border-box; }
   html,body { width:1080px; height:1080px; }
   body { font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
     background:${BR.bg}; color:${BR.ink}; position:relative; overflow:hidden;
-    padding:88px 84px; display:flex; flex-direction:column; justify-content:center; }
-  /* 단색이면 심심하다. 큰 원 하나로 깊이를 준다 */
-  .blob { position:absolute; width:900px; height:900px; border-radius:50%;
-    right:-280px; top:-300px; background:${BR.bg2}; opacity:.85; }
-  .blob2 { position:absolute; width:520px; height:520px; border-radius:50%;
-    left:-200px; bottom:-220px; background:${BR.bg2}; opacity:.5; }
+    padding:84px 78px; display:flex; flex-direction:column; justify-content:center; }
+  .blob { position:absolute; width:940px; height:940px; border-radius:50%;
+    right:-300px; top:-330px; background:${BR.bg2}; opacity:.9; }
+  .blob2 { position:absolute; width:540px; height:540px; border-radius:50%;
+    left:-220px; bottom:-240px; background:${BR.bg2}; opacity:.55; }
   .inner { position:relative; z-index:1; }
-  .kicker { font-size:30px; letter-spacing:3px; font-weight:700; color:${BR.chip}; }
-  .rule { width:92px; height:9px; background:${BR.chip}; border-radius:5px; margin:26px 0 34px; }
-  .title { font-size:${글자크기([...표지제목].length)}px; line-height:1.3; font-weight:800;
-    letter-spacing:-1.5px; word-break:keep-all; overflow-wrap:break-word; }
-  .foot { position:absolute; left:84px; right:84px; bottom:76px; z-index:1;
-    display:flex; justify-content:space-between; align-items:flex-end; font-size:29px; }
-  .brand { font-weight:800; } .tag { opacity:.82; font-weight:600; }
+  .rule { width:120px; height:14px; background:${BR.chip}; border-radius:7px; margin-bottom:40px; }
+  .l1 { font-size:${크기}px; line-height:1.14; font-weight:800; letter-spacing:-3px;
+        word-break:keep-all; }
+  .l2 { font-size:${Math.round(크기 * 0.84)}px; line-height:1.16; font-weight:800;
+        letter-spacing:-3px; color:${BR.chip}; word-break:keep-all; margin-top:10px; }
+  .foot { position:absolute; left:78px; right:78px; bottom:64px; z-index:1;
+    display:flex; justify-content:space-between; align-items:flex-end; font-size:34px; }
+  .brand { font-weight:800; opacity:.95; } .tag { opacity:.75; font-weight:700; }
 </style></head><body>
   <div class="blob"></div><div class="blob2"></div>
   <div class="inner">
-    <div class="kicker">측정 기반 · 아람휴비스</div>
     <div class="rule"></div>
-    <div class="title">${esc(표지제목)}</div>
+    <div class="l1">${esc(윗줄)}</div>
+    ${아랫줄 ? `<div class="l2">${esc(아랫줄)}</div>` : ''}
   </div>
-  <div class="foot"><div class="brand">${BR.name}</div><div class="tag">#측정으로_갈린다</div></div>
+  <div class="foot"><div class="brand">${BR.name}</div><div class="tag">측정으로 갈린다</div></div>
 </body></html>`;
 
 const browser = await chromium.launch();
