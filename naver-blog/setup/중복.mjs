@@ -8,7 +8,7 @@ for (const no of ['224411513435', '224447202257']) {
   const f = pg.frames().find((fr) => /PostView|mainFrame/i.test(fr.url())) || pg.mainFrame();
   const r = await f.evaluate(() => {
     const t = document.body.innerText;
-    const body = (document.querySelector('.se-main-container') || document.body).innerText;
+    const body = (document.querySelector('.se-content, .se-canvas, .se-main-container') || document.body).innerText;
     return {
       제목: (document.querySelector('.se-title-text, .pcol1') || {}).innerText?.replace(/\s+/g, ' ').trim().slice(0, 40) || '-',
       글자수: body.replace(/\s/g, '').length,

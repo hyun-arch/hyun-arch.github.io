@@ -33,7 +33,9 @@ try {
   await pg.waitForTimeout(2000);
 
   const 찾음 = await pg.evaluate((n) => {
-    const c = document.querySelector('.se-main-container');
+    // 새 글쓰기 화면에는 .se-main-container 가 없다. .se-canvas 가 본문이다.
+    // (2026-10-24 — 이걸 몰라서 본문 1,638자를 "0자"로 읽었다)
+    const c = document.querySelector('.se-content, .se-canvas, .se-main-container');
     if (!c) return { 있나: false, 이유: '본문 못 찾음' };
     const t = c.innerText || '';
     const re = new RegExp(n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\(https:\\/\\/blog\\.naver\\.com\\/ianlove80\\)');

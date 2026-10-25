@@ -14,6 +14,14 @@ import path from 'node:path';
 import { openBrowser } from './naver-open.mjs';
 
 const 적용 = process.argv.includes('--적용');
+// 진행 상황을 파일로 남긴다. 파이프(grep)로 받으면 끝날 때까지 한 줄도 안 보인다. (2026-10-25 당함)
+const 기록파일 = '/tmp/cover-run.log';
+try { fs.writeFileSync(기록파일, ''); } catch { /* 무시 */ }
+const 적기 = (...a) => {
+  const l = a.join(' ');
+  console.log(l);
+  try { fs.appendFileSync(기록파일, `[${new Date().toTimeString().slice(0, 8)}] ${l}\n`); } catch { /* 무시 */ }
+};
 const 옛글도 = process.argv.includes('--옛글');
 const blogId = 'ianlove80';
 const 뿌리 = path.resolve('naver-blog/posts');
@@ -81,7 +89,7 @@ const { execFileSync } = await import('node:child_process');
 
 let 됨 = 0; const 실패 = [];
 for (const x of 할것) {
-  console.log(`\n▶ ${x.id} ${x.제목.slice(0, 30)}`);
+  적기(`▶ ${x.id} ${x.제목.slice(0, 30)}`);
   try {
     await pg.goto(`https://blog.naver.com/PostWriteForm.naver?blogId=${blogId}&Redirect=Update&logNo=${x.id}`,
       { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -106,7 +114,7 @@ for (const x of 할것) {
       그림: document.querySelectorAll('.se-component.se-image, .se-section-image').length,
       글자: (document.querySelector('.se-content, .se-canvas, .se-main-container')?.innerText || '').length,
     }));
-    if (!전.그림) { 실패.push([x.id, '그림 없음']); console.log('  ✗ 그림이 없습니다'); continue; }
+    if (!전.그림) { 실패.push([x.id, '그림 없음']); 적기('  ✗ 그림이 없습니다'); continue; }
 
     const 자리 = await f.evaluate(() => {
       const g = document.querySelector('.se-component.se-image, .se-section-image');
@@ -124,7 +132,7 @@ for (const x of 할것) {
     if (지움 >= 전.그림) { await pg.keyboard.press('Backspace'); await pg.waitForTimeout(1500); }
     const 지움2 = await f.evaluate(() =>
       document.querySelectorAll('.se-component.se-image, .se-section-image').length);
-    if (지움2 >= 전.그림) { 실패.push([x.id, '옛 표지를 못 지움']); console.log('  ✗ 옛 표지를 못 지웠습니다'); continue; }
+    if (지움2 >= 전.그림) { 실패.push([x.id, '옛 표지를 못 지움']); 적기('  ✗ 옛 표지를 못 지웠습니다'); continue; }
 
     execFileSync('osascript', ['-e',
       `set the clipboard to (read (POSIX file "${path.resolve(x.cover).replace(/"/g, '\\"')}") as «class PNGf»)`]);
@@ -165,16 +173,16 @@ for (const x of 할것) {
       await pg.waitForTimeout(1500);
       if (!/PostWriteForm|postwrite/i.test(pg.url())) break;
     }
-    if (/PostWriteForm|postwrite/i.test(pg.url())) { 실패.push([x.id, '발행 확인 안 됨']); console.log('  ✗ 발행 확인이 안 됩니다'); continue; }
+    if (/PostWriteForm|postwrite/i.test(pg.url())) { 실패.push([x.id, '발행 확인 안 됨']); 적기('  ✗ 발행 확인이 안 됩니다'); continue; }
     됨 += 1;
-    console.log(`  ✓ 바꿨습니다 (${대표})`);
+    적기(`  ✓ 바꿨습니다 (${대표})`);
   } catch (e) {
     실패.push([x.id, String(e.message).split('\n')[0].slice(0, 60)]);
-    console.log(`  ✗ ${String(e.message).split('\n')[0].slice(0, 70)}`);
+    적기(`  ✗ ${String(e.message).split('\n')[0].slice(0, 70)}`);
   }
 }
 
-console.log(`\n  ${됨}편 바꿨습니다. 실패 ${실패.length}편`);
+적기(`  ${됨}편 바꿨습니다. 실패 ${실패.length}편`);
 실패.forEach(([id, 왜]) => console.log(`   ✗ ${id} ${왜}`));
 console.log('\n  창은 그대로 둡니다. 다 쓰셨으면 직접 닫으세요.');
 await new Promise(() => {});

@@ -30,3 +30,9 @@ publish/sent/drafts/  # 네이버 초안(개인 글)
 
 # 네이버 브라우저 프로필(로그인 상태) — 절대 커밋 금지
 publish/.browser/
+
+# 브라우저 프로필 — 쿠키·세션·캐시가 들어 있다. 절대 커밋하지 않는다.
+# (2026-10-25: .browser-ai 4,700개 · .browser-sns 411개가 커밋 대기에 올라와 있었다)
+publish/.browser*/
+publish/*.log
+publish/.aramhuvis-done.json

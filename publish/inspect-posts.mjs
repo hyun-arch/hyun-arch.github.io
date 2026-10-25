@@ -14,7 +14,7 @@ try {
     let info = null;
     for (const fr of pg.frames()) {
       info = await fr.evaluate(() => {
-        const body = document.querySelector('.se-main-container');
+        const body = document.querySelector('.se-content, .se-canvas, .se-main-container');
         if (!body) return null;
         const imgs = body.querySelectorAll('img').length;
         const text = (body.innerText || '').replace(/\s+/g, ' ').trim();

@@ -171,6 +171,7 @@ export default {
         '.se-component.se-text .se-text-paragraph:nth-of-type(1)',
         '.se-section-text .se-text-paragraph',
         '.se-main-container .se-text-paragraph',
+        '.se-canvas .se-text-paragraph',
         '[contenteditable="true"]',
       ]);
       if (!bodied) throw new Error('본문 칸에 커서를 넣지 못했습니다.');
