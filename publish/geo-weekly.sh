@@ -1,7 +1,7 @@
 #!/bin/zsh
-# GEO 주간 측정 — 매주 월요일 오전 9시. 20문항을 돌리고 전주와 견준다.
+# GEO 주간 측정 — 매주 **일요일 오후 3시**. 20문항을 돌리고 전주와 견준다.
 #   설치: crontab -e 에 아래 한 줄
-#   0 9 * * 1 "/Users/aram/Desktop/project/14. 나만의 os/아람미러(hyun-arch.github.io)/publish/geo-weekly.sh"
+#   0 15 * * 0 "/Users/aram/Desktop/project/14. 나만의 os/아람미러(hyun-arch.github.io)/publish/geo-weekly.sh"
 cd "/Users/aram/Desktop/project/14. 나만의 os/아람미러(hyun-arch.github.io)" || exit 1
 M="/Users/aram/Desktop/project/31. 이니_GEO/geo/측정"
 날짜=$(date +%Y-%m-%d)
