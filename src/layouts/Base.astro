@@ -116,6 +116,55 @@ const pageUrl = new URL(path || '/', Astro.site).href;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap"
     />
+
+    {/*
+      AI 가 읽는 이름표 (JSON-LD).
+      사람 눈에는 안 보이지만, AI·검색이 「이게 무슨 사이트이고 누가 만들었나」를 읽는 자리다.
+      2026-10-25: 네 브랜드 사이트에는 붙였는데 정작 여기가 0개였다.
+      레이아웃에 두면 37개 페이지 전부에 한 번에 붙는다.
+    */}
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebSite',
+            '@id': 'https://hyun-arch.github.io/#website',
+            url: 'https://hyun-arch.github.io/',
+            name: 'Aramirror · 아람미러',
+            inLanguage: 'ko',
+            description:
+              'AI는 나를 대신하지 않는다 — 거울이 된다. 던진 생각이 자산과 가치로 기능하는 개인 운영 환경.',
+            publisher: { '@id': 'https://hyun-arch.github.io/#person' },
+          },
+          {
+            '@type': 'Person',
+            '@id': 'https://hyun-arch.github.io/#person',
+            name: '박상현',
+            alternateName: '아람',
+            jobTitle: '부사장',
+            worksFor: {
+              '@type': 'Organization',
+              name: '아람휴비스',
+              alternateName: 'ARAM HUVIS',
+              url: 'https://www.aramhuvis.com',
+            },
+            knowsAbout: ['두피 진단', '피부 측정', '맞춤 화장품', 'AX 워크플로우', 'GEO'],
+            url: 'https://hyun-arch.github.io/',
+          },
+          {
+            '@type': 'WebPage',
+            '@id': Astro.url.href + '#webpage',
+            url: Astro.url.href,
+            name: pageTitle,
+            description: desc,
+            inLanguage: 'ko',
+            isPartOf: { '@id': 'https://hyun-arch.github.io/#website' },
+          },
+        ],
+      })}
+    />
   </head>
   <body>
     <nav class="nav">
